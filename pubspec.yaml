@@ -1,0 +1,57 @@
+name: boscdex
+description: La Pokédex offline del boletaire per explorar el bosc català.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.1.1
+
+  # Database (Type-safe SQLite)
+  drift: ^2.4.0
+  sqlite3_flutter_libs: ^0.5.0
+
+  # Navigation
+  go_router: ^5.2.0
+
+  # Storage & Utils
+  shared_preferences: ^2.0.0
+  path_provider: ^2.0.0
+  path: ^1.8.0
+  uuid: ^3.0.0
+  intl: ^0.17.0
+
+  # Location
+  geolocator: ^9.0.0
+  permission_handler: ^10.0.0
+
+  # UI
+  flutter_svg: ^1.1.0
+  shimmer: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  drift_dev: ^2.4.0
+  build_runner: ^2.3.0
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/database/
+    - assets/models/
+    - assets/images/mushrooms/
+    - assets/images/trees/
+    - assets/images/silhouettes/
+    - assets/icons/
+    - assets/badges/

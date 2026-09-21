@@ -1,0 +1,40 @@
+species_id,scientific_name,catalan_name,inat_taxon_id,edibility,target_image_count
+lactarius_deliciosus,Lactarius deliciosus,Rovelló / Pinetell,57421,excellent,300
+boletus_edulis,Boletus edulis,Cep,48701,excellent,300
+cantharellus_cibarius,Cantharellus cibarius,Rossinyol,47348,excellent,300
+amanita_caesarea,Amanita caesarea,Ou de reig,48715,excellent,300
+craterellus_cornucopioides,Craterellus cornucopioides,Trompeta de la mort,47349,excellent,300
+macrolepiota_procera,Macrolepiota procera,Apagallums,55867,comestible,300
+tricholoma_terreum,Tricholoma terreum,Fredolic,118153,comestible,300
+calocybe_gambosa,Calocybe gambosa,Moixernó,123880,comestible,300
+pleurotus_ostreatus,Pleurotus ostreatus,Gírgola,48700,comestible,300
+hydnum_repandum,Hydnum repandum,Llengua de bou,67743,comestible,300
+hygrophorus_latitabundus,Hygrophorus latitabundus,Llenega negra,350022,comestible,300
+craterellus_lutescens,Craterellus lutescens,Camagroc,54438,comestible,300
+suillus_luteus,Suillus luteus,Llenegot,48531,sense_valor,250
+russula_cyanoxantha,Russula cyanoxantha,Llora verda,118183,sense_valor,250
+amanita_muscaria,Amanita muscaria,Reig bord,48715,toxic,300
+omphalotus_olearius,Omphalotus olearius,Gírgola d'olivera,54134,toxic,300
+entoloma_sinuatum,Entoloma sinuatum,Pèrfid,352757,toxic,300
+amanita_phalloides,Amanita phalloides,Farinera borda,52135,mortal,300
+amanita_verna,Amanita verna,Cicuta blanca,62707,mortal,300
+cortinarius_orellanus,Cortinarius orellanus,Cortinari de muntanya,125751,mortal,300
+lactarius_sanguifluus,Lactarius sanguifluus,Rovelló de sang,118207,excellent,300
+boletus_aereus,Boletus aereus,Cep negre,326791,excellent,300
+morchella_esculenta,Morchella esculenta,Múrgola,48089,excellent,250
+marasmius_oreades,Marasmius oreades,Carrereta,47285,comestible,250
+suillus_granulatus,Suillus granulatus,Pinetell de bou,48530,comestible,250
+hygrophorus_russula,Hygrophorus russula,Carlet,350225,comestible,300
+hygrophorus_personii,Hygrophorus personii,Llenega d'alzina,624781,comestible,250
+pleurotus_eryngii,Pleurotus eryngii,Gírgola de panical,53711,comestible,300
+agaricus_campestris,Agaricus campestris,Xampinyó de prat,60321,comestible,250
+coprinus_comatus,Coprinus comatus,Bolet de tinta,48098,comestible,250
+russula_virescens,Russula virescens,Llora,118228,comestible,250
+lactarius_semisanguifluus,Lactarius semisanguifluus,Pinetell de sang,372821,comestible,250
+suillus_bellinii,Suillus bellinii,Pinet de pi bord,366841,comestible,250
+amanita_pantherina,Amanita pantherina,Pantera,52858,toxic,300
+agaricus_xanthodermus,Agaricus xanthodermus,Xampinyó groguejant,126614,toxic,300
+lactarius_chrysorrheus,Lactarius chrysorrheus,Lleterola de llet groga,154044,toxic,250
+tricholoma_equestre,Tricholoma equestre,Verderol,118100,toxic,250
+amanita_virosa,Amanita virosa,Àngel de la mort,62706,mortal,300
+galerina_marginata,Galerina marginata,Galerina mortal,55848,mortal,300
