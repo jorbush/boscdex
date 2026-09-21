@@ -6,20 +6,20 @@ The **Live Scan** tab (`/scan`) provides the visual viewfinder used for identify
 
 ## 📷 Viewfinder Interface
 
-* **Targeting Frame:** Centered targeting reticle with animated border scaling to focus the user's attention on diagnostic mushroom features (cap, gills, stem base).
+* **Targeting Frame:** Centered targeting reticle with animated border scaling to focus the user's attention on diagnostic morphology.
 * **Mode Switcher:** Segmented selector at the top switching between:
-  * `[ Bolets ]`: Configures classifier targeting fungal morphology.
-  * `[ Arbres ]`: Configures classifier targeting bark structure, foliage, and needles.
-* **100% Offline Indicator:** Prominent pill badge (`OfflineIndicator`) reassuring the user that no internet connection or roaming signal is needed.
+  * `[ Bolets ]`: Evaluates fungal specimens via `classifier.classify()` and displays `ClassificationResultSheet`.
+  * `[ Arbres ]`: Evaluates indicator trees via `classifier.classifyTree()` and displays `TreeClassificationResultSheet`.
+* **Clean & Minimalist Viewfinder:** Free of distracting indicators to keep focus entirely on specimen photography.
 * **Shutter & Gallery Actions:**
   * Primary circular shutter button triggering immediate frame capture and edge inference.
   * Gallery picker alternative icon for identifying previously captured camera roll photos.
 
 ---
 
-## 📊 Classification Result Sheet (`ClassificationResultSheet`)
+## 📊 Fungi Classification Result Sheet (`ClassificationResultSheet`)
 
-Upon trigger, the on-device model evaluates the image and presents a modal bottom sheet:
+Upon scanning a mushroom, the on-device model evaluates the image and presents a modal bottom sheet:
 
 1. **Top Candidate Card:**
    * Catalan vernacular name and scientific binomial.
@@ -34,3 +34,19 @@ Upon trigger, the on-device model evaluates the image and presents a modal botto
    * Unlocks the specimen in `Descobriments` if encountering it for the first time.
    * Re-evaluates badge conditions and updates `Insignies`.
    * Displays instant feedback and dismisses the sheet.
+
+---
+
+## 🌲 Tree Classification Result Sheet (`TreeClassificationResultSheet`)
+
+When in **Arbres** mode, scanning an indicator tree presents:
+
+1. **Top Indicator Tree Card:**
+   * Catalan and scientific names (e.g., *Pinus sylvestris* - Pi roig).
+   * Confidence score badge.
+   * Diagnostic botanical traits: needle/leaf type, bark description, and typical soil.
+2. **Symbiotic Fungi Section ("Bolets que pots cercar sota aquest arbre"):**
+   * Direct chips of associated mushrooms linked via mycorrhizal relations (e.g., Rovelló under Pi roig).
+   * Tapping any associated mushroom opens its Boscdex entry.
+3. **Habitat & Tree Profile Action:**
+   * "Veure fitxa completa de l'arbre" button tracks the tree as visited (contributing towards the "Aliança Silvestre" badge) and navigates to the detailed tree profile (`/arbre/:id`).

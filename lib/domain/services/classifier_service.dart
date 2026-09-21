@@ -3,12 +3,14 @@ import '../models/classificacio_result.dart';
 
 abstract class ClassifierService {
   Future<List<ClassificacioResult>> classify(Uint8List imageBytes);
+  Future<List<ArbreClassificacioResult>> classifyTree(Uint8List imageBytes);
   Future<void> initialize();
   void dispose();
 }
 
 class MockClassifierService implements ClassifierService {
   int _scenarioIndex = 0;
+  int _treeScenarioIndex = 0;
 
   @override
   Future<void> initialize() async {
@@ -115,6 +117,85 @@ class MockClassifierService implements ClassifierService {
 
     final result = scenarios[_scenarioIndex % scenarios.length];
     _scenarioIndex++;
+    return result;
+  }
+
+  @override
+  Future<List<ArbreClassificacioResult>> classifyTree(
+      Uint8List imageBytes) async {
+    // Simulate Edge-ML on-device inference latency (~300ms)
+    await Future.delayed(const Duration(milliseconds: 350));
+
+    final scenarios = [
+      // 1. Pi roig (Pinus sylvestris)
+      [
+        const ArbreClassificacioResult(
+          arbreId: 'pinus_sylvestris',
+          displayName: 'Pi roig',
+          confidence: 0.93,
+        ),
+        const ArbreClassificacioResult(
+          arbreId: 'pinus_halepensis',
+          displayName: 'Pi blanc',
+          confidence: 0.45,
+        ),
+      ],
+      // 2. Alzina (Quercus ilex)
+      [
+        const ArbreClassificacioResult(
+          arbreId: 'quercus_ilex',
+          displayName: 'Alzina',
+          confidence: 0.91,
+        ),
+        const ArbreClassificacioResult(
+          arbreId: 'castanea_sativa',
+          displayName: 'Castanyer',
+          confidence: 0.38,
+        ),
+      ],
+      // 3. Faig (Fagus sylvatica)
+      [
+        const ArbreClassificacioResult(
+          arbreId: 'fagus_sylvatica',
+          displayName: 'Faig',
+          confidence: 0.89,
+        ),
+        const ArbreClassificacioResult(
+          arbreId: 'quercus_ilex',
+          displayName: 'Alzina',
+          confidence: 0.42,
+        ),
+      ],
+      // 4. Pi blanc (Pinus halepensis)
+      [
+        const ArbreClassificacioResult(
+          arbreId: 'pinus_halepensis',
+          displayName: 'Pi blanc',
+          confidence: 0.87,
+        ),
+        const ArbreClassificacioResult(
+          arbreId: 'pinus_sylvestris',
+          displayName: 'Pi roig',
+          confidence: 0.51,
+        ),
+      ],
+      // 5. Castanyer (Castanea sativa)
+      [
+        const ArbreClassificacioResult(
+          arbreId: 'castanea_sativa',
+          displayName: 'Castanyer',
+          confidence: 0.92,
+        ),
+        const ArbreClassificacioResult(
+          arbreId: 'fagus_sylvatica',
+          displayName: 'Faig',
+          confidence: 0.35,
+        ),
+      ],
+    ];
+
+    final result = scenarios[_treeScenarioIndex % scenarios.length];
+    _treeScenarioIndex++;
     return result;
   }
 

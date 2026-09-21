@@ -85,7 +85,8 @@ void main() {
       // Verify Viewfinder elements
       expect(find.text('Bolets'), findsOneWidget);
       expect(find.text('Arbres'), findsOneWidget);
-      expect(find.text('100% Offline'), findsOneWidget);
+      expect(find.text('Enfoca el barret i les làmines del bolet'),
+          findsOneWidget);
 
       // 5. User taps the Shutter button to initiate scan
       final shutterFinder = find.byKey(const Key('shutter_button'));

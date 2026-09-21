@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/classifier_provider.dart';
-import '../shared/offline_indicator.dart';
 import 'classification_result_sheet.dart';
+import 'tree_classification_result_sheet.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({Key? key}) : super(key: key);
@@ -46,21 +46,43 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       final classifier = ref.read(classifierProvider);
       // Pass dummy bytes for Edge-ML inference simulation
       final dummyBytes = Uint8List(0);
-      final results = await classifier.classify(dummyBytes);
 
-      if (mounted) {
-        _animController.stop();
-        setState(() => _isScanning = false);
+      if (_selectedModeIndex == 1) {
+        // Mode 1: Indicator Trees
+        final treeResults = await classifier.classifyTree(dummyBytes);
 
-        await showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (ctx) => ClassificationResultSheet(
-            results: results,
-            imageBytes: dummyBytes,
-          ),
-        );
+        if (mounted) {
+          _animController.stop();
+          setState(() => _isScanning = false);
+
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (ctx) => TreeClassificationResultSheet(
+              results: treeResults,
+              imageBytes: dummyBytes,
+            ),
+          );
+        }
+      } else {
+        // Mode 0: Fungi / Bolets
+        final results = await classifier.classify(dummyBytes);
+
+        if (mounted) {
+          _animController.stop();
+          setState(() => _isScanning = false);
+
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (ctx) => ClassificationResultSheet(
+              results: results,
+              imageBytes: dummyBytes,
+            ),
+          );
+        }
       }
     } catch (e, stackTrace) {
       developer.log(
@@ -201,13 +223,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 ),
               ),
             ),
-          ),
-
-          // Offline Badge
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 24,
-            right: 16,
-            child: const OfflineIndicator(),
           ),
 
           // Bottom Controls

@@ -23,3 +23,15 @@ class ClassificacioResponse {
     this.toxicLookalikeIds,
   });
 }
+
+class ArbreClassificacioResult {
+  final String arbreId;
+  final String displayName;
+  final double confidence;
+
+  const ArbreClassificacioResult({
+    required this.arbreId,
+    required this.displayName,
+    required this.confidence,
+  });
+}

@@ -34,6 +34,23 @@ void main() {
     expect(find.byIcon(Icons.star), findsOneWidget);
   });
 
+  testWidgets('EdibilityBadge renders icon only when iconOnly is true',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: EdibilityBadge(
+            edibilitat: Edibilitat.comestible,
+            iconOnly: true,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.restaurant), findsOneWidget);
+    expect(find.text('Comestible'), findsNothing);
+  });
+
   testWidgets(
       'SafetyAlertBox renders warning title and species and triggers onTap',
       (WidgetTester tester) async {

@@ -16,8 +16,7 @@ The **Boscdex Album** (`/boscdex`) is the central gamified field guide modeled a
 * **Discovered State:**
   * Full specimen illustration/photo.
   * Catalan vernacular name prominent at the base.
-  * Colored rarity border (`RarityBorder`).
-  * Corner edibility badge (`EdibilityBadge`).
+  * Minimalist circular corner edibility badge (`EdibilityBadge` in `iconOnly` mode).
   * Sequential Dex number.
   * Tapping navigates to the rich specimen detail sheet (`/boscdex/:id`).
 

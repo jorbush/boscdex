@@ -103,12 +103,11 @@ class BoscdexCard extends StatelessWidget {
                 ],
               ),
               Positioned(
-                top: -2,
-                right: -2,
-                child: Transform.scale(
-                  scale: 0.8,
-                  alignment: Alignment.topRight,
-                  child: EdibilityBadge(edibilitat: edibility),
+                top: 6,
+                right: 6,
+                child: EdibilityBadge(
+                  edibilitat: edibility,
+                  iconOnly: true,
                 ),
               ),
             ],
