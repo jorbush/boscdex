@@ -46,6 +46,12 @@ An indicator tree is a botanical beacon in the forest. By recognizing tree speci
 
 ---
 
-## 🔗 Detail & Navigation Integration
+## 📱 Arbres Boscdex & Navigation Integration
 
-Each tree detail screen (`/arbre/:id`) displays bark and foliage morphology, typical soil conditions, and a list of all associated mushrooms. Tapping any mushroom immediately navigates to its full Boscdex specimen sheet.
+Indicator trees are first-class citizens in the app with their own dedicated **Arbres Boscdex** within the Boscdex tab:
+
+1. **Sub-Catalog Selector:** The Boscdex screen features a selector toggle (`🍄 Bolets` | `🌲 Arbres`) to seamlessly switch between the fungi and tree catalogs.
+2. **Arbre Cards:** Tree cards display leaf type tags (`Agulla`, `Caduca`, `Perenne`), identification checkmarks, and dynamic counters for symbiotic mushroom species (`🍄 X bolets socis`).
+3. **Detail & Cross-Linking:** Each tree detail screen (`/arbre/:id`) displays bark and foliage morphology, typical soil conditions, and an interactive grid of all associated mushrooms. Tapping any mushroom immediately navigates to its full Boscdex specimen sheet.
+4. **Live Scanning:** The camera viewfinder has a dedicated **Arbres** mode for real-time indicator tree classification.
+

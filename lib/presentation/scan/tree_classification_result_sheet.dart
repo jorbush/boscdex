@@ -1,13 +1,13 @@
 import 'dart:developer' as developer;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/models/classificacio_result.dart';
-import '../../domain/models/insignia.dart' as domain;
-import '../../domain/services/badge_service.dart';
+import '../../domain/services/badge_progression_service.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/preferences_provider.dart';
 
@@ -19,11 +19,11 @@ class TreeClassificationResultSheet extends ConsumerStatefulWidget {
   final VoidCallback? onInspected;
 
   const TreeClassificationResultSheet({
-    Key? key,
+    super.key,
     required this.results,
     this.imageBytes,
     this.onInspected,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<TreeClassificationResultSheet> createState() =>
@@ -84,75 +84,13 @@ class _TreeClassificationResultSheetState
   }
 
   Future<void> _evaluateBadges(String treeId) async {
-    try {
-      final db = ref.read(appDatabaseProvider);
-      final allDiscoveries = await db.descobrimentDao.getAllDiscoveries();
-      final allInsignies = await db.insigniaDao.getAllInsignies();
-      final toxicViews = ref.read(toxicComparisonViewCountProvider);
-
-      final hasRovello =
-          allDiscoveries.any((d) => d.boletId == 'lactarius_deliciosus');
-      final hasPinetell =
-          allDiscoveries.any((d) => d.boletId == 'lactarius_sanguifluus');
-
-      // Check if user has discovered a mushroom associated with this tree
-      final associatedMushrooms = await db.boletDao.getBoletsByArbreId(treeId);
-      final discoveredIds = allDiscoveries.map((d) => d.boletId).toSet();
-      final hasTreeAlliance =
-          associatedMushrooms.any((b) => discoveredIds.contains(b.id));
-
-      final badgeService = BadgeService();
-      final currentDomainBadges = allInsignies.map((dbBadge) {
-        return domain.Insignia(
-          id: dbBadge.id,
-          nom: dbBadge.id,
-          descripcio: '',
-          iconPath: '',
-          progressCount: dbBadge.progressCount,
-          targetCount: _getTargetCountForBadge(dbBadge.id),
-          awardedAt: dbBadge.awardedAt,
-        );
-      }).toList();
-
-      final updatedBadges = await badgeService.evaluateBadges(
-        discoveryCount: allDiscoveries.length,
-        hasRovello: hasRovello,
-        hasPinetell: hasPinetell,
-        toxicComparisonViewCount: toxicViews,
-        hasTreeAlliance: hasTreeAlliance,
-        currentBadges: currentDomainBadges,
-      );
-
-      for (final b in updatedBadges) {
-        await db.insigniaDao.updateProgress(b.id, b.progressCount);
-        if (b.isAwarded && b.awardedAt != null) {
-          await db.insigniaDao.awardInsignia(b.id, b.awardedAt!);
-        }
-      }
-    } catch (e) {
-      // Non-critical background badge evaluation
-    }
-  }
-
-  int _getTargetCountForBadge(String id) {
-    switch (id) {
-      case 'primer_pas':
-      case 'primer_pas_al_bosc':
-      case 'alianca_silvestre':
-        return 1;
-      case 'cacador_rovellons':
-      case 'cacador_de_rovellons':
-        return 2;
-      case 'micoleg_prudent':
-        return 5;
-      case 'cistell_tardor':
-      case 'cistell_de_tardor':
-        return 15;
-      case 'mestre_boletaire':
-        return 50;
-      default:
-        return 1;
-    }
+    final db = ref.read(appDatabaseProvider);
+    final toxicViews = ref.read(toxicComparisonViewCountProvider);
+    await BadgeProgressionService().syncBadgeProgression(
+      db: db,
+      toxicComparisonViewCount: toxicViews,
+      currentTreeId: treeId,
+    );
   }
 
   @override
@@ -173,8 +111,9 @@ class _TreeClassificationResultSheetState
       ),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: RetroColors.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(color: RetroColors.ink, width: 2.5),
       ),
       child: _loadingDetails
           ? const Center(
@@ -191,11 +130,11 @@ class _TreeClassificationResultSheetState
                   // Drag handle
                   Center(
                     child: Container(
-                      width: 40,
-                      height: 4,
+                      width: 44,
+                      height: 5,
                       decoration: BoxDecoration(
-                        color: Colors.white24,
-                        borderRadius: BorderRadius.circular(2),
+                        color: RetroColors.ink,
+                        borderRadius: BorderRadius.circular(3),
                       ),
                     ),
                   ),
@@ -205,32 +144,37 @@ class _TreeClassificationResultSheetState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Resultat d\'arbre indicador',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.white70,
-                                ),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: RetroColors.ink,
+                          letterSpacing: 0.3,
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
                           color: isLowConfidence
-                              ? Colors.orange.withOpacity(0.2)
-                              : Colors.green.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color:
-                                isLowConfidence ? Colors.orange : Colors.green,
-                          ),
+                              ? RetroColors.questAmber
+                              : RetroColors.goldCoin,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: RetroColors.ink, width: 2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: RetroColors.ink,
+                              offset: Offset(1.5, 1.5),
+                              blurRadius: 0,
+                            ),
+                          ],
                         ),
                         child: Text(
                           '${(top.confidence * 100).toInt()}% coincidència',
-                          style: TextStyle(
-                            color:
-                                isLowConfidence ? Colors.orange : Colors.green,
-                            fontWeight: FontWeight.bold,
+                          style: const TextStyle(
+                            color: RetroColors.ink,
+                            fontWeight: FontWeight.w900,
                             fontSize: 12,
                           ),
                         ),
@@ -242,10 +186,8 @@ class _TreeClassificationResultSheetState
                   // Top Matched Tree Card
                   Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white12),
+                    decoration: RetroDecorations.card(
+                      backgroundColor: RetroColors.surface,
                     ),
                     child: Row(
                       children: [
@@ -253,14 +195,20 @@ class _TreeClassificationResultSheetState
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            borderRadius: BorderRadius.circular(12),
+                            color: RetroColors.mintWash,
+                            borderRadius: BorderRadius.circular(14),
+                            border:
+                                Border.all(color: RetroColors.ink, width: 2),
                           ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.park,
-                              size: 32,
-                              color: Colors.white,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              _arbre?.imageAssetPath ??
+                                  'assets/images/trees/${_arbre?.id ?? top.arbreId}.png',
+                              fit: BoxFit.contain,
+                              filterQuality: FilterQuality.none,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _buildTreeIconPlaceholder(),
                             ),
                           ),
                         ),
@@ -273,7 +221,8 @@ class _TreeClassificationResultSheetState
                                 _arbre?.catalanName ?? top.displayName,
                                 style: const TextStyle(
                                   fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w900,
+                                  color: RetroColors.ink,
                                 ),
                               ),
                               if (_arbre != null) ...[
@@ -283,7 +232,8 @@ class _TreeClassificationResultSheetState
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontStyle: FontStyle.italic,
-                                    color: Colors.white60,
+                                    color: RetroColors.inkSoft,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -302,7 +252,7 @@ class _TreeClassificationResultSheetState
                         Expanded(
                           child: _buildTraitChip(
                             context,
-                            icon: Icons.eco,
+                            icon: Icons.eco_rounded,
                             label: 'Fulla',
                             value: _arbre!.leafType,
                           ),
@@ -311,7 +261,7 @@ class _TreeClassificationResultSheetState
                         Expanded(
                           child: _buildTraitChip(
                             context,
-                            icon: Icons.texture,
+                            icon: Icons.texture_rounded,
                             label: 'Escorça',
                             value: _arbre!.barkDescription,
                           ),
@@ -321,7 +271,7 @@ class _TreeClassificationResultSheetState
                     const SizedBox(height: 8),
                     _buildTraitChip(
                       context,
-                      icon: Icons.landscape,
+                      icon: Icons.landscape_rounded,
                       label: 'Sòl típic',
                       value: _arbre!.typicalSoil,
                     ),
@@ -332,34 +282,27 @@ class _TreeClassificationResultSheetState
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardTheme.color ??
-                          const Color(0xFF1E2D22),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .tertiary
-                            .withOpacity(0.3),
-                      ),
+                    decoration: RetroDecorations.card(
+                      backgroundColor: const Color(0xFFF0F5ED),
+                      shadowOffset: 2,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          children: [
+                          children: const [
                             Icon(
-                              Icons.search,
+                              Icons.search_rounded,
                               size: 18,
-                              color: Theme.of(context).colorScheme.tertiary,
+                              color: RetroColors.forestGreen,
                             ),
-                            const SizedBox(width: 6),
-                            const Text(
+                            SizedBox(width: 6),
+                            Text(
                               'Bolets que pots cercar sota aquest arbre:',
                               style: TextStyle(
                                 fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                color: RetroColors.ink,
                               ),
                             ),
                           ],
@@ -370,29 +313,61 @@ class _TreeClassificationResultSheetState
                             spacing: 8.0,
                             runSpacing: 6.0,
                             children: _bolets.map((bolet) {
-                              return ActionChip(
-                                avatar: const Icon(Icons.grass, size: 16),
-                                label: Text(
-                                  bolet.catalanName,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                backgroundColor: Colors.white10,
-                                onPressed: () {
+                              return GestureDetector(
+                                onTap: () {
+                                  HapticFeedback.lightImpact();
                                   Navigator.of(context).pop();
                                   try {
-                                    context.push('/boscdex/${bolet.id}');
+                                    GoRouter.of(context).push('/boscdex/${bolet.id}');
                                   } catch (_) {
                                     // Non-fatal if rendered without GoRouter in tests
                                   }
                                 },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: RetroColors.ink, width: 1.8),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: RetroColors.ink,
+                                        offset: Offset(1.5, 1.5),
+                                        blurRadius: 0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.grass_rounded,
+                                          size: 14,
+                                          color: RetroColors.forestGreen),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        bolet.catalanName,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w800,
+                                          color: RetroColors.ink,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               );
                             }).toList(),
                           )
                         else
                           const Text(
                             'Sense bolets associats catalogats.',
-                            style:
-                                TextStyle(fontSize: 12, color: Colors.white54),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: RetroColors.inkSoft,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                       ],
                     ),
@@ -405,8 +380,8 @@ class _TreeClassificationResultSheetState
                       'Altres possibles espècies:',
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white70,
+                        fontWeight: FontWeight.w800,
+                        color: RetroColors.inkSoft,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -420,28 +395,34 @@ class _TreeClassificationResultSheetState
                   // Action Button: View Tree Details
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
+                    height: 52,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: RetroColors.forestGreen,
                         foregroundColor: Colors.white,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(14),
+                          side: const BorderSide(
+                              color: RetroColors.ink, width: 2.5),
                         ),
+                        shadowColor: Colors.transparent,
                       ),
-                      icon: const Icon(Icons.park),
+                      icon: const Icon(Icons.park_rounded),
                       label: const Text(
                         'Veure fitxa completa de l\'arbre',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.3,
                         ),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        HapticFeedback.mediumImpact();
                         widget.onInspected?.call();
+                        Navigator.of(context).pop();
                         try {
-                          context.push('/arbre/${top.arbreId}');
+                          GoRouter.of(context).push('/arbre/${top.arbreId}');
                         } catch (_) {
                           // Non-fatal if rendered without GoRouter in tests
                         }
@@ -451,10 +432,16 @@ class _TreeClassificationResultSheetState
                   const SizedBox(height: 8),
                   Center(
                     child: TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.of(context).pop();
+                      },
                       child: const Text(
                         'Tancar',
-                        style: TextStyle(color: Colors.white54),
+                        style: TextStyle(
+                          color: RetroColors.inkSoft,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
@@ -473,13 +460,13 @@ class _TreeClassificationResultSheetState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white10),
+        border: Border.all(color: RetroColors.ink, width: 1.5),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: Theme.of(context).colorScheme.tertiary),
+          Icon(icon, size: 16, color: RetroColors.forestGreen),
           const SizedBox(width: 6),
           Expanded(
             child: Column(
@@ -487,13 +474,18 @@ class _TreeClassificationResultSheetState
               children: [
                 Text(
                   label,
-                  style: const TextStyle(fontSize: 10, color: Colors.white54),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: RetroColors.inkSoft,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 Text(
                   value,
                   style: const TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w800,
+                    color: RetroColors.ink,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -516,27 +508,42 @@ class _TreeClassificationResultSheetState
           children: [
             Text(
               candidate.displayName,
-              style: const TextStyle(fontSize: 13, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 13,
+                color: RetroColors.ink,
+                fontWeight: FontWeight.w800,
+              ),
             ),
             Text(
               '$pct%',
-              style: const TextStyle(fontSize: 12, color: Colors.white54),
+              style: const TextStyle(
+                fontSize: 12,
+                color: RetroColors.inkSoft,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 4),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: candidate.confidence,
-            minHeight: 6,
-            backgroundColor: Colors.white10,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorScheme.secondary,
-            ),
-          ),
+        RetroProgressBar(
+          progress: candidate.confidence,
+          height: 10,
+          fillColor: RetroColors.forestGreen,
         ),
       ],
+    );
+  }
+
+  Widget _buildTreeIconPlaceholder() {
+    return Container(
+      color: RetroColors.forestGreen,
+      child: const Center(
+        child: Icon(
+          Icons.park_rounded,
+          size: 32,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

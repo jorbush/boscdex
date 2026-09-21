@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import '../theme/retro_decorations.dart';
 import '../../presentation/boscdex/boscdex_screen.dart';
 import '../../presentation/disclaimer/disclaimer_screen.dart';
 import '../../presentation/detail/bolet_detail_screen.dart';
@@ -33,7 +35,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: ':id',
               builder: (context, state) {
-                final id = state.params['id']!;
+                final id = state.params['id'] ?? '';
                 return BoletDetailScreen(id: id);
               },
             ),
@@ -53,7 +55,7 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/arbre/:id',
       builder: (context, state) {
-        final id = state.params['id']!;
+        final id = state.params['id'] ?? '';
         return ArbreDetailScreen(id: id);
       },
     ),
@@ -66,7 +68,7 @@ final appRouter = GoRouter(
 
 /// Shell widget providing the bottom navigation bar for the 3 main tabs.
 class BoscdexShell extends StatelessWidget {
-  const BoscdexShell({Key? key, required this.child}) : super(key: key);
+  const BoscdexShell({super.key, required this.child});
 
   final Widget child;
 
@@ -84,35 +86,46 @@ class BoscdexShell extends StatelessWidget {
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedIndex,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              GoRouter.of(context).go('/boscdex');
-              break;
-            case 1:
-              GoRouter.of(context).go('/scan');
-              break;
-            case 2:
-              GoRouter.of(context).go('/journal');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
-            label: 'Boscdex',
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: RetroColors.surface,
+          border: Border(
+            top: BorderSide(color: RetroColors.ink, width: 2.5),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera_alt),
-            label: 'Escanejar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Diari',
-          ),
-        ],
+        ),
+        child: BottomNavigationBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          currentIndex: selectedIndex,
+          onTap: (index) {
+            HapticFeedback.selectionClick();
+            switch (index) {
+              case 0:
+                GoRouter.of(context).go('/boscdex');
+                break;
+              case 1:
+                GoRouter.of(context).go('/scan');
+                break;
+              case 2:
+                GoRouter.of(context).go('/journal');
+                break;
+            }
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.grid_view_rounded),
+              label: 'Boscdex',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera_alt_rounded),
+              label: 'Escanejar',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.auto_stories_rounded),
+              label: 'Diari',
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -43,36 +43,47 @@ extension EdibilitatExtension on Edibilitat {
   Color get color {
     switch (this) {
       case Edibilitat.excellent:
-        return Colors.green;
+        return const Color(0xFF2D6E44);
       case Edibilitat.comestible:
-        return Colors.lightGreen;
+        return const Color(0xFF4C9A66);
       case Edibilitat.senseValor:
-        return Colors.amber;
+        return const Color(0xFF7E8F84);
       case Edibilitat.toxic:
-        return Colors.red;
+        return const Color(0xFFD97736);
       case Edibilitat.mortal:
-        return const Color(0xFF4A0E0E);
+        return const Color(0xFFB3332C);
     }
   }
 
   bool get isEdible =>
       this == Edibilitat.excellent || this == Edibilitat.comestible;
 
-  static Edibilitat fromString(String value) {
-    switch (value) {
+  bool get isToxic =>
+      this == Edibilitat.toxic || this == Edibilitat.mortal;
+
+  static Edibilitat? tryFromString(String? value) {
+    if (value == null) return null;
+    final normalized = value.trim().toLowerCase();
+    switch (normalized) {
       case 'excellent':
         return Edibilitat.excellent;
       case 'comestible':
         return Edibilitat.comestible;
-      case 'senseValor':
+      case 'sensevalor':
       case 'sense_valor':
         return Edibilitat.senseValor;
       case 'toxic':
+      case 'tòxic':
         return Edibilitat.toxic;
       case 'mortal':
         return Edibilitat.mortal;
       default:
-        return Edibilitat.senseValor;
+        return null;
     }
+  }
+
+  static Edibilitat fromString(String value,
+      {Edibilitat fallback = Edibilitat.senseValor}) {
+    return tryFromString(value) ?? fallback;
   }
 }

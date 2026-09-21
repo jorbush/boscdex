@@ -27,34 +27,42 @@ extension RaritatTierExtension on RaritatTier {
   Color get color {
     switch (this) {
       case RaritatTier.comu:
-        return const Color(0xFFCD7F32); // Bronze
+        return const Color(0xFF7D6B58); // Earthy bronze
       case RaritatTier.pocFrequent:
-        return const Color(0xFFC0C0C0); // Silver
+        return const Color(0xFF4A7C6D); // Pine teal
       case RaritatTier.rar:
-        return const Color(0xFFFFD700); // Gold
+        return const Color(0xFFD4922A); // Vintage amber gold
       case RaritatTier.moltRar:
-        return Colors.purple;
+        return const Color(0xFF7E528F); // Mystic plum
       case RaritatTier.llegendari:
-        return Colors.cyanAccent; // Holographic/Rainbow representation
+        return const Color(0xFF2B7A78); // Deep jade
     }
   }
 
-  static RaritatTier fromString(String value) {
-    switch (value) {
+  static RaritatTier? tryFromString(String? value) {
+    if (value == null) return null;
+    final normalized = value.trim().toLowerCase();
+    switch (normalized) {
       case 'comu':
+      case 'comú':
         return RaritatTier.comu;
-      case 'pocFrequent':
+      case 'pocfrequent':
       case 'poc_frequent':
         return RaritatTier.pocFrequent;
       case 'rar':
         return RaritatTier.rar;
-      case 'moltRar':
+      case 'moltrar':
       case 'molt_rar':
         return RaritatTier.moltRar;
       case 'llegendari':
         return RaritatTier.llegendari;
       default:
-        return RaritatTier.comu;
+        return null;
     }
+  }
+
+  static RaritatTier fromString(String value,
+      {RaritatTier fallback = RaritatTier.comu}) {
+    return tryFromString(value) ?? fallback;
   }
 }

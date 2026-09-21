@@ -24,6 +24,8 @@ class SeedData {
           safetyNotes: Value(
               'Atenció: diferent dels falsos rovellons tòxics com el Lactarius chrysorrheus (de làtex blanc que es torna groc) i d\'espècies similars però menys valorades (L. sanguifluus, L. semisanguifluus).'),
           dexNumber: Value(1),
+          imageAssetPath:
+              Value('assets/images/mushrooms/lactarius_deliciosus.png'),
         ),
         BoletsCompanion(
           id: Value('boletus_edulis'),
@@ -44,6 +46,7 @@ class SeedData {
           safetyNotes: Value(
               'Pot confondre\'s amb el mataparent amarg (Tylopilus felleus), que té porus rosats de gran i un reticle molt marcat, a més d\'un gust extremadament amarg.'),
           dexNumber: Value(2),
+          imageAssetPath: Value('assets/images/mushrooms/boletus_edulis.png'),
         ),
         BoletsCompanion(
           id: Value('cantharellus_cibarius'),
@@ -64,6 +67,8 @@ class SeedData {
           safetyNotes: Value(
               'Precaució de no confondre amb la Gírgola d\'olivera (Omphalotaceae), que és tòxica, creix sobre fusta i té làmines de veritat fines en lloc de plecs gruixuts.'),
           dexNumber: Value(3),
+          imageAssetPath:
+              Value('assets/images/mushrooms/cantharellus_cibarius.png'),
         ),
         BoletsCompanion(
           id: Value('amanita_caesarea'),
@@ -84,6 +89,7 @@ class SeedData {
           safetyNotes: Value(
               'Possible confusió mortal o perillosa amb Amanita muscaria, que té peu blanc (no groc), làmines blanques (no grogues), marge no estriat i normalment restes blanques sobre el barret.'),
           dexNumber: Value(4),
+          imageAssetPath: Value('assets/images/mushrooms/amanita_caesarea.png'),
         ),
         BoletsCompanion(
           id: Value('craterellus_cornucopioides'),
@@ -104,6 +110,8 @@ class SeedData {
           safetyNotes: Value(
               'Molt característic, difícil de confondre, sobretot en el seu estat fresc o assecat.'),
           dexNumber: Value(5),
+          imageAssetPath:
+              Value('assets/images/mushrooms/craterellus_cornucopioides.png'),
         ),
         BoletsCompanion(
           id: Value('macrolepiota_procera'),
@@ -124,6 +132,8 @@ class SeedData {
           safetyNotes: Value(
               'No confondre amb lepiotes de mida petita (menys de 10 cm) moltes de les quals són mortals. La característica de l\'anell mòbil és fonamental.'),
           dexNumber: Value(6),
+          imageAssetPath:
+              Value('assets/images/mushrooms/macrolepiota_procera.png'),
         ),
         BoletsCompanion(
           id: Value('tricholoma_terreum'),
@@ -144,6 +154,8 @@ class SeedData {
           safetyNotes: Value(
               'Fàcilment confusible amb altres Tricholoma grisos, alguns dels quals són lleugerament tòxics (com el T. pardinum) que solen ser molt més robustos. Important fixar-se en l\'aspecte de "ratolí" i fragilitat general.'),
           dexNumber: Value(7),
+          imageAssetPath:
+              Value('assets/images/mushrooms/tricholoma_terreum.png'),
         ),
         BoletsCompanion(
           id: Value('calocybe_gambosa'),
@@ -164,6 +176,7 @@ class SeedData {
           safetyNotes: Value(
               'Olor inconfusible a farina fresca. Vigilar amb bolets primaverals mortals blancs (Entoloma, algunes Inocybe) que generalment no tenen l\'olor a farina o esporen en altres colors (el pèrfid espora en rosa).'),
           dexNumber: Value(8),
+          imageAssetPath: Value('assets/images/mushrooms/calocybe_gambosa.png'),
         ),
         BoletsCompanion(
           id: Value('pleurotus_ostreatus'),
@@ -184,6 +197,8 @@ class SeedData {
           safetyNotes: Value(
               'Es cria sobre troncs morts. Confusió (tot i ser força diferent) amb Omphalotus olearius, tòxica, que és molt ataronjada i de zones menys fredes.'),
           dexNumber: Value(9),
+          imageAssetPath:
+              Value('assets/images/mushrooms/pleurotus_ostreatus.png'),
         ),
         BoletsCompanion(
           id: Value('hydnum_repandum'),
@@ -204,6 +219,7 @@ class SeedData {
           safetyNotes: Value(
               'Pràcticament inconfusible per la presència d\'agulles (fiblons) inferiors fàcilment desprenibles i el color general.'),
           dexNumber: Value(10),
+          imageAssetPath: Value('assets/images/mushrooms/hydnum_repandum.png'),
         ),
         BoletsCompanion(
           id: Value('hygrophorus_latitabundus'),
@@ -224,6 +240,8 @@ class SeedData {
           safetyNotes: Value(
               'És la varietat reina de les llenegues; excel·lent per cuinar.'),
           dexNumber: Value(11),
+          imageAssetPath:
+              Value('assets/images/mushrooms/hygrophorus_latitabundus.png'),
         ),
         BoletsCompanion(
           id: Value('craterellus_lutescens'),
@@ -244,6 +262,8 @@ class SeedData {
           safetyNotes: Value(
               'Surt a milers on apareix, no hi ha espècies perilloses similars amb cama groga i fina sense autèntiques làmines.'),
           dexNumber: Value(12),
+          imageAssetPath:
+              Value('assets/images/mushrooms/craterellus_lutescens.png'),
         ),
         BoletsCompanion(
           id: Value('suillus_luteus'),
@@ -264,6 +284,7 @@ class SeedData {
           safetyNotes: Value(
               'Tot i classificar-se com comestible pelant bé la cutícula, té molt poc valor culinari.'),
           dexNumber: Value(13),
+          imageAssetPath: Value('assets/images/mushrooms/suillus_luteus.png'),
         ),
         BoletsCompanion(
           id: Value('russula_cyanoxantha'),
@@ -284,6 +305,8 @@ class SeedData {
           safetyNotes:
               Value('Es pot consumir, però no s\'aprecia gaire a la cuina.'),
           dexNumber: Value(14),
+          imageAssetPath:
+              Value('assets/images/mushrooms/russula_cyanoxantha.png'),
         ),
         BoletsCompanion(
           id: Value('amanita_muscaria'),
@@ -303,6 +326,7 @@ class SeedData {
           safetyNotes: Value(
               'Molt tòxic, té efectes psicoactius, al·lucinògens, nàusees fortes i vòmits intensos. Possible confusió amb l\'ou de reig quan les pluges en renten els punts blancs, però la muscaria manté làmines blanques (no grogues).'),
           dexNumber: Value(15),
+          imageAssetPath: Value('assets/images/mushrooms/amanita_muscaria.png'),
         ),
         BoletsCompanion(
           id: Value('omphalotus_olearius'),
@@ -323,6 +347,8 @@ class SeedData {
           safetyNotes: Value(
               'Molt tòxic, especialment del tracte gastrointestinal, si es confon amb el rossinyol (C. cibarius), del qual es distingeix per viure en fusta, color fosc i làmines veritables, no plecs.'),
           dexNumber: Value(16),
+          imageAssetPath:
+              Value('assets/images/mushrooms/omphalotus_olearius.png'),
         ),
         BoletsCompanion(
           id: Value('entoloma_sinuatum'),
@@ -343,6 +369,8 @@ class SeedData {
           safetyNotes: Value(
               'Provoca toxicitat greu intestinal crònica i nàusees agudes. Olor de farina rància, a diferència de la farina fresca del Moixernó (Calocybe gambosa), l\'esporada (la pols que allibera) és rosa, mentre el Moixernó l\'espora és blanca.'),
           dexNumber: Value(17),
+          imageAssetPath:
+              Value('assets/images/mushrooms/entoloma_sinuatum.png'),
         ),
         BoletsCompanion(
           id: Value('amanita_phalloides'),
@@ -363,6 +391,8 @@ class SeedData {
           safetyNotes: Value(
               'MORTAL. Conté amatoxines; la dosi d\'un sol bolet petit destrueix el fetge i produeix la mort en diversos dies després d\'un període sense símptomes d\'unes hores.'),
           dexNumber: Value(18),
+          imageAssetPath:
+              Value('assets/images/mushrooms/amanita_phalloides.png'),
         ),
         BoletsCompanion(
           id: Value('amanita_verna'),
@@ -383,6 +413,7 @@ class SeedData {
           safetyNotes: Value(
               'MORTAL. Surt a la primavera (vernal). Similar a l\'A. phalloides però tota de blanc integral, s\'assembla erròniament a molts xampinyons bords o bolets de prat comestibles joves (però aquests no tenen volva en sac).'),
           dexNumber: Value(19),
+          imageAssetPath: Value('assets/images/mushrooms/amanita_verna.png'),
         ),
         BoletsCompanion(
           id: Value('cortinarius_orellanus'),
@@ -403,6 +434,8 @@ class SeedData {
           safetyNotes: Value(
               'MORTAL. La toxina orrelanina, extremadament perillosa per la seva acció molt retardada (dies o més de 2 setmanes sense símptomes greus per presentar llavors dany renal catastròfic generalment fatal).'),
           dexNumber: Value(20),
+          imageAssetPath:
+              Value('assets/images/mushrooms/cortinarius_orellanus.png'),
         ),
         BoletsCompanion(
           id: Value('lactarius_sanguifluus'),
@@ -425,6 +458,8 @@ class SeedData {
           safetyNotes: Value(
               'Comestible excel·lent, molt apreciat com el pinetell. Es distingeix pel seu làtex de color sang o vi fosc.'),
           dexNumber: Value(21),
+          imageAssetPath:
+              Value('assets/images/mushrooms/lactarius_sanguifluus.png'),
         ),
       ];
 
@@ -436,6 +471,7 @@ class SeedData {
           leafType: Value('Agulla'),
           barkDescription: Value('Tronc superior ataronjat'),
           typicalSoil: Value('Silici o àcid'),
+          imageAssetPath: Value('assets/images/trees/pinus_sylvestris.png'),
         ),
         ArbresCompanion(
           id: Value('pinus_halepensis'),
@@ -444,6 +480,7 @@ class SeedData {
           leafType: Value('Agulla'),
           barkDescription: Value('Escorça gris platejada'),
           typicalSoil: Value('Calcari'),
+          imageAssetPath: Value('assets/images/trees/pinus_halepensis.png'),
         ),
         ArbresCompanion(
           id: Value('quercus_ilex'),
@@ -452,6 +489,7 @@ class SeedData {
           leafType: Value('Perenne'),
           barkDescription: Value('Escorça fosca clivellada'),
           typicalSoil: Value('Calcari o silici'),
+          imageAssetPath: Value('assets/images/trees/quercus_ilex.png'),
         ),
         ArbresCompanion(
           id: Value('fagus_sylvatica'),
@@ -460,6 +498,7 @@ class SeedData {
           leafType: Value('Caduca'),
           barkDescription: Value('Escorça llisa gris'),
           typicalSoil: Value('Silici o àcid'),
+          imageAssetPath: Value('assets/images/trees/fagus_sylvatica.png'),
         ),
         ArbresCompanion(
           id: Value('castanea_sativa'),
@@ -468,6 +507,7 @@ class SeedData {
           leafType: Value('Caduca'),
           barkDescription: Value('Escorça amb solcs espirals'),
           typicalSoil: Value('Silici, àcid'),
+          imageAssetPath: Value('assets/images/trees/castanea_sativa.png'),
         ),
       ];
 
@@ -634,43 +674,6 @@ class SeedData {
         ToxicLookalikesCompanion(
           boletId: Value('calocybe_gambosa'),
           lookalikeBoletId: Value('entoloma_sinuatum'),
-          comparisonNotes: Value(
-              'El Pèrfid té esporada rosa i olor de farina rància, mentre que el Moixernó té esporada blanca i olor agradable de farina fresca. L\'Entoloma té làmines escotades (pèrfid) i és tòxic.'),
-        ),
-        // Inverse relationships for better querying
-        ToxicLookalikesCompanion(
-          boletId: Value('amanita_muscaria'),
-          lookalikeBoletId: Value('lactarius_deliciosus'),
-          comparisonNotes: Value(
-              'Tots dos es troben en pinedes, però el Reig bord té un barret vermell brillant amb esquames blanques i mai presenta làtex taronja.'),
-        ),
-        ToxicLookalikesCompanion(
-          boletId: Value('omphalotus_olearius'),
-          lookalikeBoletId: Value('cantharellus_cibarius'),
-          comparisonNotes: Value(
-              'La Gírgola d\'olivera creix en fusta i té làmines veritables (no plecs), a més brilla en la foscor (bioluminescència).'),
-        ),
-        ToxicLookalikesCompanion(
-          boletId: Value('amanita_muscaria'),
-          lookalikeBoletId: Value('amanita_caesarea'),
-          comparisonNotes: Value(
-              'L\'Ou de reig té làmines i peu grocs (mai blancs), i el barret és llis sense esquames blanques.'),
-        ),
-        ToxicLookalikesCompanion(
-          boletId: Value('amanita_phalloides'),
-          lookalikeBoletId: Value('macrolepiota_procera'),
-          comparisonNotes: Value(
-              'L\'Apagallums té un anell mòbil i doble, i mai té volva. La Farinera borda té sempre volva a la base del peu.'),
-        ),
-        ToxicLookalikesCompanion(
-          boletId: Value('omphalotus_olearius'),
-          lookalikeBoletId: Value('pleurotus_ostreatus'),
-          comparisonNotes: Value(
-              'La Gírgola d\'olivera creix sobre fusta d\'olivera i té un color taronja intens, no gris-blavós com la Gírgola comestible.'),
-        ),
-        ToxicLookalikesCompanion(
-          boletId: Value('entoloma_sinuatum'),
-          lookalikeBoletId: Value('calocybe_gambosa'),
           comparisonNotes: Value(
               'El Pèrfid té esporada rosa i olor de farina rància, mentre que el Moixernó té esporada blanca i olor agradable de farina fresca. L\'Entoloma té làmines escotades (pèrfid) i és tòxic.'),
         ),

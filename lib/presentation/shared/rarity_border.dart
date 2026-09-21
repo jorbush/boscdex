@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/retro_decorations.dart';
 import '../../domain/models/raritat_tier.dart';
 
 class RarityBorder extends StatelessWidget {
@@ -7,43 +8,74 @@ class RarityBorder extends StatelessWidget {
   final double borderWidth;
   final BorderRadius? borderRadius;
 
+  static const List<Color> _rainbowColors = [
+    Colors.red,
+    Colors.yellow,
+    Colors.green,
+    Colors.cyan,
+    Colors.blue,
+    Colors.purple,
+    Colors.red,
+  ];
+
   const RarityBorder({
-    Key? key,
+    super.key,
     required this.tier,
     required this.child,
-    this.borderWidth = 2.0,
+    this.borderWidth = 3.0,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
+    final br = borderRadius ?? BorderRadius.circular(14);
     final decoration = tier == RaritatTier.llegendari
         ? BoxDecoration(
-            borderRadius: borderRadius ?? BorderRadius.circular(8),
-            gradient: const SweepGradient(
-              colors: [
-                Colors.red,
-                Colors.yellow,
-                Colors.green,
-                Colors.cyan,
-                Colors.blue,
-                Colors.purple,
-                Colors.red,
-              ],
-            ),
+            borderRadius: br,
+            border: Border.all(color: RetroColors.ink, width: 2.5),
+            boxShadow: const [
+              BoxShadow(
+                color: RetroColors.ink,
+                offset: Offset(3, 3),
+                blurRadius: 0,
+              ),
+            ],
+            gradient: const SweepGradient(colors: _rainbowColors),
           )
         : BoxDecoration(
-            borderRadius: borderRadius ?? BorderRadius.circular(8),
+            borderRadius: br,
+            border: Border.all(color: RetroColors.ink, width: 2.5),
+            boxShadow: const [
+              BoxShadow(
+                color: RetroColors.ink,
+                offset: Offset(3, 3),
+                blurRadius: 0,
+              ),
+            ],
             color: tier.color,
           );
+
+    final innerTopLeft =
+        (br.topLeft.x - borderWidth).clamp(0.0, double.infinity);
+    final innerTopRight =
+        (br.topRight.x - borderWidth).clamp(0.0, double.infinity);
+    final innerBottomLeft =
+        (br.bottomLeft.x - borderWidth).clamp(0.0, double.infinity);
+    final innerBottomRight =
+        (br.bottomRight.x - borderWidth).clamp(0.0, double.infinity);
+
+    final innerRadius = BorderRadius.only(
+      topLeft: Radius.circular(innerTopLeft),
+      topRight: Radius.circular(innerTopRight),
+      bottomLeft: Radius.circular(innerBottomLeft),
+      bottomRight: Radius.circular(innerBottomRight),
+    );
 
     return Container(
       padding: EdgeInsets.all(borderWidth),
       decoration: decoration,
       child: ClipRRect(
-        borderRadius: borderRadius != null
-            ? borderRadius!.subtract(BorderRadius.circular(borderWidth))
-            : BorderRadius.circular(8 - borderWidth),
+        borderRadius: innerRadius,
         child: child,
       ),
     );

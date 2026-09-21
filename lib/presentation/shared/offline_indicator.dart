@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/retro_decorations.dart';
 
 class OfflineIndicator extends StatelessWidget {
-  const OfflineIndicator({Key? key}) : super(key: key);
+  const OfflineIndicator({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.secondary.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.colorScheme.secondary),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.wifi_off, size: 14, color: theme.colorScheme.secondary),
-          const SizedBox(width: 4),
-          Text(
-            '100% Offline',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.secondary,
+    return Semantics(
+      label: 'Estat de la connexió: 100% fora de línia',
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: RetroColors.screenOverlay,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: RetroColors.ink, width: 2),
+          boxShadow: const [
+            BoxShadow(
+              color: RetroColors.ink,
+              offset: Offset(1.5, 1.5),
+              blurRadius: 0,
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(Icons.wifi_off, size: 13, color: RetroColors.forestGreen),
+            SizedBox(width: 4),
+            Text(
+              '100% Offline',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+                color: RetroColors.ink,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

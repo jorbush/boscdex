@@ -42,4 +42,7 @@ class DescobrimentDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<Descobriment>> getAllDiscoveries() => select(descobriments).get();
+
+  Stream<List<Descobriment>> watchAllDiscoveries() =>
+      select(descobriments).watch();
 }

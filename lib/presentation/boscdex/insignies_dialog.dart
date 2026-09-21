@@ -1,14 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/database/app_database.dart' as db;
+import '../../core/theme/retro_decorations.dart';
 import '../../domain/models/insignia.dart' as domain;
 import '../../providers/database_provider.dart';
 
-/// Modal dialog or bottom sheet showcasing the 6 starter badges,
-/// their unlock status, and real-time progress.
+/// Provider for loading badges asynchronously.
+final insigniesProvider = FutureProvider<List<domain.Insignia>>((ref) async {
+  final appDb = ref.watch(appDatabaseProvider);
+  final dbBadges = await appDb.insigniaDao.getAllInsignies();
+  final badgeMap = {for (final b in dbBadges) b.id: b};
+
+  return domain.Insignia.registry.map((def) {
+    final dbRow = badgeMap[def.id];
+    return domain.Insignia(
+      id: def.id,
+      nom: def.nom,
+      descripcio: def.descripcio,
+      iconPath: def.iconPath,
+      targetCount: def.targetCount,
+      progressCount: dbRow?.progressCount ?? 0,
+      awardedAt: dbRow?.awardedAt,
+    );
+  }).toList();
+});
+
+/// Modal bottom sheet showcasing the 6 starter badges in a retro arcade trophy case.
 class InsigniesDialog extends ConsumerWidget {
-  const InsigniesDialog({Key? key}) : super(key: key);
+  const InsigniesDialog({super.key});
 
   static Future<void> show(BuildContext context) {
     return showModalBottomSheet(
@@ -21,7 +41,7 @@ class InsigniesDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appDb = ref.watch(appDatabaseProvider);
+    final badgesAsync = ref.watch(insigniesProvider);
 
     return Container(
       constraints: BoxConstraints(
@@ -29,28 +49,27 @@ class InsigniesDialog extends ConsumerWidget {
       ),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: RetroColors.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(color: RetroColors.ink, width: 2.5),
       ),
-      child: FutureBuilder<List<db.Insignia>>(
-        future: appDb.insigniaDao.getAllInsignies(),
-        builder: (context, snapshot) {
-          final dbBadges = snapshot.data ?? [];
-          final badgeMap = {for (final b in dbBadges) b.id: b};
-
-          final badges = domain.Insignia.registry.map((def) {
-            final dbRow = badgeMap[def.id];
-            return domain.Insignia(
-              id: def.id,
-              nom: def.nom,
-              descripcio: def.descripcio,
-              iconPath: def.iconPath,
-              targetCount: def.targetCount,
-              progressCount: dbRow?.progressCount ?? 0,
-              awardedAt: dbRow?.awardedAt,
-            );
-          }).toList();
-
+      child: badgesAsync.when(
+        loading: () => const Center(
+          child: Padding(
+            padding: EdgeInsets.all(32.0),
+            child: CircularProgressIndicator(color: RetroColors.forestGreen),
+          ),
+        ),
+        error: (err, _) => Center(
+          child: Text(
+            'Error carregant les insígnies: $err',
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              color: RetroColors.arcadeRed,
+            ),
+          ),
+        ),
+        data: (badges) {
           final awardedCount = badges.where((b) => b.isAwarded).length;
 
           return Column(
@@ -60,11 +79,11 @@ class InsigniesDialog extends ConsumerWidget {
               // Drag handle
               Center(
                 child: Container(
-                  width: 40,
-                  height: 4,
+                  width: 44,
+                  height: 5,
                   decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(2),
+                    color: RetroColors.ink,
+                    borderRadius: BorderRadius.circular(3),
                   ),
                 ),
               ),
@@ -75,16 +94,18 @@ class InsigniesDialog extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    children: [
-                      const Icon(Icons.emoji_events,
-                          color: Color(0xFFE9C46A), size: 28),
-                      const SizedBox(width: 10),
+                    children: const [
+                      Icon(Icons.emoji_events,
+                          color: RetroColors.goldCoin, size: 28),
+                      SizedBox(width: 10),
                       Text(
                         'Les Meves Insígnies',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
+                          color: RetroColors.ink,
+                          letterSpacing: 0.3,
+                        ),
                       ),
                     ],
                   ),
@@ -92,16 +113,23 @@ class InsigniesDialog extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE9C46A).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFE9C46A)),
+                      color: RetroColors.goldCoin,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: RetroColors.ink, width: 2),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: RetroColors.ink,
+                          offset: Offset(2, 2),
+                          blurRadius: 0,
+                        ),
+                      ],
                     ),
                     child: Text(
                       '$awardedCount/${badges.length}',
                       style: const TextStyle(
-                        color: Color(0xFFE9C46A),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
+                        color: RetroColors.ink,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
                       ),
                     ),
                   ),
@@ -110,7 +138,11 @@ class InsigniesDialog extends ConsumerWidget {
               const SizedBox(height: 6),
               const Text(
                 'Fites de col·lecció i reconeixement de camp del boletaire.',
-                style: TextStyle(color: Colors.white60, fontSize: 13),
+                style: TextStyle(
+                  color: RetroColors.inkSoft,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -118,7 +150,7 @@ class InsigniesDialog extends ConsumerWidget {
               Expanded(
                 child: ListView.separated(
                   itemCount: badges.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 10),
+                  separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final badge = badges[index];
                     return _buildBadgeCard(context, badge);
@@ -130,9 +162,17 @@ class InsigniesDialog extends ConsumerWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Tancar',
-                      style: TextStyle(color: Colors.white60)),
+                  onPressed: () {
+                    HapticFeedback.selectionClick();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Tancar',
+                    style: TextStyle(
+                      color: RetroColors.inkSoft,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -144,103 +184,118 @@ class InsigniesDialog extends ConsumerWidget {
 
   Widget _buildBadgeCard(BuildContext context, domain.Insignia badge) {
     final isUnlocked = badge.isAwarded;
-    final progress = (badge.progressCount / badge.targetCount).clamp(0.0, 1.0);
+    final progress = badge.targetCount > 0
+        ? (badge.progressCount / badge.targetCount).clamp(0.0, 1.0)
+        : 0.0;
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: isUnlocked
-            ? const Color(0xFF1B4332).withOpacity(0.5)
-            : Theme.of(context).scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: isUnlocked ? const Color(0xFFE9C46A) : Colors.white10,
-          width: isUnlocked ? 1.5 : 1,
+    return Semantics(
+      label:
+          '${badge.nom}, ${badge.isAwarded ? "Desbloquejada" : "Progrés: ${badge.progressCount} de ${badge.targetCount}"}. ${badge.descripcio}',
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isUnlocked ? RetroColors.goldLight : RetroColors.surfaceLight,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: RetroColors.ink, width: 2.2),
+          boxShadow: [
+            BoxShadow(
+              color: isUnlocked ? RetroColors.goldCoin : RetroColors.ink,
+              offset: const Offset(2.5, 2.5),
+              blurRadius: 0,
+            ),
+          ],
         ),
-      ),
-      child: Row(
-        children: [
-          // Badge Icon / Medal
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isUnlocked
-                  ? const Color(0xFFE9C46A).withOpacity(0.2)
-                  : Colors.white.withOpacity(0.05),
-              border: Border.all(
-                color: isUnlocked ? const Color(0xFFE9C46A) : Colors.white24,
+        child: Row(
+          children: [
+            // Badge Icon / Medal
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isUnlocked ? RetroColors.goldCoin : Colors.white,
+                border: Border.all(color: RetroColors.ink, width: 2),
+              ),
+              child: Icon(
+                isUnlocked ? Icons.verified : Icons.lock_outline,
+                color: isUnlocked ? RetroColors.ink : RetroColors.inkSoft,
+                size: 26,
               ),
             ),
-            child: Icon(
-              isUnlocked ? Icons.verified : Icons.lock_outline,
-              color: isUnlocked ? const Color(0xFFE9C46A) : Colors.white38,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 14),
+            const SizedBox(width: 14),
 
-          // Details
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      badge.nom,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: isUnlocked ? Colors.white : Colors.white54,
-                      ),
-                    ),
-                    if (isUnlocked) ...[
-                      const Text(
-                        'DESBLOQUEJAT',
+            // Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        badge.nom,
                         style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFE9C46A),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color:
+                              isUnlocked ? RetroColors.ink : RetroColors.inkSoft,
                         ),
                       ),
-                    ] else ...[
-                      Text(
-                        '${badge.progressCount}/${badge.targetCount}',
-                        style: const TextStyle(
-                            fontSize: 12, color: Colors.white38),
-                      ),
+                      if (isUnlocked) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: RetroColors.forestGreen,
+                            borderRadius: BorderRadius.circular(6),
+                            border:
+                                Border.all(color: RetroColors.ink, width: 1.5),
+                          ),
+                          child: const Text(
+                            'DESBLOQUEJAT',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ] else ...[
+                        Text(
+                          '${badge.progressCount}/${badge.targetCount}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: RetroColors.inkSoft,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  badge.descripcio,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: isUnlocked ? Colors.white70 : Colors.white38,
                   ),
-                ),
-                if (!isUnlocked) ...[
-                  const SizedBox(height: 8),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: progress,
-                      minHeight: 4,
-                      backgroundColor: Colors.white10,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).colorScheme.tertiary,
-                      ),
+                  const SizedBox(height: 4),
+                  Text(
+                    badge.descripcio,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: RetroColors.inkSoft,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (!isUnlocked) ...[
+                    const SizedBox(height: 8),
+                    RetroProgressBar(
+                      progress: progress,
+                      height: 8,
+                      totalSegments: 8,
+                      fillColor: RetroColors.questAmber,
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -61,6 +61,19 @@ class AppDatabase extends _$AppDatabase {
             b.insertAll(insignies, SeedData.insignies);
           });
         },
+        beforeOpen: (details) async {
+          await customStatement('PRAGMA foreign_keys = ON;');
+
+          // Backfill imageAssetPath only for pre-existing databases
+          if (!details.wasCreated) {
+            await customStatement(
+              "UPDATE bolets SET image_asset_path = 'assets/images/mushrooms/' || id || '.png' WHERE image_asset_path IS NULL OR image_asset_path = '';",
+            );
+            await customStatement(
+              "UPDATE arbres SET image_asset_path = 'assets/images/trees/' || id || '.png' WHERE image_asset_path IS NULL OR image_asset_path = '';",
+            );
+          }
+        },
       );
 }
 

@@ -25,4 +25,18 @@ class ArbreDao extends DatabaseAccessor<AppDatabase> with _$ArbreDaoMixin {
     final result = await query.get();
     return result.map((row) => row.readTable(arbres)).toList();
   }
+
+  /// Aggregates count of associated mushrooms for each tree in a single query.
+  Future<Map<String, int>> getAssociatedBoletCounts() async {
+    final countExp = boletArbreAssociations.boletId.count();
+    final query = selectOnly(boletArbreAssociations)
+      ..addColumns([boletArbreAssociations.arbreId, countExp])
+      ..groupBy([boletArbreAssociations.arbreId]);
+
+    final rows = await query.get();
+    return {
+      for (final row in rows)
+        row.read(boletArbreAssociations.arbreId)!: row.read(countExp) ?? 0,
+    };
+  }
 }

@@ -19,20 +19,20 @@ The starter list of badges focuses on exploration milestones and safety habits:
 
 ---
 
-## ⚙️ Trigger Evaluation Engine (`BadgeService`)
+## ⚙️ Trigger Evaluation Engine (`BadgeService` & `BadgeProgressionService`)
 
 Badge evaluation runs seamlessly in the background whenever the user:
 1. **Registers a specimen from the scan sheet:** Triggers checks for `primer_pas_al_bosc`, `cacador_de_rovellons`, `alianca_silvestre`, `cistell_de_tardor`, and `mestre_boletaire`.
 2. **Inspects a toxic lookalike comparison card:** Increments `toxicComparisonViewCount` and evaluates `micoleg_prudent`.
+3. **Visits an indicator tree:** Triggers checks for `alianca_silvestre` when host trees are inspected.
+
+The pure domain logic is evaluated by `BadgeService` and coordinated with SQLite persistence via `BadgeProgressionService`:
 
 ```dart
-final updatedBadges = await badgeService.evaluateBadges(
-  discoveryCount: allDiscoveries.length,
-  hasRovello: hasRovello,
-  hasPinetell: hasPinetell,
+await BadgeProgressionService().syncBadgeProgression(
+  db: db,
   toxicComparisonViewCount: toxicViews,
-  hasTreeAlliance: hasTreeAlliance,
-  currentBadges: currentDomainBadges,
+  visitedTreeIds: visitedTrees,
 );
 ```
 

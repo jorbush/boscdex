@@ -1,20 +1,25 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/theme/retro_decorations.dart';
 import '../../providers/preferences_provider.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    _timer = Timer(const Duration(milliseconds: 1500), () {
       if (mounted) {
         final isAccepted = ref.read(disclaimerAcceptedProvider);
         if (isAccepted) {
@@ -27,37 +32,104 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1B0E), // Dark bark
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              '🍄',
-              style: TextStyle(fontSize: 80),
+      backgroundColor: RetroColors.creamBg,
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Retro Mushroom Card
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(28),
+                    border: Border.all(color: RetroColors.ink, width: 3),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: RetroColors.ink,
+                        offset: Offset(4, 5),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '🍄',
+                      style: TextStyle(fontSize: 64),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Retro Game Title
+                const Text(
+                  'Boscdex',
+                  style: TextStyle(
+                    fontSize: 46,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                    color: RetroColors.ink,
+                    shadows: [
+                      Shadow(
+                        color: RetroColors.forestGreen,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Subtitle
+                const Text(
+                  'La Pokédex del boletaire per explorar el bosc català',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: RetroColors.inkSoft,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 36),
+
+                // 16-Bit Loading Badge
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: RetroColors.goldCoin,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: RetroColors.ink, width: 2),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: RetroColors.ink,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    '★ INSERT COIN TO EXPLORE ★',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: RetroColors.ink,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Boscdex',
-              style: TextStyle(
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.tertiary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'La Pokédex del boletaire per explorar el bosc català',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -36,10 +36,34 @@ Each species belongs to one of 5 distinct tiers reflecting encounter probability
 
 ---
 
-## 🔍 Interactive Filtering
+## 🗂️ Dual Sub-Catalog Architecture
 
-The album includes horizontal filter chips allowing instant query slicing:
-1. **Tots:** All cataloged Catalan species.
-2. **Comestibles:** Filters strictly for `excellent` and `comestible` taxa.
-3. **Tòxics / Mortals:** Isolates poisonous species (`toxic`, `mortal`) to train the eye on hazards.
-4. **Arbres socis:** Filters species linked to key indicator trees.
+Boscdex separates its field guides into two dedicated, ecologically interconnected sub-catalogs accessible via an arcade-style mode selector:
+
+### 1. 🍄 Bolets Sub-Dex (Mushrooms)
+* Comprehensive catalog of Catalan wild mushrooms.
+* Features discovery silhouettes, dex numbers (`#001` - `#080`), rarity borders, and edibility badges.
+* Interactive filters:
+  1. **Tots:** All cataloged Catalan mushroom species.
+  2. **Comestibles:** Filters strictly for `excellent` and `comestible` taxa.
+  3. **Tòxics / Mortals:** Isolates poisonous species (`toxic`, `mortal`) to train the eye on hazards.
+  4. **Arbres socis:** Isolates species with documented mycorrhizal associations to indicator trees.
+
+### 2. 🌲 Arbres Sub-Dex (Indicator Trees)
+* Dedicated catalog of key Catalan mycorrhizal host trees.
+* Displays leaf morphology tags, identification status, and the number of associated mushroom species (`🍄 X bolets socis`).
+* Interactive filters:
+  1. **Tots:** All cataloged indicator trees.
+  2. **Agulla:** Coniferous needle trees (*Pinus sylvestris*, *Pinus halepensis*).
+  3. **Caduca:** Deciduous broadleaf trees (*Fagus sylvatica*, *Castanea sativa*).
+  4. **Perenne:** Evergreen sclerophyllous trees (*Quercus ilex*).
+
+---
+
+## 🔗 Mutual Ecological Cross-Linking
+
+The two sub-catalogs maintain a symbiotic relationship throughout the UI:
+* In any **Bolet detail screen** (`/boscdex/:id`), tapping an associated tree chip opens that tree's full profile in the Arbres dex.
+* In any **Arbre detail screen** (`/arbre/:id`), tapping any associated mushroom card navigates directly to its full Boscdex entry.
+* In the **Arbres grid**, each tree card displays a badge indicating how many mushroom species fruit in mycorrhizal partnership under its canopy.
+

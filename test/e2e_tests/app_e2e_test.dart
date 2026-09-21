@@ -153,7 +153,7 @@ void main() {
 
       // Verify sighting is listed in the journal
       expect(find.text('El Meu Diari'), findsOneWidget);
-      expect(find.textContaining('Bolet ID:'), findsOneWidget);
+      expect(find.text('Rovelló / Pinetell'), findsWidgets);
 
       // Dismiss snackbars and unmount widget tree so Riverpod/Drift streams flush
       ScaffoldMessenger.of(tester.element(find.byType(Scaffold).first))

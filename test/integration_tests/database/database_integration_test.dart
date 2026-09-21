@@ -87,6 +87,13 @@ void main() {
     expect(isFound, isFalse);
 
     final now = DateTime.now();
+    await db.avistamentDao.insertAvistament(
+      AvistamentsCompanion.insert(
+        id: 'test-avistament-1',
+        boletId: 'boletus_edulis',
+        timestamp: now,
+      ),
+    );
     await db.descobrimentDao
         .markDiscovered('boletus_edulis', now, 'test-avistament-1');
 
@@ -97,6 +104,13 @@ void main() {
     expect(count, equals(1));
 
     // Duplicate call should be ignored without error
+    await db.avistamentDao.insertAvistament(
+      AvistamentsCompanion.insert(
+        id: 'test-avistament-2',
+        boletId: 'boletus_edulis',
+        timestamp: now,
+      ),
+    );
     await db.descobrimentDao
         .markDiscovered('boletus_edulis', now, 'test-avistament-2');
     final countAfterDuplicate = await db.descobrimentDao.getDiscoveryCount();

@@ -29,6 +29,10 @@ void main() {
       prefs = await SharedPreferences.getInstance();
     });
 
+    tearDown(() async {
+      // In-memory sqlite is automatically cleaned up with the test process
+    });
+
     testWidgets('renders red danger alert when identified mushroom is mortal',
         (WidgetTester tester) async {
       await tester.pumpWidget(
@@ -129,6 +133,53 @@ void main() {
 
       expect(find.byType(SafetyAlertBox), findsOneWidget);
       expect(find.textContaining('Reig bord'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'renders other candidate possibilities with high-contrast text and progress bars',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: ClassificationResultSheet(
+                results: [
+                  ClassificacioResult(
+                    boletId: 'lactarius_deliciosus',
+                    displayName: 'Rovelló',
+                    confidence: 0.85,
+                  ),
+                  ClassificacioResult(
+                    boletId: 'lactarius_sanguifluus',
+                    displayName: 'Rovelló de sang',
+                    confidence: 0.52,
+                  ),
+                  ClassificacioResult(
+                    boletId: 'suillus_luteus',
+                    displayName: 'Llenegot',
+                    confidence: 0.18,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Altres possibles espècies:'), findsOneWidget);
+      expect(find.text('Rovelló de sang'), findsOneWidget);
+      expect(find.text('52%'), findsOneWidget);
+      expect(find.text('Llenegot'), findsOneWidget);
+      expect(find.text('18%'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
     });

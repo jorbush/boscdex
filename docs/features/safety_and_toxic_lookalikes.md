@@ -37,9 +37,9 @@ Whenever the classifier generates results, `SafetyGateService` evaluates two dis
 
 | Prized Edible | Dangerous / Toxic Lookalike | Key Diagnostic Difference |
 |---|---|---|
-| **Rovelló / Pinetell** (*Lactarius deliciosus*) | **Lleterola de llet groga** (*Lactarius chrysorrheus*) | White latex quickly turning bright sulphur-yellow vs. immutable carrot-orange latex. |
-| **Ou de reig** (*Amanita caesarea*) | **Reig bord** (*Amanita muscaria*) | Yellow stem, yellow gills, striate margin vs. pure white stem, white gills, non-striate margin. |
-| **Rossinyol** (*Cantharellus cibarius*) | **Gírgola d'olivera** (*Omphalotus olearius*) | Blunt ridges/folds growing on soil vs. true sharp knife-edge gills growing clustered on wood/roots. |
-| **Cep** (*Boletus edulis*) | **Mataparent amarg** (*Tylopilus felleus*) | White/olive-yellow pores with faint white reticle vs. pinkish pores with dark coarse brown reticle and intense bitter taste. |
-| **Fredolic** (*Tricholoma terreum*) | **Pèrfid** (*Entoloma sinuatum*) | Thin hollow stem and grey gills vs. robust yellowish-pink gills and strong floury odor. |
-| **Xampinyó silvestre** (*Agaricus campestris*) | **Farinera borda** (*Amanita phalloides*) | Pink-to-chocolate brown gills, no volva vs. pure white gills, persistent white volva and ring. |
+| **Rovelló / Pinetell** (*Lactarius deliciosus*) | **Reig bord** (*Amanita muscaria*) | Tots dos es troben en pinedes, però el Reig bord té un barret vermell brillant amb esquames blanques i mai presenta làtex taronja. |
+| **Rossinyol** (*Cantharellus cibarius*) | **Gírgola d'olivera** (*Omphalotus olearius*) | La Gírgola d'olivera creix en fusta i té làmines veritables (no plecs), a més brilla en la foscor (bioluminescència). |
+| **Ou de reig** (*Amanita caesarea*) | **Reig bord** (*Amanita muscaria*) | L'Ou de reig té làmines i peu grocs (mai blancs), i el barret és llis sense esquames blanques. |
+| **Apagallums** (*Macrolepiota procera*) | **Farinera borda** (*Amanita phalloides*) | L'Apagallums té un anell mòbil i doble, i mai té volva. La Farinera borda té sempre volva a la base del peu. |
+| **Gírgola** (*Pleurotus ostreatus*) | **Gírgola d'olivera** (*Omphalotus olearius*) | La Gírgola d'olivera creix sobre fusta d'olivera i té un color taronja intens, no gris-blavós com la Gírgola comestible. |
+| **Moixernó** (*Calocybe gambosa*) | **Pèrfid** (*Entoloma sinuatum*) | El Pèrfid té esporada rosa i olor de farina rància, mentre que el Moixernó té esporada blanca i olor agradable de farina fresca. |

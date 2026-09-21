@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../data/database/daos/bolet_dao.dart';
 import '../../providers/database_provider.dart';
@@ -14,7 +16,8 @@ import 'toxic_twin_alert.dart';
 
 class BoletDetailScreen extends ConsumerStatefulWidget {
   final String id;
-  const BoletDetailScreen({Key? key, required this.id}) : super(key: key);
+
+  const BoletDetailScreen({super.key, required this.id});
 
   @override
   ConsumerState<BoletDetailScreen> createState() => _BoletDetailScreenState();
@@ -83,29 +86,109 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
     if (bolet == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('No trobat')),
-        body: const Center(child: Text('Aquest bolet no existeix.')),
+        body: const Center(
+          child: Text(
+            'Aquest bolet no existeix.',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: RetroColors.inkSoft,
+            ),
+          ),
+        ),
       );
     }
 
     final fruitingMonths = _parseMonths(bolet.fruitingSeason);
-
     final edibilitat = EdibilitatExtension.fromString(bolet.edibility);
     final raritatTier = RaritatTierExtension.fromString(bolet.rarityTier);
 
     return Scaffold(
+      backgroundColor: RetroColors.creamBg,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 250.0,
+            expandedHeight: 240.0,
             pinned: true,
+            backgroundColor: RetroColors.creamBg,
+            elevation: 0,
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Semantics(
+                button: true,
+                label: 'Enrere',
+                child: GestureDetector(
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go('/boscdex');
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: RetroColors.ink, width: 2),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: RetroColors.ink,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: RetroColors.ink,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
-                color: _getEdibilityColor(edibilitat),
+                decoration: BoxDecoration(
+                  color: edibilitat.color.withOpacity(0.18),
+                  border: const Border(
+                    bottom: BorderSide(color: RetroColors.ink, width: 3),
+                  ),
+                ),
                 child: Center(
-                  child: Text(
-                    bolet.catalanName.substring(0, 1).toUpperCase(),
-                    style:
-                        const TextStyle(fontSize: 100, color: Colors.white54),
+                  child: Container(
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: RetroColors.ink, width: 3),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: RetroColors.ink,
+                          offset: Offset(4, 4),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: Center(
+                      child: Image.asset(
+                        bolet.imageAssetPath ??
+                            'assets/images/mushrooms/${bolet.id}.png',
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.none,
+                        errorBuilder: (context, error, stackTrace) => Text(
+                          bolet.catalanName.isNotEmpty
+                              ? bolet.catalanName.substring(0, 1).toUpperCase()
+                              : '?',
+                          style: TextStyle(
+                            fontSize: 76,
+                            fontWeight: FontWeight.w900,
+                            color: edibilitat.color,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -117,19 +200,24 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Title & Scientific Name
                   Text(
                     bolet.catalanName,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: RetroColors.ink,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     bolet.scientificName,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white70,
-                        ),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w600,
+                      color: RetroColors.inkSoft,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
@@ -138,30 +226,48 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                            horizontal: 14, vertical: 7),
                         decoration: BoxDecoration(
                           color: edibilitat.color,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: RetroColors.ink, width: 2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: RetroColors.ink,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
                         ),
                         child: Text(
                           edibilitat.label,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            fontSize: 12.5,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 10),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                            horizontal: 14, vertical: 7),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          border: Border.all(color: raritatTier.color),
-                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: RetroColors.ink, width: 2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: RetroColors.ink,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
                         ),
                         child: Text(
                           raritatTier.label,
                           style: TextStyle(
                             color: raritatTier.color,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 12.5,
                           ),
                         ),
                       ),
@@ -169,35 +275,65 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Lookalikes
+                  // Lookalikes Alert
                   if (_toxicLookalikes.isNotEmpty) ...[
                     for (final twin in _toxicLookalikes)
                       ToxicTwinAlert(
                         lookalikeName: twin.lookalike.catalanName,
                         comparisonNotes: twin.comparisonNotes,
                       ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
                   ],
 
-                  // Season
+                  // Season Indicator
                   SeasonIndicator(fruitingMonths: fruitingMonths),
                   const SizedBox(height: 24),
 
                   // Altitude Range
                   if (bolet.altitudeMin != null &&
                       bolet.altitudeMax != null) ...[
-                    const Text(
-                      'Altitud',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: RetroDecorations.card(
+                        backgroundColor: Colors.white,
+                        borderColor: RetroColors.ink,
+                        borderWidth: 2,
+                        shadowOffset: 3,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: const [
+                              Icon(Icons.terrain_rounded,
+                                  size: 18, color: RetroColors.forestGreen),
+                              SizedBox(width: 6),
+                              Text(
+                                'Altitud',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900,
+                                  color: RetroColors.ink,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            '${bolet.altitudeMin}m - ${bolet.altitudeMax}m sobre el nivell del mar',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: RetroColors.inkSoft,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                        '${bolet.altitudeMin}m - ${bolet.altitudeMax}m sobre el nivell del mar'),
                     const SizedBox(height: 24),
                   ],
 
-                  // Morphology
+                  // Morphology Section
                   MorphologySection(
                     cap: bolet.capDescription,
                     gills: bolet.gillsDescription,
@@ -206,23 +342,69 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Trees
+                  // Associated Trees
                   if (_arbres.isNotEmpty) ...[
-                    const Text(
-                      'Arbres associats',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Row(
+                      children: const [
+                        Icon(Icons.park_rounded,
+                            size: 18, color: RetroColors.forestGreen),
+                        SizedBox(width: 6),
+                        Text(
+                          'Arbres associats',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            color: RetroColors.ink,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Wrap(
                       spacing: 8.0,
+                      runSpacing: 8.0,
                       children: _arbres
-                          .map((arbre) => ActionChip(
-                                label: Text(arbre.catalanName),
-                                onPressed: () {
-                                  context.push('/arbre/${arbre.id}');
-                                },
-                              ))
+                          .map(
+                            (arbre) => ActionChip(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(
+                                  color: RetroColors.ink, width: 2),
+                              elevation: 0,
+                              pressElevation: 0,
+                              shadowColor: Colors.transparent,
+                              avatar: ClipRRect(
+                                borderRadius: BorderRadius.circular(4),
+                                child: SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: Image.asset(
+                                    arbre.imageAssetPath ??
+                                        'assets/images/trees/${arbre.id}.png',
+                                    fit: BoxFit.contain,
+                                    filterQuality: FilterQuality.none,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Icon(
+                                      Icons.park_rounded,
+                                      size: 16,
+                                      color: RetroColors.forestGreen,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              label: Text(
+                                arbre.catalanName,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  color: RetroColors.ink,
+                                ),
+                              ),
+                              onPressed: () {
+                                HapticFeedback.selectionClick();
+                                context.push('/arbre/${arbre.id}');
+                              },
+                            ),
+                          )
                           .toList(),
                     ),
                     const SizedBox(height: 24),
@@ -232,33 +414,47 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   if (bolet.safetyNotes != null &&
                       bolet.safetyNotes!.isNotEmpty) ...[
                     Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(8),
+                      padding: const EdgeInsets.all(14),
+                      decoration: RetroDecorations.card(
+                        backgroundColor: const Color(0xFFFFFBEA),
+                        borderColor: RetroColors.goldCoin,
+                        borderWidth: 2,
+                        shadowOffset: 3,
+                        shadowColor: RetroColors.ink,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            children: [
-                              Icon(Icons.info_outline,
-                                  color:
-                                      Theme.of(context).colorScheme.tertiary),
-                              const SizedBox(width: 8),
-                              const Text(
+                            children: const [
+                              Icon(Icons.lightbulb_rounded,
+                                  color: Color(0xFFB8860B), size: 18),
+                              SizedBox(width: 8),
+                              Text(
                                 'Notes',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: RetroColors.ink,
+                                  fontSize: 15,
+                                ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          Text(bolet.safetyNotes!),
+                          const SizedBox(height: 6),
+                          Text(
+                            bolet.safetyNotes!,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: RetroColors.inkSoft,
+                              height: 1.35,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ],
-                  const SizedBox(height: 48), // Bottom padding
+                  const SizedBox(height: 48),
                 ],
               ),
             ),
@@ -266,9 +462,5 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
         ],
       ),
     );
-  }
-
-  Color _getEdibilityColor(Edibilitat edibilitat) {
-    return edibilitat.color;
   }
 }

@@ -1,7 +1,8 @@
 import 'dart:developer' as developer;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/theme/retro_decorations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:drift/drift.dart' as drift;
@@ -10,9 +11,8 @@ import '../../core/constants/app_constants.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/models/classificacio_result.dart';
 import '../../domain/models/edibilitat.dart';
-import '../../domain/models/insignia.dart' as domain;
 import '../../domain/models/nivell_seguretat.dart';
-import '../../domain/services/badge_service.dart';
+import '../../domain/services/badge_progression_service.dart';
 import '../../domain/services/safety_gate_service.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/preferences_provider.dart';
@@ -28,11 +28,11 @@ class ClassificationResultSheet extends ConsumerStatefulWidget {
   final VoidCallback? onRegistered;
 
   const ClassificationResultSheet({
-    Key? key,
+    super.key,
     required this.results,
     this.imageBytes,
     this.onRegistered,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<ClassificationResultSheet> createState() =>
@@ -54,23 +54,35 @@ class _ClassificationResultSheetState
 
   Future<void> _loadBoletDetails() async {
     if (widget.results.isEmpty) {
-      setState(() => _loadingDetails = false);
+      if (mounted) setState(() => _loadingDetails = false);
       return;
     }
 
-    final db = ref.read(appDatabaseProvider);
-    final topCandidate = widget.results.first;
+    try {
+      final db = ref.read(appDatabaseProvider);
+      final topCandidate = widget.results.first;
 
-    final bolet = await db.boletDao.getBoletById(topCandidate.boletId);
-    final lookalikes =
-        await db.boletDao.getToxicLookalikes(topCandidate.boletId);
+      final bolet = await db.boletDao.getBoletById(topCandidate.boletId);
+      final lookalikes =
+          await db.boletDao.getToxicLookalikes(topCandidate.boletId);
 
-    if (mounted) {
-      setState(() {
-        _topBolet = bolet;
-        _lookalikes = lookalikes;
-        _loadingDetails = false;
-      });
+      if (mounted) {
+        setState(() {
+          _topBolet = bolet;
+          _lookalikes = lookalikes;
+          _loadingDetails = false;
+        });
+      }
+    } catch (e, stackTrace) {
+      developer.log(
+        'Error loading bolet details: $e',
+        error: e,
+        stackTrace: stackTrace,
+        name: 'ClassificationResultSheet',
+      );
+      if (mounted) {
+        setState(() => _loadingDetails = false);
+      }
     }
   }
 
@@ -103,65 +115,30 @@ class _ClassificationResultSheetState
       await db.descobrimentDao
           .markDiscovered(topCandidate.boletId, now, avistamentId);
 
-      // 3. Evaluate and update badges
-      final allDiscoveries = await db.descobrimentDao.getAllDiscoveries();
-      final allInsignies = await db.insigniaDao.getAllInsignies();
-      final toxicViews = ref.read(toxicComparisonViewCountProvider);
-
-      final hasRovello =
-          allDiscoveries.any((d) => d.boletId == 'lactarius_deliciosus');
-      final hasPinetell =
-          allDiscoveries.any((d) => d.boletId == 'lactarius_sanguifluus');
-
-      // Check if user has both a mushroom and its indicator tree discovered/visited
-      final associatedTrees =
-          await db.boletDao.getAssociatedArbres(topCandidate.boletId);
+      // 3. Evaluate and update badges via service
       final visitedTrees = ref.read(visitedArbresProvider);
-      final hasTreeAlliance =
-          associatedTrees.any((a) => visitedTrees.contains(a.id));
-
-      final badgeService = BadgeService();
-      final currentDomainBadges = allInsignies.map((dbBadge) {
-        return domain.Insignia(
-          id: dbBadge.id,
-          nom: dbBadge.id,
-          descripcio: '',
-          iconPath: '',
-          progressCount: dbBadge.progressCount,
-          targetCount: _getTargetCountForBadge(dbBadge.id),
-          awardedAt: dbBadge.awardedAt,
-        );
-      }).toList();
-
-      final updatedBadges = await badgeService.evaluateBadges(
-        discoveryCount: allDiscoveries.length,
-        hasRovello: hasRovello,
-        hasPinetell: hasPinetell,
+      final toxicViews = ref.read(toxicComparisonViewCountProvider);
+      await BadgeProgressionService().syncBadgeProgression(
+        db: db,
         toxicComparisonViewCount: toxicViews,
-        hasTreeAlliance: hasTreeAlliance,
-        currentBadges: currentDomainBadges,
+        visitedTreeIds: visitedTrees,
       );
-
-      for (final b in updatedBadges) {
-        await db.insigniaDao.updateProgress(b.id, b.progressCount);
-        if (b.isAwarded && b.awardedAt != null) {
-          await db.insigniaDao.awardInsignia(b.id, b.awardedAt!);
-        }
-      }
 
       ref.invalidate(boscdexEntriesProvider);
 
       if (mounted) {
+        final scaffoldMessenger = ScaffoldMessenger.of(context);
+        final primaryColor = Theme.of(context).colorScheme.primary;
         Navigator.of(context).pop();
 
         final msg = wasDiscovered
             ? 'Nou avistament registrat al teu diari!'
             : '🎉 Nou bolet desbloquejat a la teva Boscdex!';
 
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text(msg),
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: primaryColor,
             duration: const Duration(seconds: 3),
           ),
         );
@@ -184,27 +161,6 @@ class _ClassificationResultSheetState
           ),
         );
       }
-    }
-  }
-
-  int _getTargetCountForBadge(String id) {
-    switch (id) {
-      case 'primer_pas':
-      case 'primer_pas_al_bosc':
-      case 'alianca_silvestre':
-        return 1;
-      case 'cacador_rovellons':
-      case 'cacador_de_rovellons':
-        return 2;
-      case 'micoleg_prudent':
-        return 5;
-      case 'cistell_tardor':
-      case 'cistell_de_tardor':
-        return 15;
-      case 'mestre_boletaire':
-        return 50;
-      default:
-        return 1;
     }
   }
 
@@ -244,8 +200,9 @@ class _ClassificationResultSheetState
       ),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: RetroColors.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(color: RetroColors.ink, width: 2.5),
       ),
       child: _loadingDetails
           ? const Center(
@@ -262,11 +219,11 @@ class _ClassificationResultSheetState
                   // Drag handle
                   Center(
                     child: Container(
-                      width: 40,
-                      height: 4,
+                      width: 44,
+                      height: 5,
                       decoration: BoxDecoration(
-                        color: Colors.white24,
-                        borderRadius: BorderRadius.circular(2),
+                        color: RetroColors.ink,
+                        borderRadius: BorderRadius.circular(3),
                       ),
                     ),
                   ),
@@ -276,32 +233,37 @@ class _ClassificationResultSheetState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Resultat de l\'anàlisi',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.white70,
-                                ),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                          color: RetroColors.ink,
+                          letterSpacing: 0.3,
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
                           color: isLowConfidence
-                              ? Colors.orange.withOpacity(0.2)
-                              : Colors.green.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color:
-                                isLowConfidence ? Colors.orange : Colors.green,
-                          ),
+                              ? RetroColors.questAmber
+                              : RetroColors.goldCoin,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: RetroColors.ink, width: 2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: RetroColors.ink,
+                              offset: Offset(1.5, 1.5),
+                              blurRadius: 0,
+                            ),
+                          ],
                         ),
                         child: Text(
                           '${(top.confidence * 100).toInt()}% coincidència',
-                          style: TextStyle(
-                            color:
-                                isLowConfidence ? Colors.orange : Colors.green,
-                            fontWeight: FontWeight.bold,
+                          style: const TextStyle(
+                            color: RetroColors.ink,
+                            fontWeight: FontWeight.w900,
                             fontSize: 12,
                           ),
                         ),
@@ -313,10 +275,8 @@ class _ClassificationResultSheetState
                   // Top Match Card
                   Container(
                     padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white12),
+                    decoration: RetroDecorations.card(
+                      backgroundColor: RetroColors.surface,
                     ),
                     child: Row(
                       children: [
@@ -324,20 +284,20 @@ class _ClassificationResultSheetState
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            borderRadius: BorderRadius.circular(12),
+                            color: RetroColors.surfaceLight,
+                            borderRadius: BorderRadius.circular(14),
+                            border:
+                                Border.all(color: RetroColors.ink, width: 2),
                           ),
-                          child: Center(
-                            child: Text(
-                              _topBolet?.catalanName
-                                      .substring(0, 1)
-                                      .toUpperCase() ??
-                                  top.displayName.substring(0, 1).toUpperCase(),
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              _topBolet?.imageAssetPath ??
+                                  'assets/images/mushrooms/${_topBolet?.id ?? top.boletId}.png',
+                              fit: BoxFit.contain,
+                              filterQuality: FilterQuality.none,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _buildInitialPlaceholder(top.displayName),
                             ),
                           ),
                         ),
@@ -349,8 +309,9 @@ class _ClassificationResultSheetState
                               Text(
                                 _topBolet?.catalanName ?? top.displayName,
                                 style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w900,
+                                  color: RetroColors.ink,
                                 ),
                               ),
                               if (_topBolet != null) ...[
@@ -360,7 +321,8 @@ class _ClassificationResultSheetState
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontStyle: FontStyle.italic,
-                                    color: Colors.white60,
+                                    color: RetroColors.inkSoft,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -378,17 +340,36 @@ class _ClassificationResultSheetState
                   if (isDanger) ...[
                     Container(
                       key: const Key('danger_alert_banner'),
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade900.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.redAccent, width: 2),
+                        color: RetroColors.alertDangerLight,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: RetroColors.ink, width: 2.5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: RetroColors.arcadeRed,
+                            offset: Offset(3, 3),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.dangerous,
-                              color: Colors.redAccent, size: 28),
-                          const SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: RetroColors.arcadeRed,
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: RetroColors.ink, width: 2),
+                            ),
+                            child: const Icon(
+                              Icons.dangerous_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,17 +379,19 @@ class _ClassificationResultSheetState
                                       ? 'ATENCIÓ: ESPÈCIE MORTAL'
                                       : 'ATENCIÓ: ESPÈCIE TÒXICA',
                                   style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                    color: RetroColors.arcadeRed,
+                                    fontWeight: FontWeight.w900,
                                     fontSize: 13,
+                                    letterSpacing: 0.3,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
                                   'Aquest bolet és verinós o mortal. No el consumeixis mai.',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: RetroColors.ink,
                                     fontSize: 12,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -423,22 +406,32 @@ class _ClassificationResultSheetState
                   // Safety Gate: Low confidence alert
                   if (isLowConfidence) ...[
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.amber.shade900.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.amber),
+                        color: RetroColors.alertWarningLight,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: RetroColors.ink, width: 2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: RetroColors.ink,
+                            offset: Offset(2, 2),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: const [
-                          Icon(Icons.info_outline,
-                              color: Colors.amber, size: 24),
+                          Icon(Icons.info_outline_rounded,
+                              color: RetroColors.questAmber, size: 24),
                           SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               'No es pot identificar amb certesa. Consulta un micòleg humà abans de consumir.',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              style: TextStyle(
+                                color: RetroColors.ink,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -453,12 +446,17 @@ class _ClassificationResultSheetState
                       confusionSpecies:
                           _lookalikes.map((l) => l.catalanName).join(', '),
                       onTap: () {
+                        HapticFeedback.lightImpact();
                         // Increase comparison count for the badge
                         ref
                             .read(toxicComparisonViewCountProvider.notifier)
                             .increment();
                         Navigator.of(context).pop();
-                        context.push('/boscdex/${top.boletId}');
+                        try {
+                          GoRouter.of(context).push('/boscdex/${top.boletId}');
+                        } catch (_) {
+                          // Non-fatal if rendered without GoRouter in tests
+                        }
                       },
                     ),
                     const SizedBox(height: 16),
@@ -470,8 +468,8 @@ class _ClassificationResultSheetState
                       'Altres possibles espècies:',
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white70,
+                        fontWeight: FontWeight.w800,
+                        color: RetroColors.inkSoft,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -485,14 +483,18 @@ class _ClassificationResultSheetState
                   // Action Buttons
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
+                    height: 52,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: RetroColors.forestGreen,
                         foregroundColor: Colors.white,
+                        elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(14),
+                          side: const BorderSide(
+                              color: RetroColors.ink, width: 2.5),
                         ),
+                        shadowColor: Colors.transparent,
                       ),
                       icon: _isSaving
                           ? const SizedBox(
@@ -503,26 +505,38 @@ class _ClassificationResultSheetState
                                 color: Colors.white,
                               ),
                             )
-                          : const Icon(Icons.bookmark_add),
+                          : const Icon(Icons.bookmark_add_rounded),
                       label: Text(
                         _isSaving
                             ? 'Registrant...'
                             : 'Registrar a la meva Boscdex',
                         style: const TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.3,
                         ),
                       ),
-                      onPressed: _isSaving ? null : _registerSighting,
+                      onPressed: _isSaving
+                          ? null
+                          : () {
+                              HapticFeedback.mediumImpact();
+                              _registerSighting();
+                            },
                     ),
                   ),
                   const SizedBox(height: 8),
                   Center(
                     child: TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () {
+                        HapticFeedback.selectionClick();
+                        Navigator.of(context).pop();
+                      },
                       child: const Text(
                         'Tancar',
-                        style: TextStyle(color: Colors.white54),
+                        style: TextStyle(
+                          color: RetroColors.inkSoft,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
@@ -542,27 +556,48 @@ class _ClassificationResultSheetState
           children: [
             Text(
               candidate.displayName,
-              style: const TextStyle(fontSize: 13, color: Colors.white),
+              style: const TextStyle(
+                fontSize: 13,
+                color: RetroColors.ink,
+                fontWeight: FontWeight.w800,
+              ),
             ),
             Text(
               '$pct%',
-              style: const TextStyle(fontSize: 12, color: Colors.white54),
+              style: const TextStyle(
+                fontSize: 12,
+                color: RetroColors.inkSoft,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ],
         ),
         const SizedBox(height: 4),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: candidate.confidence,
-            minHeight: 6,
-            backgroundColor: Colors.white10,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorScheme.secondary,
-            ),
-          ),
+        RetroProgressBar(
+          progress: candidate.confidence,
+          height: 10,
+          fillColor: RetroColors.forestGreen,
         ),
       ],
+    );
+  }
+
+  Widget _buildInitialPlaceholder(String defaultName) {
+    final name = _topBolet?.catalanName ?? defaultName;
+    final initial = name.isNotEmpty ? name.substring(0, 1).toUpperCase() : '?';
+
+    return Container(
+      color: RetroColors.forestGreen,
+      child: Center(
+        child: Text(
+          initial,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w900,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }

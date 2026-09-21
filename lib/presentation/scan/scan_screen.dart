@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'dart:developer' as developer;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/theme/retro_decorations.dart';
 
 import '../../providers/classifier_provider.dart';
 import 'classification_result_sheet.dart';
 import 'tree_classification_result_sheet.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
-  const ScanScreen({Key? key}) : super(key: key);
+  const ScanScreen({super.key});
 
   @override
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
@@ -17,9 +17,9 @@ class ScanScreen extends ConsumerStatefulWidget {
 
 class _ScanScreenState extends ConsumerState<ScanScreen>
     with SingleTickerProviderStateMixin {
-  int _selectedModeIndex = 0; // 0 for Bolets, 1 for Arbres
-  bool _isScanning = false;
   late AnimationController _animController;
+  int _selectedModeIndex = 0; // 0 = Bolets, 1 = Arbres
+  bool _isScanning = false;
 
   @override
   void initState() {
@@ -43,59 +43,51 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     unawaited(_animController.repeat(reverse: true));
 
     try {
-      final classifier = ref.read(classifierProvider);
-      // Pass dummy bytes for Edge-ML inference simulation
       final dummyBytes = Uint8List(0);
+      final classifier = ref.read(classifierProvider);
 
-      if (_selectedModeIndex == 1) {
-        // Mode 1: Indicator Trees
-        final treeResults = await classifier.classifyTree(dummyBytes);
-
-        if (mounted) {
-          _animController.stop();
-          setState(() => _isScanning = false);
-
-          await showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (ctx) => TreeClassificationResultSheet(
-              results: treeResults,
-              imageBytes: dummyBytes,
-            ),
-          );
-        }
-      } else {
-        // Mode 0: Fungi / Bolets
+      if (_selectedModeIndex == 0) {
         final results = await classifier.classify(dummyBytes);
 
-        if (mounted) {
-          _animController.stop();
-          setState(() => _isScanning = false);
+        if (!mounted) return;
+        _animController.stop();
+        setState(() => _isScanning = false);
 
-          await showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (ctx) => ClassificationResultSheet(
-              results: results,
-              imageBytes: dummyBytes,
-            ),
-          );
-        }
+        await showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (_) => ClassificationResultSheet(
+            results: results,
+            imageBytes: dummyBytes,
+          ),
+        );
+      } else {
+        final results = await classifier.classifyTree(dummyBytes);
+
+        if (!mounted) return;
+        _animController.stop();
+        setState(() => _isScanning = false);
+
+        await showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (_) => TreeClassificationResultSheet(
+            results: results,
+            imageBytes: dummyBytes,
+          ),
+        );
       }
-    } catch (e, stackTrace) {
-      developer.log(
-        'Identification error: $e',
-        error: e,
-        stackTrace: stackTrace,
-        name: 'ScanScreen',
-      );
+    } catch (e) {
       if (mounted) {
         _animController.stop();
         setState(() => _isScanning = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error d\'identificació: $e')),
+          SnackBar(
+            content: Text('Error durant l\'anàlisi: $e'),
+            backgroundColor: RetroColors.arcadeRed,
+          ),
         );
       }
     }
@@ -104,65 +96,80 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: RetroColors.creamBg,
       body: Stack(
         children: [
-          // Viewfinder Background
-          Positioned.fill(
-            child: Container(
-              color: const Color(0xFF101B12),
-              child: Center(
-                child: AnimatedBuilder(
+          // Viewfinder Center Area
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedBuilder(
                   animation: _animController,
                   builder: (context, child) {
                     final scale = _isScanning
-                        ? 1.0 + (_animController.value * 0.08)
+                        ? 1.0 + (_animController.value * 0.05)
                         : 1.0;
                     return Transform.scale(
                       scale: scale,
                       child: Container(
-                        width: 260,
-                        height: 260,
+                        width: 270,
+                        height: 270,
                         decoration: BoxDecoration(
+                          color: RetroColors.sectionBg,
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: _isScanning
-                                ? Theme.of(context).colorScheme.tertiary
-                                : Colors.white.withOpacity(0.4),
-                            width: _isScanning ? 3 : 2,
+                                ? RetroColors.forestGreen
+                                : RetroColors.ink,
+                            width: _isScanning ? 3 : 2.5,
                           ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: RetroColors.ink,
+                              offset: Offset(3, 4),
+                              blurRadius: 0,
+                            ),
+                          ],
                         ),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             Icon(
                               _selectedModeIndex == 0
-                                  ? Icons.filter_center_focus
-                                  : Icons.nature,
+                                  ? Icons.filter_center_focus_rounded
+                                  : Icons.park_rounded,
                               size: 100,
                               color: _isScanning
-                                  ? Theme.of(context)
-                                      .colorScheme
-                                      .tertiary
-                                      .withOpacity(0.6)
-                                  : Colors.white.withOpacity(0.2),
+                                  ? RetroColors.forestGreen.withOpacity(0.6)
+                                  : RetroColors.forestGreen.withOpacity(0.28),
                             ),
                             if (_isScanning) ...[
                               Positioned(
-                                top: 20,
+                                top: 16,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 4),
+                                      horizontal: 12, vertical: 5),
                                   decoration: BoxDecoration(
-                                    color: Colors.black87,
-                                    borderRadius: BorderRadius.circular(12),
+                                    color: RetroColors.forestGreen,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: RetroColors.ink, width: 2),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: RetroColors.ink,
+                                        offset: Offset(2, 2),
+                                        blurRadius: 0,
+                                      ),
+                                    ],
                                   ),
                                   child: const Text(
-                                    'Analitzant amb Edge-AI...',
+                                    'ANALITZANT AMB EDGE-AI...',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 0.5,
                                     ),
                                   ),
                                 ),
@@ -174,35 +181,47 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                     );
                   },
                 ),
-              ),
+              ],
             ),
           ),
 
-          // Viewfinder Targeting Instructions
+          // Viewfinder Targeting Instructions (Retro prompt banner)
           Positioned(
-            top: MediaQuery.of(context).padding.top + 70,
-            left: 20,
-            right: 20,
+            top: MediaQuery.of(context).padding.top + 76,
+            left: 24,
+            right: 24,
             child: Center(
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.black45,
-                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: RetroColors.ink, width: 2),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: RetroColors.ink,
+                      offset: Offset(2, 2),
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
                 child: Text(
                   _selectedModeIndex == 0
                       ? 'Enfoca el barret i les làmines del bolet'
                       : 'Enfoca l\'escorça o les fulles de l\'arbre',
-                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                  style: const TextStyle(
+                    color: RetroColors.ink,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
           ),
 
-          // Mode Switcher (Bolets | Arbres)
+          // Mode Switcher (Bolets | Arbres) styled like arcade console toggle
           Positioned(
             top: MediaQuery.of(context).padding.top + 16,
             left: 0,
@@ -211,8 +230,16 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.circular(24),
+                  color: const Color(0xFFE2EBE2),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(color: RetroColors.ink, width: 2),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: RetroColors.ink,
+                      offset: Offset(0, 2),
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -232,65 +259,112 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             right: 0,
             child: Container(
               padding: const EdgeInsets.only(
-                  bottom: 32, top: 24, left: 24, right: 24),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Colors.black87, Colors.transparent],
-                ),
-              ),
+                  bottom: 36, top: 24, left: 28, right: 28),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Gallery picker button
-                  IconButton(
-                    key: const Key('gallery_picker_button'),
-                    icon: const Icon(Icons.photo_library,
-                        color: Colors.white, size: 32),
-                    tooltip: 'Triar de la galeria',
-                    onPressed: _isScanning ? null : _performScan,
-                  ),
-
-                  // Shutter button
-                  GestureDetector(
-                    key: const Key('shutter_button'),
-                    onTap: _isScanning ? null : _performScan,
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: _isScanning
-                              ? Theme.of(context).colorScheme.tertiary
-                              : Colors.white,
-                          width: 4,
+                  // Gallery picker button (retro cartridge icon)
+                  Semantics(
+                    button: true,
+                    label: 'Obrir galeria de fotos',
+                    child: GestureDetector(
+                      key: const Key('gallery_picker_button'),
+                      onTap: () {
+                        if (!_isScanning) {
+                          HapticFeedback.lightImpact();
+                          _performScan();
+                        }
+                      },
+                      child: Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: RetroColors.ink, width: 2.2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: RetroColors.ink,
+                              offset: Offset(0, 3),
+                              blurRadius: 0,
+                            ),
+                          ],
                         ),
-                      ),
-                      child: Center(
-                        child: _isScanning
-                            ? SizedBox(
-                                width: 36,
-                                height: 36,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                ),
-                              )
-                            : Container(
-                                width: 64,
-                                height: 64,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                ),
-                              ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.photo_library_rounded,
+                            color: RetroColors.ink,
+                            size: 26,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 48), // Balance for left icon
+
+                  // Shutter button (3D arcade cabinet lens button)
+                  Semantics(
+                    button: true,
+                    label: _selectedModeIndex == 0
+                        ? 'Fotografiar i identificar bolet'
+                        : 'Fotografiar i identificar arbre',
+                    child: GestureDetector(
+                      key: const Key('shutter_button'),
+                      onTap: () {
+                        if (!_isScanning) {
+                          HapticFeedback.mediumImpact();
+                          _performScan();
+                        }
+                      },
+                      child: Container(
+                        width: 82,
+                        height: 82,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: RetroColors.forestGreen,
+                          border: Border.all(color: RetroColors.ink, width: 3),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: RetroColors.ink,
+                              offset: Offset(0, 4),
+                              blurRadius: 0,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: _isScanning
+                              ? const SizedBox(
+                                  width: 34,
+                                  height: 34,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3.5,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Container(
+                                  width: 62,
+                                  height: 62,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: RetroColors.ink,
+                                      width: 1.8,
+                                    ),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.camera_alt_rounded,
+                                      color: RetroColors.forestGreen,
+                                      size: 28,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 52), // Balance for left icon
                 ],
               ),
             ),
@@ -302,25 +376,32 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
   Widget _buildModeButton(int index, String text) {
     final isSelected = _selectedModeIndex == index;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedModeIndex = index;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Theme.of(context).colorScheme.primary
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white54,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label: text,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          setState(() {
+            _selectedModeIndex = index;
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? RetroColors.forestGreen : Colors.transparent,
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              color: isSelected ? Colors.white : RetroColors.inkSoft,
+              fontWeight: FontWeight.w900,
+              fontSize: 13,
+              letterSpacing: 0.3,
+            ),
           ),
         ),
       ),
