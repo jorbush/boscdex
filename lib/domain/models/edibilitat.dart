@@ -58,8 +58,7 @@ extension EdibilitatExtension on Edibilitat {
   bool get isEdible =>
       this == Edibilitat.excellent || this == Edibilitat.comestible;
 
-  bool get isToxic =>
-      this == Edibilitat.toxic || this == Edibilitat.mortal;
+  bool get isToxic => this == Edibilitat.toxic || this == Edibilitat.mortal;
 
   static Edibilitat? tryFromString(String? value) {
     if (value == null) return null;

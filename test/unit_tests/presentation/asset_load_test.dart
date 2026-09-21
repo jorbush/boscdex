@@ -6,7 +6,8 @@ import 'package:boscdex/core/theme/retro_decorations.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('All 21 mushroom and 5 tree pixel art assets load via rootBundle', () async {
+  test('All 21 mushroom and 5 tree pixel art assets load via rootBundle',
+      () async {
     const mushrooms = [
       'lactarius_deliciosus',
       'boletus_edulis',
@@ -34,7 +35,8 @@ void main() {
     for (final id in mushrooms) {
       final path = 'assets/images/mushrooms/$id.png';
       final data = await rootBundle.load(path);
-      expect(data.lengthInBytes, greaterThan(0), reason: 'Expected $path to have content');
+      expect(data.lengthInBytes, greaterThan(0),
+          reason: 'Expected $path to have content');
     }
 
     const trees = [
@@ -48,7 +50,8 @@ void main() {
     for (final id in trees) {
       final path = 'assets/images/trees/$id.png';
       final data = await rootBundle.load(path);
-      expect(data.lengthInBytes, greaterThan(0), reason: 'Expected $path to have content');
+      expect(data.lengthInBytes, greaterThan(0),
+          reason: 'Expected $path to have content');
     }
 
     final silhouetteData =

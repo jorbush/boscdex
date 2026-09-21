@@ -318,7 +318,8 @@ class _TreeClassificationResultSheetState
                                   HapticFeedback.lightImpact();
                                   Navigator.of(context).pop();
                                   try {
-                                    GoRouter.of(context).push('/boscdex/${bolet.id}');
+                                    GoRouter.of(context)
+                                        .push('/boscdex/${bolet.id}');
                                   } catch (_) {
                                     // Non-fatal if rendered without GoRouter in tests
                                   }

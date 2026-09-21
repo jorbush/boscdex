@@ -33,7 +33,8 @@ void main() {
       expect(find.text('Avís Legal Important'), findsOneWidget);
       expect(find.text('Començar a explorar'), findsOneWidget);
 
-      final buttonFinder = find.widgetWithText(ElevatedButton, 'Començar a explorar');
+      final buttonFinder =
+          find.widgetWithText(ElevatedButton, 'Començar a explorar');
       final button = tester.widget<ElevatedButton>(buttonFinder);
       expect(button.onPressed, isNull);
     });
@@ -52,15 +53,18 @@ void main() {
       );
 
       // Tap checkbox row
-      await tester.tap(find.text('He llegit i accepto les condicions d\'avisos de seguretat'));
+      await tester.tap(find
+          .text('He llegit i accepto les condicions d\'avisos de seguretat'));
       await tester.pumpAndSettle();
 
-      final buttonFinder = find.widgetWithText(ElevatedButton, 'Començar a explorar');
+      final buttonFinder =
+          find.widgetWithText(ElevatedButton, 'Començar a explorar');
       final button = tester.widget<ElevatedButton>(buttonFinder);
       expect(button.onPressed, isNotNull);
     });
 
-    testWidgets('Does not overflow on constrained screen dimensions (e.g. 320x480)',
+    testWidgets(
+        'Does not overflow on constrained screen dimensions (e.g. 320x480)',
         (WidgetTester tester) async {
       tester.binding.window.physicalSizeTestValue = const Size(320, 480);
       tester.binding.window.devicePixelRatioTestValue = 1.0;

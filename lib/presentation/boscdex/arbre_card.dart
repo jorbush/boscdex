@@ -90,7 +90,8 @@ class ArbreCard extends StatelessWidget {
                           ? Icons.check
                           : Icons.visibility_off_rounded,
                       size: 10,
-                      color: entry.isVisited ? Colors.white : RetroColors.inkSoft,
+                      color:
+                          entry.isVisited ? Colors.white : RetroColors.inkSoft,
                     ),
                   ),
                 ],

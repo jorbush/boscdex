@@ -18,7 +18,8 @@ void main() {
       service = BadgeProgressionService();
     });
 
-    test('syncBadgeProgression updates primer_pas_al_bosc when discovery exists',
+    test(
+        'syncBadgeProgression updates primer_pas_al_bosc when discovery exists',
         () async {
       // 1. Mark a discovery
       final now = DateTime.now();
@@ -29,7 +30,8 @@ void main() {
           timestamp: now,
         ),
       );
-      await db.descobrimentDao.markDiscovered('boletus_edulis', now, 'sighting-1');
+      await db.descobrimentDao
+          .markDiscovered('boletus_edulis', now, 'sighting-1');
 
       // 2. Sync progression
       final updated = await service.syncBadgeProgression(
@@ -46,7 +48,8 @@ void main() {
       expect(dbBadge?.progressCount, equals(1));
     });
 
-    test('syncBadgeProgression updates cacador_de_rovellons when both rovellons are discovered',
+    test(
+        'syncBadgeProgression updates cacador_de_rovellons when both rovellons are discovered',
         () async {
       final now = DateTime.now();
       await db.avistamentDao.insertAvistament(
@@ -56,7 +59,8 @@ void main() {
           timestamp: now,
         ),
       );
-      await db.descobrimentDao.markDiscovered('lactarius_deliciosus', now, 'sighting-rovello');
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', now, 'sighting-rovello');
 
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion.insert(
@@ -65,7 +69,8 @@ void main() {
           timestamp: now,
         ),
       );
-      await db.descobrimentDao.markDiscovered('lactarius_sanguifluus', now, 'sighting-pinetell');
+      await db.descobrimentDao
+          .markDiscovered('lactarius_sanguifluus', now, 'sighting-pinetell');
 
       final updated = await service.syncBadgeProgression(
         db: db,
@@ -80,7 +85,8 @@ void main() {
       expect(dbBadge?.progressCount, equals(2));
     });
 
-    test('syncBadgeProgression updates alianca_silvestre when visiting tree with discovered mushroom',
+    test(
+        'syncBadgeProgression updates alianca_silvestre when visiting tree with discovered mushroom',
         () async {
       final now = DateTime.now();
       // lactarius_deliciosus is associated with pinus_sylvestris (Pi roig)
@@ -91,7 +97,8 @@ void main() {
           timestamp: now,
         ),
       );
-      await db.descobrimentDao.markDiscovered('lactarius_deliciosus', now, 'sighting-rovello');
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', now, 'sighting-rovello');
 
       // User visits Pi roig
       final updated = await service.syncBadgeProgression(

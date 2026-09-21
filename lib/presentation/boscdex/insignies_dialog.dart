@@ -237,8 +237,9 @@ class InsigniesDialog extends ConsumerWidget {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w900,
-                          color:
-                              isUnlocked ? RetroColors.ink : RetroColors.inkSoft,
+                          color: isUnlocked
+                              ? RetroColors.ink
+                              : RetroColors.inkSoft,
                         ),
                       ),
                       if (isUnlocked) ...[

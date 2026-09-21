@@ -105,8 +105,8 @@ void main() {
           timestamp: now,
         ),
       );
-      await db.descobrimentDao.markDiscovered(
-          'lactarius_deliciosus', now, 'avistament-1');
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', now, 'avistament-1');
 
       // Refresh entries
       container.refresh(boscdexEntriesProvider);

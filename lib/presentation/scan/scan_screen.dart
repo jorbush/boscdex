@@ -282,7 +282,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: RetroColors.ink, width: 2.2),
+                          border:
+                              Border.all(color: RetroColors.ink, width: 2.2),
                           boxShadow: const [
                             BoxShadow(
                               color: RetroColors.ink,
