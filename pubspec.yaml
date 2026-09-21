@@ -29,6 +29,10 @@ dependencies:
   uuid: ^3.0.0
   intl: ^0.17.0
 
+  # Camera & Image Processing
+  camera: ^0.10.5
+  image_picker: ^1.0.2
+
   # Location
   geolocator: ^9.0.0
   permission_handler: ^10.0.0

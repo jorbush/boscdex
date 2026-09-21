@@ -47,5 +47,13 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Boscdex necessita accés a la càmera per escanejar i identificar bolets i arbres en temps real al bosc.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Boscdex necessita accés a la galeria per seleccionar fotos de bolets per identificar-los.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Boscdex utilitza el micròfon únicament si s'enregistra vídeo amb la càmera.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Boscdex utilitza la ubicació per geolocalitzar i desar les coordenades dels teus avistaments de bolets.</string>
 </dict>
 </plist>

@@ -20,7 +20,7 @@ class EdibilityBadge extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: edibilitat.color.withOpacity(0.25),
+            color: edibilitat.badgeBackgroundColor,
             shape: BoxShape.circle,
             border: Border.all(color: RetroColors.ink, width: 1.8),
             boxShadow: const [
@@ -31,7 +31,8 @@ class EdibilityBadge extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(edibilitat.icon, size: 12, color: edibilitat.color),
+          child:
+              Icon(edibilitat.icon, size: 12, color: edibilitat.badgeIconColor),
         ),
       );
     }
@@ -39,7 +40,7 @@ class EdibilityBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: edibilitat.color.withOpacity(0.2),
+        color: edibilitat.badgeBackgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: RetroColors.ink, width: 1.8),
         boxShadow: const [
@@ -53,7 +54,7 @@ class EdibilityBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(edibilitat.icon, size: 13, color: edibilitat.color),
+          Icon(edibilitat.icon, size: 13, color: edibilitat.badgeIconColor),
           const SizedBox(width: 4),
           Text(
             edibilitat.label,

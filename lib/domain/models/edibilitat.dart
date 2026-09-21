@@ -60,6 +60,40 @@ extension EdibilitatExtension on Edibilitat {
 
   bool get isToxic => this == Edibilitat.toxic || this == Edibilitat.mortal;
 
+  /// 100% opaque light background color for high-contrast retro badge rendering.
+  ///
+  /// Prevents underlying dark comic box shadows from bleeding through transparent layers.
+  Color get badgeBackgroundColor {
+    switch (this) {
+      case Edibilitat.excellent:
+        return const Color(0xFFE0EFE4);
+      case Edibilitat.comestible:
+        return const Color(0xFFE5F4EA);
+      case Edibilitat.senseValor:
+        return const Color(0xFFECEFEA);
+      case Edibilitat.toxic:
+        return const Color(0xFFFDF0E4);
+      case Edibilitat.mortal:
+        return const Color(0xFFFCE8E7);
+    }
+  }
+
+  /// High-contrast icon color on top of [badgeBackgroundColor].
+  Color get badgeIconColor {
+    switch (this) {
+      case Edibilitat.excellent:
+        return const Color(0xFF2D6E44);
+      case Edibilitat.comestible:
+        return const Color(0xFF2D7B48);
+      case Edibilitat.senseValor:
+        return const Color(0xFF5E6F64);
+      case Edibilitat.toxic:
+        return const Color(0xFFC75D1B);
+      case Edibilitat.mortal:
+        return const Color(0xFFB3332C);
+    }
+  }
+
   static Edibilitat? tryFromString(String? value) {
     if (value == null) return null;
     final normalized = value.trim().toLowerCase();

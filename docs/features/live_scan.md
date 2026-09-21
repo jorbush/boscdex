@@ -1,19 +1,59 @@
 # Live Scan Viewfinder Feature
 
-The **Live Scan** tab (`/scan`) provides the visual viewfinder used for identifying wild specimens directly in the field.
+The **Live Scan** tab (`/scan`) provides the visual viewfinder used for identifying wild specimens directly in the field using on-device computer vision and native camera hardware.
 
 ---
 
-## 📷 Viewfinder Interface
+## 📷 Viewfinder & Hardware Architecture
 
-* **Targeting Frame:** Centered targeting reticle with animated border scaling to focus the user's attention on diagnostic morphology.
+* **Native Camera Controller (`camera` package):**
+  * Automatically detects and initializes the primary rear camera (`CameraLensDirection.back`) with high-resolution capture (`ResolutionPreset.high`).
+  * Live camera feed rendered through `CameraPreview` inside the retro-styled 270x270 targeting frame with rounded corners and comic-style ink borders.
+  * Custom retro vector overlay (`_CornerBracketPainter`) drawing arcade targeting brackets and center reticle.
+* **Lifecycle Management (`WidgetsBindingObserver`):**
+  * Pauses and disposes the camera sensor when the app enters `AppLifecycleState.inactive` or background to preserve battery life and release device resources.
+  * Automatically re-initializes upon `AppLifecycleState.resumed`.
 * **Mode Switcher:** Segmented selector at the top switching between:
   * `[ Bolets ]`: Evaluates fungal specimens via `classifier.classify()` and displays `ClassificationResultSheet`.
   * `[ Arbres ]`: Evaluates indicator trees via `classifier.classifyTree()` and displays `TreeClassificationResultSheet`.
-* **Clean & Minimalist Viewfinder:** Free of distracting indicators to keep focus entirely on specimen photography.
-* **Shutter & Gallery Actions:**
-  * Primary circular shutter button triggering immediate frame capture and edge inference.
-  * Gallery picker alternative icon for identifying previously captured camera roll photos.
+* **Shutter Action:**
+  * Circular 3D retro arcade shutter button triggering `_cameraController.takePicture()`.
+  * Extracts captured image bytes (`Uint8List`) and pipes them into edge AI inference with visual scanline animation (`ANALITZANT AMB EDGE-AI...`).
+* **Gallery Photo Picker (`image_picker` package):**
+  * Retro cartridge icon on the bottom left allowing the user to select existing field photos from the device camera roll / photo library.
+* **Permission Fallbacks:**
+  * When camera permissions are denied, displays a friendly retro prompt explaining why the permission is needed with a "Demanar permís" CTA.
+  * When permanently denied, provides a direct "Obrir Paràmetres" button linking to system settings (`openAppSettings()`).
+  * On simulators or devices without camera sensors, gracefully falls back to mock inference and gallery picking without crashing.
+
+---
+
+## 🔐 Platform Permissions Architecture
+
+### iOS (`ios/Runner/Info.plist` & `ios/Podfile`)
+* **Privacy Descriptions in `Info.plist`:**
+  * `NSCameraUsageDescription`: Required for real-time live viewfinder and specimen photography.
+  * `NSPhotoLibraryUsageDescription`: Required for picking photos from the user's photo album.
+  * `NSMicrophoneUsageDescription`: Declared to satisfy AVFoundation video frameworks.
+  * `NSLocationWhenInUseUsageDescription`: Required for GPS coordinates in sighting journal.
+* **CocoaPods Preprocessor Flags (`ios/Podfile`):**
+  * `permission_handler` on iOS uses conditional compilation. The `post_install` hook defines:
+    ```ruby
+    config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+      '$(inherited)',
+      'PERMISSION_CAMERA=1',
+      'PERMISSION_PHOTOS=1',
+      'PERMISSION_LOCATION=1',
+    ]
+    ```
+    This ensures native permission requests trigger iOS's system dialog and register toggles in the iPhone Settings app.
+
+### Android (`android/app/src/main/AndroidManifest.xml`)
+* **Permissions & Features:**
+  * `android.permission.CAMERA`: Required for camera access.
+  * `android.hardware.camera` & `android.hardware.camera.autofocus` (`required="false"`): Allows app installation on devices without autofocus hardware.
+  * `android.permission.ACCESS_FINE_LOCATION` & `ACCESS_COARSE_LOCATION`: For GPS tagging in sighting logs.
+  * `android.permission.READ_EXTERNAL_STORAGE` (`maxSdkVersion="32"`) & `android.permission.READ_MEDIA_IMAGES`: Dual support for legacy Android and Android 13+ (API 33+) photo picking.
 
 ---
 
@@ -30,7 +70,7 @@ Upon scanning a mushroom, the on-device model evaluates the image and presents a
 3. **Safety Gate Warnings:**
    * Evaluated automatically by `SafetyGateService` (see [Safety and Toxic Lookalikes](safety_and_toxic_lookalikes.md)).
 4. **Action CTA ("Registrar a la meva Boscdex"):**
-   * Persists a new entry in `Avistaments`.
+   * Persists a new entry in `Avistaments` (including photo bytes or location).
    * Unlocks the specimen in `Descobriments` if encountering it for the first time.
    * Re-evaluates badge conditions and updates `Insignies`.
    * Displays instant feedback and dismisses the sheet.

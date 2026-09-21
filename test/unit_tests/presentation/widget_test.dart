@@ -27,7 +27,8 @@ void main() {
     expect(find.byIcon(Icons.wifi_off), findsOneWidget);
   });
 
-  testWidgets('EdibilityBadge renders correct Catalan label and icon',
+  testWidgets(
+      'EdibilityBadge renders correct Catalan label and icon with high-contrast colors',
       (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
@@ -39,9 +40,22 @@ void main() {
 
     expect(find.text('Comestible excel·lent'), findsOneWidget);
     expect(find.byIcon(Icons.star), findsOneWidget);
+
+    final container = tester.widget<Container>(find.byType(Container).first);
+    final decoration = container.decoration as BoxDecoration;
+    expect(decoration.color, equals(Edibilitat.excellent.badgeBackgroundColor));
+    expect(decoration.color!.alpha, equals(255),
+        reason: 'Background must be 100% opaque');
+
+    final text = tester.widget<Text>(find.text('Comestible excel·lent'));
+    expect(text.style?.color, equals(RetroColors.ink));
+
+    final icon = tester.widget<Icon>(find.byIcon(Icons.star));
+    expect(icon.color, equals(Edibilitat.excellent.badgeIconColor));
   });
 
-  testWidgets('EdibilityBadge renders icon only when iconOnly is true',
+  testWidgets(
+      'EdibilityBadge renders icon only when iconOnly is true with opaque background',
       (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
@@ -56,6 +70,15 @@ void main() {
 
     expect(find.byIcon(Icons.restaurant), findsOneWidget);
     expect(find.text('Comestible'), findsNothing);
+
+    final container = tester.widget<Container>(find.byType(Container).first);
+    final decoration = container.decoration as BoxDecoration;
+    expect(
+        decoration.color, equals(Edibilitat.comestible.badgeBackgroundColor));
+    expect(decoration.color!.alpha, equals(255));
+
+    final icon = tester.widget<Icon>(find.byIcon(Icons.restaurant));
+    expect(icon.color, equals(Edibilitat.comestible.badgeIconColor));
   });
 
   testWidgets(

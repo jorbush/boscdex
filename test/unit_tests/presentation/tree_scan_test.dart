@@ -81,7 +81,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       // Verify title and confidence
-      expect(find.text('Resultat d\'arbre indicador'), findsOneWidget);
+      expect(find.text('Resultat d\'arbre'), findsOneWidget);
       expect(find.text('93% coincidència'), findsOneWidget);
 
       // Verify tree identification

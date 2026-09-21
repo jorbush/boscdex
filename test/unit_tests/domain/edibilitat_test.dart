@@ -33,6 +33,28 @@ void main() {
       expect(EdibilitatExtension.fromString('desconegut'),
           equals(Edibilitat.senseValor));
     });
+
+    test(
+        'badgeBackgroundColor and badgeIconColor are fully opaque for all tiers',
+        () {
+      for (final edibility in Edibilitat.values) {
+        expect(edibility.badgeBackgroundColor.alpha, equals(255),
+            reason: '${edibility.name} badge background must be fully opaque');
+        expect(edibility.badgeIconColor.alpha, equals(255),
+            reason: '${edibility.name} badge icon must be fully opaque');
+      }
+    });
+
+    test('badgeBackgroundColor has distinct light pastel tint per tier', () {
+      expect(
+          Edibilitat.excellent.badgeBackgroundColor.value, equals(0xFFE0EFE4));
+      expect(
+          Edibilitat.comestible.badgeBackgroundColor.value, equals(0xFFE5F4EA));
+      expect(
+          Edibilitat.senseValor.badgeBackgroundColor.value, equals(0xFFECEFEA));
+      expect(Edibilitat.toxic.badgeBackgroundColor.value, equals(0xFFFDF0E4));
+      expect(Edibilitat.mortal.badgeBackgroundColor.value, equals(0xFFFCE8E7));
+    });
   });
 
   group('RaritatTier', () {

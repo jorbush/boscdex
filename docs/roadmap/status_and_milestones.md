@@ -38,7 +38,7 @@ This document tracks completed features in **Boscdex MVP v1.0** and outlines upc
 
 ## 🟡 Planned for v1.1 (Edge ML Production & Camera Stream)
 
-- [ ] **Live Camera Stream Integration:** Connect camera hardware feed via `camera` or `camerawesome` with frame throttling (2–3 FPS).
+- [x] **Live Camera Stream Integration:** Connect camera hardware feed via native `camera` package with rear lens autofocus, iOS/Android permissions, and gallery photo picker fallback.
 - [ ] **Real Model Weights Packaging:** Bundle trained `boscdex_classifier.tflite` (<18 MB) into `assets/models/`.
 - [ ] **Delegate Acceleration:** Enable CoreML delegate for iOS and NNAPI/GPU delegate for Android in the interpreter initialization.
 - [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.

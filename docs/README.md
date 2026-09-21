@@ -26,3 +26,6 @@ Welcome to the official technical and product documentation for **Boscdex**, the
 
 ### 4. Roadmap
 * [**Status & Milestones**](roadmap/status_and_milestones.md) — Detailed assessment of what is completed in MVP v1.0 and what is planned for v1.1 and v2.0.
+
+### 5. Research & Benchmarks
+* [**Empirical Scan Trials & Classifier Validation**](research/empirical_scan_trials.md) — Real-world field trials on physical devices (iPhone 12), prediction diagnosis, RCA, and benchmark evolution log.

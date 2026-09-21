@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:drift/native.dart';
 
+import 'package:flutter/services.dart';
 import 'package:boscdex/app.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/services/classifier_service.dart';
@@ -23,10 +24,44 @@ void main() {
         'disclaimerAccepted': false,
         'toxicComparisonViewCount': 0,
       });
+
+      TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        const MethodChannel('flutter.baseflow.com/permissions/methods'),
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'checkPermissionStatus') {
+            return 1; // PermissionStatus.granted
+          }
+          if (methodCall.method == 'requestPermissions') {
+            return {1: 1}; // camera: granted
+          }
+          return null;
+        },
+      );
+
+      TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/camera'),
+        (MethodCall methodCall) async {
+          if (methodCall.method == 'availableCameras') {
+            return <Map<String, dynamic>>[];
+          }
+          return null;
+        },
+      );
     });
 
     tearDown(() async {
-      // In-memory sqlite is automatically cleaned up with the test process
+      TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        const MethodChannel('flutter.baseflow.com/permissions/methods'),
+        null,
+      );
+      TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/camera'),
+        null,
+      );
     });
 
     testWidgets(
@@ -85,6 +120,18 @@ void main() {
       // Verify Viewfinder elements
       expect(find.text('Bolets'), findsOneWidget);
       expect(find.text('Arbres'), findsOneWidget);
+      expect(find.text('Enfoca el barret i les làmines del bolet'),
+          findsOneWidget);
+      expect(find.byKey(const Key('gallery_picker_button')), findsOneWidget);
+
+      // Test mode switching to Arbres and back
+      await tester.tap(find.text('Arbres'));
+      await tester.pumpAndSettle();
+      expect(find.text('Enfoca l\'escorça o les fulles de l\'arbre'),
+          findsOneWidget);
+
+      await tester.tap(find.text('Bolets'));
+      await tester.pumpAndSettle();
       expect(find.text('Enfoca el barret i les làmines del bolet'),
           findsOneWidget);
 
