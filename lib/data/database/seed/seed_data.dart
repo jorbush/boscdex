@@ -461,6 +461,28 @@ class SeedData {
           imageAssetPath:
               Value('assets/images/mushrooms/lactarius_sanguifluus.png'),
         ),
+        BoletsCompanion(
+          id: Value('chroogomphus_rutilus'),
+          catalanName: Value('Cama de perdiu'),
+          scientificName: Value('Chroogomphus rutilus'),
+          family: Value('Gomphidiaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[9,10,11,12]'),
+          altitudeMin: Value(400),
+          altitudeMax: Value(1800),
+          capDescription: Value(
+              'De 4 a 10 cm, convex o cònic amb un mamelló central molt marcat (umbonat). Cutícula llisa, viscosa amb la humitat i lluent en eixut, de color marró coure o rogenc amb reflexos vinosos.'),
+          gillsDescription: Value(
+              'Clarament decurrents, gruixudes, espaiades i arquejades, d\'un color inicialment ocre ataronjat que enfosqueix a marró purpuri o negrós en madurar les espores.'),
+          stemDescription: Value(
+              'De 5 a 10 cm, cilíndric i afilat cap a la base (d\'on rep el nom popular de cama de perdiu). Fibrós, ocre ataronjat o salmó, sovint amb miceli groc llimona a la punta inferior.'),
+          safetyNotes: Value(
+              'Comestible de bon gust. La seva carn de color salmó es torna d\'un color violaci o porpra molt fosc i característic en cuinar-se. Es distingeix dels cortinaris verinosos per les seves làmines fortament decurrents i per no tenir cortina.'),
+          dexNumber: Value(22),
+          imageAssetPath:
+              Value('assets/images/mushrooms/chroogomphus_rutilus.png'),
+        ),
       ];
 
   static List<ArbresCompanion> get arbres => const [
@@ -525,6 +547,13 @@ class SeedData {
             arbreId: Value('pinus_sylvestris')),
         BoletArbreAssociationsCompanion(
             boletId: Value('lactarius_sanguifluus'),
+            arbreId: Value('pinus_halepensis')),
+        // chroogomphus_rutilus -> pinus_sylvestris, pinus_halepensis
+        BoletArbreAssociationsCompanion(
+            boletId: Value('chroogomphus_rutilus'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('chroogomphus_rutilus'),
             arbreId: Value('pinus_halepensis')),
         // boletus_edulis -> fagus_sylvatica, castanea_sativa, quercus_ilex
         BoletArbreAssociationsCompanion(
@@ -676,6 +705,12 @@ class SeedData {
           lookalikeBoletId: Value('entoloma_sinuatum'),
           comparisonNotes: Value(
               'El Pèrfid té esporada rosa i olor de farina rància, mentre que el Moixernó té esporada blanca i olor agradable de farina fresca. L\'Entoloma té làmines escotades (pèrfid) i és tòxic.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('chroogomphus_rutilus'),
+          lookalikeBoletId: Value('cortinarius_orellanus'),
+          comparisonNotes: Value(
+              'La Cama de perdiu té làmines molt decurrents i carn que es torna violàcia/negrosa al foc, sense cortina; el Cortinari mortal té làmines adnates/escotades de color rovell i cortina filamentosa.'),
         ),
       ];
 

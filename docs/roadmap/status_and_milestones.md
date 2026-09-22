@@ -36,10 +36,13 @@ This document tracks completed features in **Boscdex MVP v1.0** and outlines upc
 
 ---
 
-## 🟡 Planned for v1.1 (Edge ML Production & Camera Stream)
+## 🟡 In Progress / Completed in v1.1 (Edge ML Production & Camera Stream)
 
 - [x] **Live Camera Stream Integration:** Connect camera hardware feed via native `camera` package with rear lens autofocus, iOS/Android permissions, and gallery photo picker fallback.
-- [ ] **Real Model Weights Packaging:** Bundle trained `boscdex_classifier.tflite` (<18 MB) into `assets/models/`.
+- [x] **Real Model Weights Packaging:** Bundled trained `boscdex_classifier.tflite` (2.50 MB), `classifier_head.bin` (102.5 KB), and `labels.txt` (20 classes) into `assets/models/`.
+- [x] **Field-Calibrated Transfer Learning:** Fine-tuned on real Catalan field photographs on Google Colab T4 GPU, reaching **77.0% Top-1** (134/174) and **90.2% Top-3** (157/174) empirical accuracy across 174 photos.
+- [x] **Decoupled GAP + Dart Classification Head:** Solved mobile TFLite opcode compatibility; sub-0.05 ms linear projection executed in native Dart.
+- [x] **Golden Set Regression Test Suite:** Automated on-device benchmark evaluating 174 field photos in <55s (`model_real_images_test.dart`).
 - [ ] **Delegate Acceleration:** Enable CoreML delegate for iOS and NNAPI/GPU delegate for Android in the interpreter initialization.
 - [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.
 

@@ -6,6 +6,8 @@ import 'boscdex_grid.dart';
 import 'arbre_grid.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/retro_decorations.dart';
+import '../shared/boscdex_logo.dart';
+import '../shared/pixel_icons.dart';
 import 'insignies_dialog.dart';
 
 /// Main Boscdex screen supporting Dual-Dex modes: Bolets (Mushrooms) and Arbres (Indicator Trees).
@@ -36,63 +38,76 @@ class BoscdexScreen extends ConsumerWidget {
         titleSpacing: 16,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Boscdex',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                  decoration: BoxDecoration(
-                    color: RetroColors.forestGreen,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: RetroColors.ink, width: 1.5),
-                  ),
-                  child: const Text(
-                    'LVL 1',
-                    style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
+            const BoscdexLogo(
+              size: 38,
+              showBorder: true,
+              borderWidth: 1.8,
+              showShadow: true,
+              shadowOffset: 2.0,
             ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  isBolets
-                      ? '$boletCount/${AppConstants.maxDexEntries} descoberts'
-                      : '$visitedCount/$totalArbres identificats',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: RetroColors.inkSoft,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Boscdex',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: RetroColors.forestGreen,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: RetroColors.ink, width: 1.5),
+                      ),
+                      child: const Text(
+                        'LVL 1',
+                        style: TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                SizedBox(
-                  width: 64,
-                  child: RetroProgressBar(
-                    progress: isBolets ? boletProgress : arbreProgress,
-                    height: 8,
-                    totalSegments: 6,
-                    fillColor: RetroColors.forestGreen,
-                  ),
+                const SizedBox(height: 2),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      isBolets
+                          ? '$boletCount/${AppConstants.maxDexEntries} descoberts'
+                          : '$visitedCount/$totalArbres identificats',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: RetroColors.inkSoft,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 64,
+                      child: RetroProgressBar(
+                        progress: isBolets ? boletProgress : arbreProgress,
+                        height: 8,
+                        totalSegments: 6,
+                        fillColor: RetroColors.forestGreen,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -101,7 +116,7 @@ class BoscdexScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: RetroColors.goldCoin,
                 shape: BoxShape.circle,
@@ -114,10 +129,8 @@ class BoscdexScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.emoji_events,
-                color: RetroColors.ink,
-                size: 18,
+              child: const PixelTrophyIcon(
+                size: 20,
               ),
             ),
             tooltip: 'Les Meves Insígnies',
@@ -171,7 +184,8 @@ class BoscdexScreen extends ConsumerWidget {
               key: const Key('section_tab_bolets'),
               context: context,
               ref: ref,
-              label: '🍄 Bolets',
+              icon: const PixelBoletIcon(size: 18),
+              label: 'Bolets',
               targetSection: BoscdexSection.bolets,
               isSelected: currentSection == BoscdexSection.bolets,
             ),
@@ -179,7 +193,8 @@ class BoscdexScreen extends ConsumerWidget {
               key: const Key('section_tab_arbres'),
               context: context,
               ref: ref,
-              label: '🌲 Arbres',
+              icon: const PixelArbreIcon(size: 18),
+              label: 'Arbres',
               targetSection: BoscdexSection.arbres,
               isSelected: currentSection == BoscdexSection.arbres,
             ),
@@ -193,6 +208,7 @@ class BoscdexScreen extends ConsumerWidget {
     Key? key,
     required BuildContext context,
     required WidgetRef ref,
+    required Widget icon,
     required String label,
     required BoscdexSection targetSection,
     required bool isSelected,
@@ -227,14 +243,22 @@ class BoscdexScreen extends ConsumerWidget {
                   : null,
             ),
             alignment: Alignment.center,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? Colors.white : RetroColors.inkSoft,
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
-                fontSize: 13,
-                letterSpacing: 0.3,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                icon,
+                const SizedBox(width: 6),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : RetroColors.inkSoft,
+                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
+                    fontSize: 13,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

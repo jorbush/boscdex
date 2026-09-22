@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../domain/models/insignia.dart' as domain;
 import '../../providers/database_provider.dart';
+import '../shared/pixel_icons.dart';
 
 /// Provider for loading badges asynchronously.
 final insigniesProvider = FutureProvider<List<domain.Insignia>>((ref) async {
@@ -95,8 +96,7 @@ class InsigniesDialog extends ConsumerWidget {
                 children: [
                   Row(
                     children: const [
-                      Icon(Icons.emoji_events,
-                          color: RetroColors.goldCoin, size: 28),
+                      PixelTrophyIcon(size: 28),
                       SizedBox(width: 10),
                       Text(
                         'Les Meves Insígnies',

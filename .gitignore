@@ -84,3 +84,6 @@ tools/dataset/merged/
 tools/training/export/
 *.tflite
 !assets/models/*.tflite
+*.zip
+test/assets/
+boscdex_dataset.zip

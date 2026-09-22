@@ -9,6 +9,7 @@ import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/presentation/boscdex/boscdex_screen.dart';
 import 'package:boscdex/presentation/boscdex/boscdex_card.dart';
 import 'package:boscdex/presentation/boscdex/arbre_card.dart';
+import 'package:boscdex/presentation/shared/pixel_icons.dart';
 import 'package:boscdex/providers/database_provider.dart';
 import 'package:boscdex/providers/preferences_provider.dart';
 
@@ -50,8 +51,10 @@ void main() {
       await tester.pump(const Duration(milliseconds: 200));
 
       // 1. Initially on Bolets
-      expect(find.text('🍄 Bolets'), findsOneWidget);
-      expect(find.text('🌲 Arbres'), findsOneWidget);
+      expect(find.text('Bolets'), findsOneWidget);
+      expect(find.text('Arbres'), findsOneWidget);
+      expect(find.byType(PixelBoletIcon), findsOneWidget);
+      expect(find.byType(PixelArbreIcon), findsOneWidget);
       expect(find.textContaining('descoberts'), findsOneWidget);
       expect(find.text('Comestibles'), findsOneWidget);
       expect(find.text('Tòxics/mortals'), findsOneWidget);

@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../domain/services/classifier_service.dart';
 import '../domain/services/safety_gate_service.dart';
-import '../domain/services/visual_feature_classifier_service.dart';
+import '../domain/services/tflite_classifier_service.dart';
 
 /// Provider for the [ClassifierService] used for mushroom/tree identification.
 ///
-/// Uses [VisualFeatureClassifierService] to analyze real camera frames
-/// using on-device botanical color and morphology profiles.
+/// Uses [TfliteClassifierService] for on-device deep learning neural inference
+/// with graceful fallback to botanical visual feature analysis.
 final classifierProvider = Provider<ClassifierService>((ref) {
-  final classifier = VisualFeatureClassifierService();
+  final classifier = TfliteClassifierService();
   ref.onDispose(() => classifier.dispose());
   return classifier;
 });

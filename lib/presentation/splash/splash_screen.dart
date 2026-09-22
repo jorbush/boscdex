@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/preferences_provider.dart';
+import '../shared/boscdex_logo.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -48,27 +49,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Retro Mushroom Card
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(28),
-                    border: Border.all(color: RetroColors.ink, width: 3),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: RetroColors.ink,
-                        offset: Offset(4, 5),
-                      ),
-                    ],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      '🍄',
-                      style: TextStyle(fontSize: 64),
-                    ),
-                  ),
+                // Retro Brand Logo Emblem
+                const BoscdexLogo(
+                  size: 130,
+                  showBorder: true,
+                  borderWidth: 3.5,
+                  showShadow: true,
+                  shadowOffset: 5,
                 ),
                 const SizedBox(height: 24),
 

@@ -58,14 +58,34 @@ SafetyGateService Evaluation:
 
 ## 🔄 Decoupled Service Architecture
 
-The Flutter codebase interacts with the ML subsystem via an abstract `ClassifierService` contract:
+The Flutter codebase interacts with the computer vision subsystem via an abstract `ClassifierService` contract:
 
 ```dart
 abstract class ClassifierService {
   Future<List<ClassificacioResult>> classify(Uint8List imageBytes);
+  Future<List<ArbreClassificacioResult>> classifyTree(Uint8List imageBytes);
   Future<void> initialize();
   void dispose();
 }
 ```
 
-This clean abstraction allows the application to run with a rich `MockClassifierService` during UI development and unit testing, and swap in the native TFLite interpreter seamlessly once model training is completed.
+This decoupled abstraction supports three progressive implementations:
+1. **`TfliteClassifierService` (Active in v0.3 Production):** Executes on-device MobileNetV2 GAP feature extraction (`assets/models/boscdex_classifier.tflite`) combined with a high-performance Dart linear classification head (`assets/models/classifier_head.bin`). Verified at **77.0% Top-1** and **90.2% Top-3** accuracy across 174 real Catalan field photos.
+2. **`VisualFeatureClassifierService` (Graceful Fallback):** Real-time fallback analyzing camera frames by downscaling to $32 \times 32$ via `dart:ui.instantiateImageCodec`, computing HSV chromatic distribution histograms, and scoring against regional botanical profiles (100% offline, zero native binary dependencies).
+3. **`MockClassifierService`:** A deterministic round-robin scenario cycle used for rapid headless UI prototyping and reproducible unit tests.
+
+> **Production Model Bundle in `assets/models/`:**  
+> The `assets/models/` directory contains the production-calibrated model bundle fine-tuned on real Catalan field photos + iNaturalist observations:
+> - `boscdex_classifier.tflite` (2.50 MB): Hardware-accelerated MobileNetV2 deep learning backbone (64 layers) outputting 1,280 Global Average Pooling (GAP) features.
+> - `classifier_head.bin` (102.5 KB): Fast, universal Float32 projection matrix ($20 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$, ensuring 100% platform portability across all iOS/Android TFLite C runtime versions.
+> - `labels.txt` (20 classes): Ordered taxonomic label index mapping neural logits to database entity IDs.
+
+---
+
+## 🧪 Golden Set Empirical Evaluation & Model Testing
+
+To evaluate and track model refinement objectively across iterations, the project maintains an on-device **Golden Validation Set**:
+- **Test Asset Directory:** `test/assets/` (contains 174 real high-resolution field photographs across all 20 Catalan taxa, including *Hygrophorus latitabundus*, *Lactarius deliciosus*, *Boletus edulis*, etc.).
+- **Automated Regression Suite:** [`test/unit_tests/domain/model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/model_real_images_test.dart).
+- **Execution Command:** `flutter test test/unit_tests/domain/model_real_images_test.dart`.
+- **Current Benchmark (Series 006):** **77.0% Top-1** (134/174), **90.2% Top-3** (157/174) with 0.0% un-gated safety false negatives. Evaluates all 174 images in under 55 seconds directly in unit testing.

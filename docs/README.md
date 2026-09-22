@@ -23,6 +23,7 @@ Welcome to the official technical and product documentation for **Boscdex**, the
 * [**Scan-to-Log Workflow**](workflows/scan_to_log.md) — Complete user journey from camera detection to Boscdex unlock and journal record.
 * [**Safety Gate Decision Flow**](workflows/safety_gate_flow.md) — Verification decision tree protecting foragers against poisonous specimens.
 * [**ML Training Pipeline**](workflows/ml_training_pipeline.md) — Dataset gathering from iNaturalist, Catalan geographical filtering, augmentations, and quantization export.
+* [**Google Colab Training Guide**](workflows/colab_training_guide.md) — Step-by-step guide to train the INT8 TFLite model on Google Colab's free T4 GPU tier.
 
 ### 4. Roadmap
 * [**Status & Milestones**](roadmap/status_and_milestones.md) — Detailed assessment of what is completed in MVP v1.0 and what is planned for v1.1 and v2.0.

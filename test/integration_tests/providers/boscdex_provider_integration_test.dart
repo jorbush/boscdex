@@ -33,9 +33,9 @@ void main() {
       await db.close();
     });
 
-    test('boscdexEntriesProvider loads all 21 seeded species', () async {
+    test('boscdexEntriesProvider loads all 22 seeded species', () async {
       final entries = await container.read(boscdexEntriesProvider.future);
-      expect(entries.length, equals(21));
+      expect(entries.length, equals(22));
 
       // All initial entries should be undiscovered
       final discoveredCount = entries.where((e) => e.isDiscovered).length;

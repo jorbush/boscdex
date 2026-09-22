@@ -17,7 +17,7 @@ void main() {
 
   test('Database populates seed data on creation', () async {
     final bolets = await db.boletDao.getAllBolets();
-    expect(bolets.length, equals(21));
+    expect(bolets.length, equals(22));
 
     final arbres = await db.arbreDao.getAllArbres();
     expect(arbres.length, equals(5));
