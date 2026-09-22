@@ -30,3 +30,7 @@ Welcome to the official technical and product documentation for **Boscdex**, the
 
 ### 5. Research & Benchmarks
 * [**Empirical Scan Trials & Classifier Validation**](research/empirical_scan_trials.md) — Real-world field trials on physical devices (iPhone 12), prediction diagnosis, RCA, and benchmark evolution log.
+
+### 6. Theory & Machine Learning Foundations
+* [**Machine Learning & Computer Vision Theory**](theory/README.md) — Complete foundational curriculum explaining how computers see images, convolutions, MobileNetV2 transfer learning, backpropagation, and edge TFLite quantization from first principles.
+
