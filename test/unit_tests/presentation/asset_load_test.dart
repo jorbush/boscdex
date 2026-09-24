@@ -97,10 +97,11 @@ void main() {
     final labelsString =
         await rootBundle.loadString('assets/models/labels.txt');
     final labels = labelsString.trim().split('\n');
-    expect(labels.length, equals(20));
+    expect(labels.length, equals(21));
     expect(labels, contains('lactarius_deliciosus'));
     expect(labels, contains('amanita_caesarea'));
     expect(labels, contains('boletus_edulis'));
+    expect(labels, contains('chroogomphus_rutilus'));
   });
 
   testWidgets('Renders ColorFiltered silhouette properly', (tester) async {

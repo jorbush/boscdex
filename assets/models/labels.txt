@@ -5,6 +5,7 @@ amanita_verna
 boletus_edulis
 calocybe_gambosa
 cantharellus_cibarius
+chroogomphus_rutilus
 cortinarius_orellanus
 craterellus_cornucopioides
 craterellus_lutescens

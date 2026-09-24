@@ -10,14 +10,14 @@ This document details the offline classifier dataset assembly, model training wo
 |---|---|---|---|
 | **v0.1** | `MockClassifierService` | Memory | Hardcoded circular mock used for initial UI prototyping. |
 | **v0.2** | `VisualFeatureClassifierService` | Code (`dart:ui`) | Real-time on-device pixel analysis (HSV chromaticity and botanical morphology). Zero external dependencies, 100% offline. |
-| **v0.3 (Production)** | Edge Deep Learning (`.tflite` + Dart Head) | `assets/models/` | MobileNetV2 GAP feature extractor + Dart linear head fine-tuned on real Catalan field photos. **77.0% Top-1, 90.2% Top-3** on 174 field test photos. |
+| **v0.3 (Production)** | Edge Deep Learning (`.tflite` + Dart Head) | `assets/models/` | MobileNetV2 GAP feature extractor + Dart linear head fine-tuned on real Catalan field photos. **88.8% Top-1, 97.3% Top-3** on 188 field test photos (21 classes). |
 
 > **Model Weights Status in `assets/models/`:**  
 > The `assets/models/` directory contains the production-calibrated model bundle trained via Google Colab T4 GPU:
 > - `boscdex_classifier.tflite` (2.50 MB): Quantized MobileNetV2 backbone (64 layers) outputting 1,280 Global Average Pooling (GAP) features.
-> - `classifier_head.bin` (102.5 KB): Portable Float32 weight matrix ($20 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$, ensuring 100% cross-platform compatibility across iOS and Android without TFLite opcode version mismatches.
-> - `labels.txt` (20 classes): Ordered taxonomic label index mapping neural logits to database entity IDs.
-> - **Field Validation (Series 006):** Evaluated against 174 real field photos (`test/assets/`), achieving **77.0% Top-1** (134/174) and **90.2% Top-3** (157/174) accuracy.
+> - `classifier_head.bin` (107.6 KB): Portable Float32 weight matrix ($21 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$, ensuring 100% cross-platform compatibility across iOS and Android without TFLite opcode version mismatches.
+> - `labels.txt` (21 classes): Ordered taxonomic label index mapping neural logits to database entity IDs, including Dex #022 *Chroogomphus rutilus*.
+> - **Field Validation (Series 008):** Evaluated against 188 real field photos (`test/assets/`), achieving **88.8% Top-1** (167/188) and **97.3% Top-3** (183/188) accuracy.
 
 
 ---

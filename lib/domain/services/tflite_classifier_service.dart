@@ -17,9 +17,9 @@ import 'visual_feature_classifier_service.dart';
 /// Architecture & Performance:
 /// - Pre-processes camera frames into contiguous [1, 224, 224, 3] Float32 tensors.
 /// - MobileNetV2 backbone computes 1,280 Global Average Pooling (GAP) deep features via TFLite.
-/// - Classification head (20 classes x 1280 features) executes in Dart in <0.05ms,
+/// - Classification head (21 classes x 1280 features) executes in Dart in <0.05ms,
 ///   guaranteeing 100% platform portability across all iOS and Android TFLite C runtime versions.
-/// - Evaluates 20 Catalan fungal taxa with sub-80ms on-device latency.
+/// - Evaluates 21 Catalan fungal taxa with sub-80ms on-device latency.
 /// - Gracefully falls back to [VisualFeatureClassifierService] if native TFLite C bindings
 ///   are unavailable (e.g. headless unit tests or mock environments).
 class TfliteClassifierService implements ClassifierService {

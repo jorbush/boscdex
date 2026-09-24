@@ -61,15 +61,15 @@ Once the browser finishes downloading:
 
 ---
 
-## 📊 Verified Real-World Performance (Series 006 Benchmark)
+## 📊 Verified Real-World Performance (Series 008 Benchmark)
 
-When trained on the hybrid dataset (`boscdex_dataset.zip` + iNaturalist Catalan top-up), the model achieves:
+When trained on the hybrid dataset (`boscdex_dataset.zip` + iNaturalist Catalan top-up), the 21-species model achieves:
 
 * **Training Duration:** ~10–15 minutes on Colab T4 GPU.
-* **Top-1 Accuracy:** **77.0%** (134 / 174 real field photos).
-* **Top-3 Accuracy:** **90.2%** (157 / 174 real field photos).
-* **Standout Taxa:** *Hygrophorus latitabundus* (100% Top-1), *Boletus edulis* (100% Top-1), *Amanita muscaria* (100% Top-1), *Cortinarius orellanus* (100% Top-1), *Pleurotus ostreatus* (90% Top-1), *Cantharellus cibarius* (86% Top-1), *Lactarius deliciosus* (82% Top-3).
-* **Model Footprint:** ~2.5 MB TFLite backbone + 102.5 KB classification head (vastly below the 18 MB mobile budget).
+* **Top-1 Accuracy:** **88.8%** (167 / 188 real field photos).
+* **Top-3 Accuracy:** **97.3%** (183 / 188 real field photos).
+* **Standout Taxa:** *Chroogomphus rutilus* (100% Top-1), *Boletus edulis* (100% Top-1), *Hydnum repandum* (100% Top-1), *Amanita caesarea* (100% Top-1), *Amanita muscaria* (100% Top-1), *Amanita verna* (100% Top-1), *Cantharellus cibarius* (100% Top-1), *Craterellus cornucopioides* (100% Top-1), *Pleurotus ostreatus* (100% Top-1), *Omphalotus olearius* (100% Top-1), *Hygrophorus latitabundus* (93% Top-1), *Tricholoma terreum* (90% Top-1 / 100% Top-3), *Lactarius deliciosus* (100% Top-3).
+* **Model Footprint:** ~2.5 MB TFLite backbone + 107.6 KB classification head (vastly below the 18 MB mobile budget).
 
 ---
 

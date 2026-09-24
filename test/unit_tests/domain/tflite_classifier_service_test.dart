@@ -23,10 +23,11 @@ void main() {
       await service.initialize();
 
       // Labels from assets/models/labels.txt should be parsed
-      expect(service.labels.length, equals(20));
+      expect(service.labels.length, equals(21));
       expect(service.labels, contains('lactarius_deliciosus'));
       expect(service.labels, contains('amanita_caesarea'));
       expect(service.labels, contains('boletus_edulis'));
+      expect(service.labels, contains('chroogomphus_rutilus'));
     });
 
     test('Classifying real mushroom specimen yields non-flat confidence',

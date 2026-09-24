@@ -73,7 +73,41 @@ A machine learning model optimizing standard cross-entropy loss treats all mista
 
 ---
 
-## 5. The Boscdex Solution: Defense-in-Depth Safety Architecture
+## 5. Challenge 5: The "See-Saw" Effect (Class Interference in Small-N Datasets)
+
+In real-world field development, training datasets often grow incrementally: an engineer or forager adds 10 new photos of *Rovelló* (*Lactarius deliciosus*) because it failed on yesterday's hike.
+
+When a deep neural network is fine-tuned with small, imbalanced classes ($N < 15$ per class), a phenomenon called the **"See-Saw Effect"** occurs:
+1. **Dominant Gradient Pull:** Gradient descent shifts weights to minimize loss on the species with 20+ photos.
+2. **Boundary Erosion on Underrepresented Taxa:** The separating hyperplanes for species with only 5–8 photos (*Amanita verna*, *Calocybe gambosa*) are compressed.
+3. **The Empirical Manifestation:** In Boscdex Series 009, improving *Lactarius deliciosus* (73% $\rightarrow$ 86%) and *Amanita phalloides* (50% $\rightarrow$ 88%) caused *Amanita verna* to abruptly collapse from **100% (8/8) down to 38% (3/8)**!
+
+### The Mathematical Remedy: Minimum Class Quotas
+To eliminate class interference, datasets must enforce a strict **minimum sample quota** across all classes (e.g. $N \ge 40$ per taxon). By synthesizing local field photos with research-grade iNaturalist observations across Catalonia, Spain, and Europe (Option B), *Amanita verna* immediately rebounded from **38% back to 100% (8/8)**, maintaining both lethal Amanitas at 88%–100% without sacrificing Rovelló.
+
+---
+
+## 6. Challenge 6: The "Orange-Ochre Complex" & Hymenial Trait Occlusion
+
+Across real Catalan field trials, **40% of all classification errors** concentrate in just two species: *Lactarius deliciosus* (Rovelló) and *Hydnum repandum* (Llengua de bou).
+
+This stems from **Hymenial Trait Occlusion**:
+* **The Problem with 2D Top-Down Framing:** Viewed strictly from the dorsal (top) perspective, *Hydnum repandum* has an irregular, pale cream-buff to yellowish-orange cap. In 2D RGB pixels, its dorsal feature vector is nearly indistinguishable from pale *Cantharellus cibarius* (Rossinyol) or a sun-bleached *Boletus edulis* (Cep).
+* **The Botanical Differentiator:** The *only* definitive visual feature of *Hydnum repandum* is its **underside hymenium covered in spines/needles (*agullons / espines*)** instead of gills or pores.
+* **The Polymorphic Camouflage of Rovelló:** *Lactarius deliciosus* presents stark visual polymorphism:
+  - Young specimens: bright orange with concentric cap zonations.
+  - Weathered/dirty specimens: dull brown coated in pine needle resin (confused with *Suillus*).
+  - Bruised specimens: dark verdigris-green (*verdet*).
+
+### The Diagnostic Angle Protocol:
+To break through the 90%+ Top-1 threshold across all taxa, the training and scanning protocol must prioritize:
+1. **Underside Hymenium Macro:** Framing the needles/spines under the cap at $45^\circ$ for *Hydnum repandum*, and yellow pores for *Suillus luteus*.
+2. **Latex & Flesh Cross-Sections:** Framing broken stems showing carrot-orange milk (*làtex taronja*) and green oxidation (*verdet*) for *Lactarius*.
+3. **Concentric Zonation Close-ups:** Focusing on the alternating circular bands on the cap cuticle.
+
+---
+
+## 7. The Boscdex Solution: Defense-in-Depth Safety Architecture
 
 Because deep learning models are statistical pattern matchers that output probabilities—not infallible botanical experts—Boscdex implements a **multi-layered safety architecture**:
 
