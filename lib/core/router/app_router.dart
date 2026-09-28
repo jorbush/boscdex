@@ -8,6 +8,7 @@ import '../../presentation/detail/bolet_detail_screen.dart';
 import '../../presentation/detail/arbre_detail_screen.dart';
 import '../../presentation/scan/scan_screen.dart';
 import '../../presentation/journal/journal_screen.dart';
+import '../../presentation/settings/settings_screen.dart';
 import '../../presentation/splash/splash_screen.dart';
 
 /// Central GoRouter configuration for the Boscdex app.
@@ -62,6 +63,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/disclaimer',
       builder: (context, state) => const DisclaimerScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
   ],
 );

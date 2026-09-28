@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'boscdex_provider.dart';
 import 'boscdex_grid.dart';
 import 'arbre_grid.dart';
@@ -114,6 +115,33 @@ class BoscdexScreen extends ConsumerWidget {
           ],
         ),
         actions: [
+          IconButton(
+            icon: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: RetroColors.mintWash,
+                shape: BoxShape.circle,
+                border: Border.all(color: RetroColors.ink, width: 1.8),
+                boxShadow: const [
+                  BoxShadow(
+                    color: RetroColors.ink,
+                    offset: Offset(1.5, 1.5),
+                    blurRadius: 0,
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.settings_rounded,
+                size: 20,
+                color: RetroColors.ink,
+              ),
+            ),
+            tooltip: 'Configuració',
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              context.push('/settings');
+            },
+          ),
           IconButton(
             icon: Container(
               padding: const EdgeInsets.all(5),

@@ -78,3 +78,30 @@ class VisitedArbresNotifier extends StateNotifier<Set<String>> {
     }
   }
 }
+
+/// Notifier tracking whether tactile haptic vibration is enabled.
+final hapticFeedbackEnabledProvider =
+    StateNotifierProvider<HapticFeedbackNotifier, bool>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return HapticFeedbackNotifier(prefs);
+});
+
+/// [StateNotifier] for haptic vibration preference.
+class HapticFeedbackNotifier extends StateNotifier<bool> {
+  HapticFeedbackNotifier(this._prefs)
+      : super(_prefs.getBool('hapticFeedbackEnabled') ?? true);
+
+  final SharedPreferences _prefs;
+
+  /// Toggles tactile feedback on or off.
+  void toggle() {
+    state = !state;
+    _prefs.setBool('hapticFeedbackEnabled', state);
+  }
+
+  /// Sets tactile feedback state explicitly.
+  void setEnabled(bool enabled) {
+    state = enabled;
+    _prefs.setBool('hapticFeedbackEnabled', enabled);
+  }
+}
