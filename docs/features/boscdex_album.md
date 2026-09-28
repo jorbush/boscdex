@@ -8,17 +8,20 @@ The **Boscdex Album** (`/boscdex`) is the central gamified field guide modeled a
 
 ### 1. Dual Visual States (Discovered vs. Undiscovered)
 
-* **Undiscovered State:**
-  * Displays a dark silhouette card with the specimen's sequential entry number (`#001` to `#080`).
-  * Shows a mystery/locked aesthetic.
-  * Tapping displays a discreet field hint: *"Encara no has descobert aquest bolet!"*.
+* **Undiscovered State (Pokédex Habitat & Location Mode):**
+  * Displays a dark silhouette card with the specimen's sequential entry number (`#001 ???`).
+  * Tapping navigates directly to the detailed sheet in **Pokédex Area / Habitat Inspection mode** (`/boscdex/:id`):
+    * **Veiled Identity:** Dark silhouette image, `#001 ???` title, `Espècie per catalogar` scientific subtitle, and mystery locked status (`🔒 No descobert`).
+    * **Visible Location & Habitat ("On trobar-lo"):** Associated indicator trees (interactive chips linking to tree profiles), 12-month fruiting season calendar, and altitudinal elevation range.
+    * **Locked Morphology & Safety:** Cap, gills, stem, latex, and toxic twins remain sealed behind a retro lock card until field discovery.
+    * **Expedition CTA:** Quick button to open the live camera scanner (`/scan`).
 
 * **Discovered State:**
-  * Full specimen illustration/photo.
+  * Full specimen illustration/photo with edibility accent color.
   * Catalan vernacular name prominent at the base.
   * Minimalist circular corner edibility badge (`EdibilityBadge` in `iconOnly` mode).
   * Sequential Dex number.
-  * Tapping navigates to the rich specimen detail sheet (`/boscdex/:id`).
+  * Tapping navigates to the rich specimen detail sheet (`/boscdex/:id`) with full morphology, captures gallery, and safety keys revealed.
 
 ---
 
@@ -84,5 +87,23 @@ When a user taps an unlocked mushroom card from the Boscdex grid, the **Specimen
 5. **Altitudinal Distribution:** Altitude range bar indicating typical Catalan terrain elevation (meters above sea level).
 6. **Botanical Morphology:** Expandable sections detailing cap (*barret*), gills/pores (*làmines/tubs*), stem (*peu*), and latex (*làtex*).
 7. **Associated Host Trees:** Interactive chips linking directly to mycorrhizal partner trees.
+8. **Àrea de Distribució (Mapa Pokédex):**
+   * A retro 16-bit pixel-art regional map of Catalonia displaying the geographic foraging zones where the species naturally thrives.
+   * Active zones pulse with radar animations (`RetroColors.arcadeRed`), mimicking the classic handheld Pokédex "Area" screen.
+   * Interactive zone selector chips allow exploring the comarques, terrain types, and altitudinal habits of each natural region.
+
+---
+
+## 🗺️ Pokémon-Style Undiscovered Species & Habitat Location
+
+In true classic Pokédex tradition, undiscovered mushrooms in the Boscdex are not completely locked away or inaccessible:
+
+1. **Undiscovered Card Tap:** Tapping an undiscovered card in the Boscdex grid opens the **Mystery Specimen Screen**.
+2. **Veiled Identity:** The mushroom's name, photograph, morphology, and edibility remain confidential (`#001 ???`, `Espècie per catalogar`, `No descobert`).
+3. **Habitat & Location Clues:** The hunter can inspect where and when to find the species in Catalonia:
+   * **16-bit Catalonia Pixel Map:** Displays the pulsating natural regions where the unknown bolet grows.
+   * **Symbiotic Indicator Trees:** Direct links to the mycorrhizal host trees under which the species fruits.
+   * **Fruiting Altitude & Seasonality:** Elevation bounds and active months.
+4. **Direct Camera Call-to-Action:** A prominent button (`Cercar amb la càmera`) takes the forager directly to the AI scanner to search for and unlock the specimen.
 
 

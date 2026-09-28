@@ -46,7 +46,8 @@ This document tracks completed features in **Boscdex MVP v1.0** and outlines upc
 - [x] **Field Photo Persistence Architecture:** Scanned field photos saved permanently in `<appDocumentsDir>/scans/scan_<uuid>.jpg` with relative path linkage in SQLite `Avistaments`.
 - [x] **Sighting Inspection & Export:** Modal detail view (`AvistamentDetailSheet`) featuring `InteractiveViewer` pinch-to-zoom, neural coincidence %, direct gallery export (`ImageGallerySaver`), and system sharing (`share_plus`).
 - [x] **"Les Teves Captures" Gallery in Boscdex:** Specimen cards now showcase a personalized horizontal photo carousel of every user scan for that species.
-- [x] **Comprehensive Automated Test Suite:** 97+ passing unit, widget, and integration tests across data, domain, and presentation layers.
+- [x] **Comprehensive Automated Test Suite:** 114 passing unit, widget, integration, and E2E tests across data, domain, and presentation layers.
+- [x] **Pokédex-Style Habitat & Location Inspection with 16-Bit Catalonia Pixel Art Map:** Tap any undiscovered specimen in the Boscdex to inspect its geographic habitat, pulsating regional distribution zones on an authentic 16-bit retro map of Catalonia, associated indicator trees, altitudinal range, and fruiting seasonality with morphological keys and identity veiled until live camera discovery.
 - [ ] **Delegate Acceleration:** Enable CoreML delegate for iOS and NNAPI/GPU delegate for Android in the interpreter initialization.
 - [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.
 

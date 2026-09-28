@@ -111,11 +111,36 @@ void main() {
       expect(find.text('Boscdex'), findsWidgets);
       expect(find.text('0/80 descoberts'), findsOneWidget);
 
-      // 4. User navigates to the Scan tab
-      final scanTabFinder = find.text('Escanejar');
-      expect(scanTabFinder, findsOneWidget);
-      await tester.tap(scanTabFinder);
+      // 3b. User inspects an undiscovered bolet to check its habitat & location
+      final undiscoveredCardFinder = find.text('#001 ???');
+      expect(undiscoveredCardFinder, findsOneWidget);
+      await tester.tap(undiscoveredCardFinder);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
+
+      // Verify veiled identity and visible habitat
+      expect(find.text('#001 ???'), findsOneWidget);
+      expect(find.text('Espècie per catalogar'), findsOneWidget);
+      expect(find.text('Hàbitat i Distribució'), findsOneWidget);
+      expect(find.text('Claus Morfològiques Bloquejades'), findsOneWidget);
+
+      // Tap "Cercar amb la càmera" CTA to launch the scanner
+      final searchCtaFinder = find.text('Cercar amb la càmera');
+      await tester.scrollUntilVisible(
+        searchCtaFinder,
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(searchCtaFinder);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
+
+      // 4. User is on the Scan tab
+      expect(find.text('Escanejar'), findsWidgets);
 
       // Verify Viewfinder elements
       expect(find.text('Bolets'), findsOneWidget);

@@ -34,6 +34,9 @@ void main() {
   testWidgets(
       'BoletDetailScreen shows empty captures prompt when no user scans exist',
       (tester) async {
+    await db.descobrimentDao
+        .markDiscovered('lactarius_deliciosus', DateTime.now(), null);
+
     await tester.pumpWidget(createWidgetUnderTest('lactarius_deliciosus'));
     await tester.pumpAndSettle();
 

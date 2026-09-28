@@ -81,6 +81,26 @@ void main() {
         await rootBundle.load('assets/icons/pixel_trophy.png');
     expect(pixelTrophyData.lengthInBytes, greaterThan(0),
         reason: 'Pixel trophy icon must load');
+
+    final pixelPinActive =
+        await rootBundle.load('assets/icons/pixel_pin_active.png');
+    expect(pixelPinActive.lengthInBytes, greaterThan(0),
+        reason: 'Active pixel zone pin asset must load');
+
+    final pixelPinInactive =
+        await rootBundle.load('assets/icons/pixel_pin_inactive.png');
+    expect(pixelPinInactive.lengthInBytes, greaterThan(0),
+        reason: 'Inactive pixel zone pin asset must load');
+
+    final pixelCompass =
+        await rootBundle.load('assets/icons/pixel_compass.png');
+    expect(pixelCompass.lengthInBytes, greaterThan(0),
+        reason: 'Pixel compass asset must load');
+
+    final cataloniaMap =
+        await rootBundle.load('assets/images/map/catalonia_pixel_map.jpg');
+    expect(cataloniaMap.lengthInBytes, greaterThan(0),
+        reason: 'Catalonia pixel map image must load');
   });
 
   test('Trained TFLite model and labels load via rootBundle', () async {

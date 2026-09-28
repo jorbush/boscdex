@@ -68,5 +68,54 @@ void main() {
       expect(image.height, equals(28));
       expect(image.filterQuality, equals(FilterQuality.none));
     });
+
+    testWidgets(
+        'PixelZonePinIcon renders active and inactive variants with FilterQuality.none',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Column(
+              children: const [
+                PixelZonePinIcon(isActive: true, size: 16),
+                PixelZonePinIcon(isActive: false, size: 16),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byType(PixelZonePinIcon), findsNWidgets(2));
+      final images = tester.widgetList<Image>(find.byType(Image)).toList();
+      expect(images.length, equals(2));
+
+      final activeAsset = images[0].image as AssetImage;
+      expect(activeAsset.assetName, equals(PixelIcons.pinActivePath));
+      expect(images[0].filterQuality, equals(FilterQuality.none));
+
+      final inactiveAsset = images[1].image as AssetImage;
+      expect(inactiveAsset.assetName, equals(PixelIcons.pinInactivePath));
+      expect(images[1].filterQuality, equals(FilterQuality.none));
+    });
+
+    testWidgets(
+        'PixelCompassIcon renders compass asset with FilterQuality.none',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: PixelCompassIcon(size: 18),
+          ),
+        ),
+      );
+
+      expect(find.byType(PixelCompassIcon), findsOneWidget);
+      final image = tester.widget<Image>(find.byType(Image));
+      final assetImage = image.image as AssetImage;
+      expect(assetImage.assetName, equals(PixelIcons.compassPath));
+      expect(image.width, equals(18));
+      expect(image.height, equals(18));
+      expect(image.filterQuality, equals(FilterQuality.none));
+    });
   });
 }

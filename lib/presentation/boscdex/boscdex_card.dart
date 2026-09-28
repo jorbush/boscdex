@@ -23,17 +23,12 @@ class BoscdexCard extends StatelessWidget {
 
       return Semantics(
         button: true,
-        label: 'Bolet número $dexNum no descobert',
+        label:
+            'Bolet número $dexNum no descobert. Toca per veure hàbitat i ubicació',
         child: GestureDetector(
           onTap: () {
             HapticFeedback.lightImpact();
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Encara no has descobert aquest bolet!'),
-                duration: Duration(seconds: 2),
-              ),
-            );
+            context.push('/boscdex/${entry.bolet.id}');
           },
           child: Container(
             padding: const EdgeInsets.all(2.2),

@@ -33,6 +33,9 @@ void main() {
     testWidgets(
         'BoletDetailScreen renders specimen information and toxic twin alert',
         (WidgetTester tester) async {
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', DateTime.now(), null);
+
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -70,6 +73,51 @@ void main() {
         find.textContaining('mai presenta làtex taronja', skipOffstage: false),
         findsOneWidget,
       );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'BoletDetailScreen renders mystery undiscovered view with habitat location when not discovered',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: BoletDetailScreen(id: 'lactarius_deliciosus'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Verify veiled identity:
+      expect(find.text('#001 ???'), findsOneWidget);
+      expect(find.text('Espècie per catalogar'), findsOneWidget);
+      expect(find.text('No descobert'), findsOneWidget);
+      expect(find.text('Comestibilitat: ???'), findsOneWidget);
+      expect(find.text('Rovelló / Pinetell'), findsNothing);
+      expect(find.text('Lactarius deliciosus'), findsNothing);
+      expect(find.text('Comestible excel·lent'), findsNothing);
+
+      // Verify Habitat and Distribution (Location) renders:
+      expect(find.text('Hàbitat i Distribució'), findsOneWidget);
+      expect(find.text('Arbres associats'), findsOneWidget);
+      expect(find.text('Altitud de fructificació'), findsOneWidget);
+
+      // Verify morphology is locked:
+      expect(find.text('Claus Morfològiques Bloquejades'), findsOneWidget);
+      expect(find.text('Morfologia'), findsNothing);
+
+      // Verify toxic twin alert is hidden:
+      expect(find.byType(ToxicTwinAlert), findsNothing);
+
+      // Verify Camera CTA:
+      expect(find.text('Cercar amb la càmera'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
     });
