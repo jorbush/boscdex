@@ -34,6 +34,7 @@ The **Live Scan** tab (`/scan`) provides the visual viewfinder used for identify
 * **Privacy Descriptions in `Info.plist`:**
   * `NSCameraUsageDescription`: Required for real-time live viewfinder and specimen photography.
   * `NSPhotoLibraryUsageDescription`: Required for picking photos from the user's photo album.
+  * `NSPhotoLibraryAddUsageDescription`: Required for saving scanned field photos to the user's Camera Roll / Photo Library.
   * `NSMicrophoneUsageDescription`: Declared to satisfy AVFoundation video frameworks.
   * `NSLocationWhenInUseUsageDescription`: Required for GPS coordinates in sighting journal.
 * **CocoaPods Preprocessor Flags (`ios/Podfile`):**
@@ -70,9 +71,11 @@ Upon scanning a mushroom, the on-device model evaluates the image and presents a
 3. **Safety Gate Warnings:**
    * Evaluated automatically by `SafetyGateService` (see [Safety and Toxic Lookalikes](safety_and_toxic_lookalikes.md)).
 4. **Action CTA ("Registrar a la meva Boscdex"):**
-   * Persists a new entry in `Avistaments` (including photo bytes or location).
+   * Persists the captured high-resolution photograph to local device storage at `<appDocumentsDir>/scans/scan_<uuid>.jpg`.
+   * Inserts a new sighting into SQLite `Avistaments` linking the exact `photoPath` and `confidenceScore`.
    * Unlocks the specimen in `Descobriments` if encountering it for the first time.
    * Re-evaluates badge conditions and updates `Insignies`.
+   * Synchronizes the new capture with both **El Meu Diari** (`/journal`) and the species' **"Les Teves Captures"** gallery in **La Boscdex** (`/boscdex/:id`).
    * Displays instant feedback and dismisses the sheet.
 
 ---

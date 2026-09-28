@@ -9,11 +9,12 @@ Boscdex is a gamified, 100% offline field guide designed for mushroom foragers (
 ## ✨ Key Features
 
 - **🔌 100% Offline** — Functions completely without an internet connection. On-device computer vision classification and local SQLite data.
-- **📸 Mushroom Scanner** — Identifies wild mushrooms using real-time edge machine learning (Edge ML).
+- **📸 Mushroom Scanner & High-Res Photo Storage** — Identifies wild mushrooms using real-time edge machine learning (Edge ML) and preserves high-resolution field photos on-device.
+- **🔍 Sighting Detail & Export** — Inspect scanned photos with pinch-to-zoom (`InteractiveViewer`), neural coincidence percentage gauge, 1-tap download to Camera Roll, and native sharing (AirDrop, WhatsApp).
+- **🍄 Boscdex Album & "Les Teves Captures"** — Visual discovery album with dark silhouettes, rarity tiers, and personal specimen photo galleries.
 - **🌲 Indicator Trees** — Comprehensive guide to Catalonia's key mycorrhizal host trees (oak, beech, chestnut, pine).
 - **⚠️ Dangerous Lookalikes** — High-visibility safety alerts highlighting poisonous and deadly twin species.
-- **📖 Boscdex Album** — Visual discovery album with silhouettes, rarity tiers, and collection statistics.
-- **📝 Sighting Journal** — Field log recording discoveries with timestamps, photos, and GPS coordinates.
+- **📝 Sighting Journal** — Field log recording discoveries chronologically with real photo thumbnails, confidence pills, timestamps, and GPS coordinates.
 - **🏆 Badges & Achievements** — Local gamification milestones celebrating field achievements.
 
 ---

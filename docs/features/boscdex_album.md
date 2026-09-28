@@ -67,3 +67,22 @@ The two sub-catalogs maintain a symbiotic relationship throughout the UI:
 * In any **Arbre detail screen** (`/arbre/:id`), tapping any associated mushroom card navigates directly to its full Boscdex entry.
 * In the **Arbres grid**, each tree card displays a badge indicating how many mushroom species fruit in mycorrhizal partnership under its canopy.
 
+---
+
+## 📸 Specimen Detail Sheet & "Les Teves Captures" Gallery
+
+When a user taps an unlocked mushroom card from the Boscdex grid, the **Specimen Detail Screen** (`BoletDetailScreen`) provides a rich field profile:
+
+1. **Header & Badges:** Full-bleed hero image area, Catalan vernacular name, italicized botanical binomial, rarity tier badge, and large edibility pill.
+2. **"Les Teves Captures" (Your Captures Gallery):**
+   * A dedicated horizontal photo carousel displaying every scan the user has personally photographed of that species.
+   * Each card features the real field photograph with retro borders, scan date (e.g. `25 Set`), and neural confidence score (`🎯 89%`).
+   * Tapping any capture opens the **Sighting Detail Sheet** with zoom, coincidence analytics, and photo download/sharing options.
+   * If 0 scans exist for that taxon, an encouraging retro card invites the user to photograph it in the wild with a 1-tap shortcut to the Scanner (`/scan`).
+3. **Safety & Toxic Lookalikes:** High-priority warning cards ([`toxic_twin_alert.dart`](file:///Users/jordi/dev/boscdex/lib/presentation/detail/toxic_twin_alert.dart)) highlighting perilous visual cousins with diagnostic field keys.
+4. **Phenological Seasonality:** 12-month calendar strip highlighting peak Catalan fruiting months.
+5. **Altitudinal Distribution:** Altitude range bar indicating typical Catalan terrain elevation (meters above sea level).
+6. **Botanical Morphology:** Expandable sections detailing cap (*barret*), gills/pores (*làmines/tubs*), stem (*peu*), and latex (*làtex*).
+7. **Associated Host Trees:** Interactive chips linking directly to mycorrhizal partner trees.
+
+

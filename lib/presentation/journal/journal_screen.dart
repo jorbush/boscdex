@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/theme/retro_decorations.dart';
+import 'avistament_detail_sheet.dart';
 import 'journal_provider.dart';
 
 class JournalScreen extends ConsumerWidget {
@@ -94,6 +96,14 @@ class JournalScreen extends ConsumerWidget {
               final displayName =
                   boletsMap[avistament.boletId] ?? avistament.boletId;
 
+              final hasRealPhoto = avistament.photoPath != null &&
+                  File(avistament.photoPath!).existsSync();
+              final confidencePct = avistament.confidenceScore != null
+                  ? (avistament.confidenceScore! * 100).toInt()
+                  : null;
+              final isHighConfidence =
+                  (avistament.confidenceScore ?? 0.0) >= 0.70;
+
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 decoration: RetroDecorations.card(
@@ -106,39 +116,90 @@ class JournalScreen extends ConsumerWidget {
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   leading: Container(
-                    width: 48,
-                    height: 48,
+                    width: 52,
+                    height: 52,
                     decoration: BoxDecoration(
-                      color: RetroColors.surfaceLight,
+                      color: hasRealPhoto
+                          ? Colors.black
+                          : RetroColors.surfaceLight,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: RetroColors.ink, width: 2),
                     ),
-                    padding: const EdgeInsets.all(4),
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/mushrooms/${avistament.boletId}.png',
-                        cacheWidth: 150,
-                        fit: BoxFit.contain,
-                        filterQuality: FilterQuality.none,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Image.asset(
-                          'assets/images/silhouettes/generic_mushroom.png',
-                          cacheWidth: 150,
-                          fit: BoxFit.contain,
-                          filterQuality: FilterQuality.none,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Text('🍄', style: TextStyle(fontSize: 22)),
+                    clipBehavior: Clip.antiAlias,
+                    child: hasRealPhoto
+                        ? Image.file(
+                            File(avistament.photoPath!),
+                            fit: BoxFit.cover,
+                            errorBuilder: (ctx, err, st) => const Center(
+                              child: Text('🍄', style: TextStyle(fontSize: 24)),
+                            ),
+                          )
+                        : Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Image.asset(
+                                'assets/images/mushrooms/${avistament.boletId}.png',
+                                cacheWidth: 150,
+                                fit: BoxFit.contain,
+                                filterQuality: FilterQuality.none,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(
+                                  'assets/images/silhouettes/generic_mushroom.png',
+                                  cacheWidth: 150,
+                                  fit: BoxFit.contain,
+                                  filterQuality: FilterQuality.none,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Text('🍄',
+                                          style: TextStyle(fontSize: 22)),
+                                ),
+                              ),
+                            ),
+                          ),
+                  ),
+                  title: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          displayName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            color: RetroColors.ink,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  title: Text(
-                    displayName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w900,
-                      color: RetroColors.ink,
-                      fontSize: 15,
-                    ),
+                      if (confidencePct != null) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: isHighConfidence
+                                ? RetroColors.forestGreen.withOpacity(0.12)
+                                : RetroColors.goldCoin.withOpacity(0.18),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: isHighConfidence
+                                  ? RetroColors.forestGreen
+                                  : RetroColors.ink,
+                              width: 1.2,
+                            ),
+                          ),
+                          child: Text(
+                            '$confidencePct%',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 11,
+                              color: isHighConfidence
+                                  ? RetroColors.forestGreen
+                                  : RetroColors.ink,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +221,9 @@ class JournalScreen extends ConsumerWidget {
                         ],
                       ),
                       if (avistament.notes != null &&
-                          avistament.notes!.isNotEmpty) ...[
+                          avistament.notes!.isNotEmpty &&
+                          !avistament.notes!.startsWith(
+                              'Avistament identificat amb Boscdex AI')) ...[
                         const SizedBox(height: 4),
                         Text(
                           avistament.notes!,
@@ -190,6 +253,7 @@ class JournalScreen extends ConsumerWidget {
                   ),
                   onTap: () {
                     HapticFeedback.selectionClick();
+                    AvistamentDetailSheet.show(context, avistament);
                   },
                 ),
               );
@@ -200,33 +264,6 @@ class JournalScreen extends ConsumerWidget {
           child: CircularProgressIndicator(color: RetroColors.forestGreen),
         ),
         error: (err, stack) => Center(child: Text('Error: $err')),
-      ),
-      floatingActionButton: Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: RetroColors.ink,
-              offset: Offset(2, 3),
-            ),
-          ],
-          shape: BoxShape.circle,
-        ),
-        child: FloatingActionButton(
-          tooltip: 'Afegir manualment',
-          elevation: 0,
-          backgroundColor: RetroColors.forestGreen,
-          foregroundColor: Colors.white,
-          shape: const CircleBorder(
-            side: BorderSide(color: RetroColors.ink, width: 2.5),
-          ),
-          onPressed: () {
-            HapticFeedback.mediumImpact();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Afegeix manualment (properament)')),
-            );
-          },
-          child: const Icon(Icons.add, size: 28),
-        ),
       ),
     );
   }

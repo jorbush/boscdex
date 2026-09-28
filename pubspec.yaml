@@ -32,6 +32,8 @@ dependencies:
   # Camera & Image Processing
   camera: ^0.10.5
   image_picker: ^1.0.2
+  image_gallery_saver: ^2.0.3
+  share_plus: ^7.2.2
 
   # On-Device Machine Learning (Edge ML)
   tflite_flutter: ^0.10.4

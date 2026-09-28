@@ -89,3 +89,19 @@ To evaluate and track model refinement objectively across iterations, the projec
 - **Automated Regression Suite:** [`test/unit_tests/domain/model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/model_real_images_test.dart).
 - **Execution Command:** `flutter test test/unit_tests/domain/model_real_images_test.dart`.
 - **Current Benchmark (Series 011):** **86.4% Top-1** (185/214), **93.9% Top-3** (201/214) with 0.0% un-gated safety false negatives. Evaluates all 214 images in under 60 seconds directly in unit testing.
+
+---
+
+## 📸 Field Photo Persistence & Inspection System
+
+Whenever an inference scan is performed (via camera or photo picker) and registered by the user:
+1. **Physical Image Persistence:** High-resolution image bytes are preserved permanently in the local filesystem at `<appDocumentsDir>/scans/scan_<uuid>.jpg` with atomic writes.
+2. **Database Schema Linkage:** The SQLite `Avistaments` record stores the relative/absolute `photoPath` alongside the neural network's `confidenceScore` and UTC timestamp, ordered descending in `AvistamentDao`.
+3. **El Meu Diari (Chronological Feed):** Each journal card dynamically prioritizes real field photo thumbnails over stock pixel art, displaying real-time confidence pills (e.g. `[ 89% ]`) with color coding.
+4. **La Boscdex (Species Album Integration):** Each specimen sheet ([`bolet_detail_screen.dart`](file:///Users/jordi/dev/boscdex/lib/presentation/detail/bolet_detail_screen.dart)) features a dedicated **"Les Teves Captures"** horizontal photo gallery displaying all user-scanned specimens of that species with dates and confidence badges.
+5. **Interactive Sighting Sheet ([`avistament_detail_sheet.dart`](file:///Users/jordi/dev/boscdex/lib/presentation/journal/avistament_detail_sheet.dart)):**
+   - **Interactive Zoom:** Pinch-to-zoom and pan via `InteractiveViewer`.
+   - **Neural Confidence Breakdown:** Progress gauge, confidence score %, and safety advisory.
+   - **Download to Photos:** Exports the photo directly to the device's camera roll/gallery using [`PhotoExportService`](file:///Users/jordi/dev/boscdex/lib/domain/services/photo_export_service.dart) via `image_gallery_saver`.
+   - **System Sharing:** Native iOS/Android share sheet integration via `share_plus` (AirDrop, WhatsApp, Save to Files).
+   - **Safe Deletion:** Cascading removal of both the database record and local disk file.

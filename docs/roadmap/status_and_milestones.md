@@ -43,6 +43,10 @@ This document tracks completed features in **Boscdex MVP v1.0** and outlines upc
 - [x] **Field-Calibrated Transfer Learning:** Fine-tuned on real Catalan field photographs on Google Colab T4 GPU, reaching **86.4% Top-1** (185/214) and **93.9% Top-3** (201/214) empirical accuracy across 214 photos (Series 011).
 - [x] **Decoupled GAP + Dart Classification Head:** Solved mobile TFLite opcode compatibility; sub-0.05 ms linear projection executed in native Dart.
 - [x] **Golden Set Regression Test Suite:** Automated on-device benchmark evaluating 214 field photos in <60s (`model_real_images_test.dart`).
+- [x] **Field Photo Persistence Architecture:** Scanned field photos saved permanently in `<appDocumentsDir>/scans/scan_<uuid>.jpg` with relative path linkage in SQLite `Avistaments`.
+- [x] **Sighting Inspection & Export:** Modal detail view (`AvistamentDetailSheet`) featuring `InteractiveViewer` pinch-to-zoom, neural coincidence %, direct gallery export (`ImageGallerySaver`), and system sharing (`share_plus`).
+- [x] **"Les Teves Captures" Gallery in Boscdex:** Specimen cards now showcase a personalized horizontal photo carousel of every user scan for that species.
+- [x] **Comprehensive Automated Test Suite:** 97+ passing unit, widget, and integration tests across data, domain, and presentation layers.
 - [ ] **Delegate Acceleration:** Enable CoreML delegate for iOS and NNAPI/GPU delegate for Android in the interpreter initialization.
 - [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.
 
