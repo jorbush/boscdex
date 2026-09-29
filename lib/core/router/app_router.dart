@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../theme/retro_decorations.dart';
 import '../../presentation/boscdex/boscdex_screen.dart';
@@ -10,6 +11,7 @@ import '../../presentation/scan/scan_screen.dart';
 import '../../presentation/journal/journal_screen.dart';
 import '../../presentation/settings/settings_screen.dart';
 import '../../presentation/splash/splash_screen.dart';
+import '../../providers/preferences_provider.dart';
 
 /// Central GoRouter configuration for the Boscdex app.
 ///
@@ -18,6 +20,26 @@ import '../../presentation/splash/splash_screen.dart';
 /// - Push routes for specimen detail, tree detail, and disclaimer
 final appRouter = GoRouter(
   initialLocation: '/splash',
+  redirect: (context, state) {
+    final location = state.subloc;
+    // Splash and disclaimer are always accessible
+    if (location == '/splash' || location == '/disclaimer') {
+      return null;
+    }
+
+    try {
+      final container = ProviderScope.containerOf(context, listen: false);
+      final isAccepted = container.read(disclaimerAcceptedProvider);
+      if (!isAccepted) {
+        return '/disclaimer';
+      }
+    } catch (_) {
+      // Allow navigation in test environments without ProviderScope
+      return null;
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/splash',

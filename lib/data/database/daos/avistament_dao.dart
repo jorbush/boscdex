@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:drift/drift.dart';
 import '../app_database.dart';
 import '../tables/avistaments.dart';
@@ -68,6 +69,17 @@ class AvistamentDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteAvistament(String id) async {
+    final sighting = await getAvistamentById(id);
+    if (sighting != null && sighting.photoPath != null) {
+      try {
+        final file = File(sighting.photoPath!);
+        if (await file.exists()) {
+          await file.delete();
+        }
+      } catch (_) {
+        // Silently ignore disk deletion errors (e.g. file already removed)
+      }
+    }
     await (delete(avistaments)..where((t) => t.id.equals(id))).go();
   }
 

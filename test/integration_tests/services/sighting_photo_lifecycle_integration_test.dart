@@ -82,4 +82,28 @@ void main() {
     // Verify local disk file is cleaned up
     expect(await photoFile.exists(), isFalse);
   });
+
+  test('AvistamentDao.deleteAvistament directly deletes photo file from disk',
+      () async {
+    const sightingId = 'direct-dao-delete-test';
+    final photoFile = File('${tempDir.path}/direct_delete_$sightingId.jpg');
+    await photoFile.writeAsString('test_bytes');
+    expect(await photoFile.exists(), isTrue);
+
+    await db.avistamentDao.insertAvistament(
+      AvistamentsCompanion(
+        id: const drift.Value(sightingId),
+        boletId: const drift.Value('boletus_edulis'),
+        timestamp: drift.Value(DateTime.now()),
+        photoPath: drift.Value(photoFile.path),
+      ),
+    );
+
+    // Act: delete directly via DAO
+    await db.avistamentDao.deleteAvistament(sightingId);
+
+    // Assert: DB record removed and file cleaned up from disk
+    expect(await db.avistamentDao.getAvistamentById(sightingId), isNull);
+    expect(await photoFile.exists(), isFalse);
+  });
 }

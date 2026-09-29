@@ -14,7 +14,13 @@ class DisclaimerScreen extends ConsumerStatefulWidget {
 }
 
 class _DisclaimerScreenState extends ConsumerState<DisclaimerScreen> {
-  bool _accepted = false;
+  late bool _accepted;
+
+  @override
+  void initState() {
+    super.initState();
+    _accepted = ref.read(disclaimerAcceptedProvider);
+  }
 
   void _toggleAccepted() {
     HapticFeedback.selectionClick();
@@ -161,10 +167,17 @@ class _DisclaimerScreenState extends ConsumerState<DisclaimerScreen> {
                           onPressed: _accepted
                               ? () {
                                   HapticFeedback.mediumImpact();
-                                  ref
-                                      .read(disclaimerAcceptedProvider.notifier)
-                                      .accept();
-                                  context.go('/boscdex');
+                                  if (!ref.read(disclaimerAcceptedProvider)) {
+                                    ref
+                                        .read(
+                                            disclaimerAcceptedProvider.notifier)
+                                        .accept();
+                                  }
+                                  if (Navigator.of(context).canPop()) {
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    context.go('/boscdex');
+                                  }
                                 }
                               : null,
                           child: const Text(
