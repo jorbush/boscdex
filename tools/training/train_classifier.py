@@ -76,15 +76,15 @@ def train(dataset_dir: str, output_dir: str, epochs: int, batch_size: int):
 
     # Export TFLite model with INT8 quantization
     print("\n📦 Exporting quantized TFLite model...")
-    model.export_model(model_name='boscdex_classifier.tflite')
+    model.export_model(model_name='mushroom_classifier.tflite')
 
     # Also export labels
-    labels_path = output_path / 'labels.txt'
+    labels_path = output_path / 'mushroom_labels.txt'
     with open(labels_path, 'w', encoding='utf-8') as f:
         for label in data.label_names:
             f.write(f"{label}\n")
 
-    tflite_path = output_path / 'boscdex_classifier.tflite'
+    tflite_path = output_path / 'mushroom_classifier.tflite'
     if tflite_path.exists():
         size_mb = tflite_path.stat().st_size / (1024 * 1024)
         print(f"\n✅ Model exported successfully!")

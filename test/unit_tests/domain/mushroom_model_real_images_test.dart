@@ -7,7 +7,7 @@ import 'package:boscdex/domain/services/tflite_classifier_service.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  final assetsDir = Directory('test/assets');
+  final assetsDir = Directory('test/assets/mushrooms');
   final bool hasTestAssets = assetsDir.existsSync() &&
       assetsDir.listSync(recursive: true).whereType<File>().any((f) {
         final lower = f.path.toLowerCase();
@@ -16,7 +16,7 @@ void main() {
             lower.endsWith('.jpeg');
       });
 
-  group('Golden Set Empirical Model Evaluation (test/assets/)', () {
+  group('Golden Set Empirical Model Evaluation (test/assets/mushrooms/)', () {
     late TfliteClassifierService service;
 
     setUp(() {
@@ -27,10 +27,11 @@ void main() {
       service.dispose();
     });
 
-    test('Evaluates all user-provided real field images in test/assets/',
+    test(
+        'Evaluates all user-provided real field images in test/assets/mushrooms/',
         timeout: const Timeout(Duration(minutes: 3)),
         skip: !hasTestAssets
-            ? 'test/assets/ not found (local ML benchmark only - see Google Drive boscdex_dataset.zip)'
+            ? 'test/assets/mushrooms/ not found (local ML benchmark only - see Google Drive boscdex_dataset.zip)'
             : false, () async {
       await service.initialize();
       expect(service.isTfliteReady, isTrue,
@@ -46,7 +47,7 @@ void main() {
             ..sort((a, b) => a.path.compareTo(b.path));
 
       expect(files, isNotEmpty,
-          reason: 'Expected test/assets/ to contain test images');
+          reason: 'Expected test/assets/mushrooms/ to contain test images');
 
       print(
           '\n════════════════════════════════════════════════════════════════');

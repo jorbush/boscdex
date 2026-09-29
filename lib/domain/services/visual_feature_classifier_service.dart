@@ -19,17 +19,18 @@ class VisualFeatureClassifierService implements ClassifierService {
   }
 
   @override
-  Future<List<ClassificacioResult>> classify(Uint8List imageBytes) async {
+  Future<List<MushroomClassificationResult>> classifyMushroom(
+      Uint8List imageBytes) async {
     // If no real image bytes were provided (e.g. simulator fallback or headless tests),
     // use the mock scenario cycle for predictable regression testing.
     if (imageBytes.isEmpty) {
-      return _fallbackMock.classify(imageBytes);
+      return _fallbackMock.classifyMushroom(imageBytes);
     }
 
     try {
       final features = await _extractVisualFeatures(imageBytes);
       if (features == null) {
-        return _fallbackMock.classify(imageBytes);
+        return _fallbackMock.classifyMushroom(imageBytes);
       }
 
       return _scoreMushroomSpecies(features);
@@ -40,9 +41,13 @@ class VisualFeatureClassifierService implements ClassifierService {
         stackTrace: stackTrace,
         name: 'VisualFeatureClassifier',
       );
-      return _fallbackMock.classify(imageBytes);
+      return _fallbackMock.classifyMushroom(imageBytes);
     }
   }
+
+  @override
+  Future<List<MushroomClassificationResult>> classify(Uint8List imageBytes) =>
+      classifyMushroom(imageBytes);
 
   @override
   Future<List<ArbreClassificacioResult>> classifyTree(
@@ -77,91 +82,103 @@ class VisualFeatureClassifierService implements ClassifierService {
   /// Downscales and decodes the image in memory, extracting an HSV color histogram.
   Future<_ImageFeatures?> _extractVisualFeatures(Uint8List imageBytes) async {
     // Downscale to 32x32 for sub-50ms processing
-    final codec = await ui.instantiateImageCodec(
-      imageBytes,
-      targetWidth: 32,
-      targetHeight: 32,
-    );
-    final frame = await codec.getNextFrame();
-    final image = frame.image;
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
-    if (byteData == null) return null;
+    ui.Codec? codec;
+    ui.Image? image;
+    try {
+      codec = await ui.instantiateImageCodec(
+        imageBytes,
+        targetWidth: 32,
+        targetHeight: 32,
+      );
+      final frame = await codec.getNextFrame();
+      image = frame.image;
+      final byteData =
+          await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      if (byteData == null) return null;
 
-    final pixels = byteData.buffer.asUint8List();
-    const totalPixels = 32 * 32;
+      final pixels = byteData.buffer.asUint8List();
+      const totalPixels = 32 * 32;
 
-    int orangeCount = 0;
-    int yellowCount = 0;
-    int redCount = 0;
-    int charcoalCount = 0;
-    int brownCount = 0;
-    int greyCount = 0;
-    int greenCount = 0;
-    int whiteCreamCount = 0;
+      int orangeCount = 0;
+      int yellowCount = 0;
+      int redCount = 0;
+      int charcoalCount = 0;
+      int brownCount = 0;
+      int greyCount = 0;
+      int greenCount = 0;
+      int whiteCreamCount = 0;
 
-    double totalSat = 0.0;
-    double totalVal = 0.0;
+      double totalSat = 0.0;
+      double totalVal = 0.0;
 
-    for (int i = 0; i < pixels.length; i += 4) {
-      final r = pixels[i] / 255.0;
-      final g = pixels[i + 1] / 255.0;
-      final b = pixels[i + 2] / 255.0;
+      for (int i = 0; i < pixels.length; i += 4) {
+        final r = pixels[i] / 255.0;
+        final g = pixels[i + 1] / 255.0;
+        final b = pixels[i + 2] / 255.0;
 
-      final max = math.max(r, math.max(g, b));
-      final min = math.min(r, math.min(g, b));
-      final delta = max - min;
+        final max = math.max(r, math.max(g, b));
+        final min = math.min(r, math.min(g, b));
+        final delta = max - min;
 
-      double h = 0.0;
-      if (delta > 0) {
-        if (max == r) {
-          h = 60.0 * (((g - b) / delta) % 6.0);
-        } else if (max == g) {
-          h = 60.0 * (((b - r) / delta) + 2.0);
-        } else {
-          h = 60.0 * (((r - g) / delta) + 4.0);
+        double h = 0.0;
+        if (delta > 0) {
+          if (max == r) {
+            h = 60.0 * (((g - b) / delta) % 6.0);
+          } else if (max == g) {
+            h = 60.0 * (((b - r) / delta) + 2.0);
+          } else {
+            h = 60.0 * (((r - g) / delta) + 4.0);
+          }
+          if (h < 0) h += 360.0;
         }
-        if (h < 0) h += 360.0;
-      }
-      final s = max == 0.0 ? 0.0 : delta / max;
-      final v = max;
+        final s = max == 0.0 ? 0.0 : delta / max;
+        final v = max;
 
-      totalSat += s;
-      totalVal += v;
+        totalSat += s;
+        totalVal += v;
 
-      // Classify pixel into botanical color bins
-      if (v < 0.22 || (s < 0.20 && v < 0.32)) {
-        charcoalCount++;
-      } else if (s < 0.20 && v > 0.78) {
-        whiteCreamCount++;
-      } else if (s < 0.22 && v >= 0.32 && v <= 0.78) {
-        greyCount++;
-      } else if (h >= 14.0 && h < 42.0 && s >= 0.35 && v >= 0.35) {
-        orangeCount++;
-      } else if (h >= 42.0 && h < 68.0 && s >= 0.35 && v >= 0.35) {
-        yellowCount++;
-      } else if ((h < 14.0 || h >= 345.0) && s >= 0.45 && v >= 0.35) {
-        redCount++;
-      } else if (h >= 68.0 && h < 165.0 && s >= 0.22 && v >= 0.20) {
-        greenCount++;
-      } else if (h >= 14.0 && h < 50.0 && s >= 0.18 && v >= 0.18 && v <= 0.58) {
-        brownCount++;
-      } else {
-        greyCount++;
+        // Classify pixel into botanical color bins
+        if (v < 0.22 || (s < 0.20 && v < 0.32)) {
+          charcoalCount++;
+        } else if (s < 0.20 && v > 0.78) {
+          whiteCreamCount++;
+        } else if (s < 0.22 && v >= 0.32 && v <= 0.78) {
+          greyCount++;
+        } else if (h >= 14.0 && h < 42.0 && s >= 0.35 && v >= 0.35) {
+          orangeCount++;
+        } else if (h >= 42.0 && h < 68.0 && s >= 0.35 && v >= 0.35) {
+          yellowCount++;
+        } else if ((h < 14.0 || h >= 345.0) && s >= 0.45 && v >= 0.35) {
+          redCount++;
+        } else if (h >= 68.0 && h < 165.0 && s >= 0.22 && v >= 0.20) {
+          greenCount++;
+        } else if (h >= 14.0 &&
+            h < 50.0 &&
+            s >= 0.18 &&
+            v >= 0.18 &&
+            v <= 0.58) {
+          brownCount++;
+        } else {
+          greyCount++;
+        }
       }
+
+      return _ImageFeatures(
+        orangeRatio: orangeCount / totalPixels,
+        yellowRatio: yellowCount / totalPixels,
+        redRatio: redCount / totalPixels,
+        charcoalRatio: charcoalCount / totalPixels,
+        brownRatio: brownCount / totalPixels,
+        greyRatio: greyCount / totalPixels,
+        greenRatio: greenCount / totalPixels,
+        whiteCreamRatio: whiteCreamCount / totalPixels,
+        meanSaturation: totalSat / totalPixels,
+        meanBrightness: totalVal / totalPixels,
+      );
+    } finally {
+      image?.dispose();
+      codec?.dispose();
     }
-
-    return _ImageFeatures(
-      orangeRatio: orangeCount / totalPixels,
-      yellowRatio: yellowCount / totalPixels,
-      redRatio: redCount / totalPixels,
-      charcoalRatio: charcoalCount / totalPixels,
-      brownRatio: brownCount / totalPixels,
-      greyRatio: greyCount / totalPixels,
-      greenRatio: greenCount / totalPixels,
-      whiteCreamRatio: whiteCreamCount / totalPixels,
-      meanSaturation: totalSat / totalPixels,
-      meanBrightness: totalVal / totalPixels,
-    );
   }
 
   List<ClassificacioResult> _scoreMushroomSpecies(_ImageFeatures f) {

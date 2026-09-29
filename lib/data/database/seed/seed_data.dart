@@ -81,7 +81,7 @@ class SeedData {
           altitudeMin: Value(200),
           altitudeMax: Value(1000),
           capDescription: Value(
-              'Neix d\'un volva blanca tancada ("ou"). Obert fa 8-20 cm, llis, de color ataronjat intens o vermell ataronjat, sense restes de volva (sense esquames blanques). Marge estriat.'),
+              'Neix d\'una volva blanca tancada ("ou"). Obert fa 8-20 cm, llis, de color ataronjat intens o vermell ataronjat, sense restes de volva (sense esquames blanques). Marge estriat.'),
           gillsDescription:
               Value('Lliures, atapeïdes, de color clarament groc.'),
           stemDescription: Value(
@@ -124,7 +124,7 @@ class SeedData {
           altitudeMin: Value(100),
           altitudeMax: Value(1200),
           capDescription: Value(
-              'Molt gran, fins a 30 cm de diàmetre. Inicialment ovoidal (forma de baqueta de tambor), després s\'obre com un para-sol. De fons clar, cobert d\'esquames concèntriques fosques. Gran monyó central fosc (umbó).'),
+              'Molt gran, fins a 30 cm de diàmetre. Inicialment ovoidal (forma de baqueta de tambor), després s\'obre com un para-sol. De fons clar, cobert d\'esquames concèntriques fosques. Gran mamelló central fosc (umbó).'),
           gillsDescription:
               Value('Blanques, amples, toves i lliures respecte del peu.'),
           stemDescription: Value(
@@ -191,7 +191,7 @@ class SeedData {
           capDescription: Value(
               'Gran (5-20 cm), forma de conquilla o ostra, carnós. Color molt variable, des de blau negrós o gris plom al principi fins a gris clar o marronós. Superfície llisa.'),
           gillsDescription: Value(
-              'Llargament decurrents fins la base, bastant separades i toves. De color blanquinós a cremós.'),
+              'Llargament decurrents fins a la base, bastant separades i toves. De color blanquinós a cremós.'),
           stemDescription: Value(
               'Molt curt, completament excèntric (lateral) o gairebé absent, soldat a la fusta on creix.'),
           safetyNotes: Value(
@@ -278,7 +278,7 @@ class SeedData {
           capDescription: Value(
               'Hemisfèric i després pla, de color marró-xocolata a groc-marró fosc. En temps humit és completament viscós i enganxós (la cutícula es pot pelar fàcilment).'),
           gillsDescription: Value(
-              'Té tubs i porus, que inicialment són coberts per un vel membranós (anell). Són petits i rodons, de color groc que enfosqueix i verda amb l\'edat.'),
+              'Té tubs i porus, que inicialment són coberts per un vel membranós (anell). Són petits i rodons, de color groc que enfosqueix i enverdeix amb l\'edat.'),
           stemDescription: Value(
               'Cilíndric, curt, porta un vistós anell ample que primer és blanc i després vira al lila grisenc o marró violaci.'),
           safetyNotes: Value(
@@ -361,9 +361,9 @@ class SeedData {
           altitudeMin: Value(200),
           altitudeMax: Value(1200),
           capDescription: Value(
-              'Molt robust (fins a 18 cm). Acoloreix blanc grogós o crema cendrós (color camussa), llis, lluent en temps sec.'),
+              'Molt robust (fins a 18 cm). De color blanc groguenc o crema cendrós (color camussa), llis, lluent en temps sec.'),
           gillsDescription: Value(
-              'Molt espesses i amples. Escotades del marge de la cama. Al principi groguenques, després (això és crucial) virar a color salmó-rosat per la maduració d\'espores rosa.'),
+              'Molt espesses i amples. Escotades del marge de la cama. Al principi groguenques, després (això és crucial) viren a color salmó-rosat per la maduració d\'espores rosa.'),
           stemDescription: Value(
               'Massís, blanc, recte però de vegades eixamplat a la base.'),
           safetyNotes: Value(
@@ -432,7 +432,7 @@ class SeedData {
           stemDescription: Value(
               'De color groc i, atenció a aquest tret que el distingeix d\'altres similars, capes de filaments (la cortina) en comptes d\'un autèntic vel al peu; coloració fibril·lar oxidada.'),
           safetyNotes: Value(
-              'MORTAL. La toxina orrelanina, extremadament perillosa per la seva acció molt retardada (dies o més de 2 setmanes sense símptomes greus per presentar llavors dany renal catastròfic generalment fatal).'),
+              'MORTAL. La toxina orellanina, extremadament perillosa per la seva acció molt retardada (dies o més de 2 setmanes sense símptomes greus per presentar llavors dany renal catastròfic generalment fatal).'),
           dexNumber: Value(20),
           imageAssetPath:
               Value('assets/images/mushrooms/cortinarius_orellanus.png'),
@@ -448,9 +448,9 @@ class SeedData {
           altitudeMin: Value(300),
           altitudeMax: Value(1600),
           capDescription: Value(
-              'De 5 a 12 cm, convex i després deprimit, de color ocre ataronjat amb tons vinossos o porpres i taques verdes en envellir.'),
+              'De 5 a 12 cm, convex i després deprimit, de color ocre ataronjat amb tons vinosos o porpres i taques verdes en envellir.'),
           gillsDescription: Value(
-              'Atapeïdes, decurrents, de color ocre rosat o vinoso que es taquen de verd fosc.'),
+              'Atapeïdes, decurrents, de color ocre rosat o vinós que es taquen de verd fosc.'),
           stemDescription: Value(
               'Curt, cilíndric, atenuat a la base, de color ocre vinós pàl·lid, sovint escrobiculat.'),
           latexDescription:

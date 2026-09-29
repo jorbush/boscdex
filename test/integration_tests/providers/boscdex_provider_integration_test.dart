@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -101,7 +102,7 @@ void main() {
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion.insert(
           id: 'avistament-1',
-          boletId: 'lactarius_deliciosus',
+          boletId: const Value('lactarius_deliciosus'),
           timestamp: now,
         ),
       );
@@ -147,15 +148,22 @@ void main() {
       expect(filtered.every((t) => t.arbre.leafType == 'Caduca'), isTrue);
     });
 
-    test('visitedArbresCountProvider increments when tree is visited',
+    test(
+        'visitedArbresCountProvider increments when tree sighting is recorded in database',
         () async {
       await container.read(arbresBoscdexProvider.future);
       expect(container.read(visitedArbresCountProvider), equals(0));
 
-      container
-          .read(visitedArbresProvider.notifier)
-          .markVisited('pinus_sylvestris');
-      container.refresh(arbresBoscdexProvider);
+      await db.avistamentDao.insertAvistament(
+        AvistamentsCompanion(
+          id: const Value('test-tree-sighting-1'),
+          arbreId: const Value('pinus_sylvestris'),
+          timestamp: Value(DateTime.now()),
+        ),
+      );
+
+      // Settle stream event
+      await Future.delayed(const Duration(milliseconds: 100));
       await container.read(arbresBoscdexProvider.future);
 
       expect(container.read(visitedArbresCountProvider), equals(1));

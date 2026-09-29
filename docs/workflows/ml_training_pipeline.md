@@ -10,14 +10,14 @@ This document details the offline classifier dataset assembly, model training wo
 |---|---|---|---|
 | **v0.1** | `MockClassifierService` | Memory | Hardcoded circular mock used for initial UI prototyping. |
 | **v0.2** | `VisualFeatureClassifierService` | Code (`dart:ui`) | Real-time on-device pixel analysis (HSV chromaticity and botanical morphology). Zero external dependencies, 100% offline. |
-| **v0.3 (Production)** | Edge Deep Learning (`.tflite` + Dart Head) | `assets/models/` | MobileNetV2 GAP feature extractor + Dart linear head fine-tuned on real Catalan field photos. **88.8% Top-1, 97.3% Top-3** on 188 field test photos (21 classes). |
+| **v0.3 (Production)** | Edge Deep Learning (`.tflite` + Dart Head) | `assets/models/` | MobileNetV2 GAP feature extractor + Dart linear head fine-tuned on real Catalan field photos. **87.1% Top-1, 93.8% Top-3** on 225 field test photos (21 classes, Series 013). |
 
 > **Model Weights Status in `assets/models/`:**  
 > The `assets/models/` directory contains the production-calibrated model bundle trained via Google Colab T4 GPU:
-> - `boscdex_classifier.tflite` (2.50 MB): Quantized MobileNetV2 backbone (64 layers) outputting 1,280 Global Average Pooling (GAP) features.
-> - `classifier_head.bin` (107.6 KB): Portable Float32 weight matrix ($21 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$, ensuring 100% cross-platform compatibility across iOS and Android without TFLite opcode version mismatches.
-> - `labels.txt` (21 classes): Ordered taxonomic label index mapping neural logits to database entity IDs, including Dex #022 *Chroogomphus rutilus*.
-> - **Field Validation (Series 008):** Evaluated against 188 real field photos (`test/assets/`), achieving **88.8% Top-1** (167/188) and **97.3% Top-3** (183/188) accuracy.
+> - `mushroom_classifier.tflite` (2.50 MB): Quantized MobileNetV2 backbone (64 layers) outputting 1,280 Global Average Pooling (GAP) features.
+> - `mushroom_classifier_head.bin` (107.6 KB): Portable Float32 weight matrix ($21 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$, ensuring 100% cross-platform compatibility across iOS and Android without TFLite opcode version mismatches.
+> - `mushroom_labels.txt` (21 classes): Ordered taxonomic label index mapping neural logits to database entity IDs, including Dex #022 *Chroogomphus rutilus*.
+> - **Field Validation (Series 013):** Evaluated against 225 real field photos (`test/assets/mushrooms/`), achieving **87.1% Top-1** (196/225) and **93.8% Top-3** (211/225) accuracy.
 
 
 ---
@@ -52,7 +52,7 @@ This document details the offline classifier dataset assembly, model training wo
 │                 4. INT8 Quantization Export                 │
 │   TFLite Full Integer Quantization with calibration samples │
 │   python tools/export/quantize_export.py                    │
-│   Outputs: assets/models/boscdex_classifier.tflite (<18 MB) │
+│   Outputs: assets/models/mushroom_classifier.tflite (<18 MB)│
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -128,9 +128,36 @@ cd tools/export
 python quantize_export.py \
   --saved-model ../training/export/saved_model \
   --representative-dataset ../dataset/dataset \
-  --output ../../assets/models/boscdex_classifier.tflite
+  --output ../../assets/models/mushroom_classifier.tflite
 
-cp ../training/export/labels.txt ../../assets/models/labels.txt
+cp ../training/export/labels.txt ../../assets/models/mushroom_labels.txt
 ```
 
 Verify that the final `.tflite` model size is **under 18 MB** to guarantee rapid inference (<100ms) on mobile Neural Processing Units (Apple ANE / Android NNAPI).
+
+---
+
+## 🌲 Indicator Tree ML Training Pipeline (Phase 2)
+
+Boscdex uses a unified, ultra-lightweight architecture for tree classification:
+
+1. **Shared Feature Extractor:** Employs MobileNetV2 GAP backbone (`assets/models/tree_classifier.tflite` or shared feature extractor) generating 1,280 Float32 features.
+2. **Dedicated Binary Head (`tree_classifier_head.bin`):** A compact linear layer ($5 \times 1280$ weights + 5 biases = 25,620 bytes) evaluated in pure Dart in $<0.05\text{ ms}$.
+3. **Automated iNaturalist CLI:** Download field training and golden set photos using:
+   ```bash
+   python tools/dataset/download_trees_inat.py --count 50 --output dataset/trees
+   ```
+4. **Google Colab 1-Click Cloud Notebook:**
+   The training workflow is pre-packaged in [`notebooks/boscdex_tree_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_tree_training_colab.ipynb). Run on a free T4 GPU to:
+   - Download tree datasets directly from iNaturalist
+   - Extract MobileNetV2 GAP embeddings with data augmentation
+   - Train linear head with cosine annealing and L2 regularization
+   - Plot confusion matrix and evaluate Top-1/Top-2 metrics
+   - Export and download `tree_classifier_head.bin` and `tree_labels.txt` directly to `assets/models/`.
+5. **Golden Set Empirical Accuracy:**
+   Validated in [`test/unit_tests/domain/tree_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/tree_model_real_images_test.dart) across 79 real Catalan field photos (Phase 2 validation: **80.0% Top-1**, **96.0% Top-2**):
+   - *Castanea sativa*: 100% precision, 70% recall (f1: 0.82)
+   - *Fagus sylvatica*: 69% precision, 85% recall (f1: 0.76)
+   - *Pinus halepensis*: 90% precision, 90% recall (f1: 0.90)
+   - *Pinus sylvestris*: 90% precision, 82% recall (f1: 0.86)
+   - *Quercus ilex*: 57% precision, 67% recall (f1: 0.62)

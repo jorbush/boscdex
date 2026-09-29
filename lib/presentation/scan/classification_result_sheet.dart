@@ -23,14 +23,14 @@ import '../shared/edibility_badge.dart';
 import '../shared/safety_alert_box.dart';
 import '../boscdex/boscdex_provider.dart';
 
-/// Modal bottom sheet displaying the top-3 ML classification candidates,
+/// Modal bottom sheet displaying the top-3 ML mushroom classification candidates,
 /// confidence bars, safety gate alerts, and the registration CTA.
-class ClassificationResultSheet extends ConsumerStatefulWidget {
-  final List<ClassificacioResult> results;
+class MushroomClassificationResultSheet extends ConsumerStatefulWidget {
+  final List<MushroomClassificationResult> results;
   final Uint8List? imageBytes;
   final VoidCallback? onRegistered;
 
-  const ClassificationResultSheet({
+  const MushroomClassificationResultSheet({
     super.key,
     required this.results,
     this.imageBytes,
@@ -38,12 +38,15 @@ class ClassificationResultSheet extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ClassificationResultSheet> createState() =>
-      _ClassificationResultSheetState();
+  ConsumerState<MushroomClassificationResultSheet> createState() =>
+      _MushroomClassificationResultSheetState();
 }
 
-class _ClassificationResultSheetState
-    extends ConsumerState<ClassificationResultSheet> {
+/// Backwards-compatible alias for [MushroomClassificationResultSheet].
+typedef ClassificationResultSheet = MushroomClassificationResultSheet;
+
+class _MushroomClassificationResultSheetState
+    extends ConsumerState<MushroomClassificationResultSheet> {
   bool _isSaving = false;
   Bolet? _topBolet;
   List<Bolet> _lookalikes = [];
@@ -196,10 +199,9 @@ class _ClassificationResultSheetState
     }
 
     final top = widget.results.first;
-    Edibilitat edibilitat = Edibilitat.senseValor;
-    if (_topBolet != null) {
-      edibilitat = EdibilitatExtension.fromString(_topBolet!.edibility);
-    }
+    final Edibilitat? edibilitat = _topBolet != null
+        ? EdibilitatExtension.fromString(_topBolet!.edibility)
+        : null;
 
     final safetyService = SafetyGateService(
       toxicLookalikesData: {
@@ -356,8 +358,10 @@ class _ClassificationResultSheetState
                                     ),
                                   ),
                                 ],
-                                const SizedBox(height: 6),
-                                EdibilityBadge(edibilitat: edibilitat),
+                                if (edibilitat != null) ...[
+                                  const SizedBox(height: 6),
+                                  EdibilityBadge(edibilitat: edibilitat),
+                                ],
                               ],
                             ),
                           ),

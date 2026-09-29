@@ -134,7 +134,7 @@ Unlike basic Stochastic Gradient Descent (SGD) which uses a fixed step size for 
 
 ## 5. The Two-Phase Training Strategy
 
-In [`notebooks/boscdex_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_training_colab.ipynb), you will notice that training is divided into two distinct phases. Why?
+In [`notebooks/boscdex_mushroom_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_mushroom_training_colab.ipynb), you will notice that training is divided into two distinct phases. Why?
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐

@@ -2,8 +2,17 @@ import 'dart:typed_data';
 import '../models/classificacio_result.dart';
 
 abstract class ClassifierService {
-  Future<List<ClassificacioResult>> classify(Uint8List imageBytes);
-  Future<List<ArbreClassificacioResult>> classifyTree(Uint8List imageBytes);
+  /// Classifies a mushroom image and returns ranked candidate predictions.
+  Future<List<MushroomClassificationResult>> classifyMushroom(
+      Uint8List imageBytes);
+
+  /// Backwards-compatible alias for [classifyMushroom].
+  Future<List<MushroomClassificationResult>> classify(Uint8List imageBytes) =>
+      classifyMushroom(imageBytes);
+
+  /// Classifies an indicator tree image and returns ranked candidate predictions.
+  Future<List<TreeClassificationResult>> classifyTree(Uint8List imageBytes);
+
   Future<void> initialize();
   void dispose();
 }
@@ -18,7 +27,12 @@ class MockClassifierService implements ClassifierService {
   }
 
   @override
-  Future<List<ClassificacioResult>> classify(Uint8List imageBytes) async {
+  Future<List<MushroomClassificationResult>> classify(Uint8List imageBytes) =>
+      classifyMushroom(imageBytes);
+
+  @override
+  Future<List<MushroomClassificationResult>> classifyMushroom(
+      Uint8List imageBytes) async {
     // Simulate Edge-ML on-device inference latency (~300ms)
     await Future.delayed(const Duration(milliseconds: 350));
 

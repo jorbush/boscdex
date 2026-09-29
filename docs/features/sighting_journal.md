@@ -12,12 +12,16 @@ Catalan *boletaires* are fiercely protective of their secret foraging patches (*
 
 ---
 
-## 📝 Sighting Record Structure (`Avistament`)
+## 📝 Sighting Record Structure (`Avistament` Schema v3)
+
+> **Schema v3 SQLite Table Migration:**  
+> In SQLite, column nullability constraints cannot be dropped via `ALTER TABLE`. Schema v3 performs a zero-loss table recreation under `PRAGMA foreign_keys = OFF` (creating `avistaments_new`, copying all legacy rows, dropping `avistaments`, and renaming). This guarantees `boletId` is strictly nullable across all existing devices, preventing SQLite constraint failures when saving indicator tree observations.
 
 | Field | Type | Description |
 |---|---|---|
 | `id` | `TEXT (UUID)` | Globally unique identifier generated on-device. |
-| `boletId` | `TEXT (FK)` | Reference to the identified species in `bolets`. |
+| `boletId` | `TEXT (FK, nullable)` | Reference to the identified mushroom in `bolets` (null for tree sightings). |
+| `arbreId` | `TEXT (FK, nullable)` | Reference to the identified indicator tree in `arbres` (null for mushroom sightings). |
 | `timestamp` | `DATETIME` | Exact date and time of the field discovery. |
 | `latitude` | `REAL (nullable)` | WGS84 latitude coordinate captured via GPS. |
 | `longitude` | `REAL (nullable)` | WGS84 longitude coordinate captured via GPS. |
@@ -30,8 +34,9 @@ Catalan *boletaires* are fiercely protective of their secret foraging patches (*
 
 ## 📱 Journal Screen UI (`/journal`)
 
-* **Empty State:** Friendly graphic with an encouraging message when no sightings have been logged: *"Encara no tens cap avistament. Escaneja el teu primer bolet!"*.
+* **Empty State:** Friendly graphic with an encouraging message when no sightings have been logged: *"Encara no tens cap avistament. Escaneja el teu primer bolet o arbre!"*.
 * **Chronological List:** Cards ordered from newest to oldest (`AvistamentDao.getAllAvistaments()`), dynamically prioritizing real field photo thumbnails with retro ink borders over generic pixel art.
+* **Unified Mushroom & Tree Support:** Sightings display either the mushroom or indicator tree name. Tree sightings feature a prominent `[ ARBRE ]` badge and pixel tree fallback.
 * **Confidence Badge:** Each entry displays an inline confidence pill (e.g. `[ 89% ]` in forest green if $\ge 70\%$, or amber if $< 70\%$).
 * **Tap to Inspect:** Tapping any sighting card immediately opens the interactive **Sighting Detail Sheet** (`AvistamentDetailSheet`).
 * **100% Neural AI Captured:** All sightings originate exclusively through Boscdex Edge AI scans via the live camera or photo picker, ensuring verified entries with on-device photo captures and neural confidence metrics.
@@ -42,9 +47,8 @@ Catalan *boletaires* are fiercely protective of their secret foraging patches (*
 
 Tapping any sighting from the Journal or from the Boscdex captures gallery opens a dedicated inspection sheet (comfortably positioned below the iOS status bar with swipe-to-dismiss drag handle):
 
-1. **High-Resolution Zoomable Photo:** Uses Flutter's `InteractiveViewer` to allow foragers to pinch-to-zoom and pan across the cap, gills, or stipe to re-verify diagnostic traits.
-2. **AI Coincidence Gauge:** Displays the exact confidence score (e.g. `89% de coincidència neural`), a visual progress bar, and a safety status note (validating against the Series 011 edge model).
-3. **Species Card & Botanical Link:** Shows the Catalan common name, scientific binomial, and edibility badge, along with a direct button to navigate to the full botanical entry in the Boscdex (`/boscdex/:id`).
+1. **High-Resolution Zoomable Photo:** Uses Flutter's `InteractiveViewer` to allow foragers to pinch-to-zoom and pan across the cap, gills, stipe, bark, or foliage to re-verify diagnostic traits.
+2. **AI Coincidence Gauge:** Displays the exact confidence score (e.g. `89% de coincidència neural`), a visual progress bar, and a safety status note (validating against the Series 011 edge models).
 4. **Expedition Metadata:** Formatted date and time, altitude above sea level, GPS coordinates (if available), and custom user notes.
 5. **Action Toolbar:**
    * 💾 **Descarregar Foto:** Directly writes the image to the device's native photo library/camera roll via [`PhotoExportService`](file:///Users/jordi/dev/boscdex/lib/domain/services/photo_export_service.dart) (`image_gallery_saver`).

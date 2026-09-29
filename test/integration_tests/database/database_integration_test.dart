@@ -49,6 +49,14 @@ void main() {
     expect(searchScientific, isNotEmpty);
     expect(searchScientific.first.scientificName, contains('Boletus'));
 
+    final searchAccentInsensitive = await db.boletDao.searchByName('rovello');
+    expect(searchAccentInsensitive, isNotEmpty);
+    expect(searchAccentInsensitive.first.catalanName, contains('Rovelló'));
+
+    final searchGirgola = await db.boletDao.searchByName('girgola');
+    expect(searchGirgola, isNotEmpty);
+    expect(searchGirgola.first.catalanName, contains('Gírgola'));
+
     final searchNone = await db.boletDao.searchByName('NonExistentSpeciesXYZ');
     expect(searchNone, isEmpty);
   });
@@ -90,7 +98,7 @@ void main() {
     await db.avistamentDao.insertAvistament(
       AvistamentsCompanion.insert(
         id: 'test-avistament-1',
-        boletId: 'boletus_edulis',
+        boletId: const Value('boletus_edulis'),
         timestamp: now,
       ),
     );
@@ -107,7 +115,7 @@ void main() {
     await db.avistamentDao.insertAvistament(
       AvistamentsCompanion.insert(
         id: 'test-avistament-2',
-        boletId: 'boletus_edulis',
+        boletId: const Value('boletus_edulis'),
         timestamp: now,
       ),
     );
@@ -122,7 +130,7 @@ void main() {
     await db.avistamentDao.insertAvistament(
       AvistamentsCompanion.insert(
         id: 'sighting-1',
-        boletId: 'cantharellus_cibarius',
+        boletId: const Value('cantharellus_cibarius'),
         timestamp: now,
         notes: const Value('Trobat sota faigs al Montseny'),
       ),
@@ -137,5 +145,91 @@ void main() {
     final afterDelete =
         await db.avistamentDao.getAvistamentsByBolet('cantharellus_cibarius');
     expect(afterDelete, isEmpty);
+  });
+
+  test('AvistamentDao records and queries tree sightings with null boletId',
+      () async {
+    final now = DateTime.now();
+    await db.avistamentDao.insertAvistament(
+      AvistamentsCompanion(
+        id: const Value('tree-sighting-1'),
+        arbreId: const Value('pinus_sylvestris'),
+        timestamp: Value(now),
+        notes: const Value('Pi roig immens al Cadí-Moixeró'),
+        confidenceScore: const Value(0.95),
+      ),
+    );
+
+    final treeSightings =
+        await db.avistamentDao.getAvistamentsByArbre('pinus_sylvestris');
+    expect(treeSightings.length, equals(1));
+    expect(treeSightings.first.id, equals('tree-sighting-1'));
+    expect(treeSightings.first.arbreId, equals('pinus_sylvestris'));
+    expect(treeSightings.first.boletId, isNull);
+    expect(treeSightings.first.confidenceScore, equals(0.95));
+  });
+
+  test('Migration self-heals legacy avistaments table with NOT NULL bolet_id',
+      () async {
+    // 1. Manually create a legacy v1 avistaments table with NOT NULL bolet_id
+    await db.customStatement('DROP TABLE avistaments;');
+    await db.customStatement('''
+      CREATE TABLE avistaments (
+        id TEXT NOT NULL PRIMARY KEY,
+        bolet_id TEXT NOT NULL REFERENCES bolets (id),
+        timestamp INTEGER NOT NULL,
+        latitude REAL,
+        longitude REAL,
+        altitude REAL,
+        photo_path TEXT,
+        confidence_score REAL,
+        notes TEXT
+      );
+    ''');
+
+    // 2. Insert a legacy mushroom sighting
+    await db.customStatement('''
+      INSERT INTO avistaments (id, bolet_id, timestamp, notes)
+      VALUES ('legacy-sighting-1', 'boletus_edulis', 1700000000, 'Legacy cep sighting');
+    ''');
+
+    // Verify it is currently NOT NULL
+    final legacyCols =
+        await db.customSelect('PRAGMA table_info(avistaments);').get();
+    final legacyBoletCol =
+        legacyCols.firstWhere((c) => c.read<String>('name') == 'bolet_id');
+    expect(legacyBoletCol.read<int>('notnull'), equals(1));
+
+    // 3. Trigger database opening/migration logic
+    await db.migration.beforeOpen!(const OpeningDetails(null, 1));
+
+    // 4. Verify table is migrated: bolet_id is now nullable (notnull == 0) and arbre_id exists
+    final migratedCols =
+        await db.customSelect('PRAGMA table_info(avistaments);').get();
+    final migratedBoletCol =
+        migratedCols.firstWhere((c) => c.read<String>('name') == 'bolet_id');
+    expect(migratedBoletCol.read<int>('notnull'), equals(0));
+    final hasArbreId =
+        migratedCols.any((c) => c.read<String>('name') == 'arbre_id');
+    expect(hasArbreId, isTrue);
+
+    // 5. Verify pre-existing legacy sighting was preserved intact
+    final legacySightings =
+        await db.avistamentDao.getAvistamentsByBolet('boletus_edulis');
+    expect(legacySightings.length, equals(1));
+    expect(legacySightings.first.id, equals('legacy-sighting-1'));
+
+    // 6. Verify inserting tree sighting with null boletId succeeds without throwing constraint error
+    await db.avistamentDao.insertAvistament(
+      AvistamentsCompanion(
+        id: const Value('new-tree-sighting'),
+        arbreId: const Value('pinus_sylvestris'),
+        timestamp: Value(DateTime.now()),
+      ),
+    );
+    final treeSightings =
+        await db.avistamentDao.getAvistamentsByArbre('pinus_sylvestris');
+    expect(treeSightings.length, equals(1));
+    expect(treeSightings.first.arbreId, equals('pinus_sylvestris'));
   });
 }

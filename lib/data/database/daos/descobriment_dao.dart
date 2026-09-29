@@ -11,14 +11,24 @@ class DescobrimentDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> markDiscovered(
       String boletId, DateTime at, String? avistamentId) async {
-    await into(descobriments).insert(
-      DescobrimentsCompanion.insert(
-        boletId: boletId,
-        discoveredAt: at,
-        firstAvistamentId: Value(avistamentId),
-      ),
-      mode: InsertMode.insertOrIgnore,
-    );
+    final existing = await (select(descobriments)
+          ..where((t) => t.boletId.equals(boletId)))
+        .getSingleOrNull();
+
+    if (existing == null) {
+      await into(descobriments).insert(
+        DescobrimentsCompanion.insert(
+          boletId: boletId,
+          discoveredAt: at,
+          firstAvistamentId: Value(avistamentId),
+        ),
+        mode: InsertMode.insertOrIgnore,
+      );
+    } else if (existing.firstAvistamentId == null && avistamentId != null) {
+      await (update(descobriments)..where((t) => t.boletId.equals(boletId)))
+          .write(
+              DescobrimentsCompanion(firstAvistamentId: Value(avistamentId)));
+    }
   }
 
   Future<bool> isDiscovered(String boletId) async {

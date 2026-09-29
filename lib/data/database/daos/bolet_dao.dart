@@ -39,12 +39,28 @@ class BoletDao extends DatabaseAccessor<AppDatabase> with _$BoletDaoMixin {
   }
 
   /// Searches mushrooms by partial match against Catalan or scientific name.
-  Future<List<Bolet>> searchByName(String query) {
-    return (select(bolets)
-          ..where((t) =>
-              t.catalanName.like('%$query%') |
-              t.scientificName.like('%$query%')))
-        .get();
+  /// Normalized for case and Catalan diacritics (e.g. 'rovello' matches 'Rovelló').
+  Future<List<Bolet>> searchByName(String query) async {
+    final all = await getAllBolets();
+    final normalizedQuery = _stripDiacritics(query.trim().toLowerCase());
+    if (normalizedQuery.isEmpty) return all;
+
+    return all.where((b) {
+      final catalanNorm = _stripDiacritics(b.catalanName.toLowerCase());
+      final scientificNorm = _stripDiacritics(b.scientificName.toLowerCase());
+      return catalanNorm.contains(normalizedQuery) ||
+          scientificNorm.contains(normalizedQuery);
+    }).toList();
+  }
+
+  static String _stripDiacritics(String text) {
+    const withAccents = 'àáèéíïòóúüç·ÀÁÈÉÍÏÒÓÚÜÇ';
+    const withoutAccents = 'aaeeiioouuc.AAEEIIOOUUC';
+    var result = text;
+    for (int i = 0; i < withAccents.length; i++) {
+      result = result.replaceAll(withAccents[i], withoutAccents[i]);
+    }
+    return result;
   }
 
   /// Retrieves mushrooms associated with a specific indicator tree.

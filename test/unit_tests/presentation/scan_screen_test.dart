@@ -16,7 +16,19 @@ import 'package:boscdex/domain/models/classificacio_result.dart';
 
 class _EmptyClassifierService extends MockClassifierService {
   @override
-  Future<List<ClassificacioResult>> classify(Uint8List imageBytes) async {
+  Future<List<MushroomClassificationResult>> classifyMushroom(
+      Uint8List imageBytes) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    return const [];
+  }
+
+  @override
+  Future<List<ClassificacioResult>> classify(Uint8List imageBytes) =>
+      classifyMushroom(imageBytes);
+
+  @override
+  Future<List<TreeClassificationResult>> classifyTree(
+      Uint8List imageBytes) async {
     await Future.delayed(const Duration(milliseconds: 200));
     return const [];
   }
@@ -244,6 +256,55 @@ void main() {
       await tester.pump(); // Start scan animation
 
       // Verify scanning text appears during scan
+      expect(find.text('ANALITZANT AMB EDGE-AI...'), findsOneWidget);
+
+      // Advance past the 200ms mock latency
+      await tester.pump(const Duration(milliseconds: 250));
+      await tester.pump(const Duration(milliseconds: 50));
+
+      // Scan has finished cleanly, animation stopped
+      expect(find.text('ANALITZANT AMB EDGE-AI...'), findsNothing);
+    });
+
+    testWidgets(
+        'switching to Arbres mode and tapping shutter triggers scan animation',
+        (WidgetTester tester) async {
+      setupMockChannels(
+        permissionStatus: 1,
+        requestResult: {1: 1},
+        availableCameras: [],
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            appDatabaseProvider.overrideWithValue(testDb),
+            classifierProvider.overrideWithValue(_EmptyClassifierService()),
+          ],
+          child: const MaterialApp(
+            home: ScanScreen(),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Tap on 'Arbres' mode button
+      final arbresTab = find.text('Arbres');
+      expect(arbresTab, findsOneWidget);
+      await tester.tap(arbresTab);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      final shutter = find.byKey(const Key('shutter_button'));
+      expect(shutter, findsOneWidget);
+
+      await tester.tap(shutter);
+      await tester.pump();
+
+      // Verify scanning indicator appears
       expect(find.text('ANALITZANT AMB EDGE-AI...'), findsOneWidget);
 
       // Advance past the 200ms mock latency

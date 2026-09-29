@@ -130,4 +130,42 @@ void main() {
     await tester.tap(find.text('Cancel·lar'));
     await tester.pumpAndSettle();
   });
+
+  testWidgets(
+      'Renders AvistamentDetailSheet for tree sighting with leaf type tag and tree button',
+      (tester) async {
+    final avistament = Avistament(
+      id: 'test-tree-sighting',
+      arbreId: 'pinus_sylvestris',
+      timestamp: DateTime(2026, 9, 28, 14, 0),
+      confidenceScore: 0.94,
+      notes: 'Gran pi roig al vessant nord',
+      altitude: 1400,
+      photoPath: null,
+      latitude: null,
+      longitude: null,
+    );
+
+    await tester.pumpWidget(createWidgetUnderTest(avistament));
+    await tester.pumpAndSettle();
+
+    expect(find.text('DETALL DE L\'AVISTAMENT'), findsOneWidget);
+    expect(find.text('Coincidència Neural AI'), findsOneWidget);
+    expect(find.text('94%'), findsOneWidget);
+
+    // Scroll to reveal tree identification details
+    await tester.scrollUntilVisible(find.textContaining('Pi roig'), 200);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Pi roig'), findsOneWidget);
+    expect(find.text('Pinus sylvestris'), findsOneWidget);
+    expect(find.text('Agulla'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+        find.text('Veure fitxa completa de l\'arbre'), 200);
+    await tester.pumpAndSettle();
+    expect(find.text('Veure fitxa completa de l\'arbre'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
 }

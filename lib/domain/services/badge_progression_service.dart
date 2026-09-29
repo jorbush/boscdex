@@ -32,13 +32,18 @@ class BadgeProgressionService {
       bool hasTreeAlliance = false;
       final discoveredBoletIds = allDiscoveries.map((d) => d.boletId).toSet();
 
+      final effectiveVisitedTreeIds =
+          (visitedTreeIds != null && visitedTreeIds.isNotEmpty)
+              ? visitedTreeIds
+              : (await db.avistamentDao.getIdentifiedArbreIds()).toSet();
+
       if (currentTreeId != null) {
         final associatedMushrooms =
             await db.boletDao.getBoletsByArbreId(currentTreeId);
         hasTreeAlliance =
             associatedMushrooms.any((b) => discoveredBoletIds.contains(b.id));
-      } else if (visitedTreeIds != null && visitedTreeIds.isNotEmpty) {
-        for (final treeId in visitedTreeIds) {
+      } else if (effectiveVisitedTreeIds.isNotEmpty) {
+        for (final treeId in effectiveVisitedTreeIds) {
           final associated = await db.boletDao.getBoletsByArbreId(treeId);
           if (associated.any((b) => discoveredBoletIds.contains(b.id))) {
             hasTreeAlliance = true;
@@ -71,9 +76,13 @@ class BadgeProgressionService {
         currentBadges: currentDomainBadges,
       );
 
+      final oldDbMap = {for (final b in allDbInsignies) b.id: b};
       for (final b in updatedBadges) {
-        await db.insigniaDao.updateProgress(b.id, b.progressCount);
-        if (b.isAwarded && b.awardedAt != null) {
+        final old = oldDbMap[b.id];
+        if (old == null || old.progressCount != b.progressCount) {
+          await db.insigniaDao.updateProgress(b.id, b.progressCount);
+        }
+        if (b.isAwarded && b.awardedAt != null && old?.awardedAt == null) {
           await db.insigniaDao.awardInsignia(b.id, b.awardedAt!);
         }
       }

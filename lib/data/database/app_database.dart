@@ -47,7 +47,70 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
+
+  Future<void> _migrateAvistamentsTable() async {
+    final tables = await customSelect(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='avistaments';",
+    ).get();
+    if (tables.isEmpty) return;
+
+    final columns = await customSelect('PRAGMA table_info(avistaments);').get();
+    QueryRow? boletIdCol;
+    bool hasArbreId = false;
+    for (final col in columns) {
+      final name = col.read<String>('name');
+      if (name == 'bolet_id') {
+        boletIdCol = col;
+      } else if (name == 'arbre_id') {
+        hasArbreId = true;
+      }
+    }
+
+    final isBoletIdNotNull =
+        boletIdCol != null && boletIdCol.read<int>('notnull') == 1;
+
+    if (isBoletIdNotNull || !hasArbreId) {
+      developer.log(
+        'Migrating avistaments table to allow nullable bolet_id and support tree sightings...',
+        name: 'AppDatabase',
+      );
+      await customStatement('PRAGMA foreign_keys = OFF;');
+      await customStatement('DROP TABLE IF EXISTS avistaments_new;');
+      await customStatement('''
+        CREATE TABLE IF NOT EXISTS avistaments_new (
+          id TEXT NOT NULL PRIMARY KEY,
+          bolet_id TEXT REFERENCES bolets (id),
+          arbre_id TEXT REFERENCES arbres (id),
+          timestamp INTEGER NOT NULL,
+          latitude REAL,
+          longitude REAL,
+          altitude REAL,
+          photo_path TEXT,
+          confidence_score REAL,
+          notes TEXT
+        );
+      ''');
+
+      if (hasArbreId) {
+        await customStatement('''
+          INSERT INTO avistaments_new (id, bolet_id, arbre_id, timestamp, latitude, longitude, altitude, photo_path, confidence_score, notes)
+          SELECT id, bolet_id, arbre_id, timestamp, latitude, longitude, altitude, photo_path, confidence_score, notes
+          FROM avistaments;
+        ''');
+      } else {
+        await customStatement('''
+          INSERT INTO avistaments_new (id, bolet_id, arbre_id, timestamp, latitude, longitude, altitude, photo_path, confidence_score, notes)
+          SELECT id, bolet_id, NULL, timestamp, latitude, longitude, altitude, photo_path, confidence_score, notes
+          FROM avistaments;
+        ''');
+      }
+
+      await customStatement('DROP TABLE avistaments;');
+      await customStatement(
+          'ALTER TABLE avistaments_new RENAME TO avistaments;');
+    }
+  }
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -61,7 +124,13 @@ class AppDatabase extends _$AppDatabase {
             b.insertAll(insignies, SeedData.insignies);
           });
         },
+        onUpgrade: (m, from, to) async {
+          if (from < 3) {
+            await _migrateAvistamentsTable();
+          }
+        },
         beforeOpen: (details) async {
+          await _migrateAvistamentsTable();
           await customStatement('PRAGMA foreign_keys = ON;');
 
           // Backfill imageAssetPath only for pre-existing databases
@@ -84,10 +153,12 @@ LazyDatabase _openConnection() {
     if (!await file.exists()) {
       try {
         final blob = await rootBundle.load('assets/database/boscdex_seed.db');
-        await file.writeAsBytes(
-          blob.buffer.asUint8List(blob.offsetInBytes, blob.lengthInBytes),
-          flush: true,
-        );
+        if (blob.lengthInBytes > 0) {
+          await file.writeAsBytes(
+            blob.buffer.asUint8List(blob.offsetInBytes, blob.lengthInBytes),
+            flush: true,
+          );
+        }
       } catch (e) {
         // If the seed file is not available in assets, continue and initialize via SeedData
         developer.log(

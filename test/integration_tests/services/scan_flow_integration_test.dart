@@ -113,5 +113,100 @@ void main() {
           await db.insigniaDao.getInsignia('primer_pas_al_bosc');
       expect(updatedInDb?.awardedAt, isNotNull);
     });
+
+    test(
+        'full indicator tree scan to mutualism association lookup integration flow works seamlessly with database',
+        () async {
+      // 1. Classifier generates tree candidates
+      final treeCandidates = await classifier.classifyTree(Uint8List(0));
+      expect(treeCandidates, isNotEmpty);
+      final topTree = treeCandidates.first;
+
+      // 2. Fetch tree profile from database
+      final treeRecord = await db.arbreDao.getArbreById(topTree.arbreId);
+      expect(treeRecord, isNotNull);
+      expect(treeRecord?.catalanName, equals('Pi roig'));
+      expect(treeRecord?.leafType, equals('Agulla'));
+
+      // 3. Query mutualistic / symbiotic mushrooms for this tree species
+      final symbioticBolets =
+          await db.boletDao.getBoletsByArbreId(topTree.arbreId);
+      expect(symbioticBolets, isNotEmpty);
+      expect(
+        symbioticBolets.any((b) => b.id == 'lactarius_deliciosus'),
+        isTrue,
+        reason:
+            'Pi roig (Pinus sylvestris) must associate with Rovelló (Lactarius deliciosus)',
+      );
+
+      // 4. Verify Aliança Silvestre badge logic when tree association is visited
+      final allInsignies = await db.insigniaDao.getAllInsignies();
+      final currentDomainBadges = allInsignies.map((b) {
+        return domain.Insignia(
+          id: b.id,
+          nom: b.id,
+          descripcio: '',
+          iconPath: '',
+          progressCount: b.progressCount,
+          targetCount: 1,
+          awardedAt: b.awardedAt,
+        );
+      }).toList();
+
+      final updatedBadges = await badgeService.evaluateBadges(
+        discoveryCount: 1,
+        hasRovello: true,
+        hasPinetell: false,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: true,
+        currentBadges: currentDomainBadges,
+      );
+
+      final aliancaSilvestre =
+          updatedBadges.firstWhere((b) => b.id == 'alianca_silvestre');
+      expect(aliancaSilvestre.isAwarded, isTrue);
+
+      await db.insigniaDao
+          .awardInsignia(aliancaSilvestre.id, aliancaSilvestre.awardedAt!);
+      final inDb = await db.insigniaDao.getInsignia('alianca_silvestre');
+      expect(inDb?.awardedAt, isNotNull);
+    });
+
+    test(
+        'full tree scan to sighting registration and query by arbre works seamlessly',
+        () async {
+      // 1. Classifier generates tree candidates
+      final treeCandidates = await classifier.classifyTree(Uint8List(0));
+      expect(treeCandidates, isNotEmpty);
+      final topTree = treeCandidates.first;
+
+      // 2. User registers tree sighting into El Meu Diari
+      final sightingId = const Uuid().v4();
+      final now = DateTime.now();
+
+      await db.avistamentDao.insertAvistament(
+        AvistamentsCompanion(
+          id: drift.Value(sightingId),
+          arbreId: drift.Value(topTree.arbreId),
+          timestamp: drift.Value(now),
+          confidenceScore: drift.Value(topTree.confidence),
+          notes: const drift.Value('Exemplar centenari de Pi roig'),
+        ),
+      );
+
+      // 3. Query tree sightings by arbreId
+      final treeSightings =
+          await db.avistamentDao.getAvistamentsByArbre(topTree.arbreId);
+      expect(treeSightings.length, equals(1));
+      expect(treeSightings.first.id, equals(sightingId));
+      expect(treeSightings.first.arbreId, equals(topTree.arbreId));
+      expect(treeSightings.first.boletId, isNull);
+      expect(
+          treeSightings.first.notes, equals('Exemplar centenari de Pi roig'));
+
+      // 4. Verify all sightings stream/list includes both types
+      final all = await db.avistamentDao.getAllAvistaments().first;
+      expect(all.any((s) => s.id == sightingId && s.arbreId != null), isTrue);
+    });
   });
 }

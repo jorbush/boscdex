@@ -17,6 +17,7 @@ class JournalScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final avistamentsAsync = ref.watch(avistamentsProvider);
     final boletsMap = ref.watch(allBoletsMapProvider).value ?? {};
+    final arbresMap = ref.watch(allArbresMapProvider).value ?? {};
 
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
@@ -72,7 +73,7 @@ class JournalScreen extends ConsumerWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Encara no tens cap avistament. Escaneja el teu primer bolet!',
+                        'Encara no tens cap avistament. Escaneja el teu primer bolet o arbre!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
@@ -93,11 +94,17 @@ class JournalScreen extends ConsumerWidget {
             itemCount: avistaments.length,
             itemBuilder: (context, index) {
               final avistament = avistaments[index];
-              final displayName =
-                  boletsMap[avistament.boletId] ?? avistament.boletId;
+              final isTree = avistament.arbreId != null;
+              final displayName = isTree
+                  ? (arbresMap[avistament.arbreId] ??
+                      avistament.arbreId ??
+                      'Arbre indicador')
+                  : (boletsMap[avistament.boletId] ??
+                      avistament.boletId ??
+                      'Bolet');
 
-              final hasRealPhoto = avistament.photoPath != null &&
-                  File(avistament.photoPath!).existsSync();
+              final hasPhotoPath = avistament.photoPath != null &&
+                  avistament.photoPath!.isNotEmpty;
               final confidencePct = avistament.confidenceScore != null
                   ? (avistament.confidenceScore! * 100).toInt()
                   : null;
@@ -119,45 +126,100 @@ class JournalScreen extends ConsumerWidget {
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
-                      color: hasRealPhoto
+                      color: hasPhotoPath
                           ? Colors.black
                           : RetroColors.surfaceLight,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: RetroColors.ink, width: 2),
                     ),
                     clipBehavior: Clip.antiAlias,
-                    child: hasRealPhoto
+                    child: hasPhotoPath
                         ? Image.file(
                             File(avistament.photoPath!),
                             fit: BoxFit.cover,
-                            errorBuilder: (ctx, err, st) => const Center(
-                              child: Text('🍄', style: TextStyle(fontSize: 24)),
+                            errorBuilder: (ctx, err, st) => Center(
+                              child: isTree
+                                  ? Image.asset(
+                                      'assets/images/trees/${avistament.arbreId}.png',
+                                      cacheWidth: 150,
+                                      fit: BoxFit.contain,
+                                      filterQuality: FilterQuality.none,
+                                      errorBuilder: (context, error,
+                                              stackTrace) =>
+                                          const Text('🌲',
+                                              style: TextStyle(fontSize: 22)),
+                                    )
+                                  : Image.asset(
+                                      'assets/images/mushrooms/${avistament.boletId}.png',
+                                      cacheWidth: 150,
+                                      fit: BoxFit.contain,
+                                      filterQuality: FilterQuality.none,
+                                      errorBuilder: (context, error,
+                                              stackTrace) =>
+                                          const Text('🍄',
+                                              style: TextStyle(fontSize: 22)),
+                                    ),
                             ),
                           )
                         : Center(
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: Image.asset(
-                                'assets/images/mushrooms/${avistament.boletId}.png',
-                                cacheWidth: 150,
-                                fit: BoxFit.contain,
-                                filterQuality: FilterQuality.none,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(
-                                  'assets/images/silhouettes/generic_mushroom.png',
-                                  cacheWidth: 150,
-                                  fit: BoxFit.contain,
-                                  filterQuality: FilterQuality.none,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Text('🍄',
-                                          style: TextStyle(fontSize: 22)),
-                                ),
-                              ),
+                              child: isTree
+                                  ? Image.asset(
+                                      'assets/images/trees/${avistament.arbreId}.png',
+                                      cacheWidth: 150,
+                                      fit: BoxFit.contain,
+                                      filterQuality: FilterQuality.none,
+                                      errorBuilder: (context, error,
+                                              stackTrace) =>
+                                          const Text('🌲',
+                                              style: TextStyle(fontSize: 22)),
+                                    )
+                                  : Image.asset(
+                                      'assets/images/mushrooms/${avistament.boletId}.png',
+                                      cacheWidth: 150,
+                                      fit: BoxFit.contain,
+                                      filterQuality: FilterQuality.none,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Image.asset(
+                                        'assets/images/silhouettes/generic_mushroom.png',
+                                        cacheWidth: 150,
+                                        fit: BoxFit.contain,
+                                        filterQuality: FilterQuality.none,
+                                        errorBuilder: (context, error,
+                                                stackTrace) =>
+                                            const Text('🍄',
+                                                style: TextStyle(fontSize: 22)),
+                                      ),
+                                    ),
                             ),
                           ),
                   ),
                   title: Row(
                     children: [
+                      if (isTree) ...[
+                        Container(
+                          margin: const EdgeInsets.only(right: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 1.5),
+                          decoration: BoxDecoration(
+                            color: RetroColors.forestGreen.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                                color: RetroColors.forestGreen, width: 1.2),
+                          ),
+                          child: const Text(
+                            'ARBRE',
+                            style: TextStyle(
+                              fontSize: 9.5,
+                              fontWeight: FontWeight.w900,
+                              color: RetroColors.forestGreen,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ],
                       Expanded(
                         child: Text(
                           displayName,

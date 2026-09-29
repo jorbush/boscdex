@@ -62,33 +62,52 @@ The Flutter codebase interacts with the computer vision subsystem via an abstrac
 
 ```dart
 abstract class ClassifierService {
-  Future<List<ClassificacioResult>> classify(Uint8List imageBytes);
-  Future<List<ArbreClassificacioResult>> classifyTree(Uint8List imageBytes);
+  /// Classifies a mushroom image and returns ranked candidate predictions.
+  Future<List<MushroomClassificationResult>> classifyMushroom(
+      Uint8List imageBytes);
+
+  /// Backwards-compatible alias for [classifyMushroom].
+  Future<List<MushroomClassificationResult>> classify(Uint8List imageBytes);
+
+  /// Classifies an indicator tree image and returns ranked candidate predictions.
+  Future<List<TreeClassificationResult>> classifyTree(Uint8List imageBytes);
+
   Future<void> initialize();
   void dispose();
 }
 ```
 
 This decoupled abstraction supports three progressive implementations:
-1. **`TfliteClassifierService` (Active in v0.3 Production):** Executes on-device MobileNetV2 GAP feature extraction (`assets/models/boscdex_classifier.tflite`) combined with a high-performance Dart linear classification head (`assets/models/classifier_head.bin`). Verified at **88.8% Top-1** and **97.3% Top-3** accuracy across 188 real Catalan field photos (21 taxa).
+1. **`TfliteClassifierService` (Active in v0.3 Production):** Executes on-device MobileNetV2 GAP feature extraction combined with high-performance Dart linear classification heads for both mushrooms and indicator trees.
+   * **Mushroom Neural Classifier:** Evaluated on 21 taxa using `assets/models/mushroom_classifier.tflite` + `assets/models/mushroom_classifier_head.bin`. Verified at **86.4% Top-1** and **93.9% Top-3** accuracy across 214 real field photos.
+   * **Tree Neural Classifier:** Evaluated on 5 indicator tree taxa using `assets/models/tree_classifier.tflite` + `assets/models/tree_classifier_head.bin`. Lazy-loaded on first tree scan request to conserve RAM. Verified at **86.7% Top-1** and **100.0% Top-2** accuracy across 30 real field photos.
 2. **`VisualFeatureClassifierService` (Graceful Fallback):** Real-time fallback analyzing camera frames by downscaling to $32 \times 32$ via `dart:ui.instantiateImageCodec`, computing HSV chromatic distribution histograms, and scoring against regional botanical profiles (100% offline, zero native binary dependencies).
 3. **`MockClassifierService`:** A deterministic round-robin scenario cycle used for rapid headless UI prototyping and reproducible unit tests.
 
-> **Production Model Bundle in `assets/models/`:**  
-> The `assets/models/` directory contains the production-calibrated model bundle fine-tuned on real Catalan field photos + iNaturalist observations:
-> - `boscdex_classifier.tflite` (2.50 MB): Hardware-accelerated MobileNetV2 deep learning backbone (64 layers) outputting 1,280 Global Average Pooling (GAP) features.
-> - `classifier_head.bin` (107.6 KB): Fast, universal Float32 projection matrix ($21 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$, ensuring 100% platform portability across all iOS/Android TFLite C runtime versions.
-> - `labels.txt` (21 classes): Ordered taxonomic label index mapping neural logits to database entity IDs, including Dex #022 *Chroogomphus rutilus*.
+> **Production Model Bundles in `assets/models/`:**  
+> The `assets/models/` directory contains production-calibrated edge assets fine-tuned on real field photos + iNaturalist observations:
+> - **Mushroom Backbone & Head:**
+>   - `mushroom_classifier.tflite` (2.50 MB): MobileNetV2 feature extractor (1,280 GAP features).
+>   - `mushroom_classifier_head.bin` (107.6 KB): Float32 projection matrix ($21 \times 1280$) and biases evaluated in $<0.05\text{ ms}$.
+>   - `mushroom_labels.txt` (21 classes): Ordered taxonomic label index mapping neural logits to entity IDs.
+> - **Indicator Tree Backbone & Head:**
+>   - `tree_classifier.tflite` (2.50 MB): MobileNetV2 backbone for tree foliage/bark feature extraction.
+>   - `tree_classifier_head.bin` (25.6 KB): Calibrated Float32 projection matrix ($5 \times 1280$) and biases for the 5 indicator tree species.
+>   - `tree_labels.txt` (5 classes): Ordered tree taxonomic labels (`pinus_sylvestris`, `pinus_halepensis`, `quercus_ilex`, `fagus_sylvatica`, `castanea_sativa`).
 
 ---
 
 ## 🧪 Golden Set Empirical Evaluation & Model Testing
 
-To evaluate and track model refinement objectively across iterations, the project maintains an on-device **Golden Validation Set**:
-- **Test Asset Directory:** `test/assets/` (contains 214 real high-resolution field photographs across all 21 Catalan taxa, including *Hygrophorus latitabundus*, *Lactarius deliciosus*, *Boletus edulis*, *Chroogomphus rutilus*, etc.).
-- **Automated Regression Suite:** [`test/unit_tests/domain/model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/model_real_images_test.dart).
-- **Execution Command:** `flutter test test/unit_tests/domain/model_real_images_test.dart`.
-- **Current Benchmark (Series 011):** **86.4% Top-1** (185/214), **93.9% Top-3** (201/214) with 0.0% un-gated safety false negatives. Evaluates all 214 images in under 60 seconds directly in unit testing.
+To evaluate and track model refinement objectively across iterations, the project maintains on-device **Golden Validation Sets**:
+- **Mushroom Golden Set:** `test/assets/mushrooms/` (214 real high-resolution field photographs across all 21 Catalan taxa).
+  - Regression Test: [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart).
+  - Benchmark: **86.4% Top-1** (185/214), **93.9% Top-3** (201/214).
+  - Execution Command: `flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart`.
+- **Tree Golden Set:** `test/assets/trees/` (79 real field photographs across all 5 indicator tree species).
+  - Regression Test: [`test/unit_tests/domain/tree_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/tree_model_real_images_test.dart).
+  - Benchmark: **80.0% Top-1**, **96.0% Top-2** (Phase 2 validation).
+  - Execution Command: `flutter test test/unit_tests/domain/tree_model_real_images_test.dart`.
 
 ---
 

@@ -124,6 +124,20 @@ class SpeciesDistributionService {
       CataloniaZone.transversalMontseny,
       CataloniaZone.prepirineuCentral,
     ],
+    'lactarius_sanguifluus': [
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.portsTerresEbre,
+    ],
+    'chroogomphus_rutilus': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.portsTerresEbre,
+    ],
   };
 
   /// Returns the cataloged natural zones for a given mushroom species.

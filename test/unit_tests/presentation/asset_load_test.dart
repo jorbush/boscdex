@@ -103,25 +103,50 @@ void main() {
         reason: 'Catalonia pixel map image must load');
   });
 
-  test('Trained TFLite model and labels load via rootBundle', () async {
+  test('Trained mushroom TFLite model and labels load via rootBundle',
+      () async {
     final modelData =
-        await rootBundle.load('assets/models/boscdex_classifier.tflite');
+        await rootBundle.load('assets/models/mushroom_classifier.tflite');
     expect(modelData.lengthInBytes, greaterThan(2 * 1024 * 1024),
         reason: 'Model should be ~2.5 MB quantized INT8 network');
 
-    final headData = await rootBundle.load('assets/models/classifier_head.bin');
+    final headData =
+        await rootBundle.load('assets/models/mushroom_classifier_head.bin');
     expect(headData.lengthInBytes, greaterThan(100 * 1024),
         reason:
-            'Classifier head should contain 20 biases + 20x1280 Float32 weights (~102 KB)');
+            'Classifier head should contain 21 biases + 21x1280 Float32 weights (~107 KB)');
 
     final labelsString =
-        await rootBundle.loadString('assets/models/labels.txt');
+        await rootBundle.loadString('assets/models/mushroom_labels.txt');
     final labels = labelsString.trim().split('\n');
     expect(labels.length, equals(21));
     expect(labels, contains('lactarius_deliciosus'));
     expect(labels, contains('amanita_caesarea'));
     expect(labels, contains('boletus_edulis'));
     expect(labels, contains('chroogomphus_rutilus'));
+  });
+
+  test('Tree TFLite model and labels load via rootBundle', () async {
+    final modelData =
+        await rootBundle.load('assets/models/tree_classifier.tflite');
+    expect(modelData.lengthInBytes, greaterThan(2 * 1024 * 1024),
+        reason: 'Tree model should be ~2.5 MB quantized MobileNetV2');
+
+    final headData =
+        await rootBundle.load('assets/models/tree_classifier_head.bin');
+    expect(headData.lengthInBytes, greaterThan(20 * 1024),
+        reason:
+            'Tree classifier head should contain 5 biases + 5x1280 Float32 weights (~25 KB)');
+
+    final labelsString =
+        await rootBundle.loadString('assets/models/tree_labels.txt');
+    final labels = labelsString.trim().split('\n');
+    expect(labels.length, equals(5));
+    expect(labels, contains('pinus_sylvestris'));
+    expect(labels, contains('pinus_halepensis'));
+    expect(labels, contains('quercus_ilex'));
+    expect(labels, contains('fagus_sylvatica'));
+    expect(labels, contains('castanea_sativa'));
   });
 
   testWidgets('Renders ColorFiltered silhouette properly', (tester) async {

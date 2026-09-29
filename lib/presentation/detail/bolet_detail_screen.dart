@@ -836,8 +836,6 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
               itemBuilder: (context, index) {
                 final avistament = _avistaments[index];
                 final photoPath = avistament.photoPath;
-                final hasPhotoFile =
-                    photoPath != null && File(photoPath).existsSync();
                 final confidence = avistament.confidenceScore ?? 0.0;
                 final confidencePct = (confidence * 100).toInt();
 
@@ -863,12 +861,19 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        if (hasPhotoFile)
+                        if (photoPath != null)
                           Image.file(
                             File(photoPath),
                             fit: BoxFit.cover,
-                            errorBuilder: (ctx, err, st) => const Center(
-                              child: Text('🍄', style: TextStyle(fontSize: 32)),
+                            errorBuilder: (ctx, err, st) => Center(
+                              child: Image.asset(
+                                'assets/images/mushrooms/${avistament.boletId}.png',
+                                width: 50,
+                                height: 50,
+                                filterQuality: FilterQuality.none,
+                                errorBuilder: (ctx, err, st) => const Text('🍄',
+                                    style: TextStyle(fontSize: 28)),
+                              ),
                             ),
                           )
                         else

@@ -22,7 +22,7 @@ void main() {
         () async {
       await service.initialize();
 
-      // Labels from assets/models/labels.txt should be parsed
+      // Labels from assets/models/mushroom_labels.txt should be parsed
       expect(service.labels.length, equals(21));
       expect(service.labels, contains('lactarius_deliciosus'));
       expect(service.labels, contains('amanita_caesarea'));
@@ -66,6 +66,38 @@ void main() {
       expect(treeResults, isNotEmpty);
       expect(treeResults.first.arbreId, isNotEmpty);
       expect(treeResults.first.confidence, greaterThan(0.0));
+    });
+
+    test('Initializes tree labels and classification head on demand', () async {
+      await service.initialize();
+
+      // Tree model is lazy-loaded upon first tree classification
+      final results = await service.classifyTree(Uint8List(0));
+      expect(results, isNotEmpty);
+
+      expect(service.treeLabels.length, equals(5));
+      expect(service.treeLabels, contains('pinus_sylvestris'));
+      expect(service.treeLabels, contains('quercus_ilex'));
+      expect(service.treeLabels, contains('fagus_sylvatica'));
+      expect(service.treeLabels, contains('castanea_sativa'));
+      expect(service.treeLabels, contains('pinus_halepensis'));
+    });
+
+    test('Classifying real tree specimen yields valid tree prediction',
+        () async {
+      await service.initialize();
+
+      final sampleFile =
+          File('test/assets/trees/quercus_ilex/quercus_ilex_1.jpg');
+      if (sampleFile.existsSync()) {
+        final sampleBytes = sampleFile.readAsBytesSync();
+        final results = await service.classifyTree(sampleBytes);
+
+        expect(results, isNotEmpty);
+        expect(results.first.arbreId, isNotEmpty);
+        expect(results.first.displayName, isNotEmpty);
+        expect(results.first.confidence, greaterThan(0.0));
+      }
     });
 
     test('Disposing service cleans up resources safely', () {

@@ -81,7 +81,7 @@ We split the model into two specialized pieces:
                                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │ PART 1: Hardware-Accelerated Feature Extractor                  │
-│ Asset: assets/models/boscdex_classifier.tflite (2.50 MB)        │
+│ Asset: assets/models/mushroom_classifier.tflite (2.50 MB)       │
 │ Engine: TFLite C Interpreter (MobileNetV2, 64 Conv Layers)      │
 │ Output: 1,280 Global Average Pooling (GAP) Float32 Features     │
 └────────────────────────────────┬────────────────────────────────┘
@@ -91,19 +91,19 @@ We split the model into two specialized pieces:
                                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │ PART 2: Portable Linear Classification Head                     │
-│ Asset: assets/models/classifier_head.bin (102.5 KB)             │
+│ Asset: assets/models/mushroom_classifier_head.bin (107.6 KB)    │
 │ Engine: Pure Native Dart in TfliteClassifierService             │
 │ Operation: Dot Product (W • x + b)                              │
 │ Latency: < 0.05 ms (< 50 microseconds!)                         │
-│ Output: 20 Species Logits -> Numerically Stable Softmax         │
+│ Output: 21 Species Logits -> Numerically Stable Softmax         │
 └─────────────────────────────────────────────────────────────────┘
                                  │
                                  ▼
                    TOP-3 CANDIDATE PREDICTIONS
 ```
 
-### How Part 1 Works (`boscdex_classifier.tflite`):
-In [`notebooks/boscdex_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_training_colab.ipynb), we slice the trained model right at the output of the GAP layer:
+### How Part 1 Works (`mushroom_classifier.tflite`):
+In [`notebooks/boscdex_mushroom_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_mushroom_training_colab.ipynb), we slice the trained model right at the output of the GAP layer:
 
 ```python
 gap_model = tf.keras.Model(inputs=model.input, outputs=model.get_layer("gap_features").output)
@@ -113,7 +113,7 @@ tflite_gap = converter.convert()
 ```
 Because this model contains only convolutional and pooling operations (which have been standardized in TFLite since v1.0), it is **100% compatible with every mobile operating system, iOS version, and Android phone on earth**.
 
-### How Part 2 Works (`classifier_head.bin`):
+### How Part 2 Works (`mushroom_classifier_head.bin`):
 We export the Dense layer's weights and biases into a tiny raw binary file:
 * **20 Biases:** 20 float32s $\times$ 4 bytes = 80 bytes.
 * **Weights Matrix:** 20 classes $\times$ 1,280 features $\times$ 4 bytes = 102,400 bytes.

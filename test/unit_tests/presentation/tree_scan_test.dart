@@ -114,5 +114,59 @@ void main() {
 
       await tester.pumpWidget(const SizedBox.shrink());
     });
+
+    testWidgets(
+        'TreeClassificationResultSheet registers sighting to Diari when tapping Registrar troballa al Diari',
+        (WidgetTester tester) async {
+      bool registered = false;
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: MaterialApp(
+            home: Scaffold(
+              body: TreeClassificationResultSheet(
+                results: const [
+                  TreeClassificationResult(
+                    arbreId: 'pinus_sylvestris',
+                    displayName: 'Pi roig',
+                    confidence: 0.93,
+                  ),
+                ],
+                onRegistered: () {
+                  registered = true;
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final registerButton =
+          find.byKey(const Key('register_tree_sighting_button'));
+      expect(registerButton, findsOneWidget);
+      expect(find.text('Registrar troballa al Diari'), findsOneWidget);
+
+      await tester.ensureVisible(registerButton);
+      await tester.pump();
+      await tester.tap(registerButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+
+      expect(registered, isTrue);
+
+      final sightings =
+          await db.avistamentDao.getAvistamentsByArbre('pinus_sylvestris');
+      expect(sightings.length, equals(1));
+      expect(sightings.first.arbreId, equals('pinus_sylvestris'));
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
   });
 }

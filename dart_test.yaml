@@ -1,0 +1,3 @@
+tags:
+  ml_benchmark:
+    description: "Heavy Machine Learning empirical benchmark tests that execute TFLite inference over large on-disk photo collections. Excluded from standard CI runs."

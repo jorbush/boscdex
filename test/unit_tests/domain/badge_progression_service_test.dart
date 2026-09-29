@@ -26,7 +26,7 @@ void main() {
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion.insert(
           id: 'sighting-1',
-          boletId: 'boletus_edulis',
+          boletId: const Value('boletus_edulis'),
           timestamp: now,
         ),
       );
@@ -55,7 +55,7 @@ void main() {
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion.insert(
           id: 'sighting-rovello',
-          boletId: 'lactarius_deliciosus',
+          boletId: const Value('lactarius_deliciosus'),
           timestamp: now,
         ),
       );
@@ -65,7 +65,7 @@ void main() {
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion.insert(
           id: 'sighting-pinetell',
-          boletId: 'lactarius_sanguifluus',
+          boletId: const Value('lactarius_sanguifluus'),
           timestamp: now,
         ),
       );
@@ -93,7 +93,7 @@ void main() {
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion.insert(
           id: 'sighting-rovello',
-          boletId: 'lactarius_deliciosus',
+          boletId: const Value('lactarius_deliciosus'),
           timestamp: now,
         ),
       );

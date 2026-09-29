@@ -1,0 +1,5 @@
+pinus_sylvestris
+pinus_halepensis
+quercus_ilex
+fagus_sylvatica
+castanea_sativa

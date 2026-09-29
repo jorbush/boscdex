@@ -12,6 +12,7 @@ erDiagram
     Arbres ||--o{ BoletArbreAssociations : hosts
     Bolets ||--o{ ToxicLookalikes : has_twin
     Bolets ||--o{ Avistaments : logged_in
+    Arbres ||--o{ Avistaments : logged_in
     Bolets ||--o| Descobriments : unlocked_in
     Insignies ||--o{ Descobriments : evaluated_with
 
@@ -50,7 +51,8 @@ erDiagram
 
     Avistaments {
         string id PK
-        string boletId FK
+        string boletId FK "nullable"
+        string arbreId FK "nullable"
         datetime timestamp
         real latitude
         real longitude
@@ -90,10 +92,12 @@ Junction table linking mushroom species to their symbiotic partner trees with co
 Junction table defining dangerous confusion pairs (e.g., *Lactarius deliciosus* vs *Lactarius chrysorrheus*, or *Cantharellus cibarius* vs *Omphalotus olearius*). Stores key diagnostic comparison notes.
 
 ### 5. `avistaments`
-Chronological sighting logbook entries recording timestamp, optional GPS coordinates, altitude, photo path, ML confidence percentage, and personal field notes.
+Chronological sighting logbook entries recording timestamp, optional GPS coordinates, altitude, photo path, ML confidence percentage, and personal field notes. Supports both mushroom sightings (`boletId` set, `arbreId` null) and indicator tree sightings (`arbreId` set, `boletId` null).
+* **Schema Version 3 Migration:** Migrated using SQLite zero-loss table recreation under `PRAGMA foreign_keys = OFF` to guarantee `bolet_id` is nullable without constraint failures across existing databases.
 
 ### 6. `descobriments`
 Tracks whether a species has been registered in the user's Pokédex album. Populated upon the first registered sighting.
+* `firstAvistamentId`: Foreign key to `avistaments(id)` configured with `onDelete: KeyAction.setNull`. This guarantees that deleting a sighting entry from the journal gracefully clears the reference without causing SQL foreign key constraint violations or deleting species discovery history.
 
 ### 7. `insignies`
 Tracks player progression for the 6 field guide badges. Stores the current count (`progressCount`) and timestamp of award (`awardedAt`).

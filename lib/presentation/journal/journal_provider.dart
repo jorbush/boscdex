@@ -13,3 +13,10 @@ final allBoletsMapProvider = FutureProvider<Map<String, String>>((ref) async {
   final bolets = await db.boletDao.getAllBolets();
   return {for (final b in bolets) b.id: b.catalanName};
 });
+
+/// Provides a map of arbre ID -> catalanName for resolving tree sightings in the journal.
+final allArbresMapProvider = FutureProvider<Map<String, String>>((ref) async {
+  final db = ref.watch(appDatabaseProvider);
+  final arbres = await db.arbreDao.getAllArbres();
+  return {for (final a in arbres) a.id: a.catalanName};
+});

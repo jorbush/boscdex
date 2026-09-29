@@ -20,7 +20,7 @@ class ArbreCard extends StatelessWidget {
     return Semantics(
       button: true,
       label:
-          '${arbre.catalanName} (${arbre.scientificName}), fulla ${arbre.leafType}, ${entry.isVisited ? "identificat" : "no identificat"}',
+          '${arbre.catalanName} (${arbre.scientificName}), fulla ${arbre.leafType}, ${entry.isVisited ? "identificat al camp" : "no identificat"}',
       child: GestureDetector(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -86,9 +86,7 @@ class ArbreCard extends StatelessWidget {
                       border: Border.all(color: RetroColors.ink, width: 1.2),
                     ),
                     child: Icon(
-                      entry.isVisited
-                          ? Icons.check
-                          : Icons.visibility_off_rounded,
+                      entry.isVisited ? Icons.check : Icons.camera_alt_outlined,
                       size: 10,
                       color:
                           entry.isVisited ? Colors.white : RetroColors.inkSoft,

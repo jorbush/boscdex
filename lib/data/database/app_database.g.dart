@@ -1595,11 +1595,20 @@ class $AvistamentsTable extends Avistaments
       const VerificationMeta('boletId');
   @override
   late final GeneratedColumn<String> boletId = GeneratedColumn<String>(
-      'bolet_id', aliasedName, false,
+      'bolet_id', aliasedName, true,
       type: DriftSqlType.string,
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('REFERENCES bolets (id)'));
+  static const VerificationMeta _arbreIdMeta =
+      const VerificationMeta('arbreId');
+  @override
+  late final GeneratedColumn<String> arbreId = GeneratedColumn<String>(
+      'arbre_id', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES arbres (id)'));
   static const VerificationMeta _timestampMeta =
       const VerificationMeta('timestamp');
   @override
@@ -1645,6 +1654,7 @@ class $AvistamentsTable extends Avistaments
   List<GeneratedColumn> get $columns => [
         id,
         boletId,
+        arbreId,
         timestamp,
         latitude,
         longitude,
@@ -1670,8 +1680,10 @@ class $AvistamentsTable extends Avistaments
     if (data.containsKey('bolet_id')) {
       context.handle(_boletIdMeta,
           boletId.isAcceptableOrUnknown(data['bolet_id']!, _boletIdMeta));
-    } else if (isInserting) {
-      context.missing(_boletIdMeta);
+    }
+    if (data.containsKey('arbre_id')) {
+      context.handle(_arbreIdMeta,
+          arbreId.isAcceptableOrUnknown(data['arbre_id']!, _arbreIdMeta));
     }
     if (data.containsKey('timestamp')) {
       context.handle(_timestampMeta,
@@ -1717,7 +1729,9 @@ class $AvistamentsTable extends Avistaments
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       boletId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}bolet_id'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}bolet_id']),
+      arbreId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}arbre_id']),
       timestamp: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}timestamp'])!,
       latitude: attachedDatabase.typeMapping
@@ -1743,7 +1757,8 @@ class $AvistamentsTable extends Avistaments
 
 class Avistament extends DataClass implements Insertable<Avistament> {
   final String id;
-  final String boletId;
+  final String? boletId;
+  final String? arbreId;
   final DateTime timestamp;
   final double? latitude;
   final double? longitude;
@@ -1753,7 +1768,8 @@ class Avistament extends DataClass implements Insertable<Avistament> {
   final String? notes;
   const Avistament(
       {required this.id,
-      required this.boletId,
+      this.boletId,
+      this.arbreId,
       required this.timestamp,
       this.latitude,
       this.longitude,
@@ -1765,7 +1781,12 @@ class Avistament extends DataClass implements Insertable<Avistament> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['bolet_id'] = Variable<String>(boletId);
+    if (!nullToAbsent || boletId != null) {
+      map['bolet_id'] = Variable<String>(boletId);
+    }
+    if (!nullToAbsent || arbreId != null) {
+      map['arbre_id'] = Variable<String>(arbreId);
+    }
     map['timestamp'] = Variable<DateTime>(timestamp);
     if (!nullToAbsent || latitude != null) {
       map['latitude'] = Variable<double>(latitude);
@@ -1791,7 +1812,12 @@ class Avistament extends DataClass implements Insertable<Avistament> {
   AvistamentsCompanion toCompanion(bool nullToAbsent) {
     return AvistamentsCompanion(
       id: Value(id),
-      boletId: Value(boletId),
+      boletId: boletId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(boletId),
+      arbreId: arbreId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(arbreId),
       timestamp: Value(timestamp),
       latitude: latitude == null && nullToAbsent
           ? const Value.absent()
@@ -1818,7 +1844,8 @@ class Avistament extends DataClass implements Insertable<Avistament> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Avistament(
       id: serializer.fromJson<String>(json['id']),
-      boletId: serializer.fromJson<String>(json['boletId']),
+      boletId: serializer.fromJson<String?>(json['boletId']),
+      arbreId: serializer.fromJson<String?>(json['arbreId']),
       timestamp: serializer.fromJson<DateTime>(json['timestamp']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
@@ -1833,7 +1860,8 @@ class Avistament extends DataClass implements Insertable<Avistament> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'boletId': serializer.toJson<String>(boletId),
+      'boletId': serializer.toJson<String?>(boletId),
+      'arbreId': serializer.toJson<String?>(arbreId),
       'timestamp': serializer.toJson<DateTime>(timestamp),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
@@ -1846,7 +1874,8 @@ class Avistament extends DataClass implements Insertable<Avistament> {
 
   Avistament copyWith(
           {String? id,
-          String? boletId,
+          Value<String?> boletId = const Value.absent(),
+          Value<String?> arbreId = const Value.absent(),
           DateTime? timestamp,
           Value<double?> latitude = const Value.absent(),
           Value<double?> longitude = const Value.absent(),
@@ -1856,7 +1885,8 @@ class Avistament extends DataClass implements Insertable<Avistament> {
           Value<String?> notes = const Value.absent()}) =>
       Avistament(
         id: id ?? this.id,
-        boletId: boletId ?? this.boletId,
+        boletId: boletId.present ? boletId.value : this.boletId,
+        arbreId: arbreId.present ? arbreId.value : this.arbreId,
         timestamp: timestamp ?? this.timestamp,
         latitude: latitude.present ? latitude.value : this.latitude,
         longitude: longitude.present ? longitude.value : this.longitude,
@@ -1872,6 +1902,7 @@ class Avistament extends DataClass implements Insertable<Avistament> {
     return (StringBuffer('Avistament(')
           ..write('id: $id, ')
           ..write('boletId: $boletId, ')
+          ..write('arbreId: $arbreId, ')
           ..write('timestamp: $timestamp, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
@@ -1884,14 +1915,15 @@ class Avistament extends DataClass implements Insertable<Avistament> {
   }
 
   @override
-  int get hashCode => Object.hash(id, boletId, timestamp, latitude, longitude,
-      altitude, photoPath, confidenceScore, notes);
+  int get hashCode => Object.hash(id, boletId, arbreId, timestamp, latitude,
+      longitude, altitude, photoPath, confidenceScore, notes);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Avistament &&
           other.id == this.id &&
           other.boletId == this.boletId &&
+          other.arbreId == this.arbreId &&
           other.timestamp == this.timestamp &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
@@ -1903,7 +1935,8 @@ class Avistament extends DataClass implements Insertable<Avistament> {
 
 class AvistamentsCompanion extends UpdateCompanion<Avistament> {
   final Value<String> id;
-  final Value<String> boletId;
+  final Value<String?> boletId;
+  final Value<String?> arbreId;
   final Value<DateTime> timestamp;
   final Value<double?> latitude;
   final Value<double?> longitude;
@@ -1914,6 +1947,7 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
   const AvistamentsCompanion({
     this.id = const Value.absent(),
     this.boletId = const Value.absent(),
+    this.arbreId = const Value.absent(),
     this.timestamp = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
@@ -1924,7 +1958,8 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
   });
   AvistamentsCompanion.insert({
     required String id,
-    required String boletId,
+    this.boletId = const Value.absent(),
+    this.arbreId = const Value.absent(),
     required DateTime timestamp,
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
@@ -1933,11 +1968,11 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
     this.confidenceScore = const Value.absent(),
     this.notes = const Value.absent(),
   })  : id = Value(id),
-        boletId = Value(boletId),
         timestamp = Value(timestamp);
   static Insertable<Avistament> custom({
     Expression<String>? id,
     Expression<String>? boletId,
+    Expression<String>? arbreId,
     Expression<DateTime>? timestamp,
     Expression<double>? latitude,
     Expression<double>? longitude,
@@ -1949,6 +1984,7 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (boletId != null) 'bolet_id': boletId,
+      if (arbreId != null) 'arbre_id': arbreId,
       if (timestamp != null) 'timestamp': timestamp,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
@@ -1961,7 +1997,8 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
 
   AvistamentsCompanion copyWith(
       {Value<String>? id,
-      Value<String>? boletId,
+      Value<String?>? boletId,
+      Value<String?>? arbreId,
       Value<DateTime>? timestamp,
       Value<double?>? latitude,
       Value<double?>? longitude,
@@ -1972,6 +2009,7 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
     return AvistamentsCompanion(
       id: id ?? this.id,
       boletId: boletId ?? this.boletId,
+      arbreId: arbreId ?? this.arbreId,
       timestamp: timestamp ?? this.timestamp,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -1990,6 +2028,9 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
     }
     if (boletId.present) {
       map['bolet_id'] = Variable<String>(boletId.value);
+    }
+    if (arbreId.present) {
+      map['arbre_id'] = Variable<String>(arbreId.value);
     }
     if (timestamp.present) {
       map['timestamp'] = Variable<DateTime>(timestamp.value);
@@ -2020,6 +2061,7 @@ class AvistamentsCompanion extends UpdateCompanion<Avistament> {
     return (StringBuffer('AvistamentsCompanion(')
           ..write('id: $id, ')
           ..write('boletId: $boletId, ')
+          ..write('arbreId: $arbreId, ')
           ..write('timestamp: $timestamp, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
@@ -2061,7 +2103,7 @@ class $DescobrimentsTable extends Descobriments
           type: DriftSqlType.string,
           requiredDuringInsert: false,
           defaultConstraints: GeneratedColumn.constraintIsAlways(
-              'REFERENCES avistaments (id)'));
+              'REFERENCES avistaments (id) ON DELETE SET NULL'));
   @override
   List<GeneratedColumn> get $columns =>
       [boletId, discoveredAt, firstAvistamentId];
@@ -2507,4 +2549,16 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         descobriments,
         insignies
       ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
+        [
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('avistaments',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('descobriments', kind: UpdateKind.update),
+            ],
+          ),
+        ],
+      );
 }

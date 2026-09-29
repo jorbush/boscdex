@@ -49,7 +49,7 @@ jobs:
         run: flutter pub get
 
       - name: Run unit test suite
-        run: flutter test test/unit_tests/
+        run: flutter test test/unit_tests/ --exclude-tags ml_benchmark
 
   integration_tests:
     name: Integration Tests

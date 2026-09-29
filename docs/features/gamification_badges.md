@@ -15,7 +15,7 @@ The starter list of badges focuses on exploration milestones and safety habits:
 | `micoleg_prudent` | **Micòleg Prudent** | 5 | Tap into the "Confusió Perillosa" comparison screen 5 times (encourages safety). |
 | `alianca_silvestre` | **Aliança Silvestre** | 1 | Discover both a mushroom and its associated indicator tree. |
 | `cistell_de_tardor` | **Cistell de Tardor** | 15 | Register at least 15 different species in the Boscdex. |
-| `mestre_boletaire` | **Mestre Boletaire** | 50 | Register 50+ different species in the Boscdex. |
+| `mestre_boletaire` | **Mestre Boletaire** | 20 | Register 20+ different species in the Boscdex (out of the 22 cataloged starter species). |
 
 ---
 

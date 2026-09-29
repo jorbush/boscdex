@@ -53,8 +53,9 @@ Boscdex separates its field guides into two dedicated, ecologically interconnect
   4. **Arbres socis:** Isolates species with documented mycorrhizal associations to indicator trees.
 
 ### 2. 🌲 Arbres Sub-Dex (Indicator Trees)
-* Dedicated catalog of key Catalan mycorrhizal host trees.
-* Displays leaf morphology tags, identification status, and the number of associated mushroom species (`🍄 X bolets socis`).
+* Dedicated botanical companion catalog of key Catalan mycorrhizal host trees.
+* Displays leaf morphology tags, dynamic counters for associated mushroom species (`🍄 X bolets socis`), and field identification status.
+* **Field Identification Badges:** Trees reflect real field captures from the SQLite `avistaments` table via `watchIdentifiedArbreIds`. Unidentified trees feature a camera prompt icon (📷) indicating a field photograph is needed; once captured and logged, cards display a verified green checkmark (✓), and the main Boscdex header counter reactively tracks progress (`X/5 identificats`).
 * Interactive filters:
   1. **Tots:** All cataloged indicator trees.
   2. **Agulla:** Coniferous needle trees (*Pinus sylvestris*, *Pinus halepensis*).
@@ -63,11 +64,11 @@ Boscdex separates its field guides into two dedicated, ecologically interconnect
 
 ---
 
-## 🔗 Mutual Ecological Cross-Linking
+## 🔗 Mutual Ecological Cross-Linking & Specimen Masking
 
 The two sub-catalogs maintain a symbiotic relationship throughout the UI:
 * In any **Bolet detail screen** (`/boscdex/:id`), tapping an associated tree chip opens that tree's full profile in the Arbres dex.
-* In any **Arbre detail screen** (`/arbre/:id`), tapping any associated mushroom card navigates directly to its full Boscdex entry.
+* In any **Arbre detail screen** (`/arbre/:id`), associated mushrooms (`Bolets associats`) not yet discovered by the user are concealed with black silhouette pixel art and veiled `#00X ???` names. Tapping any mushroom card navigates directly to its Boscdex entry (mystery location sheet if undiscovered, full morphology if discovered).
 * In the **Arbres grid**, each tree card displays a badge indicating how many mushroom species fruit in mycorrhizal partnership under its canopy.
 
 ---

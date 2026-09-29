@@ -7,8 +7,9 @@ import '../../domain/models/insignia.dart' as domain;
 import '../../providers/database_provider.dart';
 import '../shared/pixel_icons.dart';
 
-/// Provider for loading badges asynchronously.
-final insigniesProvider = FutureProvider<List<domain.Insignia>>((ref) async {
+/// Auto-disposing FutureProvider loading fresh badge data each time the dialog opens.
+final insigniesProvider =
+    FutureProvider.autoDispose<List<domain.Insignia>>((ref) async {
   final appDb = ref.watch(appDatabaseProvider);
   final dbBadges = await appDb.insigniaDao.getAllInsignies();
   final badgeMap = {for (final b in dbBadges) b.id: b};
@@ -94,21 +95,27 @@ class InsigniesDialog extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: const [
-                      PixelTrophyIcon(size: 28),
-                      SizedBox(width: 10),
-                      Text(
-                        'Les Meves Insígnies',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 20,
-                          color: RetroColors.ink,
-                          letterSpacing: 0.3,
+                  Expanded(
+                    child: Row(
+                      children: const [
+                        PixelTrophyIcon(size: 28),
+                        SizedBox(width: 10),
+                        Flexible(
+                          child: Text(
+                            'Les Meves Insígnies',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 18,
+                              color: RetroColors.ink,
+                              letterSpacing: 0.3,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -232,16 +239,20 @@ class InsigniesDialog extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        badge.nom,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                          color: isUnlocked
-                              ? RetroColors.ink
-                              : RetroColors.inkSoft,
+                      Expanded(
+                        child: Text(
+                          badge.nom,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w900,
+                            color: isUnlocked
+                                ? RetroColors.ink
+                                : RetroColors.inkSoft,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      const SizedBox(width: 8),
                       if (isUnlocked) ...[
                         Container(
                           padding: const EdgeInsets.symmetric(

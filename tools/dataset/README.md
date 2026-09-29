@@ -89,6 +89,35 @@ Applied during training (not during download):
 - Horizontal flip
 - Random crop (224×224 from 256×256)
 
+## Packaging Test Assets for Google Drive & Colab
+
+When training or fine-tuning models on Google Colab using real test assets from `test/assets/`, package them into `.zip` archives where the species folders are at the root of the archive:
+
+### 1. Mushroom Dataset (`boscdex_dataset.zip`)
+```bash
+# Automated via Makefile:
+make zip-mushrooms
+
+# Or direct command:
+(cd test/assets/mushrooms && zip -r ../../../boscdex_dataset.zip . -x "*.DS_Store" -x "*/.DS_Store" -x ".DS_Store" -x "__MACOSX*")
+```
+
+### 2. Indicator Tree Dataset (`tree_dataset.zip`)
+```bash
+# Automated via Makefile:
+make zip-trees
+
+# Or direct command:
+(cd test/assets/trees && zip -r ../../../tree_dataset.zip . -x "*.DS_Store" -x "*/.DS_Store" -x ".DS_Store" -x "__MACOSX*")
+```
+
+### 3. Google Drive Ingestion
+Upload `boscdex_dataset.zip` and/or `tree_dataset.zip` to:
+* `MyDrive/` (root of your Google Drive), or
+* `MyDrive/boscdex/`
+
+Step 4 of both Colab notebooks (`notebooks/boscdex_mushroom_training_colab.ipynb` and `notebooks/boscdex_tree_training_colab.ipynb`) will automatically detect and extract the archives upon mounting Drive.
+
 ## Licensing Notes
 
 ⚠️ iNaturalist images are individually licensed (CC-BY, CC-BY-NC, CC0). The download script respects API rate limits. For commercial model training, filter for CC-BY or CC0 licensed images only.

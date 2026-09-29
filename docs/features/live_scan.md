@@ -14,7 +14,7 @@ The **Live Scan** tab (`/scan`) provides the visual viewfinder used for identify
   * Pauses and disposes the camera sensor when the app enters `AppLifecycleState.inactive` or background to preserve battery life and release device resources.
   * Automatically re-initializes upon `AppLifecycleState.resumed`.
 * **Mode Switcher:** Segmented selector at the top switching between:
-  * `[ Bolets ]`: Evaluates fungal specimens via `classifier.classify()` and displays `ClassificationResultSheet`.
+  * `[ Bolets ]`: Evaluates fungal specimens via `classifier.classifyMushroom()` and displays `ClassificationResultSheet`.
   * `[ Arbres ]`: Evaluates indicator trees via `classifier.classifyTree()` and displays `TreeClassificationResultSheet`.
 * **Shutter Action:**
   * Circular 3D retro arcade shutter button triggering `_cameraController.takePicture()`.

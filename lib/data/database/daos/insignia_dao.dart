@@ -30,4 +30,8 @@ class InsigniaDao extends DatabaseAccessor<AppDatabase>
   Stream<List<Insignia>> watchAwardedInsignies() {
     return (select(insignies)..where((t) => t.awardedAt.isNotNull())).watch();
   }
+
+  Stream<List<Insignia>> watchAllInsignies() {
+    return select(insignies).watch();
+  }
 }

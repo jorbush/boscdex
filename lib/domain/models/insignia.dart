@@ -63,10 +63,10 @@ class Insignia {
     Insignia(
       id: 'mestre_boletaire',
       nom: 'Mestre boletaire',
-      descripcio: 'Descobreix 50 bolets diferents',
+      descripcio: 'Descobreix 20 bolets diferents',
       iconPath: 'assets/badges/mestre_boletaire.png',
       progressCount: 0,
-      targetCount: 50,
+      targetCount: 20,
     ),
   ];
 }

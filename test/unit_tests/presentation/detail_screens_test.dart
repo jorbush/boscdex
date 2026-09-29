@@ -146,8 +146,9 @@ void main() {
     });
 
     testWidgets(
-        'ArbreDetailScreen renders tree information and associated bolets',
+        'ArbreDetailScreen obfuscates undiscovered associated bolets and reveals discovered ones',
         (WidgetTester tester) async {
+      // 1. Initially undiscovered: Rovelló is undiscovered (#001)
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -171,10 +172,41 @@ void main() {
         findsOneWidget,
       );
 
-      // Verify associated mushrooms chips appear (Rovelló grows with Pi roig)
+      // Verify undiscovered associated bolets show obfuscated dex number and question marks
+      expect(
+        find.text('#001 ???', skipOffstage: false),
+        findsOneWidget,
+      );
       expect(
         find.textContaining('Rovelló', skipOffstage: false),
-        findsWidgets,
+        findsNothing,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      // 2. Now mark lactarius_deliciosus as discovered
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', DateTime.now(), null);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: ArbreDetailScreen(id: 'pinus_sylvestris'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Now Rovelló is revealed!
+      expect(
+        find.textContaining('Rovelló', skipOffstage: false),
+        findsOneWidget,
       );
 
       await tester.pumpWidget(const SizedBox.shrink());

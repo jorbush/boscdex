@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/app_database.dart';
 import '../../providers/database_provider.dart';
-import '../../providers/preferences_provider.dart';
 import '../../domain/models/edibilitat.dart';
 
 /// Active section of the Boscdex catalog (Mushrooms vs. Trees).
@@ -111,22 +110,30 @@ class ArbreBoscdexEntry {
 /// Active filter applied to the Arbres grid ('tots', 'agulla', 'caduca', 'perenne').
 final arbreFilterProvider = StateProvider<String>((ref) => 'tots');
 
-/// Asynchronously loads all indicator trees joined with visited status and associated mushroom counts.
-/// Uses getAssociatedBoletCounts to eliminate N+1 queries.
-final arbresBoscdexProvider =
-    FutureProvider<List<ArbreBoscdexEntry>>((ref) async {
+/// Stream of identified indicator tree IDs based on field sightings in the database.
+final identifiedArbreIdsProvider = StreamProvider<Set<String>>((ref) {
   final db = ref.watch(appDatabaseProvider);
-  final visitedIds = ref.watch(visitedArbresProvider);
-  final arbres = await db.arbreDao.getAllArbres();
-  final countsMap = await db.arbreDao.getAssociatedBoletCounts();
+  return db.avistamentDao.watchIdentifiedArbreIds();
+});
 
-  return arbres.map((arbre) {
-    return ArbreBoscdexEntry(
-      arbre: arbre,
-      isVisited: visitedIds.contains(arbre.id),
-      associatedBoletsCount: countsMap[arbre.id] ?? 0,
-    );
-  }).toList();
+/// Asynchronously loads all indicator trees joined with field identification status and associated mushroom counts.
+/// Uses getAssociatedBoletCounts to eliminate N+1 queries.
+final arbresBoscdexProvider = StreamProvider<List<ArbreBoscdexEntry>>((ref) {
+  final db = ref.watch(appDatabaseProvider);
+  return db.avistamentDao
+      .watchIdentifiedArbreIds()
+      .asyncMap((identifiedIds) async {
+    final arbres = await db.arbreDao.getAllArbres();
+    final countsMap = await db.arbreDao.getAssociatedBoletCounts();
+
+    return arbres.map((arbre) {
+      return ArbreBoscdexEntry(
+        arbre: arbre,
+        isVisited: identifiedIds.contains(arbre.id),
+        associatedBoletsCount: countsMap[arbre.id] ?? 0,
+      );
+    }).toList();
+  });
 });
 
 /// Returns the filtered list of Arbres Boscdex entries according to leaf type filter.

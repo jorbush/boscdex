@@ -24,12 +24,14 @@ void main() {
   Widget createWidgetUnderTest({
     List<Avistament> avistaments = const [],
     Map<String, String> boletsMap = const {},
+    Map<String, String> arbresMap = const {},
   }) {
     return ProviderScope(
       overrides: [
         appDatabaseProvider.overrideWithValue(db),
         avistamentsProvider.overrideWith((ref) => Stream.value(avistaments)),
         allBoletsMapProvider.overrideWith((ref) => boletsMap),
+        allArbresMapProvider.overrideWith((ref) => arbresMap),
       ],
       child: const MaterialApp(
         home: JournalScreen(),
@@ -45,7 +47,8 @@ void main() {
     expect(find.text('El Meu Diari'), findsOneWidget);
     expect(find.text('DIARI D\'AVENTURES'), findsOneWidget);
     expect(
-      find.text('Encara no tens cap avistament. Escaneja el teu primer bolet!'),
+      find.text(
+          'Encara no tens cap avistament. Escaneja el teu primer bolet o arbre!'),
       findsOneWidget,
     );
 
@@ -111,6 +114,54 @@ void main() {
 
     expect(find.text('DETALL DE L\'AVISTAMENT'), findsOneWidget);
     expect(find.text('98%'), findsWidgets);
+
+    await tester.scrollUntilVisible(
+      find.text('Descarregar Foto'),
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Descarregar Foto'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
+
+  testWidgets(
+      'JournalScreen renders tree sighting cards with ARBRE tag and opens detail',
+      (tester) async {
+    final now = DateTime(2026, 9, 28, 16, 30);
+    final treeAvistament = Avistament(
+      id: 'journal-tree-test-1',
+      arbreId: 'pinus_sylvestris',
+      timestamp: now,
+      confidenceScore: 0.95,
+      notes: 'Bosc madur de pi roig',
+      altitude: null,
+      photoPath: null,
+      latitude: null,
+      longitude: null,
+    );
+
+    await tester.pumpWidget(createWidgetUnderTest(
+      avistaments: [treeAvistament],
+      arbresMap: {'pinus_sylvestris': 'Pi roig'},
+    ));
+    await tester.pumpAndSettle();
+
+    // Verify tree title and ARBRE badge
+    expect(find.text('ARBRE'), findsOneWidget);
+    expect(find.textContaining('Pi roig'), findsOneWidget);
+    expect(find.text('95%'), findsOneWidget);
+    expect(find.text('Bosc madur de pi roig'), findsOneWidget);
+
+    // Tap tree sighting to open AvistamentDetailSheet
+    await tester.tap(find.textContaining('Pi roig'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.text('DETALL DE L\'AVISTAMENT'), findsOneWidget);
+    expect(find.text('95%'), findsWidgets);
 
     await tester.scrollUntilVisible(
       find.text('Descarregar Foto'),

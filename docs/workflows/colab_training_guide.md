@@ -19,12 +19,62 @@ This guide walks you through training the **Boscdex on-device classifier** on **
 
 ---
 
+---
+
+## 📦 Packaging & Uploading Dataset Images to Google Drive
+
+Before training in Colab, you can feed real field photographs from `test/assets/` into the model by packaging them into clean `.zip` archives and uploading them to your Google Drive. The Colab notebooks will automatically detect and ingest them during Step 4.
+
+> [!IMPORTANT]
+> The dataset images are split into two separate directories:
+> * `test/assets/mushrooms/` (21 mushroom species directories)
+> * `test/assets/trees/` (5 indicator tree species directories)
+> 
+> The archives **must** contain the species directories at the root of the zip (e.g. `amanita_muscaria/image1.jpg` or `pinus_sylvestris/photo1.jpg`), without extra parent directory nesting, and with macOS `.DS_Store` metadata stripped.
+
+### 1. Mushroom Dataset (`boscdex_dataset.zip`)
+
+**Automated shortcut:**
+```bash
+make zip-mushrooms
+```
+
+**Manual shell command:**
+```bash
+(cd test/assets/mushrooms && zip -r ../../../boscdex_dataset.zip . -x "*.DS_Store" -x "*/.DS_Store" -x ".DS_Store" -x "__MACOSX*")
+```
+
+### 2. Indicator Tree Dataset (`tree_dataset.zip`)
+
+**Automated shortcut:**
+```bash
+make zip-trees
+```
+
+**Manual shell command:**
+```bash
+(cd test/assets/trees && zip -r ../../../tree_dataset.zip . -x "*.DS_Store" -x "*/.DS_Store" -x ".DS_Store" -x "__MACOSX*")
+```
+
+*(Tip: You can run `make zip-datasets` to package both at once!)*
+
+### 3. Upload to Google Drive
+1. Open [Google Drive](https://drive.google.com).
+2. Upload `boscdex_dataset.zip` and/or `tree_dataset.zip` to:
+   * Your Drive root: `MyDrive/boscdex_dataset.zip` (or `MyDrive/tree_dataset.zip`)
+   * OR inside a `boscdex` folder: `MyDrive/boscdex/boscdex_dataset.zip`
+3. When you run the Colab notebook, Step 4 will automatically find and unpack the archive!
+
+---
+
 ## 🛠️ Step-by-Step Instructions
 
-### Step 1: Open the Notebook in Google Colab
+### Step 1: Open the Target Notebook in Google Colab
 1. Open your browser and navigate to [**colab.research.google.com**](https://colab.research.google.com/).
 2. In the modal, click the **Upload** tab.
-3. Select and upload [`notebooks/boscdex_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_training_colab.ipynb) from your local Boscdex repository.
+3. Select and upload the appropriate notebook from your local Boscdex repository:
+   * **Mushrooms:** [`notebooks/boscdex_mushroom_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_mushroom_training_colab.ipynb)
+   * **Indicator Trees:** [`notebooks/boscdex_tree_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_tree_training_colab.ipynb)
 
 ### Step 2: Ensure GPU is Enabled
 1. In the Colab top menu, click **Runtime** > **Change runtime type**.
@@ -33,31 +83,36 @@ This guide walks you through training the **Boscdex on-device classifier** on **
 
 ### Step 3: Run the Training Pipeline
 1. Click **Runtime** > **Run all** (or press `Cmd + F9` / `Ctrl + F9`).
-2. The notebook will automatically execute:
+2. When prompted in Step 4, grant Google Drive permission to mount your Drive.
+3. The notebook will automatically execute:
    * **Step 1:** Verify the NVIDIA T4 GPU.
    * **Step 2:** Install dependencies (`pyinaturalist`, `requests`, `tqdm`, `pillow`, `tensorflow`).
-   * **Step 3 & 4:** Concurrently download research-grade Catalan mushroom observations from iNaturalist.
-   * **Step 5:** Fine-tune **MobileNetV2** using native TensorFlow / Keras transfer learning with data augmentation.
-   * **Step 6:** Export the quantized **INT8 TFLite model** (`boscdex_classifier.tflite`) and verify it is under the 18 MB budget (~3.5 MB).
-   * **Step 7:** Automatically trigger a browser download for the output files.
+   * **Step 3:** Mount Google Drive.
+   * **Step 4:** Ingest `boscdex_dataset.zip` or `tree_dataset.zip` from Drive.
+   * **Step 5:** Concurrently download research-grade observations from iNaturalist to balance all classes.
+   * **Step 6:** Fine-tune **MobileNetV2** backbone with cosine decay learning rate and data augmentation.
+   * **Step 7:** Export the quantized **INT8 TFLite model** and standalone Dart classification head.
+   * **Step 8:** Automatically package and download the output artifacts.
 
 ### Step 4: Drop Output Files into Boscdex
-Once the browser finishes downloading:
-1. Copy `boscdex_classifier.tflite` to `boscdex/assets/models/boscdex_classifier.tflite`.
-2. Copy `classifier_head.bin` to `boscdex/assets/models/classifier_head.bin`.
-3. Copy `labels.txt` to `boscdex/assets/models/labels.txt`.
-4. Verify the files are present:
-   ```bash
-   ls -lh assets/models/
-   # Should display:
-   # -rw-r--r-- boscdex_classifier.tflite (~2.5 MB)
-   # -rw-r--r-- classifier_head.bin (~102.5 KB)
-   # -rw-r--r-- labels.txt (~1 KB)
-   ```
-5. Run the on-device Golden Set verification:
-   ```bash
-   flutter test test/unit_tests/domain/model_real_images_test.dart
-   ```
+Once the training finishes:
+* **For Mushrooms:**
+  1. Copy `mushroom_classifier.tflite` to `assets/models/mushroom_classifier.tflite`.
+  2. Copy `mushroom_classifier_head.bin` to `assets/models/mushroom_classifier_head.bin`.
+  3. Copy `mushroom_labels.txt` to `assets/models/mushroom_labels.txt`.
+  4. Verify with on-device Golden Set evaluation:
+     ```bash
+     flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart
+     ```
+
+* **For Trees:**
+  1. Copy `tree_classifier.tflite` to `assets/models/tree_classifier.tflite`.
+  2. Copy `tree_classifier_head.bin` to `assets/models/tree_classifier_head.bin`.
+  3. Copy `tree_labels.txt` to `assets/models/tree_labels.txt`.
+  4. Verify with on-device Golden Set evaluation:
+     ```bash
+     flutter test test/unit_tests/domain/tree_model_real_images_test.dart
+     ```
 
 ---
 
@@ -88,7 +143,7 @@ If you encounter this error when executing the first cell in VS Code:
 #### Option A: Use Google Colab Web Browser Directly (Recommended & Foolproof)
 Running directly in Chrome or Safari eliminates local kernel and port-forwarding issues:
 1. Open [**colab.research.google.com**](https://colab.research.google.com/).
-2. Click **Upload** > Select `notebooks/boscdex_training_colab.ipynb`.
+2. Click **Upload** > Select `notebooks/boscdex_mushroom_training_colab.ipynb`.
 3. In the top navigation: **Runtime > Change runtime type > Hardware accelerator: T4 GPU** > **Save**.
 4. Click **Runtime > Run all**.
 
@@ -107,6 +162,6 @@ If you prefer running inside VS Code:
 `mediapipe-model-maker` is a legacy package that only supported Python 3.9–3.11 and has been deprecated by Google. When installed on modern environments running Python 3.12 or 3.13, pip attempts to compile outdated C-extensions (`tf-models-official`, `pyyaml`, etc.) from source, which triggers build errors.
 
 ### Resolution:
-We updated `notebooks/boscdex_training_colab.ipynb` to use **pure native TensorFlow / Keras Transfer Learning** with `MobileNetV2`. Native TensorFlow provides pre-compiled PyPI wheels for all modern Python versions (including Python 3.13 on Linux x86_64), eliminating the need for `mediapipe-model-maker` and avoiding all wheel compilation issues.
+We updated `notebooks/boscdex_mushroom_training_colab.ipynb` to use **pure native TensorFlow / Keras Transfer Learning** with `MobileNetV2`. Native TensorFlow provides pre-compiled PyPI wheels for all modern Python versions (including Python 3.13 on Linux x86_64), eliminating the need for `mediapipe-model-maker` and avoiding all wheel compilation issues.
 
 

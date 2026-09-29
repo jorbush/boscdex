@@ -113,11 +113,11 @@ void main() {
       expect(badge.progressCount, equals(15));
     });
 
-    test('awards mestre_boletaire at 50 discoveries', () async {
+    test('awards mestre_boletaire at 20 discoveries', () async {
       const initialBadges = Insignia.registry;
 
       final updated = await service.evaluateBadges(
-        discoveryCount: 50,
+        discoveryCount: 20,
         hasRovello: false,
         hasPinetell: false,
         toxicComparisonViewCount: 0,
@@ -127,7 +127,7 @@ void main() {
 
       final badge = updated.firstWhere((b) => b.id == 'mestre_boletaire');
       expect(badge.isAwarded, isTrue);
-      expect(badge.progressCount, equals(50));
+      expect(badge.progressCount, equals(20));
     });
 
     test('preserves awardedAt timestamp for already awarded badges', () async {

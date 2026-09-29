@@ -39,16 +39,30 @@ This document tracks completed features in **Boscdex MVP v1.0** and outlines upc
 ## 🟡 In Progress / Completed in v1.1 (Edge ML Production & Camera Stream)
 
 - [x] **Live Camera Stream Integration:** Connect camera hardware feed via native `camera` package with rear lens autofocus, iOS/Android permissions, and gallery photo picker fallback.
-- [x] **Real Model Weights Packaging:** Bundled trained `boscdex_classifier.tflite` (2.50 MB), `classifier_head.bin` (107.6 KB), and `labels.txt` (21 classes) into `assets/models/`.
-- [x] **Field-Calibrated Transfer Learning:** Fine-tuned on real Catalan field photographs on Google Colab T4 GPU, reaching **86.4% Top-1** (185/214) and **93.9% Top-3** (201/214) empirical accuracy across 214 photos (Series 011).
+- [x] **Real Model Weights Packaging:** Bundled trained `mushroom_classifier.tflite` (2.50 MB), `mushroom_classifier_head.bin` (107.6 KB), and `mushroom_labels.txt` (21 classes) into `assets/models/`.
+- [x] **Field-Calibrated Transfer Learning:** Fine-tuned on real Catalan field photographs on Google Colab T4 GPU, reaching **87.1% Top-1** (196/225) and **93.8% Top-3** (211/225) empirical accuracy across 225 photos (Series 013).
 - [x] **Decoupled GAP + Dart Classification Head:** Solved mobile TFLite opcode compatibility; sub-0.05 ms linear projection executed in native Dart.
-- [x] **Golden Set Regression Test Suite:** Automated on-device benchmark evaluating 214 field photos in <60s (`model_real_images_test.dart`).
+- [x] **Golden Set Regression Test Suite:** Automated on-device benchmark evaluating 225 field photos in <60s (`mushroom_model_real_images_test.dart`).
 - [x] **Field Photo Persistence Architecture:** Scanned field photos saved permanently in `<appDocumentsDir>/scans/scan_<uuid>.jpg` with relative path linkage in SQLite `Avistaments`.
 - [x] **Sighting Inspection & Export:** Modal detail view (`AvistamentDetailSheet`) featuring `InteractiveViewer` pinch-to-zoom, neural coincidence %, direct gallery export (`ImageGallerySaver`), and system sharing (`share_plus`).
 - [x] **"Les Teves Captures" Gallery in Boscdex:** Specimen cards now showcase a personalized horizontal photo carousel of every user scan for that species.
-- [x] **Comprehensive Automated Test Suite:** 114 passing unit, widget, integration, and E2E tests across data, domain, and presentation layers.
+- [x] **Comprehensive Automated Test Suite:** 120+ passing unit, widget, integration, and E2E tests across data, domain, and presentation layers.
 - [x] **Pokédex-Style Habitat & Location Inspection with 16-Bit Catalonia Pixel Art Map:** Tap any undiscovered specimen in the Boscdex to inspect its geographic habitat, pulsating regional distribution zones on an authentic 16-bit retro map of Catalonia, associated indicator trees, altitudinal range, and fruiting seasonality with morphological keys and identity veiled until live camera discovery.
-- [ ] **Delegate Acceleration:** Enable CoreML delegate for iOS and NNAPI/GPU delegate for Android in the interpreter initialization.
+- [x] **Dedicated On-Device Indicator Tree TFLite Classifier:** Quantized MobileNetV2 backbone (`tree_classifier.tflite`, 2.50 MB) + linear classification head (`tree_classifier_head.bin`, 25.6 KB) lazy-loaded into memory on demand, classifying 5 indicator tree species (`tree_labels.txt`).
+- [x] **Tree Golden Set Empirical Evaluation Suite:** Automated test suite (`tree_model_real_images_test.dart`) benchmarked on 79 real field photographs, achieving **80.0% Top-1** and **96.0% Top-2** accuracy.
+- [x] **Domain & Service Architecture English Refactoring:** Refactored domain models (`MushroomClassificationResult`, `TreeClassificationResult`) and service methods (`classifyMushroom`, `classifyTree`) to idiomatic English, eliminating internal language fragmentation while preserving user-facing Catalan text in the UI.
+- [x] **Tree Dataset Expansion & Fine-Tuning (Phase 2):** Expanded training dataset to 250 curated field observations (50 per species) trained via Colab GPU pipeline (`boscdex_tree_training_colab.ipynb`) with an expanded 79-photo golden validation set.
+- [x] **Schema v3 SQLite Table Migration:** Implemented zero-loss table recreation under `PRAGMA foreign_keys = OFF` to guarantee `bolet_id` nullability in SQLite, resolving constraint errors and supporting indicator tree sightings.
+- [x] **Reactive Field Identification for Indicator Trees:** Decoupled tree identification from guide page visits; trees are tracked reactively via the SQLite database stream (`watchIdentifiedArbreIds`), displaying camera prompts (📷) when pending field capture and verified checkmarks (✓) upon logging sightings.
+- [x] **Specimen Concealment in Associated Tree Guides:** Veiled undiscovered associated mushrooms in `ArbreDetailScreen` (`#00X ???` + black silhouette) to preserve Pokédex discovery mechanics.
+- [x] **Comprehensive Code Review Remediation & Life-Safety Hardening:**
+  - Resolved safety gate priority inversion so lethal/toxic species trigger `NivellSeguretat.perill` alerts even at low confidence, failing closed on unknown edibility.
+  - Added native GPU texture cleanup (`image.dispose()`, `codec.dispose()`) on classification cycles.
+  - Eliminated synchronous file I/O in scrollable lists (`ListView.builder`) across detail screens and journal.
+  - Hoisted static viewfinder into `AnimatedBuilder.child` to avoid 60fps camera widget rebuilds during scanning.
+  - Added Catalan diacritic normalization to `BoletDao.searchByName` (e.g. `rovello` matches `Rovelló`).
+  - Added `KeyAction.setNull` cascade to `Descobriments.firstAvistamentId` to protect against foreign key crashes.
+- [x] **Expanded Test Suite (140 Passing Tests):** Achieved 100% pass rate across 140 automated unit, widget, integration, and E2E tests, including dedicated widget tests for `InsigniesDialog`, `SeasonIndicator`, and `MorphologySection`.
 - [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.
 
 ---

@@ -1,9 +1,11 @@
 import 'package:drift/drift.dart';
 import 'bolets.dart';
+import 'arbres.dart';
 
 class Avistaments extends Table {
   TextColumn get id => text()();
-  TextColumn get boletId => text().references(Bolets, #id)();
+  TextColumn get boletId => text().nullable().references(Bolets, #id)();
+  TextColumn get arbreId => text().nullable().references(Arbres, #id)();
   DateTimeColumn get timestamp => dateTime()();
   RealColumn get latitude => real().nullable()();
   RealColumn get longitude => real().nullable()();

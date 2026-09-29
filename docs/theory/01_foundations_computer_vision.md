@@ -165,7 +165,7 @@ In [`lib/domain/services/tflite_classifier_service.dart`](file:///Users/jordi/de
 ```dart
 floatList[pIdx++] = pixels[offset].toDouble(); // Sends 0.0 to 255.0 to TFLite
 ```
-And inside [`notebooks/boscdex_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_training_colab.ipynb), our Keras graph wraps this automatically:
+And inside [`notebooks/boscdex_mushroom_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_mushroom_training_colab.ipynb), our Keras graph wraps this automatically:
 ```python
 x = tf.keras.applications.mobilenet_v2.preprocess_input(inputs)
 ```

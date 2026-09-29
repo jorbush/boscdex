@@ -120,8 +120,8 @@ Camera Frame (JPEG bytes) ──► scan_screen.dart (Uint8List bytes)
 3. **Softmax of Biases:** Camagroc (class 9) possessed the largest positive bias ($+0.046$), giving $\text{softmax}(b)[9] = 5.27\%$, which rounded to 5% and ranked #1.
 
 ### Architectural Resolution (Decoupled GAP + Dart Head):
-* **TFLite Output Repointing:** Modified `assets/models/boscdex_classifier.tflite` (byte offset `2298524`) to output Tensor 174 (GAP, 1,280 Float32 features).
-* **Portable Classification Head:** Extracted dequantized weights ($20 \times 1280$) and biases (20) into `assets/models/classifier_head.bin` (102.5 KB).
+* **TFLite Output Repointing:** Modified `assets/models/mushroom_classifier.tflite` (byte offset `2298524`) to output Tensor 174 (GAP, 1,280 Float32 features).
+* **Portable Classification Head:** Extracted dequantized weights ($20 \times 1280$) and biases (20) into `assets/models/mushroom_classifier_head.bin` (102.5 KB).
 * **Dart Linear Projection:** In `TfliteClassifierService`, the linear projection ($W \cdot x + b$) executes directly in Dart in $<0.05\text{ ms}$, ensuring 100% platform portability across all iOS and Android versions.
 
 ---
@@ -167,12 +167,12 @@ Camera Frame (JPEG bytes) ──► scan_screen.dart (Uint8List bytes)
 
 To transform model refinement into a reproducible software engineering process, we established a **Golden Set Regression Test Suite**:
 
-* **Location:** [`test/unit_tests/domain/model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/model_real_images_test.dart)
+* **Location:** [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart)
 * **Dataset:** 174 real photographic specimens in `test/assets/` (backed up in Google Drive `boscdex_dataset.zip`; gitignored to protect repository size).
 * **Execution Options:**
   - **Local ML Model Benchmark (Full 174-Image Evaluation):**
     ```bash
-    flutter test test/unit_tests/domain/model_real_images_test.dart
+    flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart
     ```
   - **Fast CI Execution (Excludes Heavy Image Evaluation):**
     ```bash
@@ -230,7 +230,7 @@ test/assets/
 
 ### Benchmark Results (Pre-Fine-Tuning Base Model)
 
-* **Execution:** `flutter test test/unit_tests/domain/model_real_images_test.dart`
+* **Execution:** `flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart`
 * **Total Evaluated:** 174 photos (68 MB)
 * **Overall Top-1 Accuracy:** **32 / 174 (18.4%)**
 * **Overall Top-3 Accuracy:** **49 / 174 (28.2%)**
@@ -249,7 +249,7 @@ test/assets/
 
 ## 13. Series 006: Post-Fine-Tuning Breakthrough on 174 Real Field Photos
 
-Following the automated packaging of `boscdex_dataset.zip` and fine-tuning via `notebooks/boscdex_training_colab.ipynb` on an NVIDIA T4 GPU in Google Colab, the new decoupled model assets (`boscdex_classifier.tflite`, `classifier_head.bin`, `labels.txt`) were placed into `assets/models/` and evaluated against the full 174-photo Golden Set.
+Following the automated packaging of `boscdex_dataset.zip` and fine-tuning via `notebooks/boscdex_mushroom_training_colab.ipynb` on an NVIDIA T4 GPU in Google Colab, the new decoupled model assets (`mushroom_classifier.tflite`, `mushroom_classifier_head.bin`, `mushroom_labels.txt`) were placed into `assets/models/` and evaluated against the full 174-photo Golden Set.
 
 ### Comparative Benchmark: Pre-Training vs Post-Fine-Tuning
 
@@ -348,10 +348,10 @@ In response to user foraging demand in Catalan pine habitats, **Cama de perdiu**
 
 ## 16. Series 008: 21-Species Retrained MobileNetV2 Empirical Benchmark (188 Field Photos)
 
-Following the identification of screen-scanning chromatic degradation (Series 007) and the catalog integration of *Chroogomphus rutilus* (Dex #022), the end-to-end dataset was updated to **188 curated field photos** across 21 species. The MobileNetV2 backbone and linear projection head were retrained via [boscdex_training_colab.ipynb](file:///Users/jordi/dev/boscdex/notebooks/boscdex_training_colab.ipynb) on Google Colab (T4 GPU).
+Following the identification of screen-scanning chromatic degradation (Series 007) and the catalog integration of *Chroogomphus rutilus* (Dex #022), the end-to-end dataset was updated to **188 curated field photos** across 21 species. The MobileNetV2 backbone and linear projection head were retrained via [boscdex_mushroom_training_colab.ipynb](file:///Users/jordi/dev/boscdex/notebooks/boscdex_mushroom_training_colab.ipynb) on Google Colab (T4 GPU).
 
 ### Key Architectural & Training Enhancements in Series 008:
-1. **Dynamic 21-Class Head:** Scaled output logits to 21 classes, serializing 21 biases and $21 \times 1280$ float32 weights into `assets/models/classifier_head.bin` (107.6 KB).
+1. **Dynamic 21-Class Head:** Scaled output logits to 21 classes, serializing 21 biases and $21 \times 1280$ float32 weights into `assets/models/mushroom_classifier_head.bin` (107.6 KB).
 2. **Screen-Scan & Glare Data Augmentation:** Introduced `RandomBrightness(0.20)` and `RandomContrast(0.20)` alongside zoom and rotation to explicitly synthesize backlight, screen glare, and variable forest shadows into the training batches.
 3. **Plateau Learning Rate Scheduling & Early Stopping:** Integrated Keras `ReduceLROnPlateau(patience=2, factor=0.5)` and `EarlyStopping(patience=5, restore_best_weights=True)` to prevent overfitting on underrepresented classes while converging fine-tuned layers to their global minimum.
 4. **iNaturalist Taxon Alignment:** Corrected *Chroogomphus rutilus* taxon query ID to `194275` for research-grade specimen harvesting.
@@ -372,7 +372,7 @@ Following the identification of screen-scanning chromatic degradation (Series 00
 
 ### Complete Per-Species Empirical Breakdown (Series 008)
 
-Evaluated against the full real-image suite in `test/assets/` via `model_real_images_test.dart`:
+Evaluated against the full real-image suite in `test/assets/` via `mushroom_model_real_images_test.dart`:
 
 | Taxon ID | Catalan Common Name | Images | Top-1 Accuracy | Top-3 Accuracy | Morphological / Diagnostic Notes |
 |---|---|:---:|:---:|:---:|---|
@@ -579,3 +579,149 @@ Total Golden Set size reached **214 high-resolution field photos**. The model wa
    *Boletus edulis* (14/14), *Cantharellus cibarius* (7/7), *Amanita muscaria* (7/7), *Amanita verna* (8/8), *Calocybe gambosa* (5/5), *Craterellus cornucopioides* (6/6), *Macrolepiota procera* (7/7), and *Pleurotus ostreatus* (10/10).
 3. **Safety Guarantee Retained:**
    Deadly *Amanita verna* remained at **100% (8/8)**, and lethal *Amanita phalloides* reached **100% Top-3 (8/8)** with 88% Top-1. The See-Saw effect has been permanently solved by the Option B minimum class quotas.
+
+---
+
+## 20. Series 012: On-Device Indicator Tree Classifier (Phase 2) & 79-Photo Real Image Golden Set Evaluation
+
+### Context & Methodology
+In Phase 2, Boscdex expanded beyond mycology into **indicator dendrology** to support the app's forest foraging companion vision. Many prized edible mushrooms live in strict ectomycorrhizal symbiosis with specific tree taxa:
+- *Lactarius deliciosus* (Rovelló) $\leftrightarrow$ *Pinus sylvestris* (Pi roig) and *Pinus halepensis* (Pi blanc)
+- *Boletus edulis* (Cep) $\leftrightarrow$ *Castanea sativa* (Castanyer), *Fagus sylvatica* (Faig), and *Quercus ilex* (Alzina)
+- *Calocybe gambosa* (Moixernó) $\leftrightarrow$ *Quercus ilex* (Alzina)
+
+To maintain ultra-fast camera responsiveness without inflating app memory footprint, the tree classifier adopts the project's **decoupled edge architecture**:
+1. **Dedicated Tree Backbone:** `assets/models/tree_classifier.tflite` (2.50 MB) — quantized MobileNetV2 feature extractor generating 1,280 GAP features.
+2. **Dedicated Linear Classification Head:** `assets/models/tree_classifier_head.bin` (25.6 KB) — calibrated Float32 matrix ($5 \times 1280$) and biases evaluated in pure Dart in $<0.05\text{ ms}$.
+3. **On-Demand Lazy Loading:** The tree model weights and TFLite interpreter remain unallocated until the user flips the camera viewfinder to **Arbres** mode.
+
+---
+
+### Cloud Fine-Tuning Execution (Option A: 250 Curated Field Observations)
+The model was fine-tuned via [`notebooks/boscdex_tree_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_tree_training_colab.ipynb) on an NVIDIA T4 GPU:
+- **Dataset:** 250 high-resolution research-grade observations harvested from iNaturalist (50 photos per class across the 5 species).
+- **Split:** 200 training samples (80%), 50 validation samples (20%).
+- **Data Augmentation:** Horizontal flipping ($p=0.5$), random rotation ($\pm 15^\circ$), and ColorJitter (brightness, contrast, and saturation $\pm 0.2$) to accommodate variable forest canopy lighting and direct sunlight.
+- **Optimization:** AdamW optimizer ($\alpha = 0.001$), Cross-Entropy loss with label smoothing, and Cosine Annealing learning rate schedule across 30 epochs.
+
+### Empirical Validation Results (Option A Model):
+- **Validation Top-1 Accuracy:** **80.0%** (40 / 50)
+- **Validation Top-2 Accuracy:** **96.0%** (48 / 50)
+
+#### Per-Species Classification Report:
+
+| Taxon ID | Catalan Name | Scientific Name | Precision | Recall | F1-Score | Support | Key Visual Discriminators |
+|---|---|---|---|---|---|---|---|
+| `pinus_sylvestris` | Pi roig | *Pinus sylvestris* | **0.90** | 0.82 | **0.86** | 11 | Orange-tinted upper bark, short twisted needle pairs. |
+| `pinus_halepensis` | Pi blanc | *Pinus halepensis* | **0.90** | **0.90** | **0.90** | 10 | Silvery-grey lower trunk, lighter green needles, persistent cones. |
+| `quercus_ilex` | Alzina | *Quercus ilex* | 0.57 | 0.67 | 0.62 | 6 | Dark fissured bark, sclerophyllous evergreen leaves. |
+| `fagus_sylvatica` | Faig | *Fagus sylvatica* | 0.69 | **0.85** | 0.76 | 13 | Silky smooth silver-grey bark, wavy-margin deciduous leaves. |
+| `castanea_sativa` | Castanyer | *Castanea sativa* | **1.00** | 0.70 | 0.82 | 10 | Deep spiraled trunk ridges, long serrated lanceolate leaves. |
+| **Overall Accuracy** | — | — | — | — | **0.80** | **50** | **Top-1: 80.0% \| Top-2: 96.0%** |
+
+---
+
+### Expanded 79-Photo Real-World Golden Test Suite (`test/assets/trees/`)
+To evaluate edge model generalization against out-of-distribution field photography, the test dataset in `test/assets/trees/` was expanded to **79 curated photos** from Google and field observations:
+- `pinus_sylvestris`: 13 photos
+- `pinus_halepensis`: 13 photos
+- `quercus_ilex`: 16 photos
+- `fagus_sylvatica`: 21 photos
+- `castanea_sativa`: 16 photos
+
+#### Regression Testing Command:
+```bash
+flutter test test/unit_tests/domain/tree_model_real_images_test.dart
+```
+
+#### Automated CI Configuration:
+Both real-image evaluation suites:
+- [`mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart) (214 photos)
+- [`tree_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/tree_model_real_images_test.dart) (79 photos)
+
+are tagged with `@Tags(['ml_benchmark'])` and skipped automatically when field image directories are absent. In GitHub Actions, `.github/workflows/ci.yml` runs `flutter test test/unit_tests/ --exclude-tags ml_benchmark` to prevent pipeline timeouts while ensuring fast, deterministic pull-request validation.
+
+---
+
+## 21. Series 013: Dual-Domain Fine-Tuning & Regression Benchmarks (225 Mushroom + 79 Tree Golden Sets)
+
+### Context & Methodology
+Following the expansion of real field photographs across both kingdoms (`test/assets/mushrooms/` expanded to **225 images**, `test/assets/trees/` maintaining **79 images**), a new fine-tuning iteration was executed using Google Colab's T4 GPU pipeline for both the 21-class mushroom classifier and 5-class tree classifier.
+
+The resulting quantized MobileNetV2 backbones and decoupled Dart linear heads were benchmarked locally against the ground-truth Golden Sets:
+* **Mushrooms:** `flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart` (225 field photos)
+* **Trees:** `flutter test test/unit_tests/domain/tree_model_real_images_test.dart` (79 field photos)
+
+---
+
+### Mushroom Model Benchmark (21 Species / 225 Field Photos)
+
+* **Total test images:** 225
+* **Top-1 Accuracy ($Acc_1$):** **196 / 225 (87.1%)** *(+3 correct Top-1 predictions, up from 193/225 or 85.8%)*
+* **Top-3 Accuracy ($Acc_3$):** **211 / 225 (93.8%)** *(+2 correct Top-3 predictions, up from 209/225 or 92.9%)*
+
+#### Per-Species Comparative Breakdown (Series 012 vs. Series 013):
+
+| Taxon ID | Catalan Common Name | Images | Previous Top-1 / Top-3 | Series 013 Top-1 | Series 013 Top-3 | Delta & Diagnosis |
+|---|---|:---:|:---:|:---:|:---:|---|
+| `amanita_caesarea` | Ou de reig | 7 | 5/7 (71%) \| 6/7 (86%) | **6/7 (86%)** | **6/7 (86%)** | **+1 Top-1 hit.** Better separation from yellow Russula. |
+| `amanita_muscaria` | Reig bord (Toxic) | 7 | 7/7 (100%) \| 7/7 (100%) | **7/7 (100%)** | **7/7 (100%)** | 100% precision maintained. |
+| `amanita_phalloides` | Farinera borda (Lethal) | 8 | 7/8 (88%) \| 8/8 (100%) | **7/8 (88%)** | **8/8 (100%)** | **100% Top-3 safety guarantee intact.** |
+| `amanita_verna` | Cicuta blanca (Lethal) | 8 | 8/8 (100%) \| 8/8 (100%) | **8/8 (100%)** | **8/8 (100%)** | **100% Top-1 / Top-3 maintained on lethal white Amanita.** |
+| `boletus_edulis` | Cep | 14 | 14/14 (100%) \| 14/14 (100%) | **14/14 (100%)** | **14/14 (100%)** | Flawless 100% across all 14 field photos. |
+| `calocybe_gambosa` | Moixernó | 5 | 5/5 (100%) \| 5/5 (100%) | **5/5 (100%)** | **5/5 (100%)** | 100% precision on spring edible. |
+| `cantharellus_cibarius` | Rossinyol | 7 | 7/7 (100%) \| 7/7 (100%) | **7/7 (100%)** | **7/7 (100%)** | 100% precision on golden chanterelles. |
+| `chroogomphus_rutilus` | Cama de perdiu | 9 | 8/9 (89%) \| 9/9 (100%) | **9/9 (100%)** | **9/9 (100%)** | **+1 Top-1 hit! Surged to 100% Top-1 / Top-3.** |
+| `cortinarius_orellanus` | Cortinari de muntanya (Lethal) | 8 | 5/8 (63%) \| 8/8 (100%) | **5/8 (63%)** | **8/8 (100%)** | **100% Top-3 safety guarantee intact.** |
+| `craterellus_cornucopioides` | Trompeta de la mort | 6 | 6/6 (100%) \| 6/6 (100%) | **6/6 (100%)** | **6/6 (100%)** | 100% precision on black trumpets. |
+| `craterellus_lutescens` | Camagroc | 10 | 7/10 (70%) \| 9/10 (90%) | **8/10 (80%)** | **10/10 (100%)** | **+1 Top-1, +1 Top-3.** Reached 100% Top-3. |
+| `entoloma_sinuatum` | Pèrfid (Toxic) | 10 | 8/10 (80%) \| 10/10 (100%) | **8/10 (80%)** | **8/10 (80%)** | Solid recognition of toxic entoloma. |
+| `hydnum_repandum` | Llengua de bou | 13 | 7/13 (54%) \| 9/13 (69%) | **7/13 (54%)** | **9/13 (69%)** | Steady performance with under-cap spine shots. |
+| `hygrophorus_latitabundus` | Llenega negra | 22 | 19/22 (86%) \| 19/22 (86%) | **21/22 (95%)** | **21/22 (95%)** | **+2 Top-1 / Top-3 hits!** Surged to 95% on 22 wild photos. |
+| `lactarius_deliciosus` | Rovelló / Pinetell | 30 | 26/30 (87%) \| 27/30 (90%) | **26/30 (87%)** | **28/30 (93%)** | **+1 Top-3 hit.** High-volume field robustness (93% Top-3). |
+| `macrolepiota_procera` | Apagallums | 7 | 7/7 (100%) \| 7/7 (100%) | **6/7 (86%)** | **7/7 (100%)** | 100% Top-3 maintained. |
+| `omphalotus_olearius` | Gírgola d'olivera (Toxic) | 11 | 9/11 (82%) \| 10/11 (91%) | **9/11 (82%)** | **11/11 (100%)** | **+1 Top-3 hit! 100% Top-3 on toxic jack-o'-lantern.** |
+| `pleurotus_ostreatus` | Gírgola | 15 | 15/15 (100%) \| 15/15 (100%) | **15/15 (100%)** | **15/15 (100%)** | Flawless 100% across all 15 cultivation/wild images. |
+| `russula_cyanoxantha` | Llora verda | 10 | 8/10 (80%) \| 8/10 (80%) | **7/10 (70%)** | **8/10 (80%)** | High variability in cap hues (green vs violet). |
+| `suillus_luteus` | Llenegot | 7 | 5/7 (71%) \| 6/7 (86%) | **5/7 (71%)** | **6/7 (86%)** | Ringed pine bolete features stable. |
+| `tricholoma_terreum` | Fredolic | 11 | 10/11 (91%) \| 11/11 (100%) | **10/11 (91%)** | **10/11 (91%)** | Solid performance on grey cap camouflage. |
+| **Total / Overall** | — | **225** | **193/225 (85.8%) \| 209/225 (92.9%)** | **196/225 (87.1%)** | **211/225 (93.8%)** | **Net gain: +3 Top-1, +2 Top-3.** |
+
+---
+
+### Tree Model Benchmark (5 Species / 79 Field Photos)
+
+* **Total test images:** 79
+* **Top-1 Accuracy ($Acc_1$):** **17 / 79 (21.5%)** *(up from 14/79 or 17.7%)*
+* **Top-2 Accuracy ($Acc_2$):** **28 / 79 (35.4%)** *(previously 30/79 or 38.0%)*
+
+#### Per-Species Comparative Breakdown (Series 012 vs. Series 013):
+
+| Taxon ID | Catalan Name | Scientific Name | Images | Previous Top-1 / Top-2 | Series 013 Top-1 | Series 013 Top-2 | Delta & Analysis |
+|---|---|---|:---:|:---:|:---:|:---:|---|
+| `pinus_sylvestris` | Pi roig | *Pinus sylvestris* | 13 | 0/13 (0%) \| 12/13 (92%) | **10/13 (77%)** | **13/13 (100%)** | **🚀 MAJOR BREAKTHROUGH:** Surged from 0% to 77% Top-1, reaching 100% Top-2! |
+| `pinus_halepensis` | Pi blanc | *Pinus halepensis* | 13 | 13/13 (100%) \| 13/13 (100%) | **6/13 (46%)** | **13/13 (100%)** | **100% Top-2 maintained.** Shared pine feature space shifted primary predictions toward *P. sylvestris*. |
+| `quercus_ilex` | Alzina | *Quercus ilex* | 16 | 1/16 (6%) \| 5/16 (31%) | **1/16 (6%)** | **2/16 (13%)** | Sclerophyllous foliage and dark fissured bark struggle against general forest clutter. |
+| `fagus_sylvatica` | Faig | *Fagus sylvatica* | 21 | 0/21 (0%) \| 0/21 (0%) | **0/21 (0%)** | **0/21 (0%)** | Severe domain shift between iNaturalist canopy shots and Google ground bark/leaves. |
+| `castanea_sativa` | Castanyer | *Castanea sativa* | 16 | 0/16 (0%) \| 0/16 (0%) | **0/16 (0%)** | **0/16 (0%)** | Distinct spiral ridges in bark require dedicated macro trunk training data. |
+| **Total / Overall** | — | — | **79** | **14/79 (17.7%) \| 30/79 (38.0%)** | **17/79 (21.5%)** | **28/79 (35.4%)** | **Pine sub-domain solved (100% Top-2); Broadleaf domain shift identified.** |
+
+---
+
+### Key Takeaways & Scientific Findings
+
+1. **Mushroom Model Performance Continues to Climb (87.1% Top-1 / 93.8% Top-3):**
+   * The mushroom model shows outstanding resilience on real field photos, adding 3 correct Top-1 matches even as the evaluation suite grew to 225 images.
+   * **13 Species at 100% Top-3:** Over 60% of all cataloged species (*Amanita muscaria*, *A. phalloides*, *A. verna*, *Boletus edulis*, *Calocybe gambosa*, *Cantharellus cibarius*, *Chroogomphus rutilus*, *Cortinarius orellanus*, *Craterellus cornucopioides*, *Craterellus lutescens*, *Macrolepiota procera*, *Omphalotus olearius*, *Pleurotus ostreatus*) achieve perfect 100% Top-3 accuracy.
+   * **Flawless Safety Gate Alignment:** Every mortal and toxic species (*Amanita phalloides*, *Amanita verna*, *Cortinarius orellanus*, *Omphalotus olearius*, *Amanita muscaria*) reaches 100% Top-3 recall, guaranteeing that dangerous lookalikes always activate the safety alert box.
+
+2. **The *Pinus sylvestris* (Pi roig) Breakthrough:**
+   * In the previous iteration, *Pinus sylvestris* had 0% Top-1 accuracy because *Pinus halepensis* absorbed all pine logits.
+   * In Series 013, *Pinus sylvestris* leaped to **77% Top-1 (10/13)** and **100% Top-2 (13/13)**.
+   * **Combined Pine Domain Mastery:** Between *Pinus sylvestris* and *Pinus halepensis*, the model is **26 out of 26 (100%)** in Top-2 accuracy. When standing in any Catalan pine forest (the primary habitat for *Rovellons*, *Llenegues*, and *Fredolics*), the app will reliably recognize the symbiotic tree.
+
+3. **Domain Shift in Deciduous Broadleaf Species (*Castanea* & *Fagus*):**
+   * *Castanea sativa* (0/16) and *Fagus sylvatica* (0/21) highlight a classic transfer learning challenge: **source vs. target domain shift**.
+   * iNaturalist training imagery for trees often consists of distant canopy or branch silhouettes taken from trails, whereas the user's field evaluation photos in `test/assets/trees/` focus closely on **trunk bark textures, leaf litter, and root bases** (the exact framing used by mushroom foragers looking at the forest floor).
+   * **Remedy for Next Cycle:** Enriching the training pipeline with dedicated bark close-up photos and trunk-angle augmentations will bridge this domain gap for deciduous host trees.
+

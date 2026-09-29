@@ -25,18 +25,21 @@ class PhotoExportService {
       }
 
       // Check and request storage/photos permission if needed on Android/iOS
-      if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
+      if (!kIsWeb && Platform.isAndroid) {
+        var status = await Permission.photos.request();
+        if (!status.isGranted) {
+          status = await Permission.storage.request();
+        }
         if (status.isPermanentlyDenied) {
           return const ExportResult(
             success: false,
             message:
-                'Cal activar els permisos d\'emmagatzematge als Paràmetres.',
+                'Cal activar els permisos d\'emmagatzematge o fotos als Paràmetres.',
           );
         }
-      } else if (Platform.isIOS) {
+      } else if (!kIsWeb && Platform.isIOS) {
         final status = await Permission.photosAddOnly.request();
-        if (status.isPermanentlyDenied) {
+        if (status.isPermanentlyDenied || status.isDenied) {
           return const ExportResult(
             success: false,
             message:

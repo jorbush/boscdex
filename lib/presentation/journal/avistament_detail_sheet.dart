@@ -52,28 +52,40 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
   final _photoExportService = const PhotoExportService();
 
   Bolet? _bolet;
+  Arbre? _arbre;
   bool _isExporting = false;
+
+  bool get _isTree => widget.avistament.arbreId != null;
 
   @override
   void initState() {
     super.initState();
-    _loadBolet();
+    _loadEntity();
   }
 
-  Future<void> _loadBolet() async {
+  Future<void> _loadEntity() async {
     final db = ref.read(appDatabaseProvider);
-    final bolet = await db.boletDao.getBoletById(widget.avistament.boletId);
-    if (mounted) {
-      setState(() {
-        _bolet = bolet;
-      });
+    if (widget.avistament.arbreId != null) {
+      final arbre = await db.arbreDao.getArbreById(widget.avistament.arbreId!);
+      if (mounted) {
+        setState(() {
+          _arbre = arbre;
+        });
+      }
+    } else if (widget.avistament.boletId != null) {
+      final bolet = await db.boletDao.getBoletById(widget.avistament.boletId!);
+      if (mounted) {
+        setState(() {
+          _bolet = bolet;
+        });
+      }
     }
   }
 
   Future<void> _downloadPhoto() async {
     if (_isExporting) return;
     final photoPath = widget.avistament.photoPath;
-    if (photoPath == null || !File(photoPath).existsSync()) {
+    if (photoPath == null || !await File(photoPath).exists()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No hi ha cap fitxer de foto per descarregar.'),
@@ -103,13 +115,16 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
 
   Future<void> _sharePhoto() async {
     final photoPath = widget.avistament.photoPath;
-    if (photoPath == null || !File(photoPath).existsSync()) return;
+    if (photoPath == null || !await File(photoPath).exists()) return;
 
     unawaited(HapticFeedback.selectionClick());
-    final name = _bolet?.catalanName ?? widget.avistament.boletId;
+    final name = _isTree
+        ? (_arbre?.catalanName ?? widget.avistament.arbreId ?? 'Arbre')
+        : (_bolet?.catalanName ?? widget.avistament.boletId ?? 'Bolet');
+    final icon = _isTree ? '🌲' : '🍄';
     await _photoExportService.sharePhoto(
       photoPath,
-      text: 'Mireu aquest exemplar de $name identificat amb Boscdex AI 🍄',
+      text: 'Mireu aquest exemplar de $name identificat amb Boscdex AI $icon',
     );
   }
 
@@ -189,13 +204,19 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
   @override
   Widget build(BuildContext context) {
     final photoPath = widget.avistament.photoPath;
-    final hasPhoto = photoPath != null && File(photoPath).existsSync();
+    final hasPhoto = photoPath != null && photoPath.isNotEmpty;
     final confidence = widget.avistament.confidenceScore ?? 0.0;
     final confidencePct = (confidence * 100).toInt();
     final isHighConfidence = confidence >= 0.70;
 
-    final displayName = _bolet?.catalanName ?? widget.avistament.boletId;
-    final scientificName = _bolet?.scientificName ?? '';
+    final displayName = _isTree
+        ? (_arbre?.catalanName ??
+            widget.avistament.arbreId ??
+            'Arbre indicador')
+        : (_bolet?.catalanName ?? widget.avistament.boletId ?? 'Bolet');
+    final scientificName = _isTree
+        ? (_arbre?.scientificName ?? '')
+        : (_bolet?.scientificName ?? '');
     final edibilitat = _bolet != null
         ? EdibilitatExtension.fromString(_bolet!.edibility)
         : null;
@@ -299,16 +320,28 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Image.asset(
-                                  'assets/images/mushrooms/${widget.avistament.boletId}.png',
-                                  width: 96,
-                                  height: 96,
-                                  filterQuality: FilterQuality.none,
-                                  errorBuilder: (ctx, err, st) => const Text(
-                                    '🍄',
-                                    style: TextStyle(fontSize: 64),
+                                if (_isTree)
+                                  Image.asset(
+                                    'assets/images/trees/${widget.avistament.arbreId}.png',
+                                    width: 96,
+                                    height: 96,
+                                    filterQuality: FilterQuality.none,
+                                    errorBuilder: (ctx, err, st) => const Text(
+                                      '🌲',
+                                      style: TextStyle(fontSize: 64),
+                                    ),
+                                  )
+                                else
+                                  Image.asset(
+                                    'assets/images/mushrooms/${widget.avistament.boletId}.png',
+                                    width: 96,
+                                    height: 96,
+                                    filterQuality: FilterQuality.none,
+                                    errorBuilder: (ctx, err, st) => const Text(
+                                      '🍄',
+                                      style: TextStyle(fontSize: 64),
+                                    ),
                                   ),
-                                ),
                                 const SizedBox(height: 12),
                                 const Text(
                                   'Sense fotografia adjunta',
@@ -496,7 +529,40 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                                 ],
                               ),
                             ),
-                            if (edibilitat != null)
+                            if (_isTree)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color:
+                                      RetroColors.forestGreen.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: RetroColors.forestGreen,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.park_rounded,
+                                      size: 14,
+                                      color: RetroColors.forestGreen,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      _arbre?.leafType ?? 'Arbre',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w900,
+                                        color: RetroColors.forestGreen,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            else if (edibilitat != null)
                               EdibilityBadge(edibilitat: edibilitat),
                           ],
                         ),
@@ -516,11 +582,18 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                                     color: RetroColors.ink, width: 2),
                               ),
                             ),
-                            icon: const Icon(Icons.menu_book_rounded,
-                                size: 18, color: RetroColors.forestGreen),
-                            label: const Text(
-                              'Veure fitxa completa a la Boscdex',
-                              style: TextStyle(
+                            icon: Icon(
+                              _isTree
+                                  ? Icons.park_rounded
+                                  : Icons.menu_book_rounded,
+                              size: 18,
+                              color: RetroColors.forestGreen,
+                            ),
+                            label: Text(
+                              _isTree
+                                  ? 'Veure fitxa completa de l\'arbre'
+                                  : 'Veure fitxa completa a la Boscdex',
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 13,
                               ),
@@ -528,8 +601,13 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                             onPressed: () {
                               HapticFeedback.selectionClick();
                               Navigator.of(context).pop();
-                              context.push(
-                                  '/boscdex/${widget.avistament.boletId}');
+                              if (_isTree) {
+                                context.push(
+                                    '/arbre/${widget.avistament.arbreId}');
+                              } else {
+                                context.push(
+                                    '/boscdex/${widget.avistament.boletId}');
+                              }
                             },
                           ),
                         ),

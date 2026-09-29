@@ -1,8 +1,14 @@
+import 'dart:async';
 import 'dart:developer' as developer;
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:drift/drift.dart' as drift;
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
@@ -14,15 +20,17 @@ import '../../providers/preferences_provider.dart';
 /// Modal bottom sheet displaying the ML classification results for indicator trees,
 /// their morphological traits, and the prized edible/symbiotic mushrooms found beneath them.
 class TreeClassificationResultSheet extends ConsumerStatefulWidget {
-  final List<ArbreClassificacioResult> results;
+  final List<TreeClassificationResult> results;
   final Uint8List? imageBytes;
   final VoidCallback? onInspected;
+  final VoidCallback? onRegistered;
 
   const TreeClassificationResultSheet({
     super.key,
     required this.results,
     this.imageBytes,
     this.onInspected,
+    this.onRegistered,
   });
 
   @override
@@ -55,14 +63,6 @@ class _TreeClassificationResultSheetState
       final arbre = await db.arbreDao.getArbreById(topCandidate.arbreId);
       final bolets = await db.boletDao.getBoletsByArbreId(topCandidate.arbreId);
 
-      // Track visited tree for indicator tree alliances
-      ref
-          .read(visitedArbresProvider.notifier)
-          .markVisited(topCandidate.arbreId);
-
-      // Check and evaluate badges (e.g. Aliança Silvestre)
-      await _evaluateBadges(topCandidate.arbreId);
-
       if (mounted) {
         setState(() {
           _arbre = arbre;
@@ -91,6 +91,88 @@ class _TreeClassificationResultSheetState
       toxicComparisonViewCount: toxicViews,
       currentTreeId: treeId,
     );
+  }
+
+  bool _isSaving = false;
+
+  Future<void> _registerTreeSighting() async {
+    if (widget.results.isEmpty || _isSaving) return;
+
+    setState(() => _isSaving = true);
+    unawaited(HapticFeedback.mediumImpact());
+
+    try {
+      final db = ref.read(appDatabaseProvider);
+      final top = widget.results.first;
+      final avistamentId = const Uuid().v4();
+      final now = DateTime.now();
+
+      String? savedPhotoPath;
+      if (widget.imageBytes != null && widget.imageBytes!.isNotEmpty) {
+        try {
+          final appDir = await getApplicationDocumentsDirectory();
+          final scansDir = Directory(p.join(appDir.path, 'scans'));
+          if (!await scansDir.exists()) {
+            await scansDir.create(recursive: true);
+          }
+          final filePath = p.join(scansDir.path, 'scan_$avistamentId.jpg');
+          final file = File(filePath);
+          await file.writeAsBytes(widget.imageBytes!, flush: true);
+          savedPhotoPath = filePath;
+        } catch (e) {
+          developer.log('Error saving tree scan photo: $e',
+              name: 'TreeClassificationResultSheet');
+        }
+      }
+
+      await db.avistamentDao.insertAvistament(
+        AvistamentsCompanion(
+          id: drift.Value(avistamentId),
+          arbreId: drift.Value(top.arbreId),
+          timestamp: drift.Value(now),
+          photoPath: drift.Value(savedPhotoPath),
+          confidenceScore: drift.Value(top.confidence),
+          notes: const drift.Value(null),
+        ),
+      );
+
+      // Mark tree as visited in preferences and sync badge progression
+      ref.read(visitedArbresProvider.notifier).markVisited(top.arbreId);
+      await _evaluateBadges(top.arbreId);
+
+      if (mounted) {
+        setState(() => _isSaving = false);
+        final messenger = ScaffoldMessenger.of(context);
+        Navigator.of(context).pop();
+        widget.onRegistered?.call();
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Troballa de ${_arbre?.catalanName ?? top.displayName} registrada al diari! 🌲',
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+            backgroundColor: RetroColors.forestGreen,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      developer.log(
+        'Error registering tree sighting: $e',
+        error: e,
+        stackTrace: stackTrace,
+        name: 'TreeClassificationResultSheet',
+      );
+      if (mounted) {
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error en desar l\'avistament d\'arbre: $e'),
+            backgroundColor: RetroColors.arcadeRed,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -400,6 +482,54 @@ class _TreeClassificationResultSheetState
                       ],
                       const SizedBox(height: 16),
                     ],
+
+                    // Action Button: Register Tree Sighting
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton.icon(
+                        key: const Key('register_tree_sighting_button'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: RetroColors.questAmber,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            side: const BorderSide(
+                                color: RetroColors.ink, width: 2.5),
+                          ),
+                          shadowColor: Colors.transparent,
+                        ),
+                        icon: _isSaving
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  valueColor:
+                                      AlwaysStoppedAnimation(RetroColors.ink),
+                                ),
+                              )
+                            : const Icon(Icons.bookmark_add_rounded),
+                        label: Text(
+                          _isSaving
+                              ? 'Registrant troballa...'
+                              : 'Registrar troballa al Diari',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        onPressed: _isSaving
+                            ? null
+                            : () {
+                                HapticFeedback.mediumImpact();
+                                _registerTreeSighting();
+                              },
+                      ),
+                    ),
+                    const SizedBox(height: 12),
 
                     // Action Button: View Tree Details
                     SizedBox(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -54,21 +55,30 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final cameraController = _cameraController;
-    if (cameraController == null || !cameraController.value.isInitialized) {
-      return;
-    }
-
-    if (state == AppLifecycleState.inactive) {
-      cameraController.dispose();
-      _cameraController = null;
-      if (mounted) {
-        setState(() {
-          _isCameraInitialized = false;
-        });
-      }
+    if (state == AppLifecycleState.paused) {
+      _disposeCurrentCamera();
     } else if (state == AppLifecycleState.resumed) {
-      _initCamera();
+      if (_cameraController == null ||
+          !_cameraController!.value.isInitialized) {
+        _initCamera();
+      }
+    }
+  }
+
+  Future<void> _disposeCurrentCamera() async {
+    final cameraController = _cameraController;
+    _cameraController = null;
+    if (mounted) {
+      setState(() {
+        _isCameraInitialized = false;
+      });
+    }
+    if (cameraController != null) {
+      try {
+        await cameraController.dispose();
+      } catch (e) {
+        developer.log('Error disposing camera: $e', name: 'ScanScreen');
+      }
     }
   }
 
@@ -234,7 +244,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       final classifier = ref.read(classifierProvider);
 
       if (_selectedModeIndex == 0) {
-        final results = await classifier.classify(imageBytes);
+        final results = await classifier.classifyMushroom(imageBytes);
 
         if (!mounted) return;
         _animController.stop();
@@ -300,140 +310,159 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
               children: [
                 AnimatedBuilder(
                   animation: _animController,
+                  child: Container(
+                    width: 270,
+                    height: 270,
+                    decoration: BoxDecoration(
+                      color: RetroColors.sectionBg,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: _isScanning
+                            ? RetroColors.forestGreen
+                            : RetroColors.ink,
+                        width: _isScanning ? 3 : 2.5,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: RetroColors.ink,
+                          offset: Offset(3, 4),
+                          blurRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(21),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // 1. Live Camera Preview or fallback state
+                          if (_isCameraInitialized && _cameraController != null)
+                            SizedBox.expand(
+                              child: FittedBox(
+                                fit: BoxFit.cover,
+                                child: SizedBox(
+                                  width: _cameraController!
+                                          .value.previewSize?.height ??
+                                      270,
+                                  height: _cameraController!
+                                          .value.previewSize?.width ??
+                                      270,
+                                  child: CameraPreview(_cameraController!),
+                                ),
+                              ),
+                            )
+                          else if (_isCameraLoading)
+                            Container(
+                              color: RetroColors.sectionBg,
+                              child: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: const [
+                                    CircularProgressIndicator(
+                                      color: RetroColors.forestGreen,
+                                      strokeWidth: 3,
+                                    ),
+                                    SizedBox(height: 12),
+                                    Text(
+                                      'Iniciant càmera...',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: RetroColors.inkSoft,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          else if (!_hasCameraPermission)
+                            _buildPermissionDeniedView()
+                          else
+                            _buildNoCameraView(),
+
+                          // 2. Retro targeting brackets & reticle overlay
+                          _buildReticleOverlay(),
+                        ],
+                      ),
+                    ),
+                  ),
                   builder: (context, child) {
                     final scale = _isScanning
                         ? 1.0 + (_animController.value * 0.05)
                         : 1.0;
                     return Transform.scale(
                       scale: scale,
-                      child: Container(
-                        width: 270,
-                        height: 270,
-                        decoration: BoxDecoration(
-                          color: RetroColors.sectionBg,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: _isScanning
-                                ? RetroColors.forestGreen
-                                : RetroColors.ink,
-                            width: _isScanning ? 3 : 2.5,
-                          ),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: RetroColors.ink,
-                              offset: Offset(3, 4),
-                              blurRadius: 0,
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(21),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              // 1. Live Camera Preview or fallback state
-                              if (_isCameraInitialized &&
-                                  _cameraController != null)
-                                SizedBox.expand(
-                                  child: FittedBox(
-                                    fit: BoxFit.cover,
-                                    child: SizedBox(
-                                      width: _cameraController!
-                                              .value.previewSize?.height ??
-                                          270,
-                                      height: _cameraController!
-                                              .value.previewSize?.width ??
-                                          270,
-                                      child: CameraPreview(_cameraController!),
-                                    ),
-                                  ),
-                                )
-                              else if (_isCameraLoading)
-                                Container(
-                                  color: RetroColors.sectionBg,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: const [
-                                        CircularProgressIndicator(
-                                          color: RetroColors.forestGreen,
-                                          strokeWidth: 3,
-                                        ),
-                                        SizedBox(height: 12),
-                                        Text(
-                                          'Iniciant càmera...',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w700,
-                                            color: RetroColors.inkSoft,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              else if (!_hasCameraPermission)
-                                _buildPermissionDeniedView()
-                              else
-                                _buildNoCameraView(),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          child!,
 
-                              // 2. Retro targeting brackets & reticle overlay
-                              _buildReticleOverlay(),
-
-                              // 3. Scanning Animation Overlay
-                              if (_isScanning) ...[
-                                Positioned(
-                                  top: _animController.value * 230,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    height: 4,
-                                    decoration: BoxDecoration(
-                                      color: RetroColors.mintGlow,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: RetroColors.mintGlow
-                                              .withOpacity(0.8),
-                                          blurRadius: 8,
-                                          spreadRadius: 2,
+                          // 3. Scanning Animation Overlay
+                          if (_isScanning)
+                            Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(21),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      top: _animController.value * 230,
+                                      left: 0,
+                                      right: 0,
+                                      child: Container(
+                                        height: 4,
+                                        decoration: BoxDecoration(
+                                          color: RetroColors.mintGlow,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: RetroColors.mintGlow
+                                                  .withOpacity(0.8),
+                                              blurRadius: 8,
+                                              spreadRadius: 2,
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 16,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: RetroColors.forestGreen,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                          color: RetroColors.ink, width: 2),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: RetroColors.ink,
-                                          offset: Offset(2, 2),
-                                          blurRadius: 0,
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Text(
-                                      'ANALITZANT AMB EDGE-AI...',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w900,
-                                        letterSpacing: 0.5,
                                       ),
                                     ),
-                                  ),
+                                    Positioned(
+                                      top: 16,
+                                      left: 0,
+                                      right: 0,
+                                      child: Center(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 5),
+                                          decoration: BoxDecoration(
+                                            color: RetroColors.forestGreen,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                                color: RetroColors.ink,
+                                                width: 2),
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: RetroColors.ink,
+                                                offset: Offset(2, 2),
+                                                blurRadius: 0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: const Text(
+                                            'ANALITZANT AMB EDGE-AI...',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w900,
+                                              letterSpacing: 0.5,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ],
-                          ),
-                        ),
+                              ),
+                            ),
+                        ],
                       ),
                     );
                   },
