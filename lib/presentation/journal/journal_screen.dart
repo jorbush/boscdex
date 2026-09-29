@@ -1,10 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/theme/retro_decorations.dart';
+import '../../domain/services/photo_export_service.dart';
 import 'avistament_detail_sheet.dart';
 import 'journal_provider.dart';
 
@@ -135,7 +135,8 @@ class JournalScreen extends ConsumerWidget {
                     clipBehavior: Clip.antiAlias,
                     child: hasPhotoPath
                         ? Image.file(
-                            File(avistament.photoPath!),
+                            PhotoExportService.resolveFile(
+                                avistament.photoPath!),
                             fit: BoxFit.cover,
                             errorBuilder: (ctx, err, st) => Center(
                               child: isTree

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:drift/drift.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../data/database/app_database.dart';
@@ -11,12 +13,71 @@ import '../../data/database/app_database.dart';
 class PhotoExportService {
   const PhotoExportService();
 
+  static String? _documentsDirectoryPath;
+
+  /// Initializes the base documents directory path used to resolve relative photo paths.
+  static void initDocumentsDirectory(String path) {
+    _documentsDirectoryPath = path;
+  }
+
+  /// Returns the configured documents directory path, if set.
+  static String? get documentsDirectoryPath => _documentsDirectoryPath;
+
+  /// Resolves any stored photo path (relative, legacy absolute, or filename)
+  /// to a concrete [File] on disk against the active application container.
+  static File resolveFile(String photoPath) {
+    final cleanPath = photoPath.trim();
+    if (cleanPath.isEmpty) return File(photoPath);
+
+    // 1. If it already exists directly (e.g. current container or relative in current dir)
+    final direct = File(cleanPath);
+    if (direct.existsSync()) return direct;
+
+    final docPath = _documentsDirectoryPath;
+    if (docPath != null) {
+      // 2. If it has scans/, extract from scans/ onward
+      final scansIndex = cleanPath.indexOf('scans/');
+      if (scansIndex != -1) {
+        final rel = cleanPath.substring(scansIndex);
+        final candidate = File(p.join(docPath, rel));
+        if (candidate.existsSync()) return candidate;
+        // Return candidate path even if not yet flushed (e.g. pending write)
+        return candidate;
+      }
+
+      // 3. Fallback: match by filename inside scans/
+      final fileName = p.basename(cleanPath);
+      final inScans = File(p.join(docPath, 'scans', fileName));
+      if (inScans.existsSync()) return inScans;
+
+      // 4. Fallback: directly in documents
+      final inDoc = File(p.join(docPath, fileName));
+      if (inDoc.existsSync()) return inDoc;
+
+      return inScans;
+    }
+
+    return direct;
+  }
+
+  /// Asynchronously resolves the photo file, ensuring getApplicationDocumentsDirectory
+  /// is checked even if initDocumentsDirectory was not called.
+  static Future<File> resolveFileAsync(String photoPath) async {
+    if (_documentsDirectoryPath == null) {
+      try {
+        final dir = await getApplicationDocumentsDirectory();
+        _documentsDirectoryPath = dir.path;
+      } catch (_) {}
+    }
+    return resolveFile(photoPath);
+  }
+
   /// Saves the photograph at [filePath] directly into the device's native photo gallery / camera roll.
   ///
   /// Requests necessary permissions and returns a user-friendly status message.
   Future<ExportResult> saveToGallery(String filePath) async {
     try {
-      final file = File(filePath);
+      final file = await resolveFileAsync(filePath);
       if (!await file.exists()) {
         return const ExportResult(
           success: false,
@@ -83,11 +144,11 @@ class PhotoExportService {
   /// Opens the system native share sheet to share or export the photograph.
   Future<void> sharePhoto(String filePath, {String? text}) async {
     try {
-      final file = File(filePath);
+      final file = await resolveFileAsync(filePath);
       if (!await file.exists()) return;
 
       await Share.shareXFiles(
-        [XFile(filePath)],
+        [XFile(file.path)],
         text: text ?? 'Fotografia presa amb la guia micològica Boscdex 🍄',
       );
     } catch (e) {
@@ -100,7 +161,7 @@ class PhotoExportService {
     try {
       final avistament = await db.avistamentDao.getAvistamentById(avistamentId);
       if (avistament != null && avistament.photoPath != null) {
-        final file = File(avistament.photoPath!);
+        final file = await resolveFileAsync(avistament.photoPath!);
         if (await file.exists()) {
           await file.delete();
         }

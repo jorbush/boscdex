@@ -21,6 +21,7 @@ import 'daos/descobriment_dao.dart';
 import 'daos/insignia_dao.dart';
 
 import 'seed/seed_data.dart';
+import '../../domain/services/photo_export_service.dart';
 
 part 'app_database.g.dart';
 
@@ -133,6 +134,11 @@ class AppDatabase extends _$AppDatabase {
           await _migrateAvistamentsTable();
           await customStatement('PRAGMA foreign_keys = ON;');
 
+          // Recover legacy absolute photo paths to relative paths across iOS/Android container updates
+          await customStatement(
+            "UPDATE avistaments SET photo_path = substr(photo_path, instr(photo_path, 'scans/')) WHERE photo_path LIKE '%scans/%' AND photo_path NOT LIKE 'scans/%';",
+          );
+
           // Backfill imageAssetPath only for pre-existing databases
           if (!details.wasCreated) {
             await customStatement(
@@ -149,6 +155,7 @@ class AppDatabase extends _$AppDatabase {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
+    PhotoExportService.initDocumentsDirectory(dbFolder.path);
     final file = File(p.join(dbFolder.path, 'boscdex.sqlite'));
     if (!await file.exists()) {
       try {

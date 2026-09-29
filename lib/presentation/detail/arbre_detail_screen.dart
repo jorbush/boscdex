@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
+import '../../domain/services/photo_export_service.dart';
 import '../../providers/database_provider.dart';
 import '../journal/avistament_detail_sheet.dart';
 
@@ -409,7 +409,7 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                       children: [
                         if (photoPath != null)
                           Image.file(
-                            File(photoPath),
+                            PhotoExportService.resolveFile(photoPath),
                             fit: BoxFit.cover,
                             errorBuilder: (ctx, err, st) => Center(
                               child: Image.asset(

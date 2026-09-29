@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'package:drift/drift.dart';
 import '../app_database.dart';
 import '../tables/avistaments.dart';
+import '../../../domain/services/photo_export_service.dart';
 
 part 'avistament_dao.g.dart';
 
@@ -72,7 +72,8 @@ class AvistamentDao extends DatabaseAccessor<AppDatabase>
     final sighting = await getAvistamentById(id);
     if (sighting != null && sighting.photoPath != null) {
       try {
-        final file = File(sighting.photoPath!);
+        final file =
+            await PhotoExportService.resolveFileAsync(sighting.photoPath!);
         if (await file.exists()) {
           await file.delete();
         }

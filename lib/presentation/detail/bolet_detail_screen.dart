@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +11,7 @@ import '../../data/database/daos/bolet_dao.dart';
 import '../../providers/database_provider.dart';
 import '../../domain/models/edibilitat.dart';
 import '../../domain/models/raritat_tier.dart';
+import '../../domain/services/photo_export_service.dart';
 import '../../domain/services/species_distribution_service.dart';
 import '../journal/avistament_detail_sheet.dart';
 import 'catalonia_pixel_map.dart';
@@ -863,7 +863,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                       children: [
                         if (photoPath != null)
                           Image.file(
-                            File(photoPath),
+                            PhotoExportService.resolveFile(photoPath),
                             fit: BoxFit.cover,
                             errorBuilder: (ctx, err, st) => Center(
                               child: Image.asset(

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -85,7 +84,17 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
   Future<void> _downloadPhoto() async {
     if (_isExporting) return;
     final photoPath = widget.avistament.photoPath;
-    if (photoPath == null || !await File(photoPath).exists()) {
+    if (photoPath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No hi ha cap fitxer de foto per descarregar.'),
+          backgroundColor: RetroColors.arcadeRed,
+        ),
+      );
+      return;
+    }
+    final file = PhotoExportService.resolveFile(photoPath);
+    if (!await file.exists()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No hi ha cap fitxer de foto per descarregar.'),
@@ -98,7 +107,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
     setState(() => _isExporting = true);
     unawaited(HapticFeedback.lightImpact());
 
-    final result = await _photoExportService.saveToGallery(photoPath);
+    final result = await _photoExportService.saveToGallery(file.path);
 
     if (mounted) {
       setState(() => _isExporting = false);
@@ -115,7 +124,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
 
   Future<void> _sharePhoto() async {
     final photoPath = widget.avistament.photoPath;
-    if (photoPath == null || !await File(photoPath).exists()) return;
+    if (photoPath == null) return;
+    final file = PhotoExportService.resolveFile(photoPath);
+    if (!await file.exists()) return;
 
     unawaited(HapticFeedback.selectionClick());
     final name = _isTree
@@ -123,7 +134,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
         : (_bolet?.catalanName ?? widget.avistament.boletId ?? 'Bolet');
     final icon = _isTree ? '🌲' : '🍄';
     await _photoExportService.sharePhoto(
-      photoPath,
+      file.path,
       text: 'Mireu aquest exemplar de $name identificat amb Boscdex AI $icon',
     );
   }
@@ -304,7 +315,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                             minScale: 1.0,
                             maxScale: 3.5,
                             child: Image.file(
-                              File(photoPath),
+                              PhotoExportService.resolveFile(photoPath),
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
                                   const Center(

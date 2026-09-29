@@ -115,10 +115,11 @@ class _TreeClassificationResultSheetState
           if (!await scansDir.exists()) {
             await scansDir.create(recursive: true);
           }
-          final filePath = p.join(scansDir.path, 'scan_$avistamentId.jpg');
+          final fileName = 'scan_$avistamentId.jpg';
+          final filePath = p.join(scansDir.path, fileName);
           final file = File(filePath);
           await file.writeAsBytes(widget.imageBytes!, flush: true);
-          savedPhotoPath = filePath;
+          savedPhotoPath = 'scans/$fileName';
         } catch (e) {
           developer.log('Error saving tree scan photo: $e',
               name: 'TreeClassificationResultSheet');
