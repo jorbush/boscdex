@@ -105,3 +105,30 @@ class HapticFeedbackNotifier extends StateNotifier<bool> {
     _prefs.setBool('hapticFeedbackEnabled', enabled);
   }
 }
+
+/// Notifier tracking whether 8-bit retro sound effects are enabled.
+final soundEffectsEnabledProvider =
+    StateNotifierProvider<SoundEffectsNotifier, bool>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return SoundEffectsNotifier(prefs);
+});
+
+/// [StateNotifier] for sound effects preference.
+class SoundEffectsNotifier extends StateNotifier<bool> {
+  SoundEffectsNotifier(this._prefs)
+      : super(_prefs.getBool('soundEffectsEnabled') ?? true);
+
+  final SharedPreferences _prefs;
+
+  /// Toggles sound effects on or off.
+  void toggle() {
+    state = !state;
+    _prefs.setBool('soundEffectsEnabled', state);
+  }
+
+  /// Sets sound effects state explicitly.
+  void setEnabled(bool enabled) {
+    state = enabled;
+    _prefs.setBool('soundEffectsEnabled', enabled);
+  }
+}

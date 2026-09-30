@@ -63,16 +63,17 @@ void main() {
       expect(find.text('DADES I MOTOR IA LOCAL'), findsOneWidget);
       expect(find.text('SOBRE BOSCDEX'), findsOneWidget);
 
-      // 3. Verify Switch for Haptic Feedback
+      // 3. Verify Switches for Sound Effects and Haptic Feedback
+      expect(find.text('Efectes de so retro 8-bit'), findsOneWidget);
       expect(find.text('Resposta hàptica (Vibració)'), findsOneWidget);
-      final switchFinder = find.byType(Switch);
-      expect(switchFinder, findsOneWidget);
-      expect(tester.widget<Switch>(switchFinder).value, isTrue);
+      final switches = find.byType(Switch);
+      expect(switches, findsNWidgets(2));
+      expect(tester.widgetList<Switch>(switches).every((s) => s.value), isTrue);
 
-      // Toggle switch
-      await tester.tap(switchFinder);
+      // Toggle first switch (sound)
+      await tester.tap(switches.first);
       await tester.pumpAndSettle();
-      expect(tester.widget<Switch>(switchFinder).value, isFalse);
+      expect(tester.widgetList<Switch>(switches).first.value, isFalse);
 
       // 4. Verify Safety & AI Engine details
       expect(find.text('Avís legal i descàrrec'), findsOneWidget);

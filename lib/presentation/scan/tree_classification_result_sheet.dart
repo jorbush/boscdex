@@ -16,6 +16,7 @@ import '../../domain/models/classificacio_result.dart';
 import '../../domain/services/badge_progression_service.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/preferences_provider.dart';
+import '../../providers/sound_provider.dart';
 
 /// Modal bottom sheet displaying the ML classification results for indicator trees,
 /// their morphological traits, and the prized edible/symbiotic mushrooms found beneath them.
@@ -83,14 +84,21 @@ class _TreeClassificationResultSheetState
     }
   }
 
-  Future<void> _evaluateBadges(String treeId) async {
+  Future<bool> _evaluateBadges(String treeId) async {
     final db = ref.read(appDatabaseProvider);
     final toxicViews = ref.read(toxicComparisonViewCountProvider);
-    await BadgeProgressionService().syncBadgeProgression(
+    final previousBadges = await db.insigniaDao.getAllInsignies();
+    final prevAwardedIds = previousBadges
+        .where((b) => b.awardedAt != null)
+        .map((b) => b.id)
+        .toSet();
+    final updatedBadges = await BadgeProgressionService().syncBadgeProgression(
       db: db,
       toxicComparisonViewCount: toxicViews,
       currentTreeId: treeId,
     );
+    return updatedBadges
+        .any((b) => b.isAwarded && !prevAwardedIds.contains(b.id));
   }
 
   bool _isSaving = false;
@@ -106,6 +114,9 @@ class _TreeClassificationResultSheetState
       final top = widget.results.first;
       final avistamentId = const Uuid().v4();
       final now = DateTime.now();
+
+      final wasVisitedBefore =
+          ref.read(visitedArbresProvider).contains(top.arbreId);
 
       String? savedPhotoPath;
       if (widget.imageBytes != null && widget.imageBytes!.isNotEmpty) {
@@ -139,9 +150,16 @@ class _TreeClassificationResultSheetState
 
       // Mark tree as visited in preferences and sync badge progression
       ref.read(visitedArbresProvider.notifier).markVisited(top.arbreId);
-      await _evaluateBadges(top.arbreId);
+      final hasNewBadge = await _evaluateBadges(top.arbreId);
 
       if (mounted) {
+        final soundService = ref.read(soundEffectServiceProvider);
+        if (hasNewBadge) {
+          unawaited(soundService.playBadgeAward());
+        } else if (!wasVisitedBefore) {
+          unawaited(soundService.playDiscovery());
+        }
+
         setState(() => _isSaving = false);
         final messenger = ScaffoldMessenger.of(context);
         Navigator.of(context).pop();
@@ -149,7 +167,9 @@ class _TreeClassificationResultSheetState
         messenger.showSnackBar(
           SnackBar(
             content: Text(
-              'Troballa de ${_arbre?.catalanName ?? top.displayName} registrada al diari! 🌲',
+              hasNewBadge
+                  ? '🏆 Enhorabona! Has desbloquejat una nova insígnia!'
+                  : 'Troballa de ${_arbre?.catalanName ?? top.displayName} registrada al diari! 🌲',
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
             backgroundColor: RetroColors.forestGreen,

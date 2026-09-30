@@ -7,6 +7,7 @@ import 'boscdex_grid.dart';
 import 'arbre_grid.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/retro_decorations.dart';
+import '../../providers/sound_provider.dart';
 import '../shared/boscdex_logo.dart';
 import '../shared/pixel_icons.dart';
 import 'insignies_dialog.dart';
@@ -249,6 +250,9 @@ class BoscdexScreen extends ConsumerWidget {
         child: GestureDetector(
           key: key,
           onTap: () {
+            if (ref.read(boscdexSectionProvider) != targetSection) {
+              ref.read(soundEffectServiceProvider).playBlip();
+            }
             HapticFeedback.selectionClick();
             ref.read(boscdexSectionProvider.notifier).state = targetSection;
           },
@@ -311,6 +315,9 @@ class BoscdexScreen extends ConsumerWidget {
               label: label,
               isSelected: isSelected,
               onTap: () {
+                if (!isSelected) {
+                  ref.read(soundEffectServiceProvider).playBlip();
+                }
                 HapticFeedback.selectionClick();
                 ref.read(boscdexFilterProvider.notifier).state = f;
               },
@@ -338,6 +345,9 @@ class BoscdexScreen extends ConsumerWidget {
               label: label,
               isSelected: isSelected,
               onTap: () {
+                if (!isSelected) {
+                  ref.read(soundEffectServiceProvider).playBlip();
+                }
                 HapticFeedback.selectionClick();
                 ref.read(arbreFilterProvider.notifier).state = f;
               },

@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/classifier_provider.dart';
+import '../../providers/sound_provider.dart';
 import 'classification_result_sheet.dart';
 import 'tree_classification_result_sheet.dart';
 
@@ -181,6 +182,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   Future<void> _onShutterTapped() async {
     if (_isScanning) return;
     unawaited(HapticFeedback.mediumImpact());
+    unawaited(ref.read(soundEffectServiceProvider).playShutter());
 
     Uint8List? imageBytes;
 
@@ -836,6 +838,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       label: text,
       child: GestureDetector(
         onTap: () {
+          if (_selectedModeIndex != index) {
+            unawaited(ref.read(soundEffectServiceProvider).playBlip());
+          }
           unawaited(HapticFeedback.selectionClick());
           setState(() {
             _selectedModeIndex = index;

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' as developer;
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ import '../../domain/services/badge_progression_service.dart';
 import '../../domain/services/safety_gate_service.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/preferences_provider.dart';
+import '../../providers/sound_provider.dart';
 import '../shared/edibility_badge.dart';
 import '../shared/safety_alert_box.dart';
 import '../boscdex/boscdex_provider.dart';
@@ -144,15 +146,30 @@ class _MushroomClassificationResultSheetState
       // 3. Evaluate and update badges via service
       final visitedTrees = ref.read(visitedArbresProvider);
       final toxicViews = ref.read(toxicComparisonViewCountProvider);
-      await BadgeProgressionService().syncBadgeProgression(
+      final previousBadges = await db.insigniaDao.getAllInsignies();
+      final updatedBadges =
+          await BadgeProgressionService().syncBadgeProgression(
         db: db,
         toxicComparisonViewCount: toxicViews,
         visitedTreeIds: visitedTrees,
       );
+      final prevAwardedIds = previousBadges
+          .where((b) => b.awardedAt != null)
+          .map((b) => b.id)
+          .toSet();
+      final hasNewBadge = updatedBadges
+          .any((b) => b.isAwarded && !prevAwardedIds.contains(b.id));
 
       ref.invalidate(boscdexEntriesProvider);
 
       if (mounted) {
+        final soundService = ref.read(soundEffectServiceProvider);
+        if (hasNewBadge) {
+          unawaited(soundService.playBadgeAward());
+        } else if (!wasDiscovered) {
+          unawaited(soundService.playDiscovery());
+        }
+
         final scaffoldMessenger = ScaffoldMessenger.of(context);
         final primaryColor = Theme.of(context).colorScheme.primary;
         Navigator.of(context).pop();

@@ -171,4 +171,19 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
+
+  test('All 4 retro 8-bit audio sound effects load via rootBundle', () async {
+    const audioFiles = [
+      'assets/audio/discovery.wav',
+      'assets/audio/badge.wav',
+      'assets/audio/shutter.wav',
+      'assets/audio/blip.wav',
+    ];
+
+    for (final path in audioFiles) {
+      final data = await rootBundle.load(path);
+      expect(data.lengthInBytes, greaterThan(0),
+          reason: 'Expected $path to exist and have non-zero audio content');
+    }
+  });
 }

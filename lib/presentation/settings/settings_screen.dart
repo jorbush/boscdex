@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/preferences_provider.dart';
+import '../../providers/sound_provider.dart';
 import '../boscdex/boscdex_provider.dart';
 import '../journal/journal_provider.dart';
 import '../shared/boscdex_logo.dart';
@@ -19,6 +20,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hapticEnabled = ref.watch(hapticFeedbackEnabledProvider);
+    final soundEnabled = ref.watch(soundEffectsEnabledProvider);
     final discoveryCountAsync = ref.watch(discoveryCountProvider);
     final avistamentsAsync = ref.watch(avistamentsProvider);
 
@@ -139,44 +141,91 @@ class SettingsScreen extends ConsumerWidget {
               borderWidth: 2,
               shadowOffset: 2.5,
             ),
-            child: SwitchListTile.adaptive(
-              value: hapticEnabled,
-              activeColor: RetroColors.forestGreen,
-              title: const Text(
-                'Resposta hàptica (Vibració)',
-                style: TextStyle(
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w800,
-                  color: RetroColors.ink,
+            child: Column(
+              children: [
+                SwitchListTile.adaptive(
+                  value: soundEnabled,
+                  activeColor: RetroColors.forestGreen,
+                  title: const Text(
+                    'Efectes de so retro 8-bit',
+                    style: TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w800,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+                  subtitle: const Text(
+                    'Sons de disparador, fanfàrria de descobriment i medalles',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: RetroColors.inkSoft,
+                    ),
+                  ),
+                  secondary: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: RetroColors.goldLight,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: RetroColors.ink, width: 1.2),
+                    ),
+                    child: const Icon(
+                      Icons.volume_up_rounded,
+                      size: 18,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+                  onChanged: (val) {
+                    if (hapticEnabled) HapticFeedback.selectionClick();
+                    ref
+                        .read(soundEffectsEnabledProvider.notifier)
+                        .setEnabled(val);
+                    if (val) {
+                      ref.read(soundEffectServiceProvider).playBlip();
+                    }
+                  },
                 ),
-              ),
-              subtitle: const Text(
-                'Feedback tàctil en prémer botons i descobrir espècies',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: RetroColors.inkSoft,
+                Container(height: 1, color: RetroColors.ink.withOpacity(0.12)),
+                SwitchListTile.adaptive(
+                  value: hapticEnabled,
+                  activeColor: RetroColors.forestGreen,
+                  title: const Text(
+                    'Resposta hàptica (Vibració)',
+                    style: TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w800,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+                  subtitle: const Text(
+                    'Feedback tàctil en prémer botons i descobrir espècies',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: RetroColors.inkSoft,
+                    ),
+                  ),
+                  secondary: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: RetroColors.mintWash,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: RetroColors.ink, width: 1.2),
+                    ),
+                    child: const Icon(
+                      Icons.vibration_rounded,
+                      size: 18,
+                      color: RetroColors.forestGreen,
+                    ),
+                  ),
+                  onChanged: (val) {
+                    if (val) HapticFeedback.mediumImpact();
+                    ref
+                        .read(hapticFeedbackEnabledProvider.notifier)
+                        .setEnabled(val);
+                  },
                 ),
-              ),
-              secondary: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: RetroColors.mintWash,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: RetroColors.ink, width: 1.2),
-                ),
-                child: const Icon(
-                  Icons.vibration_rounded,
-                  size: 18,
-                  color: RetroColors.forestGreen,
-                ),
-              ),
-              onChanged: (val) {
-                if (val) HapticFeedback.mediumImpact();
-                ref
-                    .read(hapticFeedbackEnabledProvider.notifier)
-                    .setEnabled(val);
-              },
+              ],
             ),
           ),
 
