@@ -62,14 +62,45 @@ This document tracks completed features in **Boscdex MVP v1.0** and outlines upc
   - Hoisted static viewfinder into `AnimatedBuilder.child` to avoid 60fps camera widget rebuilds during scanning.
   - Added Catalan diacritic normalization to `BoletDao.searchByName` (e.g. `rovello` matches `Rovelló`).
   - Added `KeyAction.setNull` cascade to `Descobriments.firstAvistamentId` to protect against foreign key crashes.
-- [x] **Expanded Test Suite (140 Passing Tests):** Achieved 100% pass rate across 140 automated unit, widget, integration, and E2E tests, including dedicated widget tests for `InsigniesDialog`, `SeasonIndicator`, and `MorphologySection`.
-- [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.
+- [x] **Photo Persistence & Container UUID Normalization:** Relative path storage (`scans/scan_<uuid>.jpg`), dynamic runtime resolution in `PhotoExportService`, and automatic SQLite legacy recovery migration across app versions.
+- [x] **Android Build Toolchain & Java 17 Compatibility:** AGP 7.1.2 + Kotlin 1.8.22 + Java 17 Corretto configuration, verifying clean standalone release APK builds (`app-release.apk`, 101.9 MB).
+- [x] **Expanded Test Suite (147 Passing Tests):** Achieved 100% pass rate across 147 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`).
 
 ---
 
-## 🔵 Planned for v2.0 (Advanced Field Guide & Tools)
+## 🟡 Milestone v1.2: Pre-Store Experience & Field Tools (Current Focus)
 
-- [ ] **Private Offline Heatmaps:** Render offline topographic raster tiles with clustered personal sighting points (strictly local, zero cloud sync).
-- [ ] **Weather & Solunar Correlation:** Offline rain/temperature estimations based on local sensors and elevation to suggest optimal foraging days.
-- [ ] **Audio Chirps & Sounds:** Retro Pokédex sound effects for discoveries and badge awards.
-- [ ] **Data Export & Backup:** Export sightings to CSV / GeoJSON or encrypted local backup.
+Prioritized features before the initial public store release:
+
+1. **Retro 8-Bit Audio System (`SoundService`):**
+   - [ ] Implement lightweight offline audio engine for retro 8-bit sound effects.
+   - [ ] Species discovery fanfare (unveiling a new Boscdex card from silhouette).
+   - [ ] Badge award triumph chime.
+   - [ ] Camera scan / shutter sound effect.
+   - [ ] Audio toggle in `SettingsScreen` (enable/disable sound effects with SharedPreferences persistence).
+
+2. **Personal Sightings GPS Map in Diari (`JournalMapView`):**
+   - [ ] Interactive offline field sightings map visualizing the user's geolocated finds across Catalonia.
+   - [ ] Distinct markers for mushrooms (🍄) and indicator trees (🌲) with confidence & date indicators.
+   - [ ] Sighting card inspection preview sheet upon tapping map pins.
+   - [ ] Mode toggle in Diari between chronological list view and geographic map view.
+   - [ ] 100% offline operation respecting zero-cloud privacy guarantee.
+
+---
+
+## 🚀 Milestone v1.3: Store Release (App Store & Google Play)
+
+- [ ] **Android App Bundle (.aab):** Generate optimized release bundle for Google Play Console dynamic delivery (~25 MB).
+- [ ] **iOS Archive (.ipa):** Create signed App Store release archive for TestFlight distribution.
+- [ ] **App Assets & Icons:** Finalize adaptive launcher icons (`ic_launcher` / `AppIcon`) with pixel-art Boscdex identity across all density buckets.
+- [ ] **Store Metadata & ASO:** Store listings in Catalan, Spanish, and English with screenshots highlighting 100% offline edge ML inference and safety gates.
+
+---
+
+## 🔵 Planned for v2.0 (Taxonomy Expansion & Advanced Tools)
+
+- [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.
+- [ ] **Tree Classifier Head Refinement:** Further fine-tune leaves vs bark accuracy with expanded multi-season training set.
+- [ ] **Weather & Solunar Correlation:** Offline rain/temperature estimations based on local elevation and seasonality to suggest optimal foraging windows.
+- [ ] **Data Export & Backup:** Export sightings to CSV / GeoJSON and complete encrypted backup (database + scan photos).
+
