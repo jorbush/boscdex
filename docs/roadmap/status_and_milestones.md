@@ -72,12 +72,14 @@ This document tracks completed features in **Boscdex MVP v1.0** and outlines upc
 
 Prioritized features before the initial public store release:
 
-1. **Retro 8-Bit Audio System (`SoundService`):**
-   - [ ] Implement lightweight offline audio engine for retro 8-bit sound effects.
-   - [ ] Species discovery fanfare (unveiling a new Boscdex card from silhouette).
-   - [ ] Badge award triumph chime.
-   - [ ] Camera scan / shutter sound effect.
-   - [ ] Audio toggle in `SettingsScreen` (enable/disable sound effects with SharedPreferences persistence).
+1. **Retro 8-Bit Audio System (`SoundEffectService`):**
+   - [x] Implement lightweight offline audio engine for retro 8-bit sound effects (`audioplayers` 4.1.0).
+   - [x] Species discovery fanfare (unveiling a new Boscdex card from silhouette).
+   - [x] Tree identification jingle for indicator trees.
+   - [x] Badge award triumph chime (`achievement_unlocked.wav`).
+   - [x] Camera scan / shutter sound effect (`camera_shutter.wav`).
+   - [x] Audio toggle in `SettingsScreen` (enable/disable sound effects with SharedPreferences persistence and reactive sound provider).
+   - [x] Resolved native iOS share sheet presentation, anchor origin, and MIME type in sightings detail (`AvistamentDetailSheet`).
 
 2. **Personal Sightings GPS Map in Diari (`JournalMapView`):**
    - [ ] Interactive offline field sightings map visualizing the user's geolocated finds across Catalonia.
