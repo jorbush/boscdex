@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/services/photo_export_service.dart';
 import 'package:drift/drift.dart' hide isNotNull, isNull;
@@ -30,12 +31,22 @@ void main() {
     expect(result.message, contains('no existeix'));
   });
 
-  test('sharePhoto handles non-existent file gracefully without throwing',
+  test('sharePhoto handles non-existent file gracefully and returns false',
       () async {
-    expect(
-      () async => await service.sharePhoto('/non/existent/photo.jpg'),
-      returnsNormally,
+    final result = await service.sharePhoto('/non/existent/photo.jpg');
+    expect(result, isFalse);
+  });
+
+  test(
+      'sharePhoto accepts optional sharePositionOrigin and returns false when file missing',
+      () async {
+    final result = await service.sharePhoto(
+      '/non/existent/photo.jpg',
+      text: 'Foto de prova',
+      subject: 'Assumpte de prova',
+      sharePositionOrigin: const Rect.fromLTWH(10, 20, 30, 40),
     );
+    expect(result, isFalse);
   });
 
   test('deleteSighting deletes DB record and removes physical file', () async {

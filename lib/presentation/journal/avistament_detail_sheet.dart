@@ -18,17 +18,20 @@ import '../shared/edibility_badge.dart';
 class AvistamentDetailSheet extends ConsumerStatefulWidget {
   final Avistament avistament;
   final VoidCallback? onDeleted;
+  final PhotoExportService photoExportService;
 
   const AvistamentDetailSheet({
     Key? key,
     required this.avistament,
     this.onDeleted,
+    this.photoExportService = const PhotoExportService(),
   }) : super(key: key);
 
   static Future<void> show(
     BuildContext context,
     Avistament avistament, {
     VoidCallback? onDeleted,
+    PhotoExportService photoExportService = const PhotoExportService(),
   }) {
     return showModalBottomSheet(
       context: context,
@@ -37,6 +40,7 @@ class AvistamentDetailSheet extends ConsumerStatefulWidget {
       builder: (context) => AvistamentDetailSheet(
         avistament: avistament,
         onDeleted: onDeleted,
+        photoExportService: photoExportService,
       ),
     );
   }
@@ -48,7 +52,7 @@ class AvistamentDetailSheet extends ConsumerStatefulWidget {
 
 class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
   static final _dateFormat = DateFormat('dd/MM/yyyy HH:mm');
-  final _photoExportService = const PhotoExportService();
+  PhotoExportService get _photoExportService => widget.photoExportService;
 
   Bolet? _bolet;
   Arbre? _arbre;
@@ -84,7 +88,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
   Future<void> _downloadPhoto() async {
     if (_isExporting) return;
     final photoPath = widget.avistament.photoPath;
-    if (photoPath == null) {
+    if (photoPath == null || photoPath.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No hi ha cap fitxer de foto per descarregar.'),
@@ -93,8 +97,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
       );
       return;
     }
-    final file = PhotoExportService.resolveFile(photoPath);
+    final file = await PhotoExportService.resolveFileAsync(photoPath);
     if (!await file.exists()) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No hi ha cap fitxer de foto per descarregar.'),
@@ -122,21 +127,71 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
     }
   }
 
-  Future<void> _sharePhoto() async {
+  Future<void> _sharePhoto([BuildContext? buttonContext]) async {
     final photoPath = widget.avistament.photoPath;
-    if (photoPath == null) return;
-    final file = PhotoExportService.resolveFile(photoPath);
-    if (!await file.exists()) return;
+    if (photoPath == null || photoPath.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No hi ha cap fitxer de foto per compartir.'),
+          backgroundColor: RetroColors.arcadeRed,
+        ),
+      );
+      return;
+    }
+
+    // Calculate anchor bounding box synchronously before async operations
+    // for iOS iPad popover and newer iPhone presentation
+    Rect? sharePositionOrigin;
+    final targetContext = buttonContext ?? context;
+    final box = targetContext.findRenderObject() as RenderBox?;
+    if (box != null &&
+        box.hasSize &&
+        box.size.width > 0 &&
+        box.size.height > 0) {
+      sharePositionOrigin = box.localToGlobal(Offset.zero) & box.size;
+    } else {
+      final size = MediaQuery.of(context).size;
+      sharePositionOrigin = Rect.fromCenter(
+        center: Offset(size.width / 2, size.height / 2),
+        width: 44,
+        height: 44,
+      );
+    }
+
+    final file = await PhotoExportService.resolveFileAsync(photoPath);
+    if (!await file.exists()) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No s\'ha trobat la imatge al dispositiu.'),
+            backgroundColor: RetroColors.arcadeRed,
+          ),
+        );
+      }
+      return;
+    }
 
     unawaited(HapticFeedback.selectionClick());
     final name = _isTree
         ? (_arbre?.catalanName ?? widget.avistament.arbreId ?? 'Arbre')
         : (_bolet?.catalanName ?? widget.avistament.boletId ?? 'Bolet');
     final icon = _isTree ? '🌲' : '🍄';
-    await _photoExportService.sharePhoto(
+
+    final success = await _photoExportService.sharePhoto(
       file.path,
       text: 'Mireu aquest exemplar de $name identificat amb Boscdex AI $icon',
+      subject: 'Boscdex - Identificació de $name',
+      sharePositionOrigin: sharePositionOrigin,
     );
+
+    if (!success && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No s\'ha pogut obrir el menú per compartir.'),
+          backgroundColor: RetroColors.arcadeRed,
+        ),
+      );
+    }
   }
 
   Future<void> _confirmDelete() async {
@@ -756,11 +811,17 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: RetroColors.ink, width: 2),
                         ),
-                        child: IconButton(
-                          icon: const Icon(Icons.share_rounded,
-                              color: RetroColors.ink),
-                          tooltip: 'Compartir',
-                          onPressed: hasPhoto ? _sharePhoto : null,
+                        child: Builder(
+                          builder: (btnContext) {
+                            return IconButton(
+                              icon: const Icon(Icons.share_rounded,
+                                  color: RetroColors.ink),
+                              tooltip: 'Compartir',
+                              onPressed: hasPhoto
+                                  ? () => _sharePhoto(btnContext)
+                                  : null,
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(width: 8),

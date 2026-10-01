@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:drift/drift.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -142,17 +143,62 @@ class PhotoExportService {
   }
 
   /// Opens the system native share sheet to share or export the photograph.
-  Future<void> sharePhoto(String filePath, {String? text}) async {
+  ///
+  /// On iOS/iPadOS, [sharePositionOrigin] is required to anchor the share popover
+  /// and avoid system crashes or presentation failures.
+  Future<bool> sharePhoto(
+    String filePath, {
+    String? text,
+    String? subject,
+    Rect? sharePositionOrigin,
+  }) async {
     try {
       final file = await resolveFileAsync(filePath);
-      if (!await file.exists()) return;
+      if (!await file.exists()) {
+        debugPrint('PhotoExportService: file does not exist at $filePath');
+        return false;
+      }
+
+      final ext = p.extension(file.path).toLowerCase();
+      final isPng = ext == '.png';
+      final mimeType = isPng ? 'image/png' : 'image/jpeg';
+      final validExt = isPng ? '.png' : '.jpg';
+
+      String pathToShare = file.path;
+      String? shareName;
+
+      try {
+        final tempDir = await getTemporaryDirectory();
+        final shareFileName =
+            'boscdex_share_${DateTime.now().millisecondsSinceEpoch}$validExt';
+        final shareFile = File(p.join(tempDir.path, shareFileName));
+        await file.copy(shareFile.path);
+        pathToShare = shareFile.path;
+        shareName = shareFileName;
+      } catch (e) {
+        // Fallback to original file path if temporary copy cannot be created
+        debugPrint('PhotoExportService: could not copy to temp directory: $e');
+        pathToShare = file.path;
+      }
+
+      final xFile = XFile(
+        pathToShare,
+        mimeType: mimeType,
+        name: shareName,
+      );
+
+      final origin = sharePositionOrigin ?? const Rect.fromLTWH(0, 0, 100, 100);
 
       await Share.shareXFiles(
-        [XFile(file.path)],
+        [xFile],
         text: text ?? 'Fotografia presa amb la guia micològica Boscdex 🍄',
+        subject: subject ?? 'Boscdex - Identificació de camp',
+        sharePositionOrigin: origin,
       );
-    } catch (e) {
-      debugPrint('Error sharing photo: $e');
+      return true;
+    } catch (e, stack) {
+      debugPrint('Error sharing photo: $e\n$stack');
+      return false;
     }
   }
 
