@@ -224,4 +224,202 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await tester.pump();
   });
+
+  group('Clustering Tests', () {
+    final clusterSighting1 = Avistament(
+      id: 'sighting-cluster-1',
+      boletId: 'lactarius_deliciosus',
+      timestamp: DateTime(2026, 10, 1, 10, 0),
+      latitude: 42.18,
+      longitude: 1.85,
+      altitude: 850.0,
+      confidenceScore: 0.95,
+      notes: 'Primer rovelló trobat',
+      photoPath: null,
+    );
+
+    final clusterSighting2 = Avistament(
+      id: 'sighting-cluster-2',
+      boletId: 'boletus_edulis',
+      timestamp: DateTime(2026, 10, 1, 10, 15),
+      latitude: 42.1802,
+      longitude: 1.8503,
+      altitude: 855.0,
+      confidenceScore: 0.89,
+      notes: 'Un cep a tocar del rovelló!',
+      photoPath: null,
+    );
+
+    final clusterSighting3 = Avistament(
+      id: 'sighting-cluster-3',
+      arbreId: 'pinus_sylvestris',
+      timestamp: DateTime(2026, 10, 1, 10, 20),
+      latitude: 42.1801,
+      longitude: 1.8501,
+      altitude: 852.0,
+      confidenceScore: 0.92,
+      notes: 'El pi amfitrió',
+      photoPath: null,
+    );
+
+    testWidgets(
+        'Clusters overlapping sightings into a single marker with count badge',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest(
+        avistaments: [clusterSighting1, clusterSighting2, clusterSighting3],
+      ));
+      await tester.pumpAndSettle();
+
+      // Only 1 marker should be rendered on the map, not 3 separate pins
+      expect(find.byType(JournalMapMarker), findsOneWidget);
+
+      // Verify the arcade gold counter badge displays x3
+      expect(
+          find.byKey(const Key('marker_cluster_count_badge')), findsOneWidget);
+      expect(find.text('x3'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+
+    testWidgets(
+        'Tapping clustered marker opens HUD with pager, chip selector, and cycling behavior',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest(
+        avistaments: [clusterSighting1, clusterSighting2, clusterSighting3],
+      ));
+      await tester.pumpAndSettle();
+
+      // Tap the marker to open the inspection HUD
+      await tester.tap(find.byType(JournalMapMarker));
+      await tester.pumpAndSettle();
+
+      // Verify cluster pager header and chip items
+      expect(find.text('Troballa 1 de 3 en aquest punt'), findsOneWidget);
+      expect(find.text('Rovelló'), findsOneWidget);
+      expect(find.byKey(const Key('hud_prev_sighting_button')), findsOneWidget);
+      expect(find.byKey(const Key('hud_next_sighting_button')), findsOneWidget);
+      expect(
+          find.byKey(const Key('hud_cluster_specimen_chip_0')), findsOneWidget);
+      expect(
+          find.byKey(const Key('hud_cluster_specimen_chip_1')), findsOneWidget);
+      expect(
+          find.byKey(const Key('hud_cluster_specimen_chip_2')), findsOneWidget);
+
+      // Tap NEXT button -> cycles to item 2 (Cep)
+      await tester.tap(find.byKey(const Key('hud_next_sighting_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Troballa 2 de 3 en aquest punt'), findsOneWidget);
+      expect(find.text('Cep'), findsOneWidget);
+
+      // Tap chip 2 directly -> switches to item 3 (Pi roig)
+      await tester.tap(find.byKey(const Key('hud_cluster_specimen_chip_2')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Troballa 3 de 3 en aquest punt'), findsOneWidget);
+      expect(find.text('Pi roig'), findsOneWidget);
+      expect(find.text('ARBRE'), findsOneWidget);
+
+      // Tap NEXT button from last item -> wraps back to item 1 (Rovelló)
+      await tester.tap(find.byKey(const Key('hud_next_sighting_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Troballa 1 de 3 en aquest punt'), findsOneWidget);
+      expect(find.text('Rovelló'), findsOneWidget);
+
+      // Tap PREV button from first item -> wraps backwards to item 3 (Pi roig)
+      await tester.tap(find.byKey(const Key('hud_prev_sighting_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Troballa 3 de 3 en aquest punt'), findsOneWidget);
+      expect(find.text('Pi roig'), findsOneWidget);
+
+      // Tapping the map marker pin itself cycles forward to item 1
+      await tester.tap(find.byType(JournalMapMarker));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Troballa 1 de 3 en aquest punt'), findsOneWidget);
+      expect(find.text('Rovelló'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+
+    testWidgets(
+        'Filtering dynamically updates cluster count and specimen navigation',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest(
+        avistaments: [clusterSighting1, clusterSighting2, clusterSighting3],
+      ));
+      await tester.pumpAndSettle();
+
+      expect(find.text('x3'), findsOneWidget);
+
+      // Filter by Bolets only (2 mushrooms in cluster)
+      await tester.tap(find.byKey(const Key('map_filter_bolets')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('x2'), findsOneWidget);
+
+      // Tap marker -> HUD displays 2 items
+      await tester.tap(find.byType(JournalMapMarker));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Troballa 1 de 2 en aquest punt'), findsOneWidget);
+      expect(
+          find.byKey(const Key('hud_cluster_specimen_chip_0')), findsOneWidget);
+      expect(
+          find.byKey(const Key('hud_cluster_specimen_chip_1')), findsOneWidget);
+      expect(
+          find.byKey(const Key('hud_cluster_specimen_chip_2')), findsNothing);
+
+      // Filter by Arbres only (1 tree in location)
+      await tester.tap(find.byKey(const Key('map_filter_arbres')));
+      await tester.pumpAndSettle();
+
+      // No cluster badge when itemCount == 1
+      expect(find.byKey(const Key('marker_cluster_count_badge')), findsNothing);
+
+      // Tap tree marker -> standard single inspection HUD without cluster pager
+      await tester.tap(find.byType(JournalMapMarker));
+      await tester.pumpAndSettle();
+
+      expect(find.text('ARBRE'), findsOneWidget);
+      expect(find.text('Pi roig'), findsOneWidget);
+      expect(find.byKey(const Key('hud_prev_sighting_button')), findsNothing);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+
+    testWidgets(
+        'Viewing details from clustered HUD opens detail sheet for the active specimen',
+        (tester) async {
+      await tester.pumpWidget(createWidgetUnderTest(
+        avistaments: [clusterSighting1, clusterSighting2],
+      ));
+      await tester.pumpAndSettle();
+
+      // Tap marker and switch to specimen 2 (Cep)
+      await tester.tap(find.byType(JournalMapMarker));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('hud_next_sighting_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Cep'), findsOneWidget);
+
+      // Tap "Veure Detall"
+      await tester.tap(find.byKey(const Key('hud_view_detail_button')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+
+      expect(find.text('DETALL DE L\'AVISTAMENT'), findsOneWidget);
+      expect(find.text('Cep'), findsWidgets);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+  });
 }

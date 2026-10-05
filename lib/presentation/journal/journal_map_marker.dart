@@ -12,6 +12,7 @@ class JournalMapMarker extends StatelessWidget {
   final String displayName;
   final bool isTree;
   final bool isSelected;
+  final int itemCount;
   final double pulseValue;
   final VoidCallback onTap;
 
@@ -21,6 +22,7 @@ class JournalMapMarker extends StatelessWidget {
     required this.displayName,
     required this.isTree,
     required this.isSelected,
+    this.itemCount = 1,
     this.pulseValue = 0.0,
     required this.onTap,
   }) : super(key: key);
@@ -49,7 +51,7 @@ class JournalMapMarker extends StatelessWidget {
       child: Semantics(
         button: true,
         label:
-            '${isTree ? "Arbre" : "Bolet"}: $displayName, ${confidencePct != null ? "$confidencePct%" : ""}',
+            '${itemCount > 1 ? "Grup de $itemCount: " : ""}${isTree ? "Arbre" : "Bolet"}: $displayName, ${confidencePct != null ? "$confidencePct%" : ""}',
         child: AnimatedScale(
           scale: isSelected ? 1.18 : 1.0,
           duration: const Duration(milliseconds: 200),
@@ -76,6 +78,32 @@ class JournalMapMarker extends StatelessWidget {
                               .withOpacity(0.6 * (1.0 - pulseValue * 0.5)),
                           width: 2,
                         ),
+                      ),
+                    ),
+                  ),
+
+                // Stacked Coin Underlay when itemCount > 1
+                if (itemCount > 1)
+                  Positioned(
+                    top: 1,
+                    left: 2,
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: RetroColors.mintWash,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: RetroColors.ink,
+                          width: 1.8,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: RetroColors.ink,
+                            offset: Offset(1.5, 1.5),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -153,6 +181,44 @@ class JournalMapMarker extends StatelessWidget {
                       ),
                       child: Text(
                         '$confidencePct%',
+                        style: const TextStyle(
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.w900,
+                          color: RetroColors.ink,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                // Cluster Count Badge at top right of badge
+                if (itemCount > 1)
+                  Positioned(
+                    top: -1,
+                    right: -2,
+                    child: Container(
+                      key: const Key('marker_cluster_count_badge'),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4.5,
+                        vertical: 1.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: RetroColors.goldCoin,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: RetroColors.ink,
+                          width: 1.5,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: RetroColors.ink,
+                            offset: Offset(1.0, 1.0),
+                            blurRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        'x$itemCount',
                         style: const TextStyle(
                           fontSize: 8.5,
                           fontWeight: FontWeight.w900,

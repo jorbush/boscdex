@@ -143,4 +143,39 @@ void main() {
 
     expect(find.byType(PixelBoletIcon), findsOneWidget);
   });
+
+  testWidgets(
+      'JournalMapMarker renders stacked coin visuals and cluster count badge when itemCount > 1',
+      (tester) async {
+    final mushroomSighting = Avistament(
+      id: 'm1',
+      boletId: 'lactarius_deliciosus',
+      timestamp: DateTime(2026, 10, 1),
+      confidenceScore: 0.95,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: JournalMapMarker(
+            avistament: mushroomSighting,
+            displayName: 'Rovelló',
+            isTree: false,
+            isSelected: false,
+            itemCount: 3,
+            onTap: () {},
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // Verify cluster badge is rendered with count
+    final badgeFinder = find.byKey(const Key('marker_cluster_count_badge'));
+    expect(badgeFinder, findsOneWidget);
+    expect(find.text('x3'), findsOneWidget);
+
+    // Verify semantics label contains group information
+    expect(find.bySemanticsLabel(RegExp(r'Grup de 3')), findsOneWidget);
+  });
 }

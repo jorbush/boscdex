@@ -9,6 +9,7 @@ import '../../domain/services/photo_export_service.dart';
 import '../../domain/services/sound_effect_service.dart';
 import '../../providers/sound_provider.dart';
 import 'avistament_detail_sheet.dart';
+import 'journal_map_cluster.dart';
 import 'journal_map_marker.dart';
 import 'journal_map_projection.dart';
 import '../shared/pixel_icons.dart';
@@ -48,7 +49,17 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
   Animation<Matrix4>? _resetAnimation;
 
   String _filter = 'tots'; // 'tots', 'bolets', 'arbres'
-  Avistament? _selectedAvistament;
+  SightingCluster? _selectedCluster;
+  int _selectedClusterIndex = 0;
+
+  Avistament? get _selectedAvistament {
+    if (_selectedCluster == null || _selectedCluster!.sightings.isEmpty) {
+      return null;
+    }
+    final index =
+        _selectedClusterIndex.clamp(0, _selectedCluster!.sightings.length - 1);
+    return _selectedCluster!.sightings[index];
+  }
 
   @override
   void initState() {
@@ -85,9 +96,13 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
   @override
   void didUpdateWidget(covariant JournalMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (_selectedAvistament != null &&
-        !widget.avistaments.any((a) => a.id == _selectedAvistament!.id)) {
-      _selectedAvistament = null;
+    if (_selectedCluster != null) {
+      final stillExists = widget.avistaments
+          .any((a) => _selectedCluster!.sightings.any((s) => s.id == a.id));
+      if (!stillExists) {
+        _selectedCluster = null;
+        _selectedClusterIndex = 0;
+      }
     }
   }
 
@@ -122,21 +137,52 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
     });
   }
 
-  void _selectAvistament(Avistament avistament) {
+  void _selectCluster(SightingCluster cluster) {
     HapticFeedback.selectionClick();
     try {
       ref.read(soundEffectServiceProvider).play(RetroSoundEffect.blip);
     } catch (_) {}
 
     setState(() {
-      _selectedAvistament = avistament;
+      if (_selectedCluster?.id == cluster.id) {
+        // Tapping an already selected cluster cycles to the next item
+        _selectedClusterIndex =
+            (_selectedClusterIndex + 1) % cluster.sightings.length;
+      } else {
+        _selectedCluster = cluster;
+        _selectedClusterIndex = 0;
+      }
+    });
+  }
+
+  void _cycleCluster(int offset) {
+    if (_selectedCluster == null || _selectedCluster!.sightings.isEmpty) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      final count = _selectedCluster!.sightings.length;
+      _selectedClusterIndex = (_selectedClusterIndex + offset) % count;
+      if (_selectedClusterIndex < 0) {
+        _selectedClusterIndex += count;
+      }
+    });
+  }
+
+  void _selectClusterIndex(int index) {
+    if (_selectedCluster == null ||
+        index < 0 ||
+        index >= _selectedCluster!.sightings.length) return;
+    if (_selectedClusterIndex == index) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _selectedClusterIndex = index;
     });
   }
 
   void _clearSelection() {
-    if (_selectedAvistament != null) {
+    if (_selectedCluster != null) {
       setState(() {
-        _selectedAvistament = null;
+        _selectedCluster = null;
+        _selectedClusterIndex = 0;
       });
     }
   }
@@ -211,11 +257,14 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                             final mapWidth = constraints.maxWidth;
                             final mapHeight = constraints.maxHeight;
 
+                            final clusters =
+                                JournalMapClustering.cluster(visibleSightings);
+
                             return Stack(
                               children: [
-                                for (final avistament in visibleSightings)
+                                for (final cluster in clusters)
                                   _buildMarker(
-                                    avistament: avistament,
+                                    cluster: cluster,
                                     mapWidth: mapWidth,
                                     mapHeight: mapHeight,
                                     markerScale: markerScale,
@@ -394,12 +443,12 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
           ),
 
         // Sighting Inspection HUD Card (Floating Preview)
-        if (_selectedAvistament != null)
+        if (_selectedCluster != null)
           Positioned(
             left: 12,
             right: 12,
             bottom: 12,
-            child: _buildInspectionHUD(_selectedAvistament!),
+            child: _buildInspectionHUD(_selectedCluster!),
           ),
       ],
     );
@@ -420,6 +469,8 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
         HapticFeedback.selectionClick();
         setState(() {
           _filter = filterId;
+          _selectedCluster = null;
+          _selectedClusterIndex = 0;
         });
       },
       child: Container(
@@ -461,20 +512,17 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
   }
 
   Widget _buildMarker({
-    required Avistament avistament,
+    required SightingCluster cluster,
     required double mapWidth,
     required double mapHeight,
     required double markerScale,
   }) {
-    final norm = JournalMapProjection.toNormalized(
-      avistament.latitude,
-      avistament.longitude,
-    );
-    if (norm == null) return const SizedBox.shrink();
-
-    final isSelected = _selectedAvistament?.id == avistament.id;
-    final isTree = avistament.arbreId != null;
-    final displayName = _resolveName(avistament);
+    final norm = cluster.normalizedPosition;
+    final isSelected = _selectedCluster?.id == cluster.id;
+    final activeIndex = isSelected ? _selectedClusterIndex : 0;
+    final activeSighting = cluster.sightings[activeIndex];
+    final isTree = activeSighting.arbreId != null;
+    final displayName = _resolveName(activeSighting);
 
     // Anchor pin bottom tip precisely at (norm.dx * mapWidth, norm.dy * mapHeight)
     // The pin dimensions are 44w x 52h with pointer tip at bottom center (x: 22, y: 50)
@@ -485,19 +533,23 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
         scale: markerScale,
         alignment: const Alignment(0.0, 0.92), // Pin tip anchor point
         child: JournalMapMarker(
-          key: Key('map_marker_${avistament.id}'),
-          avistament: avistament,
+          key: Key('map_marker_${activeSighting.id}'),
+          avistament: activeSighting,
           displayName: displayName,
           isTree: isTree,
           isSelected: isSelected,
+          itemCount: cluster.count,
           pulseValue: _pulseAnimation.value,
-          onTap: () => _selectAvistament(avistament),
+          onTap: () => _selectCluster(cluster),
         ),
       ),
     );
   }
 
-  Widget _buildInspectionHUD(Avistament avistament) {
+  Widget _buildInspectionHUD(SightingCluster cluster) {
+    final activeIndex =
+        _selectedClusterIndex.clamp(0, cluster.sightings.length - 1);
+    final avistament = cluster.sightings[activeIndex];
     final isTree = avistament.arbreId != null;
     final displayName = _resolveName(avistament);
     final hasPhoto =
@@ -519,6 +571,107 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Cluster navigation bar and mini specimen chip strip
+          if (cluster.isCluster) ...[
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
+              decoration: BoxDecoration(
+                color: RetroColors.mintWash,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: RetroColors.ink, width: 1.2),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    key: const Key('hud_prev_sighting_button'),
+                    icon: const Icon(Icons.arrow_back_ios_rounded, size: 14),
+                    color: RetroColors.ink,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(),
+                    onPressed: () => _cycleCluster(-1),
+                    tooltip: 'Troballa anterior',
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.layers_rounded,
+                        size: 13,
+                        color: RetroColors.forestGreen,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Troballa ${activeIndex + 1} de ${cluster.count} en aquest punt',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w900,
+                          color: RetroColors.ink,
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    key: const Key('hud_next_sighting_button'),
+                    icon: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                    color: RetroColors.ink,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(),
+                    onPressed: () => _cycleCluster(1),
+                    tooltip: 'Següent troballa',
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 38,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: cluster.sightings.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 6),
+                itemBuilder: (context, i) {
+                  final item = cluster.sightings[i];
+                  final isItemTree = item.arbreId != null;
+                  final isCurrent = i == activeIndex;
+                  return GestureDetector(
+                    key: Key('hud_cluster_specimen_chip_$i'),
+                    onTap: () => _selectClusterIndex(i),
+                    child: Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: isCurrent
+                            ? RetroColors.goldCoin.withOpacity(0.3)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: isCurrent
+                              ? RetroColors.forestGreen
+                              : RetroColors.ink,
+                          width: isCurrent ? 2.0 : 1.2,
+                        ),
+                        boxShadow: isCurrent
+                            ? const [
+                                BoxShadow(
+                                  color: RetroColors.ink,
+                                  offset: Offset(1, 1),
+                                  blurRadius: 0,
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: Center(
+                        child: _buildMiniThumbnail(item, isItemTree),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+
           // Top Row: Category tag, Species Name, Close Button
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -755,7 +908,28 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
     );
   }
 
-  Widget _buildDefaultThumbnail(Avistament avistament, bool isTree) {
+  Widget _buildMiniThumbnail(Avistament avistament, bool isTree) {
+    if (avistament.photoPath != null && avistament.photoPath!.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(4),
+        child: Image.file(
+          PhotoExportService.resolveFile(avistament.photoPath!),
+          width: 26,
+          height: 26,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) =>
+              _buildDefaultThumbnail(avistament, isTree, size: 24),
+        ),
+      );
+    }
+    return _buildDefaultThumbnail(avistament, isTree, size: 24);
+  }
+
+  Widget _buildDefaultThumbnail(
+    Avistament avistament,
+    bool isTree, {
+    double size = 36,
+  }) {
     final spriteAssetPath = isTree
         ? (avistament.arbreId != null
             ? 'assets/images/trees/${avistament.arbreId}.png'
@@ -764,22 +938,24 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
             ? 'assets/images/mushrooms/${avistament.boletId}.png'
             : null);
 
+    final iconSize = size * 0.72;
+
     if (spriteAssetPath != null) {
       return Image.asset(
         spriteAssetPath,
-        width: 36,
-        height: 36,
+        width: size,
+        height: size,
         fit: BoxFit.contain,
         filterQuality: FilterQuality.none,
         errorBuilder: (ctx, err, st) => isTree
-            ? const PixelArbreIcon(size: 26)
-            : const PixelBoletIcon(size: 26),
+            ? PixelArbreIcon(size: iconSize)
+            : PixelBoletIcon(size: iconSize),
       );
     }
 
     return isTree
-        ? const PixelArbreIcon(size: 26)
-        : const PixelBoletIcon(size: 26);
+        ? PixelArbreIcon(size: iconSize)
+        : PixelBoletIcon(size: iconSize);
   }
 
   Widget _buildFallbackPixelCanvas() {
