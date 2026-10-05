@@ -82,11 +82,19 @@ Prioritized features before the initial public store release:
    - [x] Resolved native iOS share sheet presentation, anchor origin, and MIME type in sightings detail (`AvistamentDetailSheet`).
 
 2. **Personal Sightings GPS Map in Diari (`JournalMapView`):**
-   - [ ] Interactive offline field sightings map visualizing the user's geolocated finds across Catalonia.
-   - [ ] Distinct markers for mushrooms (🍄) and indicator trees (🌲) with confidence & date indicators.
-   - [ ] Sighting card inspection preview sheet upon tapping map pins.
-   - [ ] Mode toggle in Diari between chronological list view and geographic map view.
-   - [ ] 100% offline operation respecting zero-cloud privacy guarantee.
+   - [x] Interactive offline field sightings map visualizing the user's geolocated finds across Catalonia with pinch-to-zoom (`InteractiveViewer` 1.0x to 4.5x) and center reset button.
+   - [x] Specimen-specific 16-bit pixel art markers (`JournalMapMarker`) for each individual mushroom and indicator tree species with confidence pills and selection halo.
+   - [x] Category filter chips with 16-bit pixel icons (`PixelBoletIcon` and `PixelArbreIcon`): `Tots`, `Bolets`, `Arbres`.
+   - [x] Sighting preview inspection HUD upon tapping map pins with photo/sprite fallback and direct link to `AvistamentDetailSheet`.
+   - [x] Mode toggle in Diari between chronological list view (`[ 📜 Llista ]`) and geographic map view (`[ 🗺️ Mapa ]`).
+   - [x] 100% offline operation respecting zero-cloud privacy guarantee.
+
+3. **Hardware GPS Geolocation & Permissions (`LocationService`):**
+   - [x] Offline geolocation engine (`geolocator: ^11.1.0`) with `LocationService` and Riverpod provider.
+   - [x] Automatic permission prompt on camera launch (`NSLocationWhenInUseUsageDescription` & `NSLocationAlwaysAndWhenInUseUsageDescription`).
+   - [x] Scanner HUD `📍 GPS` status indicator and async background pre-warming.
+   - [x] Real-time coordinate & altitude pills in mushroom and tree classification sheets with SQLite database persistence.
+   - [x] **Comprehensive Test Suite (181 Passing Tests):** 100% pass rate across 181 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`).
 
 ---
 

@@ -174,4 +174,49 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await tester.pump();
   });
+
+  testWidgets('Switching between Llista and Mapa view mode updates UI',
+      (tester) async {
+    final sightingWithGps = Avistament(
+      id: 'journal-gps-test',
+      boletId: 'lactarius_deliciosus',
+      timestamp: DateTime(2026, 10, 1, 9, 0),
+      confidenceScore: 0.96,
+      notes: null,
+      photoPath: null,
+      latitude: 42.18,
+      longitude: 1.85,
+      altitude: 850.0,
+    );
+
+    await tester.pumpWidget(createWidgetUnderTest(
+      avistaments: [sightingWithGps],
+      boletsMap: {'lactarius_deliciosus': 'Rovelló'},
+    ));
+    await tester.pumpAndSettle();
+
+    // Verify view mode tabs exist
+    expect(find.byKey(const Key('journal_tab_list')), findsOneWidget);
+    expect(find.byKey(const Key('journal_tab_map')), findsOneWidget);
+
+    // Initial mode is Llista -> shows sighting in list
+    expect(find.textContaining('Rovelló'), findsWidgets);
+
+    // Tap Mapa tab
+    await tester.tap(find.byKey(const Key('journal_tab_map')));
+    await tester.pumpAndSettle();
+
+    // Map view is now active -> shows filter chips and marker
+    expect(find.byKey(const Key('map_filter_tots')), findsOneWidget);
+    expect(find.byKey(const Key('map_reset_zoom_button')), findsOneWidget);
+
+    // Switch back to Llista tab
+    await tester.tap(find.byKey(const Key('journal_tab_list')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('journal_tab_list')), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump();
+  });
 }

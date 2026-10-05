@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/classifier_provider.dart';
+import '../../providers/location_provider.dart';
 import '../../providers/sound_provider.dart';
 import 'classification_result_sheet.dart';
 import 'tree_classification_result_sheet.dart';
@@ -44,6 +45,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       duration: const Duration(milliseconds: 1500),
     );
     _initCamera();
+    _initLocation();
+  }
+
+  Future<void> _initLocation() async {
+    try {
+      await ref.read(locationServiceProvider).requestPermission();
+      // Pre-warm GPS fix in background
+      unawaited(ref.read(locationServiceProvider).getCurrentPosition());
+    } catch (_) {}
   }
 
   @override
@@ -244,9 +254,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
     try {
       final classifier = ref.read(classifierProvider);
+      final locationFuture =
+          ref.read(locationServiceProvider).getCurrentPosition();
 
       if (_selectedModeIndex == 0) {
         final results = await classifier.classifyMushroom(imageBytes);
+        final location = await locationFuture;
 
         if (!mounted) return;
         _animController.stop();
@@ -261,11 +274,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             builder: (_) => ClassificationResultSheet(
               results: results,
               imageBytes: imageBytes.isNotEmpty ? imageBytes : null,
+              initialLocation: location,
             ),
           ));
         }
       } else {
         final results = await classifier.classifyTree(imageBytes);
+        final location = await locationFuture;
 
         if (!mounted) return;
         _animController.stop();
@@ -280,6 +295,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             builder: (_) => TreeClassificationResultSheet(
               results: results,
               imageBytes: imageBytes.isNotEmpty ? imageBytes : null,
+              initialLocation: location,
             ),
           ));
         }
@@ -536,6 +552,46 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                     _buildModeButton(1, 'Arbres'),
                   ],
                 ),
+              ),
+            ),
+          ),
+
+          // GPS Status Badge
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 18,
+            right: 16,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: RetroColors.ink, width: 1.8),
+                boxShadow: const [
+                  BoxShadow(
+                    color: RetroColors.ink,
+                    offset: Offset(1.5, 1.5),
+                    blurRadius: 0,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(
+                    Icons.location_on_rounded,
+                    size: 13,
+                    color: RetroColors.forestGreen,
+                  ),
+                  SizedBox(width: 3),
+                  Text(
+                    'GPS',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -180,6 +180,8 @@ void main() {
 
       // Tap "Registrar a la meva Boscdex"
       final registerButtonFinder = find.text('Registrar a la meva Boscdex');
+      await tester.ensureVisible(registerButtonFinder);
+      await tester.pumpAndSettle();
       await tester.tap(registerButtonFinder);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));

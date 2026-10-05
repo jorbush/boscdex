@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:drift/drift.dart' as drift;
 
+import 'package:geolocator/geolocator.dart';
 import '../../core/constants/app_constants.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/models/classificacio_result.dart';
@@ -19,8 +20,10 @@ import '../../domain/models/nivell_seguretat.dart';
 import '../../domain/services/badge_progression_service.dart';
 import '../../domain/services/safety_gate_service.dart';
 import '../../providers/database_provider.dart';
+import '../../providers/location_provider.dart';
 import '../../providers/preferences_provider.dart';
 import '../../providers/sound_provider.dart';
+import '../journal/journal_map_projection.dart';
 import '../shared/edibility_badge.dart';
 import '../shared/safety_alert_box.dart';
 import '../boscdex/boscdex_provider.dart';
@@ -30,12 +33,14 @@ import '../boscdex/boscdex_provider.dart';
 class MushroomClassificationResultSheet extends ConsumerStatefulWidget {
   final List<MushroomClassificationResult> results;
   final Uint8List? imageBytes;
+  final Position? initialLocation;
   final VoidCallback? onRegistered;
 
   const MushroomClassificationResultSheet({
     super.key,
     required this.results,
     this.imageBytes,
+    this.initialLocation,
     this.onRegistered,
   });
 
@@ -53,11 +58,25 @@ class _MushroomClassificationResultSheetState
   Bolet? _topBolet;
   List<Bolet> _lookalikes = [];
   bool _loadingDetails = true;
+  Position? _location;
 
   @override
   void initState() {
     super.initState();
+    _location = widget.initialLocation;
     _loadBoletDetails();
+    if (_location == null) {
+      _fetchLocation();
+    }
+  }
+
+  Future<void> _fetchLocation() async {
+    try {
+      final loc = await ref.read(locationServiceProvider).getCurrentPosition();
+      if (mounted && loc != null) {
+        setState(() => _location = loc);
+      }
+    } catch (_) {}
   }
 
   Future<void> _loadBoletDetails() async {
@@ -125,12 +144,23 @@ class _MushroomClassificationResultSheetState
         }
       }
 
-      // 1. Insert avistament in journal
+      // 1. Insert avistament in journal with GPS coordinates
+      Position? loc = _location;
+      if (loc == null) {
+        try {
+          loc = await ref.read(locationServiceProvider).getCurrentPosition();
+        } catch (_) {}
+      }
+
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion(
           id: drift.Value(avistamentId),
           boletId: drift.Value(topCandidate.boletId),
           timestamp: drift.Value(now),
+          latitude: drift.Value(loc?.latitude),
+          longitude: drift.Value(loc?.longitude),
+          altitude: drift.Value(
+              loc != null && loc.altitude != 0.0 ? loc.altitude : null),
           photoPath: drift.Value(savedPhotoPath),
           confidenceScore: drift.Value(topCandidate.confidence),
           notes: const drift.Value(null),
@@ -533,6 +563,47 @@ class _MushroomClassificationResultSheetState
                       ],
                       const SizedBox(height: 16),
                     ],
+
+                    // GPS Coordinates indicator
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: _location != null
+                            ? RetroColors.mintWash
+                            : RetroColors.sectionBg,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: RetroColors.ink, width: 1.5),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _location != null
+                                ? Icons.location_on_rounded
+                                : Icons.location_searching_rounded,
+                            size: 14,
+                            color: _location != null
+                                ? RetroColors.forestGreen
+                                : RetroColors.inkSoft,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            _location != null
+                                ? '${JournalMapProjection.format(_location!.latitude, _location!.longitude)}${_location!.altitude != 0.0 ? " • ${_location!.altitude.round()} m" : ""}'
+                                : 'Cercant senyal GPS...',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w800,
+                              color: _location != null
+                                  ? RetroColors.forestGreen
+                                  : RetroColors.inkSoft,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                     // Action Buttons
                     SizedBox(

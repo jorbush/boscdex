@@ -11,6 +11,7 @@ import 'package:boscdex/domain/services/classifier_service.dart';
 import 'package:boscdex/presentation/scan/tree_classification_result_sheet.dart';
 import 'package:boscdex/providers/database_provider.dart';
 import 'package:boscdex/providers/preferences_provider.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -165,6 +166,70 @@ void main() {
           await db.avistamentDao.getAvistamentsByArbre('pinus_sylvestris');
       expect(sightings.length, equals(1));
       expect(sightings.first.arbreId, equals('pinus_sylvestris'));
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'TreeClassificationResultSheet renders GPS pill and persists coordinates',
+        (WidgetTester tester) async {
+      final mockPosition = Position(
+        latitude: 41.78,
+        longitude: 2.40,
+        timestamp: DateTime(2026, 10, 1),
+        accuracy: 5.0,
+        altitude: 920.0,
+        altitudeAccuracy: 0.0,
+        heading: 0.0,
+        headingAccuracy: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0,
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: MaterialApp(
+            home: Scaffold(
+              body: TreeClassificationResultSheet(
+                initialLocation: mockPosition,
+                results: const [
+                  TreeClassificationResult(
+                    arbreId: 'pinus_sylvestris',
+                    displayName: 'Pi roig',
+                    confidence: 0.91,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Verify GPS pill shows coordinates
+      expect(find.textContaining('41.78° N, 2.40° E'), findsOneWidget);
+      expect(find.textContaining('920 m'), findsOneWidget);
+
+      final registerButton =
+          find.byKey(const Key('register_tree_sighting_button'));
+      await tester.ensureVisible(registerButton);
+      await tester.pump();
+      await tester.tap(registerButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+
+      final sightings =
+          await db.avistamentDao.getAvistamentsByArbre('pinus_sylvestris');
+      expect(sightings.length, equals(1));
+      expect(sightings.first.latitude, equals(41.78));
+      expect(sightings.first.longitude, equals(2.40));
+      expect(sightings.first.altitude, equals(920.0));
 
       await tester.pumpWidget(const SizedBox.shrink());
     });

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -15,14 +16,17 @@ import '../../data/database/app_database.dart';
 import '../../domain/models/classificacio_result.dart';
 import '../../domain/services/badge_progression_service.dart';
 import '../../providers/database_provider.dart';
+import '../../providers/location_provider.dart';
 import '../../providers/preferences_provider.dart';
 import '../../providers/sound_provider.dart';
+import '../journal/journal_map_projection.dart';
 
 /// Modal bottom sheet displaying the ML classification results for indicator trees,
 /// their morphological traits, and the prized edible/symbiotic mushrooms found beneath them.
 class TreeClassificationResultSheet extends ConsumerStatefulWidget {
   final List<TreeClassificationResult> results;
   final Uint8List? imageBytes;
+  final Position? initialLocation;
   final VoidCallback? onInspected;
   final VoidCallback? onRegistered;
 
@@ -30,6 +34,7 @@ class TreeClassificationResultSheet extends ConsumerStatefulWidget {
     super.key,
     required this.results,
     this.imageBytes,
+    this.initialLocation,
     this.onInspected,
     this.onRegistered,
   });
@@ -44,11 +49,25 @@ class _TreeClassificationResultSheetState
   Arbre? _arbre;
   List<Bolet> _bolets = [];
   bool _loadingDetails = true;
+  Position? _location;
 
   @override
   void initState() {
     super.initState();
+    _location = widget.initialLocation;
     _loadTreeDetails();
+    if (_location == null) {
+      _fetchLocation();
+    }
+  }
+
+  Future<void> _fetchLocation() async {
+    try {
+      final loc = await ref.read(locationServiceProvider).getCurrentPosition();
+      if (mounted && loc != null) {
+        setState(() => _location = loc);
+      }
+    } catch (_) {}
   }
 
   Future<void> _loadTreeDetails() async {
@@ -137,11 +156,23 @@ class _TreeClassificationResultSheetState
         }
       }
 
+      // Insert avistament in journal with GPS coordinates
+      Position? loc = _location;
+      if (loc == null) {
+        try {
+          loc = await ref.read(locationServiceProvider).getCurrentPosition();
+        } catch (_) {}
+      }
+
       await db.avistamentDao.insertAvistament(
         AvistamentsCompanion(
           id: drift.Value(avistamentId),
           arbreId: drift.Value(top.arbreId),
           timestamp: drift.Value(now),
+          latitude: drift.Value(loc?.latitude),
+          longitude: drift.Value(loc?.longitude),
+          altitude: drift.Value(
+              loc != null && loc.altitude != 0.0 ? loc.altitude : null),
           photoPath: drift.Value(savedPhotoPath),
           confidenceScore: drift.Value(top.confidence),
           notes: const drift.Value(null),
@@ -503,6 +534,47 @@ class _TreeClassificationResultSheetState
                       ],
                       const SizedBox(height: 16),
                     ],
+
+                    // GPS Coordinates indicator
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: _location != null
+                            ? RetroColors.mintWash
+                            : RetroColors.sectionBg,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: RetroColors.ink, width: 1.5),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _location != null
+                                ? Icons.location_on_rounded
+                                : Icons.location_searching_rounded,
+                            size: 14,
+                            color: _location != null
+                                ? RetroColors.forestGreen
+                                : RetroColors.inkSoft,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            _location != null
+                                ? '${JournalMapProjection.format(_location!.latitude, _location!.longitude)}${_location!.altitude != 0.0 ? " • ${_location!.altitude.round()} m" : ""}'
+                                : 'Cercant senyal GPS...',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w800,
+                              color: _location != null
+                                  ? RetroColors.forestGreen
+                                  : RetroColors.inkSoft,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
 
                     // Action Button: Register Tree Sighting
                     SizedBox(

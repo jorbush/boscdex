@@ -140,6 +140,34 @@ class SpeciesDistributionService {
     ],
   };
 
+  static const Map<String, List<CataloniaZone>> _treeZones = {
+    'pinus_sylvestris': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'pinus_halepensis': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.portsTerresEbre,
+      CataloniaZone.ponent,
+    ],
+    'quercus_ilex': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'fagus_sylvatica': [
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.altPirineu,
+      CataloniaZone.portsTerresEbre,
+    ],
+    'castanea_sativa': [
+      CataloniaZone.transversalMontseny,
+    ],
+  };
+
   /// Returns the cataloged natural zones for a given mushroom species.
   /// If unknown, defaults to Prepirineu and Transversal (the primary mushroom foraging belt).
   static List<CataloniaZone> getZonesForSpecies(String boletId) {
@@ -147,6 +175,15 @@ class SpeciesDistributionService {
         const [
           CataloniaZone.prepirineuCentral,
           CataloniaZone.transversalMontseny,
+        ];
+  }
+
+  /// Returns the cataloged natural zones for a given indicator tree.
+  static List<CataloniaZone> getZonesForTree(String arbreId) {
+    return _treeZones[arbreId] ??
+        const [
+          CataloniaZone.transversalMontseny,
+          CataloniaZone.prepirineuCentral,
         ];
   }
 }

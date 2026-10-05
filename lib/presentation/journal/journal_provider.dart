@@ -20,3 +20,10 @@ final allArbresMapProvider = FutureProvider<Map<String, String>>((ref) async {
   final arbres = await db.arbreDao.getAllArbres();
   return {for (final a in arbres) a.id: a.catalanName};
 });
+
+/// Available view modes for the user's sighting journal (Diari).
+enum JournalViewMode { llista, mapa }
+
+/// Current view mode selected in the journal: list view or geographic map.
+final journalViewModeProvider =
+    StateProvider<JournalViewMode>((ref) => JournalViewMode.llista);

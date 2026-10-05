@@ -129,6 +129,10 @@ void main() {
       expect(find.text('Bolets'), findsOneWidget);
       expect(find.text('Arbres'), findsOneWidget);
 
+      // Check GPS Badge
+      expect(find.text('GPS'), findsOneWidget);
+      expect(find.byIcon(Icons.location_on_rounded), findsOneWidget);
+
       // Check Default Instructions for Bolets
       expect(find.text('Enfoca el barret i les làmines del bolet'),
           findsOneWidget);

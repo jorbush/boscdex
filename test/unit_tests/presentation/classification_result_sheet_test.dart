@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/models/classificacio_result.dart';
 import 'package:boscdex/presentation/scan/classification_result_sheet.dart';
@@ -182,6 +183,69 @@ void main() {
       expect(find.text('18%'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'ClassificationResultSheet displays GPS coordinates and persists them to database',
+        (WidgetTester tester) async {
+      final mockPosition = Position(
+        latitude: 42.18,
+        longitude: 1.85,
+        timestamp: DateTime(2026, 10, 1),
+        accuracy: 4.0,
+        altitude: 850.0,
+        altitudeAccuracy: 0.0,
+        heading: 0.0,
+        headingAccuracy: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0,
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: MaterialApp(
+            home: Scaffold(
+              body: ClassificationResultSheet(
+                initialLocation: mockPosition,
+                results: const [
+                  ClassificacioResult(
+                    boletId: 'lactarius_deliciosus',
+                    displayName: 'Rovelló',
+                    confidence: 0.95,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Verify GPS pill shows coordinates
+      expect(find.textContaining('42.18° N, 1.85° E'), findsOneWidget);
+      expect(find.textContaining('850 m'), findsOneWidget);
+
+      // Tap Register CTA
+      await tester.tap(find.text('Registrar a la meva Boscdex'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // Verify record in database has GPS coordinates
+      final avistaments = await db.select(db.avistaments).get();
+      expect(avistaments.length, 1);
+      final saved = avistaments.first;
+      expect(saved.latitude, 42.18);
+      expect(saved.longitude, 1.85);
+      expect(saved.altitude, 850.0);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
     });
   });
 }

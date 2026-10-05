@@ -16,13 +16,13 @@ Welcome to the official technical and product documentation for **Boscdex**, the
 * [**Live Scan Viewfinder**](features/live_scan.md) — Real-time camera viewfinder, Edge-ML inference, candidate confidence sheet, and registration.
 * [**Safety Gates & Toxic Lookalikes**](features/safety_and_toxic_lookalikes.md) — Confidence thresholds, "Confusió Perillosa" alerts, and side-by-side morphological checks.
 * [**Indicator Trees Companion Guide**](features/indicator_trees.md) — Symbiotic host trees of Catalonia (*Pi roig, Alzina, Faig...*) and mycorrhizal partnerships.
-* [**Offline Sighting Journal**](features/sighting_journal.md) — Private, non-cloud GPS logbook ("El Meu Diari" / "Les Meves Clapes").
+* [**Offline Sighting Journal & Catalonia Field Map**](features/sighting_journal.md) — Private, non-cloud GPS logbook ("El Meu Diari"), 16-bit interactive Catalonia field map, and specimen sprite pins.
 * [**Gamification & Badges**](features/gamification_badges.md) — 6 starter badges, SQLite-backed progress evaluation, and milestones.
 
 ### 3. Workflows
 * [**Scan-to-Log Workflow**](workflows/scan_to_log.md) — Complete user journey from camera detection to Boscdex unlock and journal record.
 * [**Safety Gate Decision Flow**](workflows/safety_gate_flow.md) — Verification decision tree protecting foragers against poisonous specimens.
-* [**ML Training Pipeline**](workflows/ml_training_pipeline.md) — Dataset gathering from iNaturalist, Catalan geographical filtering, augmentations, and quantization export.
+* [**ML Training Pipeline & Architecture**](workflows/ml_training_pipeline.md) — Comprehensive guide: "Eyes vs Brain" decoupled architecture, Colab GPU training, INT8 quantization, and millisecond inference timeline.
 * [**Google Colab Training Guide**](workflows/colab_training_guide.md) — Step-by-step guide to train the INT8 TFLite model on Google Colab's free T4 GPU tier.
 
 ### 4. Roadmap

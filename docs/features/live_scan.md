@@ -37,6 +37,7 @@ The **Live Scan** tab (`/scan`) provides the visual viewfinder used for identify
   * `NSPhotoLibraryAddUsageDescription`: Required for saving scanned field photos to the user's Camera Roll / Photo Library.
   * `NSMicrophoneUsageDescription`: Declared to satisfy AVFoundation video frameworks.
   * `NSLocationWhenInUseUsageDescription`: Required for GPS coordinates in sighting journal.
+  * `NSLocationAlwaysAndWhenInUseUsageDescription`: Required for location services on iOS.
 * **CocoaPods Preprocessor Flags (`ios/Podfile`):**
   * `permission_handler` on iOS uses conditional compilation. The `post_install` hook defines:
     ```ruby
@@ -70,9 +71,11 @@ Upon scanning a mushroom, the on-device model evaluates the image and presents a
    * Displays the next two runner-up candidate species with relative linear progress bars to guard against misclassification.
 3. **Safety Gate Warnings:**
    * Evaluated automatically by `SafetyGateService` (see [Safety and Toxic Lookalikes](safety_and_toxic_lookalikes.md)).
-4. **Action CTA ("Registrar a la meva Boscdex"):**
+4. **Live GPS Coordinates Pill:**
+   * Shows real-time WGS84 coordinates (e.g., `42.18° N, 1.85° E`) and altitude (`850 m`), or `Sense senyal GPS` if unavailable.
+5. **Action CTA ("Registrar a la meva Boscdex"):**
    * Persists the captured high-resolution photograph to local device storage at `<appDocumentsDir>/scans/scan_<uuid>.jpg`.
-   * Inserts a new sighting into SQLite `Avistaments` linking the exact `photoPath` and `confidenceScore`.
+   * Inserts a new sighting into SQLite `Avistaments` linking the exact `photoPath`, `confidenceScore`, and GPS coordinates (`latitude`, `longitude`, `altitude`).
    * Unlocks the specimen in `Descobriments` if encountering it for the first time.
    * Re-evaluates badge conditions and updates `Insignies`.
    * Synchronizes the new capture with both **El Meu Diari** (`/journal`) and the species' **"Les Teves Captures"** gallery in **La Boscdex** (`/boscdex/:id`).
@@ -91,5 +94,9 @@ When in **Arbres** mode, scanning an indicator tree presents:
 2. **Symbiotic Fungi Section ("Bolets que pots cercar sota aquest arbre"):**
    * Direct chips of associated mushrooms linked via mycorrhizal relations (e.g., Rovelló under Pi roig).
    * Tapping any associated mushroom opens its Boscdex entry.
-3. **Habitat & Tree Profile Action:**
+3. **Live GPS Coordinates Pill:**
+   * Displays real-time field coordinates and altitude.
+4. **Registration Action ("Registrar troballa al Diari"):**
+   * Persists tree observation into `Avistaments` with photo, confidence, and GPS coordinates (`latitude`, `longitude`, `altitude`).
+5. **Habitat & Tree Profile Action:**
    * "Veure fitxa completa de l'arbre" button tracks the tree as visited (contributing towards the "Aliança Silvestre" badge) and navigates to the detailed tree profile (`/arbre/:id`).

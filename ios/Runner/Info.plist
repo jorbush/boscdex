@@ -57,5 +57,7 @@
 	<string>Boscdex utilitza el micròfon únicament si s'enregistra vídeo amb la càmera.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Boscdex utilitza la ubicació per geolocalitzar i desar les coordenades dels teus avistaments de bolets.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Boscdex utilitza la ubicació per geolocalitzar i desar les coordenades dels teus avistaments de bolets al mapa del teu diari.</string>
 </dict>
 </plist>
