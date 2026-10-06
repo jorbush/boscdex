@@ -11,12 +11,16 @@ void main() {
       expect(RetroFonts.pixel, equals('PixelifySans'));
     });
 
-    test('AppTheme retroTheme applies RetroFonts.pixel globally and to all text styles', () {
+    test(
+        'AppTheme retroTheme applies RetroFonts.pixel globally and to all text styles',
+        () {
       final theme = AppTheme.retroTheme;
 
-      expect(theme.appBarTheme.titleTextStyle?.fontFamily, equals('PixelifySans'));
+      expect(
+          theme.appBarTheme.titleTextStyle?.fontFamily, equals('PixelifySans'));
       expect(theme.textTheme.headlineLarge?.fontFamily, equals('PixelifySans'));
-      expect(theme.textTheme.headlineMedium?.fontFamily, equals('PixelifySans'));
+      expect(
+          theme.textTheme.headlineMedium?.fontFamily, equals('PixelifySans'));
       expect(theme.textTheme.titleLarge?.fontFamily, equals('PixelifySans'));
       expect(theme.textTheme.titleMedium?.fontFamily, equals('PixelifySans'));
       expect(theme.textTheme.bodyLarge?.fontFamily, equals('PixelifySans'));
@@ -33,7 +37,8 @@ void main() {
       );
     });
 
-    testWidgets('Renders Catalan, Spanish, and English text with PixelifySans font',
+    testWidgets(
+        'Renders Catalan, Spanish, and English text with PixelifySans font',
         (tester) async {
       await tester.pumpWidget(
         MaterialApp(
@@ -72,7 +77,8 @@ void main() {
       expect(find.text('Rovelló / Pinetell - Excel·lent'), findsOneWidget);
       expect(find.text('Moixernó - Caçador de Bolets'), findsOneWidget);
       expect(find.text('★ CARREGANT EL BOSC ★'), findsOneWidget);
-      expect(find.text('¡Atención! Posible confusión con especie tóxica'), findsOneWidget);
+      expect(find.text('¡Atención! Posible confusión con especie tóxica'),
+          findsOneWidget);
     });
   });
 }
