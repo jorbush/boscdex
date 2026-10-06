@@ -10,6 +10,9 @@ class PixelIcons {
   static const String pinActivePath = 'assets/icons/pixel_pin_active.png';
   static const String pinInactivePath = 'assets/icons/pixel_pin_inactive.png';
   static const String compassPath = 'assets/icons/pixel_compass.png';
+  static const String dexPath = 'assets/icons/pixel_dex.png';
+  static const String cameraPath = 'assets/icons/pixel_camera.png';
+  static const String journalPath = 'assets/icons/pixel_journal.png';
 }
 
 /// 16-bit retro pixel art icon representing a wild mushroom (Rovelló / Pinetell).
@@ -131,6 +134,138 @@ class PixelCompassIcon extends StatelessWidget {
         size: size,
         color: const Color(0xFF1E2822),
       ),
+    );
+  }
+}
+
+/// Internal widget for bottom navigation pixel art icons with active/inactive states.
+class _RetroPixelNavIcon extends StatelessWidget {
+  final String assetPath;
+  final double size;
+  final bool isActive;
+  final String fallbackEmoji;
+
+  const _RetroPixelNavIcon({
+    Key? key,
+    required this.assetPath,
+    required this.size,
+    required this.isActive,
+    required this.fallbackEmoji,
+  }) : super(key: key);
+
+  static const ColorFilter _grayscaleMuted = ColorFilter.matrix(<double>[
+    0.2126,
+    0.7152,
+    0.0722,
+    0,
+    0,
+    0.2126,
+    0.7152,
+    0.0722,
+    0,
+    0,
+    0.2126,
+    0.7152,
+    0.0722,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0.45,
+    0,
+  ]);
+
+  @override
+  Widget build(BuildContext context) {
+    final image = Image.asset(
+      assetPath,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      filterQuality: FilterQuality.none, // Preserve crisp 16-bit pixel edges
+      errorBuilder: (_, __, ___) => Text(
+        fallbackEmoji,
+        style: TextStyle(
+          fontSize: size * 0.8,
+          color: isActive ? null : Colors.grey,
+        ),
+      ),
+    );
+
+    if (isActive) {
+      return image;
+    }
+
+    return ColorFiltered(
+      colorFilter: _grayscaleMuted,
+      child: image,
+    );
+  }
+}
+
+/// 16-bit retro pixel art icon representing the Pokédex electronic encyclopedia device.
+class PixelDexIcon extends StatelessWidget {
+  final double size;
+  final bool isActive;
+
+  const PixelDexIcon({
+    Key? key,
+    this.size = 24,
+    this.isActive = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _RetroPixelNavIcon(
+      assetPath: PixelIcons.dexPath,
+      size: size,
+      isActive: isActive,
+      fallbackEmoji: '📱',
+    );
+  }
+}
+
+/// 16-bit retro pixel art icon representing the retro handheld camera.
+class PixelCameraIcon extends StatelessWidget {
+  final double size;
+  final bool isActive;
+
+  const PixelCameraIcon({
+    Key? key,
+    this.size = 24,
+    this.isActive = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _RetroPixelNavIcon(
+      assetPath: PixelIcons.cameraPath,
+      size: size,
+      isActive: isActive,
+      fallbackEmoji: '📷',
+    );
+  }
+}
+
+/// 16-bit retro pixel art icon representing the field journal notebook.
+class PixelJournalIcon extends StatelessWidget {
+  final double size;
+  final bool isActive;
+
+  const PixelJournalIcon({
+    Key? key,
+    this.size = 24,
+    this.isActive = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _RetroPixelNavIcon(
+      assetPath: PixelIcons.journalPath,
+      size: size,
+      isActive: isActive,
+      fallbackEmoji: '📖',
     );
   }
 }

@@ -231,7 +231,8 @@ void main() {
           home: Scaffold(
             body: ToxicTwinAlert(
               lookalikeName: 'Reig bord',
-              comparisonNotes: 'El Reig bord té un barret vermell brillant amb esquames blanques.',
+              comparisonNotes:
+                  'El Reig bord té un barret vermell brillant amb esquames blanques.',
               onTap: () {
                 tapped = true;
               },
@@ -253,7 +254,8 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('ToxicTwinAlert renders cleanly as static alert when onTap is null',
+    testWidgets(
+        'ToxicTwinAlert renders cleanly as static alert when onTap is null',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(

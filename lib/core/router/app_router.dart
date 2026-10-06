@@ -12,6 +12,7 @@ import '../../presentation/scan/scan_screen.dart';
 import '../../presentation/journal/journal_screen.dart';
 import '../../presentation/settings/settings_screen.dart';
 import '../../presentation/splash/splash_screen.dart';
+import '../../presentation/shared/pixel_icons.dart';
 import '../../providers/preferences_provider.dart';
 
 /// Central GoRouter configuration for the Boscdex app.
@@ -142,15 +143,18 @@ class BoscdexShell extends StatelessWidget {
           },
           items: [
             BottomNavigationBarItem(
-              icon: const Icon(Icons.grid_view_rounded),
+              icon: const PixelDexIcon(isActive: false, size: 24),
+              activeIcon: const PixelDexIcon(isActive: true, size: 26),
               label: l10n.tabBoscdex,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.camera_alt_rounded),
+              icon: const PixelCameraIcon(isActive: false, size: 24),
+              activeIcon: const PixelCameraIcon(isActive: true, size: 26),
               label: l10n.tabScan,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.auto_stories_rounded),
+              icon: const PixelJournalIcon(isActive: false, size: 24),
+              activeIcon: const PixelJournalIcon(isActive: true, size: 26),
               label: l10n.tabJournal,
             ),
           ],
