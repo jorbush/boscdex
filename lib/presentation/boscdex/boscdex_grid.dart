@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/localization/app_localizations.dart';
 import 'boscdex_provider.dart';
 import 'boscdex_card.dart';
 
@@ -8,6 +9,7 @@ class BoscdexGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final entries = ref.watch(filteredBoscdexEntriesProvider);
     final asyncEntries = ref.watch(boscdexEntriesProvider);
 
@@ -16,7 +18,7 @@ class BoscdexGrid extends ConsumerWidget {
       error: (err, stack) => Center(child: Text('Error: $err')),
       data: (_) {
         if (entries.isEmpty) {
-          return const Center(child: Text('Cap bolet trobat.'));
+          return Center(child: Text(l10n.noBoletsFound));
         }
         return GridView.builder(
           padding: const EdgeInsets.all(12),

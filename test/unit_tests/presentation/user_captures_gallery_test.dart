@@ -91,7 +91,7 @@ void main() {
 
     expect(find.text('Les Teves Captures (1)'), findsOneWidget);
     expect(find.text('91%'), findsOneWidget);
-    expect(find.text('Nova foto'), findsOneWidget);
+    expect(find.text('Nova foto'), findsNothing);
     expect(find.text('Cap captura registrada'), findsNothing);
 
     await tester.pumpWidget(const SizedBox());

@@ -16,7 +16,7 @@ class EdibilityBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     if (iconOnly) {
       return Semantics(
-        label: edibilitat.label,
+        label: edibilitat.localizedLabel(context),
         child: Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -57,7 +57,7 @@ class EdibilityBadge extends StatelessWidget {
           Icon(edibilitat.icon, size: 13, color: edibilitat.badgeIconColor),
           const SizedBox(width: 4),
           Text(
-            edibilitat.label,
+            edibilitat.localizedLabel(context),
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w800,

@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/services/photo_export_service.dart';
@@ -188,11 +190,23 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
   }
 
   String _resolveName(Avistament a) {
+    final langCode = AppLocalizations.of(context).languageCode;
     final isTree = a.arbreId != null;
     if (isTree) {
-      return widget.arbresMap[a.arbreId] ?? a.arbreId ?? 'Arbre indicador';
+      final fallback =
+          widget.arbresMap[a.arbreId] ?? a.arbreId ?? 'Arbre indicador';
+      return SpeciesLocalizer.getTreeName(
+        a.arbreId,
+        languageCode: langCode,
+        fallbackName: fallback,
+      );
     }
-    return widget.boletsMap[a.boletId] ?? a.boletId ?? 'Bolet';
+    final fallback = widget.boletsMap[a.boletId] ?? a.boletId ?? 'Bolet';
+    return SpeciesLocalizer.getMushroomName(
+      a.boletId,
+      languageCode: langCode,
+      fallbackName: fallback,
+    );
   }
 
   @override
@@ -217,6 +231,8 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
     final currentScale =
         _transformationController.value.getMaxScaleOnAxis().clamp(1.0, 4.5);
     final markerScale = 1.0 / currentScale;
+
+    final l10n = AppLocalizations.of(context);
 
     return Stack(
       children: [
@@ -298,14 +314,14 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                     children: [
                       _buildFilterChip(
                         key: const Key('map_filter_tots'),
-                        label: 'Tots (${allGpsSightings.length})',
+                        label: '${l10n.filterAll} (${allGpsSightings.length})',
                         filterId: 'tots',
                         color: RetroColors.forestGreen,
                       ),
                       const SizedBox(width: 6),
                       _buildFilterChip(
                         key: const Key('map_filter_bolets'),
-                        label: 'Bolets ($boletsCount)',
+                        label: '${l10n.filterBolets} ($boletsCount)',
                         icon: const PixelBoletIcon(size: 16),
                         filterId: 'bolets',
                         color: RetroColors.arcadeRed,
@@ -313,7 +329,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                       const SizedBox(width: 6),
                       _buildFilterChip(
                         key: const Key('map_filter_arbres'),
-                        label: 'Arbres ($arbresCount)',
+                        label: '${l10n.filterArbres} ($arbresCount)',
                         icon: const PixelArbreIcon(size: 16),
                         filterId: 'arbres',
                         color: RetroColors.forestGreen,
@@ -345,7 +361,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                     size: 20,
                     color: RetroColors.ink,
                   ),
-                  tooltip: 'Centrar mapa',
+                  tooltip: l10n.mapResetZoom,
                   padding: const EdgeInsets.all(6),
                   constraints: const BoxConstraints(),
                   onPressed: _resetZoom,
@@ -384,7 +400,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    '$noGpsCount sense GPS',
+                    '$noGpsCount ${l10n.journalNoGpsBadge}',
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -414,9 +430,9 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                   children: [
                     const Text('🗺️', style: TextStyle(fontSize: 44)),
                     const SizedBox(height: 12),
-                    const Text(
-                      'SENSE COORDENADES GPS',
-                      style: TextStyle(
+                    Text(
+                      l10n.mapNoGpsTitle,
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w900,
                         color: RetroColors.forestGreen,
@@ -426,8 +442,8 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                     const SizedBox(height: 8),
                     Text(
                       widget.avistaments.isEmpty
-                          ? 'Encara no tens cap avistament registrat al teu diari.'
-                          : 'Tens ${widget.avistaments.length} avistaments, però cap amb dades GPS.\nEn registrar fotos al bosc amb GPS, els pins apareixeran aquí!',
+                          ? l10n.mapEmptyPrompt
+                          : l10n.mapNoGpsMessage,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 13,
@@ -448,7 +464,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
             left: 12,
             right: 12,
             bottom: 12,
-            child: _buildInspectionHUD(_selectedCluster!),
+            child: _buildInspectionHUD(_selectedCluster!, l10n),
           ),
       ],
     );
@@ -546,7 +562,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
     );
   }
 
-  Widget _buildInspectionHUD(SightingCluster cluster) {
+  Widget _buildInspectionHUD(SightingCluster cluster, AppLocalizations l10n) {
     final activeIndex =
         _selectedClusterIndex.clamp(0, cluster.sightings.length - 1);
     final avistament = cluster.sightings[activeIndex];
@@ -603,7 +619,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Troballa ${activeIndex + 1} de ${cluster.count} en aquest punt',
+                        l10n.findingItemOfTotal(activeIndex + 1, cluster.count),
                         style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w900,
@@ -726,7 +742,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                             ),
                           ),
                           child: Text(
-                            isTree ? 'ARBRE' : 'BOLET',
+                            isTree ? l10n.categoryArbre : l10n.categoryBolet,
                             style: TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.w900,
@@ -835,7 +851,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                               avistament.latitude!,
                               avistament.longitude!,
                             )
-                          : 'Sense GPS',
+                          : l10n.journalNoGpsBadge,
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
@@ -889,12 +905,12 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.visibility_rounded, size: 16),
-                SizedBox(width: 6),
+              children: [
+                const Icon(Icons.visibility_rounded, size: 16),
+                const SizedBox(width: 6),
                 Text(
-                  'Veure Detall',
-                  style: TextStyle(
+                  l10n.viewDetail,
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 0.5,

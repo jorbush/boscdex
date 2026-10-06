@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'boscdex_provider.dart';
-import '../shared/rarity_border.dart';
 import '../shared/edibility_badge.dart';
+import '../shared/rarity_border.dart';
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../domain/models/edibilitat.dart';
 import '../../domain/models/raritat_tier.dart';
@@ -16,6 +18,13 @@ class BoscdexCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dexNum = entry.bolet.dexNumber.toString().padLeft(3, '0');
+    final l10n = AppLocalizations.of(context);
+    final langCode = l10n.languageCode;
+    final displayName = SpeciesLocalizer.getMushroomName(
+      entry.bolet.id,
+      languageCode: langCode,
+      fallbackName: entry.bolet.catalanName,
+    );
 
     if (!entry.isDiscovered) {
       final assetPath = entry.bolet.imageAssetPath ??
@@ -23,8 +32,7 @@ class BoscdexCard extends StatelessWidget {
 
       return Semantics(
         button: true,
-        label:
-            'Bolet número $dexNum no descobert. Toca per veure hàbitat i ubicació',
+        label: l10n.boletNumberNotDiscovered(dexNum),
         child: GestureDetector(
           onTap: () {
             HapticFeedback.lightImpact();
@@ -96,7 +104,7 @@ class BoscdexCard extends StatelessWidget {
     return Semantics(
       button: true,
       label:
-          '${entry.bolet.catalanName}, número $dexNum, raresa ${rarity.label}, comestibilitat ${edibility.label}',
+          '$displayName, número $dexNum, raresa ${rarity.label}, comestibilitat ${edibility.label}',
       child: GestureDetector(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -153,7 +161,7 @@ class BoscdexCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 1),
                           Text(
-                            entry.bolet.catalanName,
+                            displayName,
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w900,

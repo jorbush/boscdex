@@ -13,6 +13,8 @@ import 'package:drift/drift.dart' as drift;
 
 import 'package:geolocator/geolocator.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/models/classificacio_result.dart';
 import '../../domain/models/edibilitat.dart';
@@ -57,6 +59,7 @@ class _MushroomClassificationResultSheetState
   bool _isSaving = false;
   Bolet? _topBolet;
   List<Bolet> _lookalikes = [];
+  Map<String, Edibilitat> _candidateEdibilities = {};
   bool _loadingDetails = true;
   Position? _location;
 
@@ -93,10 +96,20 @@ class _MushroomClassificationResultSheetState
       final lookalikes =
           await db.boletDao.getToxicLookalikes(topCandidate.boletId);
 
+      final candidateEdibilities = <String, Edibilitat>{};
+      for (final candidate in widget.results.take(3)) {
+        final b = await db.boletDao.getBoletById(candidate.boletId);
+        if (b != null) {
+          candidateEdibilities[candidate.boletId] =
+              EdibilitatExtension.fromString(b.edibility);
+        }
+      }
+
       if (mounted) {
         setState(() {
           _topBolet = bolet;
           _lookalikes = lookalikes;
+          _candidateEdibilities = candidateEdibilities;
           _loadingDetails = false;
         });
       }
@@ -202,11 +215,11 @@ class _MushroomClassificationResultSheetState
 
         final scaffoldMessenger = ScaffoldMessenger.of(context);
         final primaryColor = Theme.of(context).colorScheme.primary;
+        final l10n = AppLocalizations.of(context);
         Navigator.of(context).pop();
 
-        final msg = wasDiscovered
-            ? 'Nou avistament registrat al teu diari!'
-            : '🎉 Nou bolet desbloquejat a la teva Boscdex!';
+        final msg =
+            wasDiscovered ? l10n.newSightingSaved : l10n.newBoletUnlocked;
 
         scaffoldMessenger.showSnackBar(
           SnackBar(
@@ -239,10 +252,11 @@ class _MushroomClassificationResultSheetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (widget.results.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(24),
-        child: const Text('No s\'han obtingut resultats d\'identificació.'),
+        child: Text(l10n.noClassificationResults),
       );
     }
 
@@ -260,11 +274,40 @@ class _MushroomClassificationResultSheetState
     final safetyLevel = safetyService.evaluateSafety(
       widget.results,
       edibility: edibilitat,
+      candidatesEdibility: _candidateEdibilities,
     );
 
     final isLowConfidence = top.confidence < AppConstants.confidenceThreshold;
     final isDanger = safetyLevel == NivellSeguretat.perill;
-    final hasToxicLookalike = _lookalikes.isNotEmpty;
+
+    // Collect secondary toxic candidate names for the alert box
+    final secondaryToxicNames = <String>[];
+    if (_candidateEdibilities.isNotEmpty &&
+        top.confidence < safetyService.overwhelmingConfidenceThreshold) {
+      for (final c in widget.results.skip(1).take(2)) {
+        final ed = _candidateEdibilities[c.boletId];
+        if ((ed == Edibilitat.toxic || ed == Edibilitat.mortal) &&
+            c.confidence >= safetyService.secondaryToxicConfidenceThreshold) {
+          secondaryToxicNames.add(SpeciesLocalizer.getMushroomName(
+            c.boletId,
+            languageCode: l10n.languageCode,
+            fallbackName: c.displayName,
+          ));
+        }
+      }
+    }
+
+    final lookalikeNames = _lookalikes
+        .map((l) => SpeciesLocalizer.getMushroomName(
+              l.id,
+              languageCode: l10n.languageCode,
+              fallbackName: l.catalanName,
+            ))
+        .toList();
+    final allConfusionNames =
+        {...lookalikeNames, ...secondaryToxicNames}.join(', ');
+    final hasToxicLookalike = safetyLevel == NivellSeguretat.confusioPossible ||
+        _lookalikes.isNotEmpty;
 
     return SafeArea(
       top: true,
@@ -308,10 +351,10 @@ class _MushroomClassificationResultSheetState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Resultat de l\'anàlisi',
-                            style: TextStyle(
+                            l10n.analysisResult,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
                               color: RetroColors.ink,
@@ -340,7 +383,8 @@ class _MushroomClassificationResultSheetState
                             ],
                           ),
                           child: Text(
-                            '${(top.confidence * 100).toInt()}% coincidència',
+                            l10n.matchConfidence(
+                                (top.confidence * 100).toInt()),
                             style: const TextStyle(
                               color: RetroColors.ink,
                               fontWeight: FontWeight.w900,
@@ -387,7 +431,13 @@ class _MushroomClassificationResultSheetState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _topBolet?.catalanName ?? top.displayName,
+                                  SpeciesLocalizer.getMushroomName(
+                                    top.boletId,
+                                    languageCode: AppLocalizations.of(context)
+                                        .languageCode,
+                                    fallbackName: _topBolet?.catalanName ??
+                                        top.displayName,
+                                  ),
                                   style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w900,
@@ -459,8 +509,8 @@ class _MushroomClassificationResultSheetState
                                 children: [
                                   Text(
                                     edibilitat == Edibilitat.mortal
-                                        ? 'ATENCIÓ: ESPÈCIE MORTAL'
-                                        : 'ATENCIÓ: ESPÈCIE TÒXICA',
+                                        ? l10n.dangerMortalAlertTitle
+                                        : l10n.dangerToxicAlertTitle,
                                     style: const TextStyle(
                                       color: RetroColors.arcadeRed,
                                       fontWeight: FontWeight.w900,
@@ -469,9 +519,9 @@ class _MushroomClassificationResultSheetState
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  const Text(
-                                    'Aquest bolet és verinós o mortal. No el consumeixis mai.',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.dangerAlertDescription,
+                                    style: const TextStyle(
                                       color: RetroColors.ink,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -503,14 +553,14 @@ class _MushroomClassificationResultSheetState
                           ],
                         ),
                         child: Row(
-                          children: const [
-                            Icon(Icons.info_outline_rounded,
+                          children: [
+                            const Icon(Icons.info_outline_rounded,
                                 color: RetroColors.questAmber, size: 24),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'No es pot identificar amb certesa. Consulta un micòleg humà abans de consumir.',
-                                style: TextStyle(
+                                l10n.lowConfidenceWarning,
+                                style: const TextStyle(
                                   color: RetroColors.ink,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
@@ -524,10 +574,9 @@ class _MushroomClassificationResultSheetState
                     ],
 
                     // Safety Gate: Toxic Lookalike warning
-                    if (hasToxicLookalike) ...[
+                    if (hasToxicLookalike && allConfusionNames.isNotEmpty) ...[
                       SafetyAlertBox(
-                        confusionSpecies:
-                            _lookalikes.map((l) => l.catalanName).join(', '),
+                        confusionSpecies: allConfusionNames,
                         onTap: () {
                           HapticFeedback.lightImpact();
                           // Increase comparison count for the badge
@@ -548,9 +597,9 @@ class _MushroomClassificationResultSheetState
 
                     // Candidate list (positions 2 & 3)
                     if (widget.results.length > 1) ...[
-                      const Text(
-                        'Altres possibles espècies:',
-                        style: TextStyle(
+                      Text(
+                        l10n.otherPossibleSpecies,
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
                           color: RetroColors.inkSoft,
@@ -592,7 +641,7 @@ class _MushroomClassificationResultSheetState
                           Text(
                             _location != null
                                 ? '${JournalMapProjection.format(_location!.latitude, _location!.longitude)}${_location!.altitude != 0.0 ? " • ${_location!.altitude.round()} m" : ""}'
-                                : 'Cercant senyal GPS...',
+                                : l10n.searchingGpsSignal,
                             style: TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w800,
@@ -633,8 +682,8 @@ class _MushroomClassificationResultSheetState
                             : const Icon(Icons.bookmark_add_rounded),
                         label: Text(
                           _isSaving
-                              ? 'Registrant...'
-                              : 'Registrar a la meva Boscdex',
+                              ? l10n.savingProgress
+                              : l10n.registerToBoscdex,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -656,9 +705,9 @@ class _MushroomClassificationResultSheetState
                           HapticFeedback.selectionClick();
                           Navigator.of(context).pop();
                         },
-                        child: const Text(
-                          'Tancar',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.settingsClose,
+                          style: const TextStyle(
                             color: RetroColors.inkSoft,
                             fontWeight: FontWeight.w800,
                           ),
@@ -681,7 +730,11 @@ class _MushroomClassificationResultSheetState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              candidate.displayName,
+              SpeciesLocalizer.getMushroomName(
+                candidate.boletId,
+                languageCode: AppLocalizations.of(context).languageCode,
+                fallbackName: candidate.displayName,
+              ),
               style: const TextStyle(
                 fontSize: 13,
                 color: RetroColors.ink,

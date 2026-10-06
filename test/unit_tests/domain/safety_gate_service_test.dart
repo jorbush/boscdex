@@ -153,5 +153,131 @@ void main() {
       );
       expect(level, equals(NivellSeguretat.segur));
     });
+
+    group('Top-N Multi-Candidate Toxicity Gate', () {
+      test(
+          'escalates to confusioPossible when candidate 2 is mortal with confidence >= 0.15',
+          () {
+        final level = service.evaluateSafety(
+          [
+            const ClassificacioResult(
+              boletId: 'boletus_edulis',
+              displayName: 'Cep',
+              confidence: 0.76,
+            ),
+            const ClassificacioResult(
+              boletId: 'amanita_phalloides',
+              displayName: 'Farinera borda',
+              confidence: 0.20,
+            ),
+          ],
+          edibility: Edibilitat.excellent,
+          candidatesEdibility: {
+            'boletus_edulis': Edibilitat.excellent,
+            'amanita_phalloides': Edibilitat.mortal,
+          },
+        );
+        expect(level, equals(NivellSeguretat.confusioPossible));
+      });
+
+      test(
+          'escalates to confusioPossible when candidate 2 is toxic with confidence >= 0.15',
+          () {
+        final level = service.evaluateSafety(
+          [
+            const ClassificacioResult(
+              boletId: 'calocybe_gambosa',
+              displayName: 'Moixernó',
+              confidence: 0.74,
+            ),
+            const ClassificacioResult(
+              boletId: 'entoloma_sinuatum',
+              displayName: 'Pèrfid',
+              confidence: 0.19,
+            ),
+          ],
+          edibility: Edibilitat.comestible,
+          candidatesEdibility: {
+            'calocybe_gambosa': Edibilitat.comestible,
+            'entoloma_sinuatum': Edibilitat.toxic,
+          },
+        );
+        expect(level, equals(NivellSeguretat.confusioPossible));
+      });
+
+      test(
+          'does NOT escalate if candidate 2 toxic confidence is below 0.15 (noise threshold)',
+          () {
+        final level = service.evaluateSafety(
+          [
+            const ClassificacioResult(
+              boletId: 'boletus_edulis',
+              displayName: 'Cep',
+              confidence: 0.85,
+            ),
+            const ClassificacioResult(
+              boletId: 'amanita_phalloides',
+              displayName: 'Farinera borda',
+              confidence: 0.08,
+            ),
+          ],
+          edibility: Edibilitat.excellent,
+          candidatesEdibility: {
+            'boletus_edulis': Edibilitat.excellent,
+            'amanita_phalloides': Edibilitat.mortal,
+          },
+        );
+        expect(level, equals(NivellSeguretat.segur));
+      });
+
+      test(
+          'does NOT escalate if top candidate confidence is overwhelming (>= 0.88)',
+          () {
+        final level = service.evaluateSafety(
+          [
+            const ClassificacioResult(
+              boletId: 'boletus_edulis',
+              displayName: 'Cep',
+              confidence: 0.89,
+            ),
+            const ClassificacioResult(
+              boletId: 'amanita_phalloides',
+              displayName: 'Farinera borda',
+              confidence: 0.11,
+            ),
+          ],
+          edibility: Edibilitat.excellent,
+          candidatesEdibility: {
+            'boletus_edulis': Edibilitat.excellent,
+            'amanita_phalloides': Edibilitat.mortal,
+          },
+        );
+        expect(level, equals(NivellSeguretat.segur));
+      });
+
+      test('returns segur when candidate 2 is edible with confidence >= 0.15',
+          () {
+        final level = service.evaluateSafety(
+          [
+            const ClassificacioResult(
+              boletId: 'boletus_edulis',
+              displayName: 'Cep',
+              confidence: 0.75,
+            ),
+            const ClassificacioResult(
+              boletId: 'cantharellus_cibarius',
+              displayName: 'Rossinyol',
+              confidence: 0.22,
+            ),
+          ],
+          edibility: Edibilitat.excellent,
+          candidatesEdibility: {
+            'boletus_edulis': Edibilitat.excellent,
+            'cantharellus_cibarius': Edibilitat.excellent,
+          },
+        );
+        expect(level, equals(NivellSeguretat.segur));
+      });
+    });
   });
 }

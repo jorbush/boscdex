@@ -17,6 +17,7 @@ Boscdex is a gamified, 100% offline field guide designed for mushroom foragers (
 - **🌲 Indicator Trees** — Comprehensive guide to Catalonia's key mycorrhizal host trees (oak, beech, chestnut, pine).
 - **⚠️ Dangerous Lookalikes** — High-visibility safety alerts highlighting poisonous and deadly twin species.
 - **📝 Sighting Journal** — Field log recording discoveries with dual list/map view, real photo thumbnails, confidence pills, and timestamps.
+- **🌐 Trilingual Localization** — Full Catalan (*Català*, default), Spanish (*Castellano*), and English support across all UI navigation, on-device settings, species morphology (cap, gills, stem, latex), safety warnings, lookalike comparisons, and 16-bit regional foraging maps.
 - **🏆 Badges & Achievements** — Local gamification milestones celebrating field achievements.
 
 ---
@@ -31,6 +32,7 @@ Boscdex is a gamified, 100% offline field guide designed for mushroom foragers (
 | State Management | Riverpod 2.x |
 | Navigation | GoRouter |
 | Location | Geolocator (offline GPS coordinates) |
+| Localization | Custom trilingual l10n engine (`ca`, `es`, `en`) |
 
 ---
 
@@ -78,11 +80,11 @@ make check
 lib/
 ├── app.dart            # Main MaterialApp and theme configuration
 ├── main.dart           # App entrypoint with dependency initialization
-├── core/               # App constants, router, theme, and utility helpers
+├── core/               # App constants, router, theme, utilities, and localization (ca, es, en)
 ├── data/               # Data layer (Drift DB, tables, DAOs, seed data)
-├── domain/             # Domain models, services (ML, safety gate, badges)
-├── presentation/       # Feature screens & widgets (Boscdex, Scan, Detail, Journal)
-└── providers/          # Riverpod top-level state providers
+├── domain/             # Domain models, services (ML, safety gate, badges, Catalonia zones)
+├── presentation/       # Feature screens & widgets (Boscdex, Scan, Detail, Journal, Settings)
+└── providers/          # Riverpod top-level state providers (database, audio, preferences, locale)
 
 test/
 ├── unit_tests/         # Tier 1: Domain services, models, and isolated widget tests

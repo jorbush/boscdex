@@ -5,6 +5,8 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:boscdex/core/localization/app_localizations.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/models/classificacio_result.dart';
 import 'package:boscdex/domain/services/classifier_service.dart';
@@ -230,6 +232,53 @@ void main() {
       expect(sightings.first.latitude, equals(41.78));
       expect(sightings.first.longitude, equals(2.40));
       expect(sightings.first.altitude, equals(920.0));
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'TreeClassificationResultSheet renders localized botanical traits in Spanish',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('es'),
+            supportedLocales: [Locale('ca'), Locale('es'), Locale('en')],
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            home: Scaffold(
+              body: TreeClassificationResultSheet(
+                results: [
+                  TreeClassificationResult(
+                    arbreId: 'pinus_sylvestris',
+                    displayName: 'Pino silvestre',
+                    confidence: 0.93,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // In Spanish:
+      // leafType: Aguja
+      // bark: Tronco superior anaranjado
+      // soil: Silíceo o ácido
+      expect(find.text('Aguja'), findsOneWidget);
+      expect(find.text('Tronco superior anaranjado'), findsOneWidget);
+      expect(find.text('Silíceo o ácido'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
     });

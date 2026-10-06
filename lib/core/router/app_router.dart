@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../localization/app_localizations.dart';
 import '../theme/retro_decorations.dart';
 import '../../presentation/boscdex/boscdex_screen.dart';
 import '../../presentation/disclaimer/disclaimer_screen.dart';
@@ -110,6 +111,7 @@ class BoscdexShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedIndex = _calculateSelectedIndex(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: child,
@@ -138,18 +140,18 @@ class BoscdexShell extends StatelessWidget {
                 break;
             }
           },
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.grid_view_rounded),
-              label: 'Boscdex',
+              icon: const Icon(Icons.grid_view_rounded),
+              label: l10n.tabBoscdex,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt_rounded),
-              label: 'Escanejar',
+              icon: const Icon(Icons.camera_alt_rounded),
+              label: l10n.tabScan,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.auto_stories_rounded),
-              label: 'Diari',
+              icon: const Icon(Icons.auto_stories_rounded),
+              label: l10n.tabJournal,
             ),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../domain/models/insignia.dart' as domain;
 import '../../providers/database_provider.dart';
@@ -72,6 +73,7 @@ class InsigniesDialog extends ConsumerWidget {
           ),
         ),
         data: (badges) {
+          final l10n = AppLocalizations.of(context);
           final awardedCount = badges.where((b) => b.isAwarded).length;
 
           return Column(
@@ -97,13 +99,13 @@ class InsigniesDialog extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Row(
-                      children: const [
-                        PixelTrophyIcon(size: 28),
-                        SizedBox(width: 10),
+                      children: [
+                        const PixelTrophyIcon(size: 28),
+                        const SizedBox(width: 10),
                         Flexible(
                           child: Text(
-                            'Les Meves Insígnies',
-                            style: TextStyle(
+                            l10n.myBadges,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 18,
                               color: RetroColors.ink,
@@ -143,9 +145,9 @@ class InsigniesDialog extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              const Text(
-                'Fites de col·lecció i reconeixement de camp del boletaire.',
-                style: TextStyle(
+              Text(
+                l10n.badgeSubtitle,
+                style: const TextStyle(
                   color: RetroColors.inkSoft,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -173,9 +175,9 @@ class InsigniesDialog extends ConsumerWidget {
                     HapticFeedback.selectionClick();
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
-                    'Tancar',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.settingsClose,
+                    style: const TextStyle(
                       color: RetroColors.inkSoft,
                       fontWeight: FontWeight.w800,
                     ),
@@ -190,14 +192,19 @@ class InsigniesDialog extends ConsumerWidget {
   }
 
   Widget _buildBadgeCard(BuildContext context, domain.Insignia badge) {
+    final l10n = AppLocalizations.of(context);
     final isUnlocked = badge.isAwarded;
     final progress = badge.targetCount > 0
         ? (badge.progressCount / badge.targetCount).clamp(0.0, 1.0)
         : 0.0;
+    final badgeName = l10n.badgeName(badge.id);
+    final badgeDesc = l10n.badgeDescription(badge.id);
+    final progressText = isUnlocked
+        ? l10n.badgeUnlocked
+        : l10n.badgeProgress(badge.progressCount, badge.targetCount);
 
     return Semantics(
-      label:
-          '${badge.nom}, ${badge.isAwarded ? "Desbloquejada" : "Progrés: ${badge.progressCount} de ${badge.targetCount}"}. ${badge.descripcio}',
+      label: '$badgeName, $progressText. $badgeDesc',
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
@@ -241,7 +248,7 @@ class InsigniesDialog extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          badge.nom,
+                          badgeName,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w900,
@@ -263,9 +270,9 @@ class InsigniesDialog extends ConsumerWidget {
                             border:
                                 Border.all(color: RetroColors.ink, width: 1.5),
                           ),
-                          child: const Text(
-                            'DESBLOQUEJAT',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.badgeUnlocked.toUpperCase(),
+                            style: const TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
@@ -287,7 +294,7 @@ class InsigniesDialog extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    badge.descripcio,
+                    badgeDesc,
                     style: const TextStyle(
                       fontSize: 12,
                       color: RetroColors.inkSoft,

@@ -5,12 +5,15 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:boscdex/core/localization/app_localizations.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/presentation/detail/bolet_detail_screen.dart';
 import 'package:boscdex/presentation/detail/arbre_detail_screen.dart';
 import 'package:boscdex/presentation/detail/toxic_twin_alert.dart';
 import 'package:boscdex/providers/database_provider.dart';
 import 'package:boscdex/providers/preferences_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -231,6 +234,307 @@ void main() {
 
       expect(find.text('No trobat'), findsOneWidget);
       expect(find.text('Aquest arbre no existeix.'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'BoletDetailScreen renders localized names, morphology, and location header in Spanish',
+        (WidgetTester tester) async {
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', DateTime.now(), null);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('es'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: BoletDetailScreen(id: 'lactarius_deliciosus'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Níscalo / Robellón'), findsOneWidget);
+      expect(find.text('Excelente comestible'), findsOneWidget);
+      expect(find.text('Ubicación'), findsOneWidget);
+      expect(find.text('Morfología'), findsOneWidget);
+      expect(find.text('Sombrero'), findsOneWidget);
+      expect(find.text('Láminas'), findsOneWidget);
+      expect(find.text('Pie'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      // Test a species with safety notes (amanita_phalloides)
+      await db.descobrimentDao
+          .markDiscovered('amanita_phalloides', DateTime.now(), null);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('es'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: BoletDetailScreen(id: 'amanita_phalloides'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Notas', skipOffstage: false), findsWidgets);
+      expect(
+        find.textContaining('MORTAL. Contiene amatoxinas', skipOffstage: false),
+        findsOneWidget,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'BoletDetailScreen renders localized names, morphology, and location header in English',
+        (WidgetTester tester) async {
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', DateTime.now(), null);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: BoletDetailScreen(id: 'lactarius_deliciosus'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Saffron Milk Cap'), findsOneWidget);
+      expect(find.text('Excellent edible'), findsOneWidget);
+      expect(find.text('Location'), findsOneWidget);
+      expect(find.text('Morphology'), findsOneWidget);
+      expect(find.text('Cap'), findsOneWidget);
+      expect(find.text('Gills'), findsOneWidget);
+      expect(find.text('Stem'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      // Test a species with safety notes (amanita_phalloides)
+      await db.descobrimentDao
+          .markDiscovered('amanita_phalloides', DateTime.now(), null);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: BoletDetailScreen(id: 'amanita_phalloides'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Notes', skipOffstage: false), findsWidgets);
+      expect(
+        find.textContaining('DEADLY. Contains lethal amatoxins',
+            skipOffstage: false),
+        findsOneWidget,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'ArbreDetailScreen renders localized traits in Spanish and English',
+        (WidgetTester tester) async {
+      // 1. Spanish
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('es'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: ArbreDetailScreen(id: 'pinus_sylvestris'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Pino silvestre / Pino albar'), findsOneWidget);
+      expect(find.text('Corteza'), findsOneWidget);
+      expect(find.text('Hoja'), findsOneWidget);
+      expect(find.text('Tronco superior anaranjado'), findsOneWidget);
+
+      // 2. English
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: ArbreDetailScreen(id: 'pinus_sylvestris'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Scots Pine'), findsOneWidget);
+      expect(find.text('Bark'), findsOneWidget);
+      expect(find.text('Leaf'), findsOneWidget);
+      expect(find.text('Upper trunk orange-ochre'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'Tapping ToxicTwinAlert in BoletDetailScreen navigates to lookalike screen and increments comparison count',
+        (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', DateTime.now(), null);
+
+      final router = GoRouter(
+        initialLocation: '/boscdex/lactarius_deliciosus',
+        routes: [
+          GoRoute(
+            path: '/boscdex/:id',
+            builder: (context, state) {
+              final id = state.params['id']!;
+              return BoletDetailScreen(id: id);
+            },
+          ),
+        ],
+      );
+
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          sharedPreferencesProvider.overrideWithValue(prefs),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp.router(
+            routerConfig: router,
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Scroll down to make ToxicTwinAlert visible
+      final alertFinder = find.byType(ToxicTwinAlert);
+      expect(alertFinder, findsOneWidget);
+      await tester.ensureVisible(alertFinder);
+      await tester.pumpAndSettle();
+
+      // Tap ToxicTwinAlert
+      await tester.tap(alertFinder);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Verify comparison badge counter was incremented
+      expect(container.read(toxicComparisonViewCountProvider), equals(1));
+
+      // Verify router navigated to lookalike amanita_muscaria
+      expect(router.location, equals('/boscdex/amanita_muscaria'));
 
       await tester.pumpWidget(const SizedBox.shrink());
     });

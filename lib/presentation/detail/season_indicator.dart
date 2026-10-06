@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 
 class SeasonIndicator extends StatelessWidget {
@@ -10,44 +11,31 @@ class SeasonIndicator extends StatelessWidget {
   /// List of integers from 1 to 12 representing the months the mushroom fruits
   final List<int> fruitingMonths;
 
-  static const List<String> _monthNames = [
-    'Gen',
-    'Feb',
-    'Mar',
-    'Abr',
-    'Mai',
-    'Jun',
-    'Jul',
-    'Ag',
-    'Set',
-    'Oct',
-    'Nov',
-    'Des'
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final monthNames = l10n.monthNames;
     final activeSet = fruitingMonths.toSet();
     final activeMonthNames = fruitingMonths
         .where((m) => m >= 1 && m <= 12)
-        .map((m) => _monthNames[m - 1])
+        .map((m) => monthNames[m - 1])
         .toList();
 
     return Semantics(
       label: activeMonthNames.isEmpty
-          ? 'Sense temporada definida'
-          : 'Temporada de fructificació: ${activeMonthNames.join(", ")}',
+          ? l10n.noSeasonDefined
+          : l10n.fruitingSeasonSemantics(activeMonthNames.join(', ')),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.calendar_month_rounded,
+            children: [
+              const Icon(Icons.calendar_month_rounded,
                   size: 18, color: RetroColors.forestGreen),
-              SizedBox(width: 6),
+              const SizedBox(width: 6),
               Text(
-                'Temporada',
-                style: TextStyle(
+                l10n.season,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
                   color: RetroColors.ink,
@@ -92,7 +80,7 @@ class SeasonIndicator extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            _monthNames[index],
+                            monthNames[index],
                             style: TextStyle(
                               fontSize: 9.5,
                               fontWeight:

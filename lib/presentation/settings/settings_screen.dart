@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_constants.dart';
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/preferences_provider.dart';
 import '../../providers/sound_provider.dart';
@@ -21,9 +22,12 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final hapticEnabled = ref.watch(hapticFeedbackEnabledProvider);
     final soundEnabled = ref.watch(soundEffectsEnabledProvider);
+    final currentLocale = ref.watch(appLocaleProvider);
     final discoveryCountAsync = ref.watch(discoveryCountProvider);
     final avistamentsAsync = ref.watch(avistamentsProvider);
+    final totalBolets = ref.watch(totalBoletsCountProvider);
 
+    final l10n = AppLocalizations.of(context);
     final discoveryCount = discoveryCountAsync.value ?? 0;
     final avistamentCount = avistamentsAsync.value?.length ?? 0;
 
@@ -44,9 +48,9 @@ class SettingsScreen extends ConsumerWidget {
             context.pop();
           },
         ),
-        title: const Text(
-          'Configuració',
-          style: TextStyle(
+        title: Text(
+          l10n.settingsTitle,
+          style: const TextStyle(
             color: RetroColors.ink,
             fontWeight: FontWeight.w900,
             fontSize: 22,
@@ -92,9 +96,9 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'La Pokédex micològica de Catalunya',
-                  style: TextStyle(
+                Text(
+                  l10n.appTagline,
+                  style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,
                     color: RetroColors.inkSoft,
@@ -132,7 +136,7 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 20),
 
           // 2. Section: Preferències de l'App
-          _buildSectionHeader('PREFERÈNCIES DE L\'APLICACIÓ'),
+          _buildSectionHeader(l10n.settingsAppPreferences),
           const SizedBox(height: 8),
           Container(
             decoration: RetroDecorations.card(
@@ -143,20 +147,68 @@ class SettingsScreen extends ConsumerWidget {
             ),
             child: Column(
               children: [
-                SwitchListTile.adaptive(
-                  value: soundEnabled,
-                  activeColor: RetroColors.forestGreen,
-                  title: const Text(
-                    'Efectes de so retro 8-bit',
-                    style: TextStyle(
+                // Language selection tile
+                ListTile(
+                  key: const Key('settings_language_tile'),
+                  title: Text(
+                    l10n.settingsLanguage,
+                    style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w800,
                       color: RetroColors.ink,
                     ),
                   ),
-                  subtitle: const Text(
-                    'Sons de disparador, fanfàrria de descobriment i medalles',
-                    style: TextStyle(
+                  subtitle: Text(
+                    _getLocaleDisplayName(currentLocale.languageCode, l10n),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: RetroColors.inkSoft,
+                    ),
+                  ),
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: RetroColors.mintWash,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: RetroColors.ink, width: 1.2),
+                    ),
+                    child: const Icon(
+                      Icons.language_rounded,
+                      size: 18,
+                      color: RetroColors.forestGreen,
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.chevron_right_rounded,
+                    color: RetroColors.ink,
+                    size: 22,
+                  ),
+                  onTap: () {
+                    if (hapticEnabled) HapticFeedback.selectionClick();
+                    _showLanguageDialog(
+                      context,
+                      ref,
+                      currentLocale,
+                      hapticEnabled,
+                    );
+                  },
+                ),
+                Container(height: 1, color: RetroColors.ink.withOpacity(0.12)),
+                SwitchListTile.adaptive(
+                  value: soundEnabled,
+                  activeColor: RetroColors.forestGreen,
+                  title: Text(
+                    l10n.settingsSoundTitle,
+                    style: const TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w800,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+                  subtitle: Text(
+                    l10n.settingsSoundSubtitle,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: RetroColors.inkSoft,
@@ -189,17 +241,17 @@ class SettingsScreen extends ConsumerWidget {
                 SwitchListTile.adaptive(
                   value: hapticEnabled,
                   activeColor: RetroColors.forestGreen,
-                  title: const Text(
-                    'Resposta hàptica (Vibració)',
-                    style: TextStyle(
+                  title: Text(
+                    l10n.settingsHapticTitle,
+                    style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w800,
                       color: RetroColors.ink,
                     ),
                   ),
-                  subtitle: const Text(
-                    'Feedback tàctil en prémer botons i descobrir espècies',
-                    style: TextStyle(
+                  subtitle: Text(
+                    l10n.settingsHapticSubtitle,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: RetroColors.inkSoft,
@@ -232,7 +284,7 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 20),
 
           // 3. Section: Seguretat Micològica
-          _buildSectionHeader('SEGURETAT I AVÍS LEGAL'),
+          _buildSectionHeader(l10n.settingsSafetySection),
           const SizedBox(height: 8),
           Container(
             decoration: RetroDecorations.card(
@@ -257,17 +309,17 @@ class SettingsScreen extends ConsumerWidget {
                       color: RetroColors.arcadeRed,
                     ),
                   ),
-                  title: const Text(
-                    'Avís legal i descàrrec',
-                    style: TextStyle(
+                  title: Text(
+                    l10n.settingsLegalDisclaimerTitle,
+                    style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w800,
                       color: RetroColors.ink,
                     ),
                   ),
-                  subtitle: const Text(
-                    'Revisa els termes legals i avisos de consum',
-                    style: TextStyle(
+                  subtitle: Text(
+                    l10n.settingsLegalDisclaimerSubtitle,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: RetroColors.inkSoft,
@@ -298,17 +350,17 @@ class SettingsScreen extends ConsumerWidget {
                       color: RetroColors.forestGreen,
                     ),
                   ),
-                  title: const Text(
-                    'Filtre de certesa IA (70%)',
-                    style: TextStyle(
+                  title: Text(
+                    l10n.settingsAiCertaintyFilterTitle,
+                    style: const TextStyle(
                       fontSize: 14.5,
                       fontWeight: FontWeight.w800,
                       color: RetroColors.ink,
                     ),
                   ),
-                  subtitle: const Text(
-                    'Qualsevol coincidència amb certesa inferior al 70% o amb risc de confusió tòxica activa l\'alerta vermella.',
-                    style: TextStyle(
+                  subtitle: Text(
+                    l10n.settingsAiCertaintyFilterSubtitle,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: RetroColors.inkSoft,
@@ -323,7 +375,7 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 20),
 
           // 4. Section: Dades i Motor IA Local
-          _buildSectionHeader('DADES I MOTOR IA LOCAL'),
+          _buildSectionHeader(l10n.settingsDataAndAiEngine),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(14),
@@ -337,16 +389,14 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 _buildInfoRow(
                   icon: const PixelBoletIcon(size: 20),
-                  title: 'Xarxa Neuronal On-Device',
-                  description:
-                      'Model INT8 quantitzat (~2.5 MB) integrat a l\'app. Execució 100% autònoma sense connexió a internet.',
+                  title: l10n.settingsOnDeviceNeuralNetwork,
+                  description: l10n.settingsOnDeviceNeuralNetworkDesc,
                 ),
                 const Divider(height: 18, color: RetroColors.progressBarEmpty),
                 _buildInfoRow(
                   icon: const PixelArbreIcon(size: 20),
-                  title: 'Catàleg Relacional SQLite',
-                  description:
-                      '20 bolets i 5 arbres indicadors de Catalunya amb claus morfològiques i xarxa micorrízica.',
+                  title: l10n.settingsSqliteDatabase,
+                  description: l10n.databaseDescription,
                 ),
                 const Divider(height: 18, color: RetroColors.progressBarEmpty),
                 _buildInfoRow(
@@ -363,9 +413,12 @@ class SettingsScreen extends ConsumerWidget {
                       color: RetroColors.questAmber,
                     ),
                   ),
-                  title: 'Estat de la Teva Expedició',
-                  description:
-                      '$discoveryCount / ${AppConstants.maxDexEntries} bolets catalogats • $avistamentCount fotos personals al diari.',
+                  title: l10n.settingsExpeditionStatus,
+                  description: l10n.speciesCatalogedStats(
+                    discoveryCount,
+                    totalBolets > 0 ? totalBolets : AppConstants.maxDexEntries,
+                    avistamentCount,
+                  ),
                 ),
               ],
             ),
@@ -374,7 +427,7 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 20),
 
           // 5. Section: Sobre Boscdex
-          _buildSectionHeader('SOBRE BOSCDEX'),
+          _buildSectionHeader(l10n.settingsAboutBoscdex),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(16),
@@ -388,16 +441,16 @@ class SettingsScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       Icons.forest_rounded,
                       size: 20,
                       color: RetroColors.forestGreen,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
-                      'Compromís de Privacitat',
-                      style: TextStyle(
+                      l10n.settingsPrivacyCommitment,
+                      style: const TextStyle(
                         fontSize: 14.5,
                         fontWeight: FontWeight.w900,
                         color: RetroColors.ink,
@@ -406,9 +459,9 @@ class SettingsScreen extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 6),
-                const Text(
-                  'Boscdex està dissenyada per funcionar a les profunditats del bosc sense cobertura. Totes les fotografies, dades GPS i anàlisis d\'imatge es queden estrictament al teu dispositiu.',
-                  style: TextStyle(
+                Text(
+                  l10n.settingsPrivacyCommitmentDesc,
+                  style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
                     color: RetroColors.inkSoft,
@@ -418,7 +471,7 @@ class SettingsScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 Center(
                   child: Text(
-                    'Fet amb 🌲 per als boletaires de Catalunya',
+                    l10n.madeWithLoveForForagers,
                     style: TextStyle(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w800,
@@ -490,6 +543,123 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+
+  String _getLocaleDisplayName(String code, AppLocalizations l10n) {
+    switch (code) {
+      case 'es':
+        return l10n.languageNameSpanish;
+      case 'en':
+        return l10n.languageNameEnglish;
+      case 'ca':
+      default:
+        return l10n.languageNameCatalan;
+    }
+  }
+
+  void _showLanguageDialog(
+    BuildContext context,
+    WidgetRef ref,
+    Locale currentLocale,
+    bool hapticEnabled,
+  ) {
+    final l10n = AppLocalizations.of(context);
+    final options = [
+      {'code': 'ca', 'label': '🌲 ${l10n.languageNameCatalan}'},
+      {'code': 'es', 'label': '🇪🇸 ${l10n.languageNameSpanish}'},
+      {'code': 'en', 'label': '🇬🇧 ${l10n.languageNameEnglish}'},
+    ];
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: RetroColors.ink, width: 2.5),
+        ),
+        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+        contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: RetroColors.goldLight,
+                shape: BoxShape.circle,
+                border: Border.all(color: RetroColors.ink, width: 1.5),
+              ),
+              child: const Icon(
+                Icons.translate_rounded,
+                size: 20,
+                color: RetroColors.ink,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                l10n.settingsSelectLanguage,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: RetroColors.ink,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final opt in options)
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  color: currentLocale.languageCode == opt['code']
+                      ? RetroColors.mintWash
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: currentLocale.languageCode == opt['code']
+                        ? RetroColors.forestGreen
+                        : RetroColors.ink.withOpacity(0.2),
+                    width:
+                        currentLocale.languageCode == opt['code'] ? 2.0 : 1.2,
+                  ),
+                ),
+                child: ListTile(
+                  key: Key('language_option_${opt['code']}'),
+                  title: Text(
+                    opt['label']!,
+                    style: const TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w800,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+                  trailing: currentLocale.languageCode == opt['code']
+                      ? const Icon(
+                          Icons.check_circle_rounded,
+                          color: RetroColors.forestGreen,
+                          size: 22,
+                        )
+                      : null,
+                  onTap: () {
+                    if (hapticEnabled) HapticFeedback.selectionClick();
+                    try {
+                      ref.read(soundEffectServiceProvider).playBlip();
+                    } catch (_) {}
+                    ref
+                        .read(appLocaleProvider.notifier)
+                        .setLocale(Locale(opt['code']!));
+                    Navigator.of(dialogCtx).pop();
+                  },
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

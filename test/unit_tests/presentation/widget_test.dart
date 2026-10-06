@@ -167,7 +167,7 @@ void main() {
     );
 
     expect(find.text('Boscdex'), findsOneWidget);
-    expect(find.text('★ INSERT COIN TO EXPLORE ★'), findsOneWidget);
+    expect(find.text('★ CARREGANT EL BOSC ★'), findsOneWidget);
 
     // Unmount early to verify timer cancellation in dispose() doesn't throw
     await tester.pumpWidget(const SizedBox.shrink());

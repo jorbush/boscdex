@@ -11,6 +11,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/models/classificacio_result.dart';
@@ -193,14 +195,20 @@ class _TreeClassificationResultSheetState
 
         setState(() => _isSaving = false);
         final messenger = ScaffoldMessenger.of(context);
+        final l10n = AppLocalizations.of(context);
         Navigator.of(context).pop();
         widget.onRegistered?.call();
+        final treeDisplayName = SpeciesLocalizer.getTreeName(
+          top.arbreId,
+          languageCode: l10n.languageCode,
+          fallbackName: _arbre?.catalanName ?? top.displayName,
+        );
         messenger.showSnackBar(
           SnackBar(
             content: Text(
               hasNewBadge
-                  ? '🏆 Enhorabona! Has desbloquejat una nova insígnia!'
-                  : 'Troballa de ${_arbre?.catalanName ?? top.displayName} registrada al diari! 🌲',
+                  ? l10n.newBadgeUnlockedBanner
+                  : l10n.treeSightingSaved(treeDisplayName),
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
             backgroundColor: RetroColors.forestGreen,
@@ -229,10 +237,11 @@ class _TreeClassificationResultSheetState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     if (widget.results.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(24),
-        child: const Text('No s\'han obtingut resultats d\'arbre.'),
+        child: Text(l10n.noTreeClassificationResults),
       );
     }
 
@@ -281,10 +290,10 @@ class _TreeClassificationResultSheetState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            'Resultat d\'arbre',
-                            style: TextStyle(
+                            l10n.treeAnalysisResult,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
                               color: RetroColors.ink,
@@ -313,7 +322,8 @@ class _TreeClassificationResultSheetState
                             ],
                           ),
                           child: Text(
-                            '${(top.confidence * 100).toInt()}% coincidència',
+                            l10n.matchConfidence(
+                                (top.confidence * 100).toInt()),
                             style: const TextStyle(
                               color: RetroColors.ink,
                               fontWeight: FontWeight.w900,
@@ -360,7 +370,13 @@ class _TreeClassificationResultSheetState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  _arbre?.catalanName ?? top.displayName,
+                                  SpeciesLocalizer.getTreeName(
+                                    top.arbreId,
+                                    languageCode: AppLocalizations.of(context)
+                                        .languageCode,
+                                    fallbackName:
+                                        _arbre?.catalanName ?? top.displayName,
+                                  ),
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w900,
@@ -395,8 +411,12 @@ class _TreeClassificationResultSheetState
                             child: _buildTraitChip(
                               context,
                               icon: Icons.eco_rounded,
-                              label: 'Fulla',
-                              value: _arbre!.leafType,
+                              label: l10n.leafTrait,
+                              value: SpeciesLocalizer.getTreeLeafType(
+                                _arbre!.id,
+                                languageCode: l10n.languageCode,
+                                fallback: _arbre!.leafType,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -404,8 +424,12 @@ class _TreeClassificationResultSheetState
                             child: _buildTraitChip(
                               context,
                               icon: Icons.texture_rounded,
-                              label: 'Escorça',
-                              value: _arbre!.barkDescription,
+                              label: l10n.barkTrait,
+                              value: SpeciesLocalizer.getTreeBark(
+                                _arbre!.id,
+                                languageCode: l10n.languageCode,
+                                fallback: _arbre!.barkDescription,
+                              ),
                             ),
                           ),
                         ],
@@ -414,8 +438,12 @@ class _TreeClassificationResultSheetState
                       _buildTraitChip(
                         context,
                         icon: Icons.landscape_rounded,
-                        label: 'Sòl típic',
-                        value: _arbre!.typicalSoil,
+                        label: l10n.soilTrait,
+                        value: SpeciesLocalizer.getTreeSoil(
+                          _arbre!.id,
+                          languageCode: l10n.languageCode,
+                          fallback: _arbre!.typicalSoil,
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -432,16 +460,16 @@ class _TreeClassificationResultSheetState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            children: const [
-                              Icon(
+                            children: [
+                              const Icon(
                                 Icons.search_rounded,
                                 size: 18,
                                 color: RetroColors.forestGreen,
                               ),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               Text(
-                                'Bolets que pots cercar sota aquest arbre:',
-                                style: TextStyle(
+                                l10n.searchMushroomsUnderTree,
+                                style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w900,
                                   color: RetroColors.ink,
@@ -490,7 +518,11 @@ class _TreeClassificationResultSheetState
                                             color: RetroColors.forestGreen),
                                         const SizedBox(width: 4),
                                         Text(
-                                          bolet.catalanName,
+                                          SpeciesLocalizer.getMushroomName(
+                                            bolet.id,
+                                            languageCode: l10n.languageCode,
+                                            fallbackName: bolet.catalanName,
+                                          ),
                                           style: const TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w800,
@@ -504,9 +536,9 @@ class _TreeClassificationResultSheetState
                               }).toList(),
                             )
                           else
-                            const Text(
-                              'Sense bolets associats catalogats.',
-                              style: TextStyle(
+                            Text(
+                              l10n.noAssociatedBolets,
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: RetroColors.inkSoft,
                                 fontWeight: FontWeight.w600,
@@ -519,9 +551,9 @@ class _TreeClassificationResultSheetState
 
                     // Candidate list (secondary matches)
                     if (widget.results.length > 1) ...[
-                      const Text(
-                        'Altres possibles espècies:',
-                        style: TextStyle(
+                      Text(
+                        l10n.otherPossibleSpecies,
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
                           color: RetroColors.inkSoft,
@@ -563,7 +595,7 @@ class _TreeClassificationResultSheetState
                           Text(
                             _location != null
                                 ? '${JournalMapProjection.format(_location!.latitude, _location!.longitude)}${_location!.altitude != 0.0 ? " • ${_location!.altitude.round()} m" : ""}'
-                                : 'Cercant senyal GPS...',
+                                : l10n.searchingGpsSignal,
                             style: TextStyle(
                               fontSize: 11.5,
                               fontWeight: FontWeight.w800,
@@ -606,8 +638,8 @@ class _TreeClassificationResultSheetState
                             : const Icon(Icons.bookmark_add_rounded),
                         label: Text(
                           _isSaving
-                              ? 'Registrant troballa...'
-                              : 'Registrar troballa al Diari',
+                              ? l10n.savingTreeProgress
+                              : l10n.registerToJournal,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
@@ -641,9 +673,9 @@ class _TreeClassificationResultSheetState
                           shadowColor: Colors.transparent,
                         ),
                         icon: const Icon(Icons.park_rounded),
-                        label: const Text(
-                          'Veure fitxa completa de l\'arbre',
-                          style: TextStyle(
+                        label: Text(
+                          l10n.viewFullTreeCard,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 0.3,
@@ -668,9 +700,9 @@ class _TreeClassificationResultSheetState
                           HapticFeedback.selectionClick();
                           Navigator.of(context).pop();
                         },
-                        child: const Text(
-                          'Tancar',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.settingsClose,
+                          style: const TextStyle(
                             color: RetroColors.inkSoft,
                             fontWeight: FontWeight.w800,
                           ),
@@ -740,7 +772,11 @@ class _TreeClassificationResultSheetState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              candidate.displayName,
+              SpeciesLocalizer.getTreeName(
+                candidate.arbreId,
+                languageCode: AppLocalizations.of(context).languageCode,
+                fallbackName: candidate.displayName,
+              ),
               style: const TextStyle(
                 fontSize: 13,
                 color: RetroColors.ink,

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/services/photo_export_service.dart';
@@ -20,6 +22,8 @@ class ArbreDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
+  AppLocalizations get l10n => AppLocalizations.of(context);
+
   Arbre? _arbre;
   List<Bolet> _bolets = [];
   List<Avistament> _avistaments = [];
@@ -71,11 +75,11 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
     final arbre = _arbre;
     if (arbre == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('No trobat')),
-        body: const Center(
+        appBar: AppBar(title: Text(l10n.notFoundTitle)),
+        body: Center(
           child: Text(
-            'Aquest arbre no existeix.',
-            style: TextStyle(
+            l10n.arbreNotFoundMessage,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: RetroColors.inkSoft,
@@ -98,7 +102,7 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Semantics(
                 button: true,
-                label: 'Enrere',
+                label: l10n.back,
                 child: GestureDetector(
                   onTap: () {
                     HapticFeedback.selectionClick();
@@ -181,7 +185,11 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    arbre.catalanName,
+                    SpeciesLocalizer.getTreeName(
+                      arbre.id,
+                      languageCode: AppLocalizations.of(context).languageCode,
+                      fallbackName: arbre.catalanName,
+                    ),
                     style: const TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w900,
@@ -201,14 +209,38 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                   const SizedBox(height: 24),
 
                   // Description fields
-                  _buildInfoCard(context, 'Escorça', arbre.barkDescription,
-                      Icons.texture_rounded),
+                  _buildInfoCard(
+                    context,
+                    l10n.barkTrait,
+                    SpeciesLocalizer.getTreeBark(
+                      arbre.id,
+                      languageCode: l10n.languageCode,
+                      fallback: arbre.barkDescription,
+                    ),
+                    Icons.texture_rounded,
+                  ),
                   const SizedBox(height: 12),
-                  _buildInfoCard(context, 'Fulla', arbre.leafType,
-                      Icons.energy_savings_leaf_rounded),
+                  _buildInfoCard(
+                    context,
+                    l10n.leafTrait,
+                    SpeciesLocalizer.getTreeLeafType(
+                      arbre.id,
+                      languageCode: l10n.languageCode,
+                      fallback: arbre.leafType,
+                    ),
+                    Icons.energy_savings_leaf_rounded,
+                  ),
                   const SizedBox(height: 12),
-                  _buildInfoCard(context, 'Sòl Típic', arbre.typicalSoil,
-                      Icons.terrain_rounded),
+                  _buildInfoCard(
+                    context,
+                    l10n.soilTrait,
+                    SpeciesLocalizer.getTreeSoil(
+                      arbre.id,
+                      languageCode: l10n.languageCode,
+                      fallback: arbre.typicalSoil,
+                    ),
+                    Icons.terrain_rounded,
+                  ),
                   const SizedBox(height: 24),
 
                   // Bolets
@@ -225,9 +257,9 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                               const Text('🍄', style: TextStyle(fontSize: 18)),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'Bolets associats',
-                          style: TextStyle(
+                        Text(
+                          l10n.associatedBolets,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w900,
                             color: RetroColors.ink,
@@ -244,8 +276,14 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                             _discoveredBoletIds.contains(bolet.id);
                         final dexNum =
                             bolet.dexNumber.toString().padLeft(3, '0');
-                        final displayName =
-                            isDiscovered ? bolet.catalanName : '#$dexNum ???';
+                        final displayName = isDiscovered
+                            ? SpeciesLocalizer.getMushroomName(
+                                bolet.id,
+                                languageCode:
+                                    AppLocalizations.of(context).languageCode,
+                                fallbackName: bolet.catalanName,
+                              )
+                            : '#$dexNum ???';
 
                         final Widget sprite = isDiscovered
                             ? Image.asset(
@@ -345,7 +383,7 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                     size: 20, color: RetroColors.forestGreen),
                 const SizedBox(width: 8),
                 Text(
-                  'Les Teves Captures (${_avistaments.length})',
+                  l10n.yourCaptures(_avistaments.length),
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
@@ -361,9 +399,10 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                   padding: EdgeInsets.zero,
                 ),
                 icon: const Icon(Icons.add_a_photo_outlined, size: 16),
-                label: const Text(
-                  'Nova foto',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+                label: Text(
+                  l10n.newPhoto,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w800, fontSize: 13),
                 ),
                 onPressed: () {
                   HapticFeedback.selectionClick();
@@ -519,19 +558,19 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        'Sense fotografies de camp',
-                        style: TextStyle(
+                        l10n.noTreeCapturesYet,
+                        style: const TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 13.5,
                           color: RetroColors.ink,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
-                        'Escaneja aquest arbre al bosc per afegir-lo al teu diari.',
-                        style: TextStyle(
+                        l10n.noTreeCapturesPrompt,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: RetroColors.inkSoft,
                           fontWeight: FontWeight.w600,

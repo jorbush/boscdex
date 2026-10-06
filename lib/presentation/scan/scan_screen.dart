@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/classifier_provider.dart';
 import '../../providers/location_provider.dart';
@@ -24,6 +25,8 @@ class ScanScreen extends ConsumerStatefulWidget {
 
 class _ScanScreenState extends ConsumerState<ScanScreen>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context);
+
   late AnimationController _animController;
   int _selectedModeIndex = 0; // 0 = Bolets, 1 = Arbres
   bool _isScanning = false;
@@ -136,7 +139,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         if (!mounted) return;
         setState(() {
           _isCameraLoading = false;
-          _cameraErrorMessage = 'No s\'ha detectat cap càmera al dispositiu.';
+          _cameraErrorMessage = null;
         });
         return;
       }
@@ -204,7 +207,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error en capturar la foto: $e'),
+              content: Text(l10n.errorCapturingPhoto(e.toString())),
               backgroundColor: RetroColors.arcadeRed,
             ),
           );
@@ -238,7 +241,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error en carregar la imatge de la galeria: $e'),
+            content: Text(l10n.errorLoadingGalleryImage(e.toString())),
             backgroundColor: RetroColors.arcadeRed,
           ),
         );
@@ -307,7 +310,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         setState(() => _isScanning = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error durant l\'anàlisi: $e'),
+            content: Text(l10n.errorDuringAnalysis(e.toString())),
             backgroundColor: RetroColors.arcadeRed,
           ),
         );
@@ -317,6 +320,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
       body: Stack(
@@ -375,15 +379,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                               child: Center(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    CircularProgressIndicator(
+                                  children: [
+                                    const CircularProgressIndicator(
                                       color: RetroColors.forestGreen,
                                       strokeWidth: 3,
                                     ),
-                                    SizedBox(height: 12),
+                                    const SizedBox(height: 12),
                                     Text(
-                                      'Iniciant càmera...',
-                                      style: TextStyle(
+                                      l10n.startingCamera,
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w700,
                                         color: RetroColors.inkSoft,
@@ -394,9 +398,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                               ),
                             )
                           else if (!_hasCameraPermission)
-                            _buildPermissionDeniedView()
+                            _buildPermissionDeniedView(l10n)
                           else
-                            _buildNoCameraView(),
+                            _buildNoCameraView(l10n),
 
                           // 2. Retro targeting brackets & reticle overlay
                           _buildReticleOverlay(),
@@ -464,9 +468,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                                               ),
                                             ],
                                           ),
-                                          child: const Text(
-                                            'ANALITZANT AMB EDGE-AI...',
-                                            style: TextStyle(
+                                          child: Text(
+                                            l10n.identifyingProgress,
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 11,
                                               fontWeight: FontWeight.w900,
@@ -512,8 +516,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 ),
                 child: Text(
                   _selectedModeIndex == 0
-                      ? 'Enfoca el barret i les làmines del bolet'
-                      : 'Enfoca l\'escorça o les fulles de l\'arbre',
+                      ? l10n.focusCapAndGills
+                      : l10n.focusBarkAndLeaves,
                   style: const TextStyle(
                     color: RetroColors.ink,
                     fontSize: 12,
@@ -548,8 +552,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildModeButton(0, 'Bolets'),
-                    _buildModeButton(1, 'Arbres'),
+                    _buildModeButton(0, l10n.sectionBolets),
+                    _buildModeButton(1, l10n.sectionArbres),
                   ],
                 ),
               ),
@@ -611,7 +615,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   // Gallery picker button (retro cartridge icon)
                   Semantics(
                     button: true,
-                    label: 'Obrir galeria de fotos',
+                    label: l10n.openPhotoGallery,
                     child: GestureDetector(
                       key: const Key('gallery_picker_button'),
                       onTap: _onGalleryTapped,
@@ -646,8 +650,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   Semantics(
                     button: true,
                     label: _selectedModeIndex == 0
-                        ? 'Fotografiar i identificar bolet'
-                        : 'Fotografiar i identificar arbre',
+                        ? l10n.photoAndIdentifyBolet
+                        : l10n.photoAndIdentifyTree,
                     child: GestureDetector(
                       key: const Key('shutter_button'),
                       onTap: _onShutterTapped,
@@ -709,7 +713,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     );
   }
 
-  Widget _buildPermissionDeniedView() {
+  Widget _buildPermissionDeniedView(AppLocalizations l10n) {
     return Container(
       color: RetroColors.sectionBg,
       padding: const EdgeInsets.all(16),
@@ -722,10 +726,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             color: RetroColors.arcadeRed,
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Permís de càmera necessari',
+          Text(
+            l10n.cameraPermissionRequired,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: RetroColors.ink,
               fontSize: 12,
               fontWeight: FontWeight.w900,
@@ -734,8 +738,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           const SizedBox(height: 4),
           Text(
             _isPermissionPermanentlyDenied
-                ? 'Activa el permís des dels Paràmetres del teu iPhone per escanejar.'
-                : 'Boscdex necessita la càmera per identificar bolets al bosc.',
+                ? l10n.cameraPermissionPermanentMessage
+                : l10n.cameraPermissionDeniedMessage,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: RetroColors.inkSoft,
@@ -764,8 +768,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             ),
             child: Text(
               _isPermissionPermanentlyDenied
-                  ? 'Obrir Paràmetres'
-                  : 'Demanar permís',
+                  ? l10n.openSettings
+                  : l10n.requestPermission,
               style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 11),
             ),
           ),
@@ -774,7 +778,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     );
   }
 
-  Widget _buildNoCameraView() {
+  Widget _buildNoCameraView(AppLocalizations l10n) {
     return Container(
       color: RetroColors.sectionBg,
       padding: const EdgeInsets.all(16),
@@ -790,7 +794,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           ),
           const SizedBox(height: 10),
           Text(
-            _cameraErrorMessage ?? 'Càmera no detectada',
+            _cameraErrorMessage ?? l10n.noCameraDetected,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: RetroColors.ink,
@@ -799,10 +803,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Fes servir la Galeria o prem Disparador per provar la identificació.',
+          Text(
+            l10n.noCameraPrompt,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: RetroColors.inkSoft,
               fontSize: 10,
               fontWeight: FontWeight.w600,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/preferences_provider.dart';
 import '../shared/boscdex_logo.dart';
@@ -40,6 +41,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
       body: SafeArea(
@@ -78,9 +81,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 const SizedBox(height: 10),
 
                 // Subtitle
-                const Text(
-                  'La Pokédex del boletaire per explorar el bosc català',
-                  style: TextStyle(
+                Text(
+                  l10n.splashSubtitle,
+                  style: const TextStyle(
                     fontSize: 14,
                     color: RetroColors.inkSoft,
                     fontWeight: FontWeight.w700,
@@ -104,9 +107,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                       ),
                     ],
                   ),
-                  child: const Text(
-                    '★ INSERT COIN TO EXPLORE ★',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.insertCoinToExplore,
+                    style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w900,
                       color: RetroColors.ink,

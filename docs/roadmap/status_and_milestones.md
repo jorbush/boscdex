@@ -94,7 +94,15 @@ Prioritized features before the initial public store release:
    - [x] Automatic permission prompt on camera launch (`NSLocationWhenInUseUsageDescription` & `NSLocationAlwaysAndWhenInUseUsageDescription`).
    - [x] Scanner HUD `📍 GPS` status indicator and async background pre-warming.
    - [x] Real-time coordinate & altitude pills in mushroom and tree classification sheets with SQLite database persistence.
-   - [x] **Comprehensive Test Suite (181 Passing Tests):** 100% pass rate across 181 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`).
+
+4. **Trilingual Localization Engine (`AppLocalizations` & `SpeciesLocalizer`):**
+   - [x] Complete offline, on-device localization framework supporting Catalan (`ca`, default), Spanish (`es`), and English (`en`).
+   - [x] Dynamic in-app language switcher in `SettingsScreen` with instant reactive UI updates and `SharedPreferences` persistence (`appLocaleProvider`).
+   - [x] Dedicated `SpeciesLocalizer` catalog providing localized vernacular names, morphology traits (cap, gills, stem, latex), safety warnings, lookalike comparative keys, and host tree traits across all 22 mushroom species and 5 indicator trees.
+   - [x] Localized Catalonia foraging regions (`CataloniaZone`) with translated zone labels, short labels, and regional habitat notes.
+   - [x] Dynamic Pokédex map section header ("Ubicació" / "Ubicación" / "Location") in `CataloniaPixelMap` and specimen sheets.
+   - [x] Streamlined specimen detail view by removing redundant "Nova foto" shortcut from user captures gallery.
+   - [x] **Comprehensive Test Suite (224 Passing Tests):** 100% pass rate across 224 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`).
 
 ---
 

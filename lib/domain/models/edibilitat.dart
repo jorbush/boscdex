@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/app_localizations.dart';
 
 /// Edibility classification for mushroom species.
 enum Edibilitat {
@@ -10,6 +11,11 @@ enum Edibilitat {
 }
 
 extension EdibilitatExtension on Edibilitat {
+  /// Localized edibility label respecting the user's selected language.
+  String localizedLabel(BuildContext context) {
+    return AppLocalizations.of(context).edibilityLabel(this);
+  }
+
   String get label {
     switch (this) {
       case Edibilitat.excellent:

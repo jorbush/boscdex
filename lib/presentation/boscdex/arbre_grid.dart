@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import 'boscdex_provider.dart';
 import 'arbre_card.dart';
@@ -10,6 +11,7 @@ class ArbreGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final entries = ref.watch(filteredArbresBoscdexProvider);
     final asyncEntries = ref.watch(arbresBoscdexProvider);
 
@@ -28,10 +30,10 @@ class ArbreGrid extends ConsumerWidget {
       ),
       data: (_) {
         if (entries.isEmpty) {
-          return const Center(
+          return Center(
             child: Text(
-              'Cap arbre trobat.',
-              style: TextStyle(
+              l10n.noTreesFound,
+              style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 color: RetroColors.inkSoft,
               ),

@@ -82,16 +82,16 @@ When a user taps an unlocked mushroom card from the Boscdex grid, the **Specimen
    * A dedicated horizontal photo carousel displaying every scan the user has personally photographed of that species.
    * Each card features the real field photograph with retro borders, scan date (e.g. `25 Set`), and neural confidence score (`🎯 89%`).
    * Tapping any capture opens the **Sighting Detail Sheet** with zoom, coincidence analytics, and photo download/sharing options.
-   * If 0 scans exist for that taxon, an encouraging retro card invites the user to photograph it in the wild with a 1-tap shortcut to the Scanner (`/scan`).
+   * If 0 scans exist for that taxon, an encouraging retro card informs the user that no field captures have been logged yet.
 3. **Safety & Toxic Lookalikes:** High-priority warning cards ([`toxic_twin_alert.dart`](file:///Users/jordi/dev/boscdex/lib/presentation/detail/toxic_twin_alert.dart)) highlighting perilous visual cousins with diagnostic field keys.
 4. **Phenological Seasonality:** 12-month calendar strip highlighting peak Catalan fruiting months.
 5. **Altitudinal Distribution:** Altitude range bar indicating typical Catalan terrain elevation (meters above sea level).
 6. **Botanical Morphology:** Expandable sections detailing cap (*barret*), gills/pores (*làmines/tubs*), stem (*peu*), and latex (*làtex*).
 7. **Associated Host Trees:** Interactive chips linking directly to mycorrhizal partner trees.
-8. **Àrea de Distribució (Mapa Pokédex):**
-   * A retro 16-bit pixel-art regional map of Catalonia displaying the geographic foraging zones where the species naturally thrives.
+8. **Ubicació / Location (Mapa Pokédex):**
+   * A retro 16-bit pixel-art regional map of Catalonia titled dynamically ("Ubicació" / "Ubicación" / "Location") displaying the geographic foraging zones where the species naturally thrives.
    * Active zones pulse with radar animations (`RetroColors.arcadeRed`), mimicking the classic handheld Pokédex "Area" screen.
-   * Interactive zone selector chips allow exploring the comarques, terrain types, and altitudinal habits of each natural region.
+   * Interactive zone selector chips allow exploring the comarques, terrain types, and altitudinal habits of each natural region with localized labels and descriptions.
 
 ---
 

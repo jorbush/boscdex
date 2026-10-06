@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -130,5 +131,35 @@ class SoundEffectsNotifier extends StateNotifier<bool> {
   void setEnabled(bool enabled) {
     state = enabled;
     _prefs.setBool('soundEffectsEnabled', enabled);
+  }
+}
+
+/// Notifier tracking the selected app language locale.
+///
+/// Defaults to Catalan (`Locale('ca')`) if not set.
+final appLocaleProvider = StateNotifierProvider<LocaleNotifier, Locale>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return LocaleNotifier(prefs);
+});
+
+/// [StateNotifier] for app language locale preference.
+class LocaleNotifier extends StateNotifier<Locale> {
+  LocaleNotifier(this._prefs) : super(_loadInitialLocale(_prefs));
+
+  final SharedPreferences _prefs;
+
+  static Locale _loadInitialLocale(SharedPreferences prefs) {
+    final code = prefs.getString('appLocale');
+    if (code == 'es' || code == 'en') {
+      return Locale(code!);
+    }
+    return const Locale('ca');
+  }
+
+  /// Updates the app language locale and persists the selection.
+  void setLocale(Locale newLocale) {
+    if (state.languageCode == newLocale.languageCode) return;
+    state = newLocale;
+    _prefs.setString('appLocale', newLocale.languageCode);
   }
 }

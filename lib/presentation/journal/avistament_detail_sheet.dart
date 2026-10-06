@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/models/edibilitat.dart';
@@ -51,6 +53,8 @@ class AvistamentDetailSheet extends ConsumerStatefulWidget {
 }
 
 class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
+  AppLocalizations get l10n => AppLocalizations.of(context);
+
   static final _dateFormat = DateFormat('dd/MM/yyyy HH:mm');
   PhotoExportService get _photoExportService => widget.photoExportService;
 
@@ -90,8 +94,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
     final photoPath = widget.avistament.photoPath;
     if (photoPath == null || photoPath.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No hi ha cap fitxer de foto per descarregar.'),
+        SnackBar(
+          content: Text(l10n.noPhotoToDownload),
           backgroundColor: RetroColors.arcadeRed,
         ),
       );
@@ -101,8 +105,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
     if (!await file.exists()) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No hi ha cap fitxer de foto per descarregar.'),
+        SnackBar(
+          content: Text(l10n.noPhotoToDownload),
           backgroundColor: RetroColors.arcadeRed,
         ),
       );
@@ -131,8 +135,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
     final photoPath = widget.avistament.photoPath;
     if (photoPath == null || photoPath.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No hi ha cap fitxer de foto per compartir.'),
+        SnackBar(
+          content: Text(l10n.noPhotoToShare),
           backgroundColor: RetroColors.arcadeRed,
         ),
       );
@@ -162,8 +166,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
     if (!await file.exists()) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No s\'ha trobat la imatge al dispositiu.'),
+          SnackBar(
+            content: Text(l10n.imageNotFoundOnDevice),
             backgroundColor: RetroColors.arcadeRed,
           ),
         );
@@ -179,15 +183,15 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
 
     final success = await _photoExportService.sharePhoto(
       file.path,
-      text: 'Mireu aquest exemplar de $name identificat amb Boscdex AI $icon',
-      subject: 'Boscdex - Identificació de $name',
+      text: l10n.shareSightingText(name, icon),
+      subject: l10n.shareSightingSubject(name),
       sharePositionOrigin: sharePositionOrigin,
     );
 
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No s\'ha pogut obrir el menú per compartir.'),
+        SnackBar(
+          content: Text(l10n.shareMenuError),
           backgroundColor: RetroColors.arcadeRed,
         ),
       );
@@ -195,6 +199,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
   }
 
   Future<void> _confirmDelete() async {
+    final l10n = AppLocalizations.of(context);
     unawaited(HapticFeedback.mediumImpact());
     final confirmed = await showDialog<bool>(
       context: context,
@@ -204,16 +209,16 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: RetroColors.ink, width: 2.5),
         ),
-        title: const Text(
-          'Eliminar avistament?',
-          style: TextStyle(
+        title: Text(
+          l10n.confirmDeletionTitle,
+          style: const TextStyle(
             fontWeight: FontWeight.w900,
             color: RetroColors.ink,
           ),
         ),
-        content: const Text(
-          'Aquesta acció eliminarà el registre del teu diari i la fotografia del dispositiu.',
-          style: TextStyle(
+        content: Text(
+          l10n.confirmDeletionMessage,
+          style: const TextStyle(
             color: RetroColors.inkSoft,
             fontWeight: FontWeight.w600,
           ),
@@ -221,9 +226,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogCtx).pop(false),
-            child: const Text(
-              'Cancel·lar',
-              style: TextStyle(
+            child: Text(
+              l10n.cancel,
+              style: const TextStyle(
                 fontWeight: FontWeight.w800,
                 color: RetroColors.inkSoft,
               ),
@@ -240,9 +245,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
               ),
             ),
             onPressed: () => Navigator.of(dialogCtx).pop(true),
-            child: const Text(
-              'Eliminar',
-              style: TextStyle(fontWeight: FontWeight.w900),
+            child: Text(
+              l10n.delete,
+              style: const TextStyle(fontWeight: FontWeight.w900),
             ),
           ),
         ],
@@ -258,8 +263,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
         Navigator.of(context).pop();
         widget.onDeleted?.call();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Avistament eliminat del teu diari.'),
+          SnackBar(
+            content: Text(l10n.sightingDeletedFromJournal),
             backgroundColor: RetroColors.ink,
           ),
         );
@@ -275,11 +280,22 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
     final confidencePct = (confidence * 100).toInt();
     final isHighConfidence = confidence >= 0.70;
 
+    final l10n = AppLocalizations.of(context);
+    final langCode = l10n.languageCode;
     final displayName = _isTree
-        ? (_arbre?.catalanName ??
-            widget.avistament.arbreId ??
-            'Arbre indicador')
-        : (_bolet?.catalanName ?? widget.avistament.boletId ?? 'Bolet');
+        ? SpeciesLocalizer.getTreeName(
+            widget.avistament.arbreId,
+            languageCode: langCode,
+            fallbackName: _arbre?.catalanName ??
+                widget.avistament.arbreId ??
+                'Arbre indicador',
+          )
+        : SpeciesLocalizer.getMushroomName(
+            widget.avistament.boletId,
+            languageCode: langCode,
+            fallbackName:
+                _bolet?.catalanName ?? widget.avistament.boletId ?? 'Bolet',
+          );
     final scientificName = _isTree
         ? (_arbre?.scientificName ?? '')
         : (_bolet?.scientificName ?? '');
@@ -331,9 +347,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
-                    'DETALL DE L\'AVISTAMENT',
-                    style: TextStyle(
+                  Text(
+                    l10n.sightingDetailTitle,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.2,
@@ -373,10 +389,10 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                               PhotoExportService.resolveFile(photoPath),
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
-                                  const Center(
+                                  Center(
                                 child: Text(
-                                  'Error en carregar la imatge',
-                                  style: TextStyle(color: Colors.white70),
+                                  l10n.imageLoadError,
+                                  style: const TextStyle(color: Colors.white70),
                                 ),
                               ),
                             ),
@@ -409,9 +425,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                                     ),
                                   ),
                                 const SizedBox(height: 12),
-                                const Text(
-                                  'Sense fotografia adjunta',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.noAttachedPhoto,
+                                  style: const TextStyle(
                                     color: Colors.white70,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 13,
@@ -436,13 +452,13 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(Icons.camera_alt_rounded,
+                              children: [
+                                const Icon(Icons.camera_alt_rounded,
                                     color: RetroColors.goldCoin, size: 14),
-                                SizedBox(width: 5),
+                                const SizedBox(width: 5),
                                 Text(
-                                  'Captura de Camp',
-                                  style: TextStyle(
+                                  l10n.fieldCapture,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w800,
                                     fontSize: 11.5,
@@ -484,9 +500,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                                       : RetroColors.goldCoin,
                                 ),
                                 const SizedBox(width: 6),
-                                const Text(
-                                  'Coincidència Neural AI',
-                                  style: TextStyle(
+                                Text(
+                                  l10n.neuralCoincidence,
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w900,
                                     color: RetroColors.ink,
@@ -539,8 +555,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                         const SizedBox(height: 8),
                         Text(
                           isHighConfidence
-                              ? '✅ Alta concordança morfològica amb els patrons del model (Series 011).'
-                              : '⚠️ Coincidència moderada. Verifica sempre l\'himeni (làmines/tubs) i la base del peu.',
+                              ? l10n.highConfidenceNote
+                              : l10n.moderateConfidenceNote,
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -657,8 +673,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                             ),
                             label: Text(
                               _isTree
-                                  ? 'Veure fitxa completa de l\'arbre'
-                                  : 'Veure fitxa completa a la Boscdex',
+                                  ? l10n.viewFullTreeCard
+                                  : l10n.viewFullBoletCard,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 13,
@@ -694,9 +710,9 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Dades de l\'expedició',
-                          style: TextStyle(
+                        Text(
+                          l10n.expeditionData,
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w900,
                             color: RetroColors.ink,
@@ -726,7 +742,8 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                                   size: 16, color: RetroColors.forestGreen),
                               const SizedBox(width: 8),
                               Text(
-                                '${widget.avistament.altitude!.toInt()} m sobre el nivell del mar',
+                                l10n.altitudeMeters(
+                                    widget.avistament.altitude!.toInt()),
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
@@ -792,7 +809,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                                 )
                               : const Icon(Icons.download_rounded, size: 20),
                           label: Text(
-                            _isExporting ? 'Desant...' : 'Descarregar Foto',
+                            _isExporting ? '...' : l10n.downloadPhoto,
                             style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 13.5,
@@ -816,7 +833,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                             return IconButton(
                               icon: const Icon(Icons.share_rounded,
                                   color: RetroColors.ink),
-                              tooltip: 'Compartir',
+                              tooltip: l10n.share,
                               onPressed: hasPhoto
                                   ? () => _sharePhoto(btnContext)
                                   : null,
@@ -836,7 +853,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
                         child: IconButton(
                           icon: const Icon(Icons.delete_outline_rounded,
                               color: RetroColors.arcadeRed),
-                          tooltip: 'Eliminar avistament',
+                          tooltip: l10n.deleteSighting,
                           onPressed: _confirmDelete,
                         ),
                       ),

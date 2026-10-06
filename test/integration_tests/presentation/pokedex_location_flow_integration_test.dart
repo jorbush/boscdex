@@ -70,7 +70,7 @@ void main() {
 
       // 4. Verify Habitat & Location information is visible
       expect(find.text('Hàbitat i Distribució'), findsOneWidget);
-      expect(find.text('ÀREA DE DISTRIBUCIÓ (MAPA POKÉDEX)'), findsOneWidget);
+      expect(find.text('Ubicació'), findsOneWidget);
       expect(find.text('Arbres associats'), findsOneWidget);
       expect(find.text('Altitud de fructificació'), findsOneWidget);
       expect(find.text('Claus Morfològiques Bloquejades'), findsOneWidget);

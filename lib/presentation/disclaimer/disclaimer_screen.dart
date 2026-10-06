@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/preferences_provider.dart';
 
@@ -31,6 +32,7 @@ class _DisclaimerScreenState extends ConsumerState<DisclaimerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
       body: SafeArea(
@@ -75,9 +77,9 @@ class _DisclaimerScreenState extends ConsumerState<DisclaimerScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Avís Legal Important',
-                              style: TextStyle(
+                            Text(
+                              l10n.legalNoticeTitle,
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w900,
                                 color: RetroColors.arcadeRed,
@@ -86,9 +88,9 @@ class _DisclaimerScreenState extends ConsumerState<DisclaimerScreen> {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Aquesta aplicació és una guia orientativa i educativa. La intel·ligència artificial pot cometre errors. Mai consumeixis cap bolet sense la validació d\'un expert micòleg humà. L\'ús d\'aquesta aplicació no substitueix el coneixement expert. L\'equip de Boscdex no es fa responsable de cap intoxicació o dany derivat de l\'ús incorrecte de la informació proporcionada.',
-                              style: TextStyle(
+                            Text(
+                              l10n.legalNoticeBody,
+                              style: const TextStyle(
                                 fontSize: 13.5,
                                 height: 1.45,
                                 fontWeight: FontWeight.w600,
@@ -130,10 +132,10 @@ class _DisclaimerScreenState extends ConsumerState<DisclaimerScreen> {
                                   _toggleAccepted();
                                 },
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: Text(
-                                  'He llegit i accepto les condicions d\'avisos de seguretat',
-                                  style: TextStyle(
+                                  l10n.legalNoticeAcceptCheckbox,
+                                  style: const TextStyle(
                                     fontSize: 13.5,
                                     fontWeight: FontWeight.w800,
                                     color: RetroColors.ink,
@@ -180,9 +182,9 @@ class _DisclaimerScreenState extends ConsumerState<DisclaimerScreen> {
                                   }
                                 }
                               : null,
-                          child: const Text(
-                            'Començar a explorar',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.legalNoticeStartButton,
+                            style: const TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w900,
                               letterSpacing: 0.5,

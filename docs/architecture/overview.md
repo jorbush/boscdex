@@ -60,3 +60,9 @@ Boscdex is designed from the ground up as a **100% offline-first, client-only mo
   * Warm ochre accents (`#E9C46A`)
   * Alert red for toxic lookalikes (`#DC2626`)
   * Deep purple-black for deadly species (`#4A0E0E`)
+
+### 4. Core & Localization Layer (`lib/core/localization/`)
+* **Trilingual Architecture:** Self-contained, zero-cloud localization engine providing runtime language switching across Catalan (`ca`, default), Spanish (`es`), and English (`en`).
+* **`AppLocalizations`:** Type-safe localization delegate providing UI labels, tab navigation, camera viewfinder cues, settings options, and warning banners.
+* **`SpeciesLocalizer`:** Curated multilingual catalog translating common names, detailed morphology traits (cap, gills, stem, latex), safety disclaimers, toxic lookalike comparative keys, and host tree traits for all 22 mushrooms and 5 indicator trees.
+* **Reactive Persistence:** Active language selection persisted via `SharedPreferences` and propagated across the widget tree with Riverpod's `appLocaleProvider`.

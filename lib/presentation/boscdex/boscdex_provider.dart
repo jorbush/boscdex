@@ -90,6 +90,12 @@ final discoveryCountProvider = StreamProvider<int>((ref) {
   return db.descobrimentDao.watchDiscoveryCount();
 });
 
+/// Reactive count of total cataloged mushroom species in the database.
+final totalBoletsCountProvider = Provider<int>((ref) {
+  final entriesAsync = ref.watch(boscdexEntriesProvider);
+  return entriesAsync.value?.length ?? 0;
+});
+
 // ==========================================
 // ARBRES BOSCDEX PROVIDERS
 // ==========================================

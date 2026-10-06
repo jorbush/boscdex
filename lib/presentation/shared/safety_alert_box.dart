@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 
 class SafetyAlertBox extends StatelessWidget {
@@ -13,10 +14,11 @@ class SafetyAlertBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Semantics(
       button: true,
       label:
-          'Alerta de confusió perillosa: Es pot confondre fàcilment amb $confusionSpecies. Toca per comparar.',
+          '${l10n.dangerousLookalikeAlert}: ${l10n.canBeConfusedWith(confusionSpecies)}. ${l10n.tapToCompare}.',
       child: GestureDetector(
         onTap: onTap,
         child: Container(
@@ -54,9 +56,9 @@ class SafetyAlertBox extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'ALERTA DE CONFUSIÓ PERILLOSA',
-                      style: TextStyle(
+                    Text(
+                      l10n.dangerousLookalikeAlert,
+                      style: const TextStyle(
                         color: RetroColors.arcadeRed,
                         fontWeight: FontWeight.w900,
                         fontSize: 13,
@@ -65,7 +67,7 @@ class SafetyAlertBox extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Es pot confondre fàcilment amb: $confusionSpecies',
+                      l10n.canBeConfusedWith(confusionSpecies),
                       style: const TextStyle(
                         color: RetroColors.ink,
                         fontSize: 13,
@@ -73,9 +75,9 @@ class SafetyAlertBox extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
-                      'Toca per comparar',
-                      style: TextStyle(
+                    Text(
+                      l10n.tapToCompare,
+                      style: const TextStyle(
                         color: RetroColors.inkSoft,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,

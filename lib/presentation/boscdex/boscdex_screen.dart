@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'boscdex_provider.dart';
 import 'boscdex_grid.dart';
 import 'arbre_grid.dart';
-import '../../core/constants/app_constants.dart';
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../providers/sound_provider.dart';
 import '../shared/boscdex_logo.dart';
@@ -23,7 +23,8 @@ class BoscdexScreen extends ConsumerWidget {
     // Bolets stats
     final discoveryCountAsync = ref.watch(discoveryCountProvider);
     final boletCount = discoveryCountAsync.value ?? 0;
-    final boletProgress = boletCount / AppConstants.maxDexEntries;
+    final totalBolets = ref.watch(totalBoletsCountProvider);
+    final boletProgress = totalBolets > 0 ? (boletCount / totalBolets) : 0.0;
     final boletFilter = ref.watch(boscdexFilterProvider);
 
     // Arbres stats
@@ -35,6 +36,7 @@ class BoscdexScreen extends ConsumerWidget {
 
     final isBolets = section == BoscdexSection.bolets;
 
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 16,
@@ -91,8 +93,9 @@ class BoscdexScreen extends ConsumerWidget {
                   children: [
                     Text(
                       isBolets
-                          ? '$boletCount/${AppConstants.maxDexEntries} descoberts'
-                          : '$visitedCount/$totalArbres identificats',
+                          ? l10n.discoveredRatio(boletCount, totalBolets)
+                          : l10n.identifiedTreesRatio(
+                              visitedCount, totalArbres),
                       style: const TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
@@ -137,7 +140,7 @@ class BoscdexScreen extends ConsumerWidget {
                 color: RetroColors.ink,
               ),
             ),
-            tooltip: 'Configuració',
+            tooltip: l10n.settingsTitle,
             onPressed: () {
               HapticFeedback.lightImpact();
               context.push('/settings');
@@ -162,7 +165,7 @@ class BoscdexScreen extends ConsumerWidget {
                 size: 20,
               ),
             ),
-            tooltip: 'Les Meves Insígnies',
+            tooltip: l10n.myBadges,
             onPressed: () {
               HapticFeedback.lightImpact();
               InsigniesDialog.show(context);
@@ -176,13 +179,13 @@ class BoscdexScreen extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Dual-Dex Mode Selector (Bolets vs Arbres)
-              _buildSectionSelector(context, ref, section),
+              _buildSectionSelector(context, ref, section, l10n),
 
               // Contextual Filter Chips
               if (isBolets)
-                _buildBoletFilterBar(context, ref, boletFilter)
+                _buildBoletFilterBar(context, ref, boletFilter, l10n)
               else
-                _buildArbreFilterBar(context, ref, arbreFilter),
+                _buildArbreFilterBar(context, ref, arbreFilter, l10n),
 
               Container(
                 height: 2,
@@ -196,8 +199,8 @@ class BoscdexScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSectionSelector(
-      BuildContext context, WidgetRef ref, BoscdexSection currentSection) {
+  Widget _buildSectionSelector(BuildContext context, WidgetRef ref,
+      BoscdexSection currentSection, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Container(
@@ -214,7 +217,7 @@ class BoscdexScreen extends ConsumerWidget {
               context: context,
               ref: ref,
               icon: const PixelBoletIcon(size: 18),
-              label: 'Bolets',
+              label: l10n.sectionBolets,
               targetSection: BoscdexSection.bolets,
               isSelected: currentSection == BoscdexSection.bolets,
             ),
@@ -223,7 +226,7 @@ class BoscdexScreen extends ConsumerWidget {
               context: context,
               ref: ref,
               icon: const PixelArbreIcon(size: 18),
-              label: 'Arbres',
+              label: l10n.sectionArbres,
               targetSection: BoscdexSection.arbres,
               isSelected: currentSection == BoscdexSection.arbres,
             ),
@@ -298,8 +301,8 @@ class BoscdexScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBoletFilterBar(
-      BuildContext context, WidgetRef ref, String currentFilter) {
+  Widget _buildBoletFilterBar(BuildContext context, WidgetRef ref,
+      String currentFilter, AppLocalizations l10n) {
     const filters = ['tots', 'comestibles', 'tòxics/mortals', 'arbres socis'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -307,7 +310,23 @@ class BoscdexScreen extends ConsumerWidget {
       child: Row(
         children: filters.map((f) {
           final isSelected = currentFilter == f;
-          final label = f[0].toUpperCase() + f.substring(1);
+          final String label;
+          switch (f) {
+            case 'tots':
+              label = l10n.filterAll;
+              break;
+            case 'comestibles':
+              label = l10n.filterEdibles;
+              break;
+            case 'tòxics/mortals':
+              label = l10n.filterToxics;
+              break;
+            case 'arbres socis':
+              label = l10n.filterTreePartners;
+              break;
+            default:
+              label = f[0].toUpperCase() + f.substring(1);
+          }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: _buildFilterChip(
@@ -328,8 +347,8 @@ class BoscdexScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildArbreFilterBar(
-      BuildContext context, WidgetRef ref, String currentFilter) {
+  Widget _buildArbreFilterBar(BuildContext context, WidgetRef ref,
+      String currentFilter, AppLocalizations l10n) {
     const filters = ['tots', 'agulla', 'caduca', 'perenne'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -337,7 +356,23 @@ class BoscdexScreen extends ConsumerWidget {
       child: Row(
         children: filters.map((f) {
           final isSelected = currentFilter == f;
-          final label = f[0].toUpperCase() + f.substring(1);
+          final String label;
+          switch (f) {
+            case 'tots':
+              label = l10n.filterAll;
+              break;
+            case 'agulla':
+              label = l10n.filterNeedle;
+              break;
+            case 'caduca':
+              label = l10n.filterDeciduous;
+              break;
+            case 'perenne':
+              label = l10n.filterEvergreen;
+              break;
+            default:
+              label = f[0].toUpperCase() + f.substring(1);
+          }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: _buildFilterChip(

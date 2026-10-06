@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../domain/models/catalonia_zone.dart';
 import '../shared/pixel_icons.dart';
@@ -27,6 +28,8 @@ class CataloniaPixelMap extends StatefulWidget {
 
 class _CataloniaPixelMapState extends State<CataloniaPixelMap>
     with SingleTickerProviderStateMixin {
+  AppLocalizations get l10n => AppLocalizations.of(context);
+
   late final AnimationController _pulseController;
   late final Animation<double> _pulseAnimation;
   CataloniaZone? _selectedZone;
@@ -106,10 +109,10 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
                   color: RetroColors.forestGreen,
                 ),
                 const SizedBox(width: 8),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'ÀREA DE DISTRIBUCIÓ (MAPA POKÉDEX)',
-                    style: TextStyle(
+                    l10n.distributionAreaPokedex,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 0.8,
@@ -127,7 +130,7 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
                         Border.all(color: RetroColors.forestGreen, width: 1.2),
                   ),
                   child: Text(
-                    '$activeCount / 7 zones',
+                    l10n.zonesCount(activeCount, 7),
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w900,
@@ -231,12 +234,12 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
               children: [
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    PixelZonePinIcon(isActive: true, size: 14),
-                    SizedBox(width: 6),
+                  children: [
+                    const PixelZonePinIcon(isActive: true, size: 14),
+                    const SizedBox(width: 6),
                     Text(
-                      'Presència habitual',
-                      style: TextStyle(
+                      l10n.habitualPresence,
+                      style: const TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w800,
                         color: RetroColors.ink,
@@ -246,12 +249,12 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    PixelZonePinIcon(isActive: false, size: 14),
-                    SizedBox(width: 6),
+                  children: [
+                    const PixelZonePinIcon(isActive: false, size: 14),
+                    const SizedBox(width: 6),
                     Text(
-                      'Sense presència',
-                      style: TextStyle(
+                      l10n.noPresence,
+                      style: const TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
                         color: RetroColors.inkSoft,
@@ -296,7 +299,7 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          zone.shortLabel,
+                          zone.getShortLabel(l10n.languageCode),
                           style: TextStyle(
                             fontSize: 11.5,
                             fontWeight:
@@ -352,7 +355,7 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            _selectedZone!.label,
+                            _selectedZone!.getLabel(l10n.languageCode),
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w900,
@@ -364,7 +367,7 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Comarques: ${_selectedZone!.comarques}',
+                      l10n.countiesLabel(_selectedZone!.comarques),
                       style: const TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w700,
@@ -373,7 +376,7 @@ class _CataloniaPixelMapState extends State<CataloniaPixelMap>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _selectedZone!.habitatDescription,
+                      _selectedZone!.getHabitatDescription(l10n.languageCode),
                       style: const TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,

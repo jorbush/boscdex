@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/services/photo_export_service.dart';
@@ -22,14 +24,16 @@ class JournalScreen extends ConsumerWidget {
     final arbresMap = ref.watch(allArbresMapProvider).value ?? {};
     final viewMode = ref.watch(journalViewModeProvider);
 
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
       appBar: AppBar(
         backgroundColor: RetroColors.creamBg,
         elevation: 0,
-        title: const Text(
-          'El Meu Diari',
-          style: TextStyle(
+        title: Text(
+          l10n.journalTitle,
+          style: const TextStyle(
             color: RetroColors.ink,
             fontWeight: FontWeight.w900,
             fontSize: 22,
@@ -40,7 +44,7 @@ class JournalScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildViewModeSelector(context, ref, viewMode),
+              _buildViewModeSelector(context, ref, viewMode, l10n),
               Container(
                 color: RetroColors.ink,
                 height: 2,
@@ -52,8 +56,8 @@ class JournalScreen extends ConsumerWidget {
       body: avistamentsAsync.when(
         data: (avistaments) {
           final listView = avistaments.isEmpty
-              ? _buildEmptyState()
-              : _buildListView(avistaments, boletsMap, arbresMap);
+              ? _buildEmptyState(l10n)
+              : _buildListView(avistaments, boletsMap, arbresMap, l10n);
 
           final mapView = JournalMapView(
             avistaments: avistaments,
@@ -77,8 +81,8 @@ class JournalScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildViewModeSelector(
-      BuildContext context, WidgetRef ref, JournalViewMode currentMode) {
+  Widget _buildViewModeSelector(BuildContext context, WidgetRef ref,
+      JournalViewMode currentMode, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Container(
@@ -95,7 +99,7 @@ class JournalScreen extends ConsumerWidget {
               context: context,
               ref: ref,
               icon: '📜',
-              label: 'Llista',
+              label: l10n.journalTabList,
               targetMode: JournalViewMode.llista,
               isSelected: currentMode == JournalViewMode.llista,
             ),
@@ -104,7 +108,7 @@ class JournalScreen extends ConsumerWidget {
               context: context,
               ref: ref,
               icon: '🗺️',
-              label: 'Mapa',
+              label: l10n.journalTabMap,
               targetMode: JournalViewMode.mapa,
               isSelected: currentMode == JournalViewMode.mapa,
             ),
@@ -174,7 +178,7 @@ class JournalScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppLocalizations l10n) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -188,26 +192,26 @@ class JournalScreen extends ConsumerWidget {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 '📜',
                 style: TextStyle(fontSize: 54),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
-                'DIARI D\'AVENTURES',
-                style: TextStyle(
+                l10n.journalAdventureDiary,
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w900,
                   color: RetroColors.forestGreen,
                   letterSpacing: 1.2,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
-                'Encara no tens cap avistament. Escaneja el teu primer bolet o arbre!',
+                l10n.journalEmptyPrompt,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: RetroColors.ink,
@@ -225,18 +229,30 @@ class JournalScreen extends ConsumerWidget {
     List<Avistament> avistaments,
     Map<String, String> boletsMap,
     Map<String, String> arbresMap,
+    AppLocalizations l10n,
   ) {
     return ListView.builder(
       padding: const EdgeInsets.all(12),
       itemCount: avistaments.length,
       itemBuilder: (context, index) {
         final avistament = avistaments[index];
+        final langCode = AppLocalizations.of(context).languageCode;
         final isTree = avistament.arbreId != null;
         final displayName = isTree
-            ? (arbresMap[avistament.arbreId] ??
-                avistament.arbreId ??
-                'Arbre indicador')
-            : (boletsMap[avistament.boletId] ?? avistament.boletId ?? 'Bolet');
+            ? SpeciesLocalizer.getTreeName(
+                avistament.arbreId,
+                languageCode: langCode,
+                fallbackName: arbresMap[avistament.arbreId] ??
+                    avistament.arbreId ??
+                    'Arbre indicador',
+              )
+            : SpeciesLocalizer.getMushroomName(
+                avistament.boletId,
+                languageCode: langCode,
+                fallbackName: boletsMap[avistament.boletId] ??
+                    avistament.boletId ??
+                    'Bolet',
+              );
 
         final hasPhotoPath =
             avistament.photoPath != null && avistament.photoPath!.isNotEmpty;
@@ -336,9 +352,9 @@ class JournalScreen extends ConsumerWidget {
                       border: Border.all(
                           color: RetroColors.forestGreen, width: 1.2),
                     ),
-                    child: const Text(
-                      'ARBRE',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.categoryArbre,
+                      style: const TextStyle(
                         fontSize: 9.5,
                         fontWeight: FontWeight.w900,
                         color: RetroColors.forestGreen,

@@ -1,7 +1,9 @@
+import 'package:boscdex/core/localization/app_localizations.dart';
 import 'package:boscdex/domain/models/catalonia_zone.dart';
 import 'package:boscdex/presentation/detail/catalonia_pixel_map.dart';
 import 'package:boscdex/presentation/shared/pixel_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -34,7 +36,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       // 1. Verify Header and active counter
-      expect(find.text('ÀREA DE DISTRIBUCIÓ (MAPA POKÉDEX)'), findsOneWidget);
+      expect(find.text('Ubicació'), findsOneWidget);
       expect(find.text('2 / 7 zones'), findsOneWidget);
 
       // 2. Verify Compass/Map indicator with pixel icon
@@ -64,6 +66,100 @@ void main() {
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump();
+    });
+
+    testWidgets('Renders CataloniaPixelMap in Spanish', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(450, 1000));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      const activeZones = [
+        CataloniaZone.altPirineu,
+        CataloniaZone.prepirineuCentral,
+      ];
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          locale: Locale('es'),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: [
+            Locale('ca'),
+            Locale('es'),
+            Locale('en'),
+          ],
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: CataloniaPixelMap(
+                activeZones: activeZones,
+                speciesName: 'Níscalo',
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Ubicación'), findsOneWidget);
+      expect(find.text('2 / 7 zonas'), findsOneWidget);
+      expect(find.text('Presencia habitual'), findsOneWidget);
+      expect(find.text('Sin presencia'), findsOneWidget);
+      expect(find.text('Alto Pirineo'), findsOneWidget);
+      expect(find.text('Alto Pirineo y Arán'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets('Renders CataloniaPixelMap in English', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(450, 1000));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      const activeZones = [
+        CataloniaZone.altPirineu,
+        CataloniaZone.prepirineuCentral,
+      ];
+
+      await tester.pumpWidget(
+        const MaterialApp(
+          locale: Locale('en'),
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: [
+            Locale('ca'),
+            Locale('es'),
+            Locale('en'),
+          ],
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: CataloniaPixelMap(
+                activeZones: activeZones,
+                speciesName: 'Saffron Milk Cap',
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Location'), findsOneWidget);
+      expect(find.text('2 / 7 zones'), findsOneWidget);
+      expect(find.text('Regular presence'), findsOneWidget);
+      expect(find.text('No presence'), findsOneWidget);
+      expect(find.text('High Pyrenees'), findsOneWidget);
+      expect(find.text('High Pyrenees & Aran'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
     });
   });
 }

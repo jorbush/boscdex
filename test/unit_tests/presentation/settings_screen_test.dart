@@ -36,6 +36,7 @@ void main() {
               .overrideWith((ref) => Stream.value(discoveryCount)),
           avistamentsProvider
               .overrideWith((ref) => Stream.value(avistaments.cast())),
+          totalBoletsCountProvider.overrideWithValue(22),
         ],
         child: const MaterialApp(
           home: SettingsScreen(),
@@ -80,7 +81,7 @@ void main() {
       expect(find.text('Filtre de certesa IA (70%)'), findsOneWidget);
       expect(find.text('Xarxa Neuronal On-Device'), findsOneWidget);
       expect(find.text('Catàleg Relacional SQLite'), findsOneWidget);
-      expect(find.textContaining('12 / 80 bolets catalogats'), findsOneWidget);
+      expect(find.textContaining('12 / 22 bolets catalogats'), findsOneWidget);
       expect(find.text('Compromís de Privacitat'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox());

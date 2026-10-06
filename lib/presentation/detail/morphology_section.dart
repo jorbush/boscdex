@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
 
 class MorphologySection extends StatelessWidget {
@@ -17,6 +18,7 @@ class MorphologySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       decoration: RetroDecorations.card(
         backgroundColor: Colors.white,
@@ -30,9 +32,9 @@ class MorphologySection extends StatelessWidget {
           initiallyExpanded: true,
           iconColor: RetroColors.forestGreen,
           collapsedIconColor: RetroColors.inkSoft,
-          title: const Text(
-            'Morfologia',
-            style: TextStyle(
+          title: Text(
+            l10n.morphology,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
               color: RetroColors.ink,
@@ -45,17 +47,17 @@ class MorphologySection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildMorphologyItem(
-                      context, 'Barret', Icons.panorama_horizontal, cap),
+                      context, l10n.cap, Icons.panorama_horizontal, cap),
                   const SizedBox(height: 12),
                   _buildMorphologyItem(
-                      context, 'Làmines', Icons.format_align_justify, gills),
+                      context, l10n.gills, Icons.format_align_justify, gills),
                   const SizedBox(height: 12),
                   _buildMorphologyItem(
-                      context, 'Peu', Icons.vertical_align_bottom, stem),
+                      context, l10n.stem, Icons.vertical_align_bottom, stem),
                   if (latex != null && latex!.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     _buildMorphologyItem(
-                        context, 'Làtex', Icons.water_drop, latex!),
+                        context, l10n.latex, Icons.water_drop, latex!),
                   ],
                 ],
               ),

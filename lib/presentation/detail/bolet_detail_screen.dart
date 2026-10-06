@@ -5,10 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../data/database/daos/bolet_dao.dart';
 import '../../providers/database_provider.dart';
+import '../../providers/preferences_provider.dart';
 import '../../domain/models/edibilitat.dart';
 import '../../domain/models/raritat_tier.dart';
 import '../../domain/services/photo_export_service.dart';
@@ -29,6 +32,8 @@ class BoletDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
+  AppLocalizations get l10n => AppLocalizations.of(context);
+
   Bolet? _bolet;
   List<Arbre> _arbres = [];
   List<ToxicLookalikeWithNotes> _toxicLookalikes = [];
@@ -40,6 +45,15 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void didUpdateWidget(BoletDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.id != widget.id) {
+      _isLoading = true;
+      _loadData();
+    }
   }
 
   Future<void> _loadData() async {
@@ -95,14 +109,15 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final l10n = AppLocalizations.of(context);
     final bolet = _bolet;
     if (bolet == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('No trobat')),
-        body: const Center(
+        appBar: AppBar(title: Text(l10n.notFoundTitle)),
+        body: Center(
           child: Text(
-            'Aquest bolet no existeix.',
-            style: TextStyle(
+            l10n.boletNotFoundMessage,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: RetroColors.inkSoft,
@@ -131,7 +146,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Semantics(
                 button: true,
-                label: 'Enrere',
+                label: l10n.back,
                 child: GestureDetector(
                   onTap: () {
                     HapticFeedback.selectionClick();
@@ -251,9 +266,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Espècie per catalogar',
-                      style: TextStyle(
+                    Text(
+                      l10n.unregisteredSpecies,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w600,
@@ -262,7 +277,11 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                     ),
                   ] else ...[
                     Text(
-                      bolet.catalanName,
+                      SpeciesLocalizer.getMushroomName(
+                        bolet.id,
+                        languageCode: AppLocalizations.of(context).languageCode,
+                        fallbackName: bolet.catalanName,
+                      ),
                       style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w900,
@@ -303,13 +322,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.lock_outline_rounded,
+                            children: [
+                              const Icon(Icons.lock_outline_rounded,
                                   size: 14, color: RetroColors.ink),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               Text(
-                                'No descobert',
-                                style: TextStyle(
+                                l10n.notDiscoveredBadge,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w900,
                                   color: RetroColors.ink,
                                   fontSize: 12.5,
@@ -334,9 +353,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                               ),
                             ],
                           ),
-                          child: const Text(
-                            'Comestibilitat: ???',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.edibilityUnknown,
+                            style: const TextStyle(
                               color: RetroColors.inkSoft,
                               fontWeight: FontWeight.w900,
                               fontSize: 12.5,
@@ -364,7 +383,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                             ],
                           ),
                           child: Text(
-                            edibilitat.label,
+                            l10n.edibilityLabel(edibilitat),
                             style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               color: Colors.white,
@@ -389,7 +408,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                             ],
                           ),
                           child: Text(
-                            raritatTier.label,
+                            l10n.rarityLabel(raritatTier),
                             style: TextStyle(
                               color: raritatTier.color,
                               fontWeight: FontWeight.w900,
@@ -409,8 +428,24 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                     if (_toxicLookalikes.isNotEmpty) ...[
                       for (final twin in _toxicLookalikes)
                         ToxicTwinAlert(
-                          lookalikeName: twin.lookalike.catalanName,
-                          comparisonNotes: twin.comparisonNotes,
+                          lookalikeName: SpeciesLocalizer.getMushroomName(
+                            twin.lookalike.id,
+                            languageCode: l10n.languageCode,
+                            fallbackName: twin.lookalike.catalanName,
+                          ),
+                          comparisonNotes: SpeciesLocalizer.getComparisonNotes(
+                            bolet.id,
+                            twin.lookalike.id,
+                            languageCode: l10n.languageCode,
+                            fallback: twin.comparisonNotes,
+                          ),
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            ref
+                                .read(toxicComparisonViewCountProvider.notifier)
+                                .increment();
+                            context.push('/boscdex/${twin.lookalike.id}');
+                          },
                         ),
                       const SizedBox(height: 20),
                     ],
@@ -428,15 +463,31 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                     _buildSearchInForestCta(context),
                   ] else ...[
                     MorphologySection(
-                      cap: bolet.capDescription,
-                      gills: bolet.gillsDescription,
-                      stem: bolet.stemDescription,
-                      latex: bolet.latexDescription,
+                      cap: SpeciesLocalizer.getCapDescription(
+                        bolet.id,
+                        languageCode: l10n.languageCode,
+                        fallback: bolet.capDescription,
+                      ),
+                      gills: SpeciesLocalizer.getGillsDescription(
+                        bolet.id,
+                        languageCode: l10n.languageCode,
+                        fallback: bolet.gillsDescription,
+                      ),
+                      stem: SpeciesLocalizer.getStemDescription(
+                        bolet.id,
+                        languageCode: l10n.languageCode,
+                        fallback: bolet.stemDescription,
+                      ),
+                      latex: SpeciesLocalizer.getLatexDescription(
+                        bolet.id,
+                        languageCode: l10n.languageCode,
+                        fallback: bolet.latexDescription,
+                      ),
                     ),
                     if (bolet.safetyNotes != null &&
                         bolet.safetyNotes!.isNotEmpty) ...[
                       const SizedBox(height: 24),
-                      _buildSafetyNotesCard(bolet.safetyNotes!),
+                      _buildSafetyNotesCard(bolet.id, bolet.safetyNotes!),
                     ],
                   ],
                   const SizedBox(height: 48),
@@ -457,13 +508,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          children: const [
-            Icon(Icons.explore_rounded,
+          children: [
+            const Icon(Icons.explore_rounded,
                 size: 22, color: RetroColors.forestGreen),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(
-              'Hàbitat i Distribució',
-              style: TextStyle(
+              l10n.habitatAndDistribution,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
                 color: RetroColors.ink,
@@ -472,9 +523,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
           ],
         ),
         const SizedBox(height: 4),
-        const Text(
-          'Pistes d\'exploració per localitzar aquest bolet al bosc',
-          style: TextStyle(
+        Text(
+          l10n.explorationClues,
+          style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: RetroColors.inkSoft,
@@ -485,7 +536,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
         // 1. Regional Pixel Art Map of Catalonia (Pokédex Area Map)
         CataloniaPixelMap(
           activeZones: zones,
-          speciesName: _isDiscovered ? bolet.catalanName : null,
+          speciesName: _isDiscovered
+              ? SpeciesLocalizer.getMushroomName(
+                  bolet.id,
+                  languageCode: l10n.languageCode,
+                  fallbackName: bolet.catalanName,
+                )
+              : null,
         ),
         const SizedBox(height: 18),
 
@@ -504,13 +561,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: const [
-                    Icon(Icons.park_rounded,
+                  children: [
+                    const Icon(Icons.park_rounded,
                         size: 18, color: RetroColors.forestGreen),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
-                      'Arbres associats',
-                      style: TextStyle(
+                      l10n.associatedTrees,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
                         color: RetroColors.ink,
@@ -519,9 +576,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Forma micorrizes amb aquestes espècies. Cerca boscos on abundin:',
-                  style: TextStyle(
+                Text(
+                  l10n.mycorrhizalNotice,
+                  style: const TextStyle(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
                     color: RetroColors.inkSoft,
@@ -560,7 +617,11 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                             ),
                           ),
                           label: Text(
-                            arbre.catalanName,
+                            SpeciesLocalizer.getTreeName(
+                              arbre.id,
+                              languageCode: l10n.languageCode,
+                              fallbackName: arbre.catalanName,
+                            ),
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               color: RetroColors.ink,
@@ -598,13 +659,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: const [
-                    Icon(Icons.terrain_rounded,
+                  children: [
+                    const Icon(Icons.terrain_rounded,
                         size: 18, color: RetroColors.forestGreen),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
-                      'Altitud de fructificació',
-                      style: TextStyle(
+                      l10n.fruitingAltitude,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
                         color: RetroColors.ink,
@@ -614,7 +675,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '${bolet.altitudeMin}m - ${bolet.altitudeMax}m sobre el nivell del mar',
+                  l10n.elevationRange(bolet.altitudeMin!, bolet.altitudeMax!),
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -629,6 +690,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
   }
 
   Widget _buildLockedMorphologyCard() {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -642,12 +704,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.lock_rounded, size: 20, color: RetroColors.arcadeRed),
-              SizedBox(width: 8),
+            children: [
+              const Icon(Icons.lock_rounded,
+                  size: 20, color: RetroColors.arcadeRed),
+              const SizedBox(width: 8),
               Text(
-                'Claus Morfològiques Bloquejades',
-                style: TextStyle(
+                l10n.lockedMorphologyTitle,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
                   color: RetroColors.ink,
@@ -656,9 +719,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Les característiques anatòmiques detallades (barret, làmines, peu i làtex) estan protegides. Escaneja un exemplar viu al bosc per desvelar les claus d\'identificació botànica.',
-            style: TextStyle(
+          Text(
+            l10n.lockedMorphologyDescription,
+            style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: RetroColors.inkSoft,
@@ -671,6 +734,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
   }
 
   Widget _buildSearchInForestCta(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -684,13 +748,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.travel_explore_rounded,
+            children: [
+              const Icon(Icons.travel_explore_rounded,
                   size: 20, color: RetroColors.forestGreen),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
-                'A punt per a l\'expedició?',
-                style: TextStyle(
+                l10n.readyForExpedition,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
                   color: RetroColors.ink,
@@ -699,9 +763,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Visita els boscos i altituds indicats durant la temporada per trobar-lo i catalogar-lo a la teva Boscdex.',
-            style: TextStyle(
+          Text(
+            l10n.expeditionPrompt,
+            style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: RetroColors.inkSoft,
@@ -727,9 +791,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                 context.go('/scan');
               },
               icon: const Icon(Icons.camera_alt_rounded, size: 18),
-              label: const Text(
-                'Cercar amb la càmera',
-                style: TextStyle(
+              label: Text(
+                l10n.searchWithCamera,
+                style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 14,
                 ),
@@ -741,7 +805,14 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
     );
   }
 
-  Widget _buildSafetyNotesCard(String safetyNotes) {
+  Widget _buildSafetyNotesCard(String boletId, String safetyNotes) {
+    final l10n = AppLocalizations.of(context);
+    final localizedNotes = SpeciesLocalizer.getSafetyNotes(
+          boletId,
+          languageCode: l10n.languageCode,
+          fallback: safetyNotes,
+        ) ??
+        safetyNotes;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: RetroDecorations.card(
@@ -755,12 +826,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.lightbulb_rounded, color: Color(0xFFB8860B), size: 18),
-              SizedBox(width: 8),
+            children: [
+              const Icon(Icons.lightbulb_rounded,
+                  color: Color(0xFFB8860B), size: 18),
+              const SizedBox(width: 8),
               Text(
-                'Notes',
-                style: TextStyle(
+                l10n.notes,
+                style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   color: RetroColors.ink,
                   fontSize: 15,
@@ -770,7 +842,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            safetyNotes,
+            localizedNotes,
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -784,6 +856,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
   }
 
   Widget _buildUserCapturesSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final hasCaptures = _avistaments.isNotEmpty;
     final shortDateFormat = DateFormat('d MMM');
 
@@ -791,39 +864,18 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                const Icon(Icons.camera_alt_rounded,
-                    size: 20, color: RetroColors.forestGreen),
-                const SizedBox(width: 8),
-                Text(
-                  'Les Teves Captures (${_avistaments.length})',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: RetroColors.ink,
-                  ),
-                ),
-              ],
-            ),
-            if (hasCaptures)
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  foregroundColor: RetroColors.forestGreen,
-                  padding: EdgeInsets.zero,
-                ),
-                icon: const Icon(Icons.add_a_photo_outlined, size: 16),
-                label: const Text(
-                  'Nova foto',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
-                ),
-                onPressed: () {
-                  HapticFeedback.selectionClick();
-                  context.go('/scan');
-                },
+            const Icon(Icons.camera_alt_rounded,
+                size: 20, color: RetroColors.forestGreen),
+            const SizedBox(width: 8),
+            Text(
+              l10n.yourCaptures(_avistaments.length),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                color: RetroColors.ink,
               ),
+            ),
           ],
         ),
         const SizedBox(height: 10),
@@ -974,19 +1026,19 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        'Cap captura registrada',
-                        style: TextStyle(
+                        l10n.noCapturesYet,
+                        style: const TextStyle(
                           fontSize: 13.5,
                           fontWeight: FontWeight.w900,
                           color: RetroColors.ink,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Text(
-                        'Troba aquest bolet al bosc i escaneja\'l per afegir la teva foto!',
-                        style: TextStyle(
+                        l10n.noCapturesPrompt,
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: RetroColors.inkSoft,
@@ -1013,9 +1065,9 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                     HapticFeedback.selectionClick();
                     context.go('/scan');
                   },
-                  child: const Text(
-                    'Escanejar',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.tabScan,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w900,
                     ),

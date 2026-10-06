@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/app_localizations.dart';
 
 enum RaritatTier {
   comu,
@@ -9,6 +10,11 @@ enum RaritatTier {
 }
 
 extension RaritatTierExtension on RaritatTier {
+  /// Localized rarity label respecting the user's selected language.
+  String localizedLabel(BuildContext context) {
+    return AppLocalizations.of(context).rarityLabel(this);
+  }
+
   String get label {
     switch (this) {
       case RaritatTier.comu:

@@ -6,6 +6,8 @@ import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:boscdex/core/localization/app_localizations.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/models/classificacio_result.dart';
 import 'package:boscdex/presentation/scan/classification_result_sheet.dart';
@@ -246,6 +248,96 @@ void main() {
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpAndSettle();
+    });
+
+    testWidgets(
+        'renders localized lookalike names in SafetyAlertBox under Spanish locale',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            locale: Locale('es'),
+            supportedLocales: [Locale('ca'), Locale('es'), Locale('en')],
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            home: Scaffold(
+              body: ClassificationResultSheet(
+                results: [
+                  ClassificacioResult(
+                    boletId: 'lactarius_deliciosus',
+                    displayName: 'Níscalo',
+                    confidence: 0.95,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.byType(SafetyAlertBox), findsOneWidget);
+      // Under Spanish locale, Amanita muscaria is "Matamoscas"
+      expect(find.textContaining('Matamoscas'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'renders SafetyAlertBox when runner-up candidate is mortal (Top-N Toxicity Gate)',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: ClassificationResultSheet(
+                results: [
+                  ClassificacioResult(
+                    boletId: 'boletus_edulis',
+                    displayName: 'Cep',
+                    confidence: 0.74,
+                  ),
+                  ClassificacioResult(
+                    boletId: 'amanita_phalloides',
+                    displayName: 'Farinera borda',
+                    confidence: 0.22,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // boletus_edulis has no direct toxic lookalikes in the database,
+      // but runner-up Amanita phalloides triggers the Top-N Toxicity Gate!
+      expect(find.byType(SafetyAlertBox), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SafetyAlertBox),
+          matching: find.textContaining('Farinera borda'),
+        ),
+        findsOneWidget,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
     });
   });
 }

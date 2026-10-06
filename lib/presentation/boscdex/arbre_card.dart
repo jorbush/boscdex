@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/localization/app_localizations.dart';
+import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import 'boscdex_provider.dart';
 
@@ -16,11 +18,23 @@ class ArbreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arbre = entry.arbre;
+    final l10n = AppLocalizations.of(context);
+    final langCode = l10n.languageCode;
+    final displayName = SpeciesLocalizer.getTreeName(
+      arbre.id,
+      languageCode: langCode,
+      fallbackName: arbre.catalanName,
+    );
 
     return Semantics(
       button: true,
-      label:
-          '${arbre.catalanName} (${arbre.scientificName}), fulla ${arbre.leafType}, ${entry.isVisited ? "identificat al camp" : "no identificat"}',
+      label: l10n.treeCardSemantics(
+        displayName,
+        arbre.scientificName,
+        arbre.leafType,
+        entry.isVisited,
+        entry.associatedBoletsCount,
+      ),
       child: GestureDetector(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -131,9 +145,9 @@ class ArbreCard extends StatelessWidget {
 
               const Spacer(),
 
-              // Catalan Vernacular Name
+              // Localized Vernacular Name
               Text(
-                arbre.catalanName,
+                displayName,
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w900,
@@ -172,7 +186,7 @@ class ArbreCard extends StatelessWidget {
                     const Text('🍄', style: TextStyle(fontSize: 10)),
                     const SizedBox(width: 4),
                     Text(
-                      '${entry.associatedBoletsCount} bolets socis',
+                      l10n.associatedBoletsCount(entry.associatedBoletsCount),
                       style: const TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,

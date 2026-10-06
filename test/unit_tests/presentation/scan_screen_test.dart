@@ -3,16 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:boscdex/core/localization/app_localizations.dart';
+import 'package:boscdex/data/database/app_database.dart';
+import 'package:boscdex/domain/models/classificacio_result.dart';
+import 'package:boscdex/domain/services/classifier_service.dart';
 import 'package:boscdex/presentation/scan/scan_screen.dart';
 import 'package:boscdex/providers/classifier_provider.dart';
-import 'package:boscdex/domain/services/classifier_service.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:boscdex/providers/database_provider.dart';
 import 'package:boscdex/providers/preferences_provider.dart';
 import 'package:drift/native.dart';
-import 'package:boscdex/data/database/app_database.dart';
-import 'package:boscdex/providers/database_provider.dart';
-import 'package:boscdex/domain/models/classificacio_result.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class _EmptyClassifierService extends MockClassifierService {
   @override
@@ -138,8 +139,7 @@ void main() {
           findsOneWidget);
 
       // Check Fallback View for no cameras
-      expect(find.text('No s\'ha detectat cap càmera al dispositiu.'),
-          findsOneWidget);
+      expect(find.text('No s\'ha detectat la càmera'), findsOneWidget);
       expect(
           find.text(
               'Fes servir la Galeria o prem Disparador per provar la identificació.'),
@@ -162,6 +162,82 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Enfoca el barret i les làmines del bolet'),
+          findsOneWidget);
+    });
+
+    testWidgets(
+        'renders localized fallback when no camera is detected in Spanish and English',
+        (WidgetTester tester) async {
+      setupMockChannels(
+        permissionStatus: 1, // granted
+        requestResult: {1: 1},
+        availableCameras: [],
+      );
+
+      // 1. Spanish
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            classifierProvider.overrideWithValue(MockClassifierService()),
+          ],
+          child: const MaterialApp(
+            locale: Locale('es'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: ScanScreen(),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Setas'), findsOneWidget);
+      expect(find.text('Árboles'), findsOneWidget);
+      expect(find.text('No se ha detectado la cámara'), findsOneWidget);
+      expect(find.text('Enfoca el sombrero y las láminas de la seta'),
+          findsOneWidget);
+
+      // 2. English
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            classifierProvider.overrideWithValue(MockClassifierService()),
+          ],
+          child: const MaterialApp(
+            locale: Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ca'),
+              Locale('es'),
+              Locale('en'),
+            ],
+            home: ScanScreen(),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(find.text('Mushrooms'), findsOneWidget);
+      expect(find.text('Trees'), findsOneWidget);
+      expect(find.text('No camera detected'), findsOneWidget);
+      expect(find.text('Focus on the cap and gills of the mushroom'),
           findsOneWidget);
     });
 
