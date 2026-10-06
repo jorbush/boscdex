@@ -83,9 +83,10 @@ class BoscdexCard extends StatelessWidget {
                       child: Text(
                         '#$dexNum ???',
                         style: const TextStyle(
+                          fontFamily: RetroFonts.pixel,
                           color: RetroColors.inkSoft,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
                         ),
                       ),
                     ),
@@ -154,8 +155,9 @@ class BoscdexCard extends StatelessWidget {
                           Text(
                             '#$dexNum',
                             style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800,
+                              fontFamily: RetroFonts.pixel,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
                               color: RetroColors.inkSoft,
                             ),
                           ),

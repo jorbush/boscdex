@@ -65,3 +65,9 @@ flutter:
     - assets/audio/
     - assets/badges/
     - assets/images/map/
+    - assets/fonts/
+
+  fonts:
+    - family: PixelifySans
+      fonts:
+        - asset: assets/fonts/PixelifySans.ttf

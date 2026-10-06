@@ -16,6 +16,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: RetroFonts.pixel,
       brightness: Brightness.light,
       scaffoldBackgroundColor: RetroColors.background,
       colorScheme: const ColorScheme.light(
@@ -37,44 +38,79 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         centerTitle: false,
         titleTextStyle: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: ink,
-          fontSize: 20,
-          fontWeight: FontWeight.w900,
+          fontSize: 22,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.5,
         ),
         iconTheme: IconThemeData(color: ink),
       ),
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: ink,
-          fontWeight: FontWeight.w900,
+          fontSize: 28,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.5,
         ),
         headlineMedium: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: ink,
-          fontWeight: FontWeight.w900,
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.5,
         ),
         titleLarge: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: ink,
-          fontWeight: FontWeight.w800,
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.3,
         ),
         titleMedium: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: ink,
+          fontSize: 16,
           fontWeight: FontWeight.w700,
         ),
         bodyLarge: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: ink,
           fontSize: 16,
+          fontWeight: FontWeight.w500,
+          height: 1.35,
         ),
         bodyMedium: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: ink,
           fontSize: 14,
+          fontWeight: FontWeight.w500,
+          height: 1.35,
         ),
         bodySmall: TextStyle(
+          fontFamily: RetroFonts.pixel,
           color: inkSoft,
           fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+        labelLarge: TextStyle(
+          fontFamily: RetroFonts.pixel,
+          color: ink,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+        ),
+        labelMedium: TextStyle(
+          fontFamily: RetroFonts.pixel,
+          color: ink,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+        labelSmall: TextStyle(
+          fontFamily: RetroFonts.pixel,
+          color: inkSoft,
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
         ),
       ),
       cardTheme: CardTheme(
@@ -90,10 +126,16 @@ class AppTheme {
         selectedItemColor: RetroColors.forestGreen,
         unselectedItemColor: inkSoft,
         elevation: 8,
-        selectedLabelStyle:
-            TextStyle(fontWeight: FontWeight.w900, fontSize: 12),
-        unselectedLabelStyle:
-            TextStyle(fontWeight: FontWeight.w600, fontSize: 11),
+        selectedLabelStyle: TextStyle(
+          fontFamily: RetroFonts.pixel,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontFamily: RetroFonts.pixel,
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+        ),
       ),
     );
   }

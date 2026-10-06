@@ -66,9 +66,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 const Text(
                   'Boscdex',
                   style: TextStyle(
-                    fontSize: 46,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
+                    fontFamily: RetroFonts.pixel,
+                    fontSize: 48,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.0,
                     color: RetroColors.ink,
                     shadows: [
                       Shadow(
@@ -110,8 +111,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   child: Text(
                     l10n.insertCoinToExplore,
                     style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
+                      fontFamily: RetroFonts.pixel,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
                       color: RetroColors.ink,
                       letterSpacing: 0.8,
                     ),

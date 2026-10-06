@@ -62,8 +62,9 @@ class BoscdexScreen extends ConsumerWidget {
                     const Text(
                       'Boscdex',
                       style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w900,
+                        fontFamily: RetroFonts.pixel,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -79,8 +80,9 @@ class BoscdexScreen extends ConsumerWidget {
                       child: const Text(
                         'LVL 1',
                         style: TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w900,
+                          fontFamily: RetroFonts.pixel,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
                       ),

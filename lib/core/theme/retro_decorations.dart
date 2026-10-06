@@ -45,6 +45,14 @@ class RetroColors {
   static const Color progressBarEmpty = Color(0xFFD5DFD1);
 }
 
+/// Font families for the retro-game visual aesthetic.
+class RetroFonts {
+  RetroFonts._();
+
+  /// 16-bit pixel font family for headers, numbers, and badges.
+  static const String pixel = 'PixelifySans';
+}
+
 class RetroDecorations {
   RetroDecorations._();
 
