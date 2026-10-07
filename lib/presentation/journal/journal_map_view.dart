@@ -428,7 +428,7 @@ class _JournalMapViewState extends ConsumerState<JournalMapView>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('🗺️', style: TextStyle(fontSize: 44)),
+                    const PixelMapIcon(size: 56),
                     const SizedBox(height: 12),
                     Text(
                       l10n.mapNoGpsTitle,

@@ -211,5 +211,44 @@ void main() {
       expect(inactiveAsset.assetName, equals(PixelIcons.journalPath));
       expect(images[1].width, equals(24));
     });
+
+    testWidgets('PixelMapIcon renders map asset with FilterQuality.none',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: PixelMapIcon(size: 20),
+          ),
+        ),
+      );
+
+      expect(find.byType(PixelMapIcon), findsOneWidget);
+      final image = tester.widget<Image>(find.byType(Image));
+      final assetImage = image.image as AssetImage;
+      expect(assetImage.assetName, equals(PixelIcons.mapPath));
+      expect(image.width, equals(20));
+      expect(image.height, equals(20));
+      expect(image.filterQuality, equals(FilterQuality.none));
+    });
+
+    testWidgets(
+        'PixelListIcon renders scroll list asset with FilterQuality.none',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: PixelListIcon(size: 20),
+          ),
+        ),
+      );
+
+      expect(find.byType(PixelListIcon), findsOneWidget);
+      final image = tester.widget<Image>(find.byType(Image));
+      final assetImage = image.image as AssetImage;
+      expect(assetImage.assetName, equals(PixelIcons.listPath));
+      expect(image.width, equals(20));
+      expect(image.height, equals(20));
+      expect(image.filterQuality, equals(FilterQuality.none));
+    });
   });
 }

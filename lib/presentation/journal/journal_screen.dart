@@ -8,6 +8,7 @@ import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
 import '../../domain/services/photo_export_service.dart';
+import '../shared/pixel_icons.dart';
 import 'avistament_detail_sheet.dart';
 import 'journal_map_view.dart';
 import 'journal_provider.dart';
@@ -98,7 +99,7 @@ class JournalScreen extends ConsumerWidget {
               key: const Key('journal_tab_list'),
               context: context,
               ref: ref,
-              icon: '📜',
+              icon: const PixelListIcon(size: 18),
               label: l10n.journalTabList,
               targetMode: JournalViewMode.llista,
               isSelected: currentMode == JournalViewMode.llista,
@@ -107,7 +108,7 @@ class JournalScreen extends ConsumerWidget {
               key: const Key('journal_tab_map'),
               context: context,
               ref: ref,
-              icon: '🗺️',
+              icon: const PixelMapIcon(size: 18),
               label: l10n.journalTabMap,
               targetMode: JournalViewMode.mapa,
               isSelected: currentMode == JournalViewMode.mapa,
@@ -122,7 +123,7 @@ class JournalScreen extends ConsumerWidget {
     required Key key,
     required BuildContext context,
     required WidgetRef ref,
-    required String icon,
+    required Widget icon,
     required String label,
     required JournalViewMode targetMode,
     required bool isSelected,
@@ -158,7 +159,7 @@ class JournalScreen extends ConsumerWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(icon, style: const TextStyle(fontSize: 16)),
+                icon,
                 const SizedBox(width: 6),
                 Text(
                   label,
@@ -193,10 +194,7 @@ class JournalScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                '📜',
-                style: TextStyle(fontSize: 54),
-              ),
+              const PixelListIcon(size: 64),
               const SizedBox(height: 16),
               Text(
                 l10n.journalAdventureDiary,
@@ -293,8 +291,7 @@ class JournalScreen extends ConsumerWidget {
                                 fit: BoxFit.contain,
                                 filterQuality: FilterQuality.none,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Text('🌲',
-                                        style: TextStyle(fontSize: 22)),
+                                    const PixelArbreIcon(size: 24),
                               )
                             : Image.asset(
                                 'assets/images/mushrooms/${avistament.boletId}.png',
@@ -302,8 +299,7 @@ class JournalScreen extends ConsumerWidget {
                                 fit: BoxFit.contain,
                                 filterQuality: FilterQuality.none,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Text('🍄',
-                                        style: TextStyle(fontSize: 22)),
+                                    const PixelBoletIcon(size: 24),
                               ),
                       ),
                     )
@@ -317,8 +313,7 @@ class JournalScreen extends ConsumerWidget {
                                 fit: BoxFit.contain,
                                 filterQuality: FilterQuality.none,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Text('🌲',
-                                        style: TextStyle(fontSize: 22)),
+                                    const PixelArbreIcon(size: 24),
                               )
                             : Image.asset(
                                 'assets/images/mushrooms/${avistament.boletId}.png',
@@ -332,8 +327,7 @@ class JournalScreen extends ConsumerWidget {
                                   fit: BoxFit.contain,
                                   filterQuality: FilterQuality.none,
                                   errorBuilder: (context, error, stackTrace) =>
-                                      const Text('🍄',
-                                          style: TextStyle(fontSize: 22)),
+                                      const PixelBoletIcon(size: 24),
                                 ),
                               ),
                       ),

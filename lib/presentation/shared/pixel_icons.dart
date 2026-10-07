@@ -13,6 +13,8 @@ class PixelIcons {
   static const String dexPath = 'assets/icons/pixel_dex.png';
   static const String cameraPath = 'assets/icons/pixel_camera.png';
   static const String journalPath = 'assets/icons/pixel_journal.png';
+  static const String mapPath = 'assets/icons/pixel_map.png';
+  static const String listPath = 'assets/icons/pixel_list.png';
 }
 
 /// 16-bit retro pixel art icon representing a wild mushroom (Rovelló / Pinetell).
@@ -266,6 +268,52 @@ class PixelJournalIcon extends StatelessWidget {
       size: size,
       isActive: isActive,
       fallbackEmoji: '📖',
+    );
+  }
+}
+
+/// 16-bit retro pixel art icon representing an adventurer's expedition map.
+class PixelMapIcon extends StatelessWidget {
+  final double size;
+
+  const PixelMapIcon({Key? key, this.size = 20}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      PixelIcons.mapPath,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      filterQuality: FilterQuality.none, // Preserve crisp 16-bit pixel edges
+      errorBuilder: (_, __, ___) => Icon(
+        Icons.map,
+        size: size,
+        color: const Color(0xFF1E2822),
+      ),
+    );
+  }
+}
+
+/// 16-bit retro pixel art icon representing a parchment scroll list.
+class PixelListIcon extends StatelessWidget {
+  final double size;
+
+  const PixelListIcon({Key? key, this.size = 20}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      PixelIcons.listPath,
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      filterQuality: FilterQuality.none, // Preserve crisp 16-bit pixel edges
+      errorBuilder: (_, __, ___) => Icon(
+        Icons.format_list_bulleted,
+        size: size,
+        color: const Color(0xFF1E2822),
+      ),
     );
   }
 }
