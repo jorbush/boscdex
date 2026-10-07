@@ -1,0 +1,20 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "Boscdex";
+
+/* Camera permission */
+"NSCameraUsageDescription" = "Boscdex necesita acceso a la cámara para escanear e identificar setas y árboles en tiempo real en el bosque.";
+
+/* Photo library read permission */
+"NSPhotoLibraryUsageDescription" = "Boscdex necesita acceso a la galería para seleccionar fotos de setas para identificarlas.";
+
+/* Photo library add permission */
+"NSPhotoLibraryAddUsageDescription" = "Boscdex necesita permiso para guardar las fotos de tus avistamientos en la galería del dispositivo.";
+
+/* Microphone permission */
+"NSMicrophoneUsageDescription" = "Boscdex utiliza el micrófono únicamente si se graba vídeo con la cámara.";
+
+/* Location when in use permission */
+"NSLocationWhenInUseUsageDescription" = "Boscdex utiliza la ubicación para geolocalizar y guardar las coordenadas de tus avistamientos de setas.";
+
+/* Location always and when in use permission */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Boscdex utiliza la ubicación para geolocalizar y guardar las coordenadas de tus avistamientos de setas en el mapa de tu diario.";

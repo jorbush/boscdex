@@ -304,8 +304,8 @@ class BoscdexScreen extends ConsumerWidget {
   }
 
   Widget _buildBoletFilterBar(BuildContext context, WidgetRef ref,
-      String currentFilter, AppLocalizations l10n) {
-    const filters = ['tots', 'comestibles', 'tòxics/mortals', 'arbres socis'];
+      BoletFilter currentFilter, AppLocalizations l10n) {
+    const filters = BoletFilter.values;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -314,25 +314,23 @@ class BoscdexScreen extends ConsumerWidget {
           final isSelected = currentFilter == f;
           final String label;
           switch (f) {
-            case 'tots':
+            case BoletFilter.all:
               label = l10n.filterAll;
               break;
-            case 'comestibles':
+            case BoletFilter.edibles:
               label = l10n.filterEdibles;
               break;
-            case 'tòxics/mortals':
+            case BoletFilter.toxic:
               label = l10n.filterToxics;
               break;
-            case 'arbres socis':
+            case BoletFilter.partnerTrees:
               label = l10n.filterTreePartners;
               break;
-            default:
-              label = f[0].toUpperCase() + f.substring(1);
           }
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: _buildFilterChip(
-              key: Key('bolet_filter_$f'),
+              key: Key('bolet_filter_${f.name}'),
               label: label,
               isSelected: isSelected,
               onTap: () {

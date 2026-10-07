@@ -107,4 +107,41 @@ void main() {
     // File on disk must be removed
     expect(await testFile.exists(), isFalse);
   });
+
+  test(
+      'AvistamentDao.deleteSighting unlinks discovery reference and removes file',
+      () async {
+    final testFile = File('${tempDir.path}/test_discovery.jpg');
+    await testFile.writeAsString('bytes');
+
+    const sightingId = 'scan-discovery-sighting';
+    const boletId = 'lactarius_deliciosus';
+    final now = DateTime.now();
+
+    await db.avistamentDao.insertAvistament(
+      AvistamentsCompanion(
+        id: const Value(sightingId),
+        boletId: const Value(boletId),
+        timestamp: Value(now),
+        photoPath: Value(testFile.path),
+      ),
+    );
+
+    await db.descobrimentDao.markDiscovered(boletId, now, sightingId);
+    final discoveryBefore = await (db.select(db.descobriments)
+          ..where((t) => t.boletId.equals(boletId)))
+        .getSingle();
+    expect(discoveryBefore.firstAvistamentId, equals(sightingId));
+
+    final deleted = await db.avistamentDao.deleteSighting(sightingId);
+    expect(deleted, isTrue);
+
+    expect(await db.avistamentDao.getAvistamentById(sightingId), isNull);
+    expect(await testFile.exists(), isFalse);
+
+    final discoveryAfter = await (db.select(db.descobriments)
+          ..where((t) => t.boletId.equals(boletId)))
+        .getSingle();
+    expect(discoveryAfter.firstAvistamentId, isNull);
+  });
 }

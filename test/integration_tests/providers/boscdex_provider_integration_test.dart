@@ -46,7 +46,8 @@ void main() {
     test('filteredBoscdexEntriesProvider correctly filters comestibles',
         () async {
       // Set filter to comestibles
-      container.read(boscdexFilterProvider.notifier).state = 'comestibles';
+      container.read(boscdexFilterProvider.notifier).state =
+          BoletFilter.edibles;
 
       // Read entries first to populate
       await container.read(boscdexEntriesProvider.future);
@@ -60,7 +61,7 @@ void main() {
 
     test('filteredBoscdexEntriesProvider correctly filters tòxics/mortals',
         () async {
-      container.read(boscdexFilterProvider.notifier).state = 'tòxics/mortals';
+      container.read(boscdexFilterProvider.notifier).state = BoletFilter.toxic;
 
       await container.read(boscdexEntriesProvider.future);
 
@@ -73,7 +74,8 @@ void main() {
 
     test('filteredBoscdexEntriesProvider correctly filters arbres socis',
         () async {
-      container.read(boscdexFilterProvider.notifier).state = 'arbres socis';
+      container.read(boscdexFilterProvider.notifier).state =
+          BoletFilter.partnerTrees;
 
       await container.read(boscdexEntriesProvider.future);
       await container.read(boletIdsWithTreesProvider.future);

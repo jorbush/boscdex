@@ -1,0 +1,20 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "Boscdex";
+
+/* Camera permission */
+"NSCameraUsageDescription" = "Boscdex requires camera access to scan and identify wild mushrooms and trees in real time in the forest.";
+
+/* Photo library read permission */
+"NSPhotoLibraryUsageDescription" = "Boscdex requires photo library access to select mushroom images for identification.";
+
+/* Photo library add permission */
+"NSPhotoLibraryAddUsageDescription" = "Boscdex requires permission to save photos of your sightings to your device photo gallery.";
+
+/* Microphone permission */
+"NSMicrophoneUsageDescription" = "Boscdex uses the microphone only if video is recorded with the camera.";
+
+/* Location when in use permission */
+"NSLocationWhenInUseUsageDescription" = "Boscdex uses your location to record the GPS coordinates of your mushroom sightings in your field journal.";
+
+/* Location always and when in use permission */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Boscdex uses your location to record the GPS coordinates of your mushroom sightings on your journal map.";

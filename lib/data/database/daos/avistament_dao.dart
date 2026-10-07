@@ -68,20 +68,45 @@ class AvistamentDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
-  Future<void> deleteAvistament(String id) async {
-    final sighting = await getAvistamentById(id);
-    if (sighting != null && sighting.photoPath != null) {
-      try {
-        final file =
-            await PhotoExportService.resolveFileAsync(sighting.photoPath!);
-        if (await file.exists()) {
-          await file.delete();
+  /// Safely deletes an avistament record, unlinks any foreign key references in
+  /// [descobriments] within an atomic transaction, and removes its photo from disk.
+  Future<bool> deleteSighting(String id) async {
+    try {
+      final sighting = await getAvistamentById(id);
+      if (sighting != null && sighting.photoPath != null) {
+        try {
+          final file =
+              await PhotoExportService.resolveFileAsync(sighting.photoPath!);
+          if (await file.exists()) {
+            await file.delete();
+          }
+        } catch (_) {
+          // Silently ignore disk deletion errors (e.g. file already removed)
         }
-      } catch (_) {
-        // Silently ignore disk deletion errors (e.g. file already removed)
       }
+
+      await transaction(() async {
+        // Unlink foreign key in descobriments if this sighting was the first discovery
+        await (db.update(db.descobriments)
+              ..where((t) => t.firstAvistamentId.equals(id)))
+            .write(
+          const DescobrimentsCompanion(
+            firstAvistamentId: Value(null),
+          ),
+        );
+
+        await (delete(avistaments)..where((t) => t.id.equals(id))).go();
+      });
+
+      return true;
+    } catch (_) {
+      return false;
     }
-    await (delete(avistaments)..where((t) => t.id.equals(id))).go();
+  }
+
+  /// Deletes an avistament record and cleans up associated resources.
+  Future<void> deleteAvistament(String id) async {
+    await deleteSighting(id);
   }
 
   Future<Set<String>> getIdentifiedArbreIds() async {

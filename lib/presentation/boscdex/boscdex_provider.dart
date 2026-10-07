@@ -26,8 +26,17 @@ class BoscdexEntry {
   });
 }
 
-/// Active filter applied to the Bolets grid ('tots', 'comestibles', 'tòxics/mortals', 'arbres socis').
-final boscdexFilterProvider = StateProvider<String>((ref) => 'tots');
+/// Active filter applied to the Bolets grid.
+enum BoletFilter {
+  all,
+  edibles,
+  toxic,
+  partnerTrees,
+}
+
+/// Active filter applied to the Bolets grid. Defaults to all mushrooms.
+final boscdexFilterProvider =
+    StateProvider<BoletFilter>((ref) => BoletFilter.all);
 
 /// Asynchronously streams cataloged mushrooms reactively joined with their discovery status.
 final boscdexEntriesProvider = StreamProvider<List<BoscdexEntry>>((ref) {
@@ -61,24 +70,23 @@ final filteredBoscdexEntriesProvider = Provider<List<BoscdexEntry>>((ref) {
 
   return entriesAsync.maybeWhen(
     data: (entries) {
-      if (filter == 'tots') return entries;
-      if (filter == 'comestibles') {
-        return entries.where((e) {
-          final ed = EdibilitatExtension.fromString(e.bolet.edibility);
-          return ed.isEdible;
-        }).toList();
+      switch (filter) {
+        case BoletFilter.all:
+          return entries;
+        case BoletFilter.edibles:
+          return entries.where((e) {
+            final ed = EdibilitatExtension.fromString(e.bolet.edibility);
+            return ed.isEdible;
+          }).toList();
+        case BoletFilter.toxic:
+          return entries.where((e) {
+            final ed = EdibilitatExtension.fromString(e.bolet.edibility);
+            return ed.isToxic;
+          }).toList();
+        case BoletFilter.partnerTrees:
+          final treeBoletIds = ref.watch(boletIdsWithTreesProvider).value ?? {};
+          return entries.where((e) => treeBoletIds.contains(e.bolet.id)).toList();
       }
-      if (filter == 'tòxics/mortals') {
-        return entries.where((e) {
-          final ed = EdibilitatExtension.fromString(e.bolet.edibility);
-          return ed.isToxic;
-        }).toList();
-      }
-      if (filter == 'arbres socis') {
-        final treeBoletIds = ref.watch(boletIdsWithTreesProvider).value ?? {};
-        return entries.where((e) => treeBoletIds.contains(e.bolet.id)).toList();
-      }
-      return entries;
     },
     orElse: () => [],
   );

@@ -256,7 +256,7 @@ class _AvistamentDetailSheetState extends ConsumerState<AvistamentDetailSheet> {
 
     if (confirmed == true && mounted) {
       final db = ref.read(appDatabaseProvider);
-      await _photoExportService.deleteSighting(db, widget.avistament.id);
+      await db.avistamentDao.deleteSighting(widget.avistament.id);
       ref.invalidate(boscdexEntriesProvider);
 
       if (mounted) {

@@ -1,0 +1,20 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "Boscdex";
+
+/* Camera permission */
+"NSCameraUsageDescription" = "Boscdex necessita accés a la càmera per escanejar i identificar bolets i arbres en temps real al bosc.";
+
+/* Photo library read permission */
+"NSPhotoLibraryUsageDescription" = "Boscdex necessita accés a la galeria per seleccionar fotos de bolets per identificar-los.";
+
+/* Photo library add permission */
+"NSPhotoLibraryAddUsageDescription" = "Boscdex necessita permís per desar les fotos dels teus avistaments a la galeria del dispositiu.";
+
+/* Microphone permission */
+"NSMicrophoneUsageDescription" = "Boscdex utilitza el micròfon únicament si s'enregistra vídeo amb la càmera.";
+
+/* Location when in use permission */
+"NSLocationWhenInUseUsageDescription" = "Boscdex utilitza la ubicació per geolocalitzar i desar les coordenades dels teus avistaments de bolets.";
+
+/* Location always and when in use permission */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Boscdex utilitza la ubicació per geolocalitzar i desar les coordenades dels teus avistaments de bolets al mapa del teu diari.";

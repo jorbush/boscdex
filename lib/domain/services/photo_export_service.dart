@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
-import 'package:drift/drift.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -203,26 +202,10 @@ class PhotoExportService {
   }
 
   /// Deletes an avistament record from the database and deletes its file from disk.
+  /// Delegates directly to [AvistamentDao.deleteSighting] to maintain separation of concerns.
   Future<bool> deleteSighting(AppDatabase db, String avistamentId) async {
     try {
-      final avistament = await db.avistamentDao.getAvistamentById(avistamentId);
-      if (avistament != null && avistament.photoPath != null) {
-        final file = await resolveFileAsync(avistament.photoPath!);
-        if (await file.exists()) {
-          await file.delete();
-        }
-      }
-      // Unlink foreign key in descobriments if this sighting was the first discovery
-      await (db.update(db.descobriments)
-            ..where((t) => t.firstAvistamentId.equals(avistamentId)))
-          .write(
-        const DescobrimentsCompanion(
-          firstAvistamentId: Value(null),
-        ),
-      );
-
-      await db.avistamentDao.deleteAvistament(avistamentId);
-      return true;
+      return await db.avistamentDao.deleteSighting(avistamentId);
     } catch (e) {
       debugPrint('Error deleting sighting: $e');
       return false;
