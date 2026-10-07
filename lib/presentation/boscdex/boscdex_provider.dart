@@ -85,7 +85,9 @@ final filteredBoscdexEntriesProvider = Provider<List<BoscdexEntry>>((ref) {
           }).toList();
         case BoletFilter.partnerTrees:
           final treeBoletIds = ref.watch(boletIdsWithTreesProvider).value ?? {};
-          return entries.where((e) => treeBoletIds.contains(e.bolet.id)).toList();
+          return entries
+              .where((e) => treeBoletIds.contains(e.bolet.id))
+              .toList();
       }
     },
     orElse: () => [],
