@@ -817,6 +817,145 @@ class AppLocalizations {
     }
   }
 
+  // --- Forager Level & Gamification ---
+  String get foragerLevelHeader {
+    switch (languageCode) {
+      case 'es':
+        return 'Nivel de Recolector';
+      case 'en':
+        return 'Forager Level';
+      case 'ca':
+      default:
+        return 'Nivell de Boletaire';
+    }
+  }
+
+  String levelBadge(int level) => 'LVL $level';
+
+  String levelWithTitle(int level, String title) {
+    switch (languageCode) {
+      case 'es':
+        return 'Nivel $level: $title';
+      case 'en':
+        return 'Level $level: $title';
+      case 'ca':
+      default:
+        return 'Nivell $level: $title';
+    }
+  }
+
+  String xpPoints(int xp) => '$xp XP';
+
+  String xpProgressFraction(int current, int target) => '$current / $target XP';
+
+  String xpNeededForNext(int needed, int nextLevel) {
+    switch (languageCode) {
+      case 'es':
+        return '$needed XP para el Nivel $nextLevel';
+      case 'en':
+        return '$needed XP to Level $nextLevel';
+      case 'ca':
+      default:
+        return '$needed XP per al Nivell $nextLevel';
+    }
+  }
+
+  String get maxLevelAchieved {
+    switch (languageCode) {
+      case 'es':
+        return '¡Nivel máximo alcanzado! Maestro absoluto del bosque.';
+      case 'en':
+        return 'Max level reached! Absolute Master of the Forest.';
+      case 'ca':
+      default:
+        return 'Nivell màxim assolit! Mestre absolut del bosc.';
+    }
+  }
+
+  String get xpBreakdownTitle {
+    switch (languageCode) {
+      case 'es':
+        return 'Fuentes de Experiencia';
+      case 'en':
+        return 'Experience Sources';
+      case 'ca':
+      default:
+        return "Fonts d'Experiència";
+    }
+  }
+
+  String get xpBreakdownMushrooms {
+    switch (languageCode) {
+      case 'es':
+        return 'Setas catalogadas';
+      case 'en':
+        return 'Mushrooms cataloged';
+      case 'ca':
+      default:
+        return 'Bolets catalogats';
+    }
+  }
+
+  String get xpBreakdownTrees {
+    switch (languageCode) {
+      case 'es':
+        return 'Árboles identificados';
+      case 'en':
+        return 'Trees identified';
+      case 'ca':
+      default:
+        return 'Arbres identificats';
+    }
+  }
+
+  String get xpBreakdownBadges {
+    switch (languageCode) {
+      case 'es':
+        return 'Insignias conseguidas';
+      case 'en':
+        return 'Badges unlocked';
+      case 'ca':
+      default:
+        return 'Insígnies assolides';
+    }
+  }
+
+  String get xpBreakdownSightings {
+    switch (languageCode) {
+      case 'es':
+        return 'Avistamientos en el diario';
+      case 'en':
+        return 'Journal sightings';
+      case 'ca':
+      default:
+        return 'Avistaments al diari';
+    }
+  }
+
+  String get ranksRoadmapTitle {
+    switch (languageCode) {
+      case 'es':
+        return 'Escala de Rangos';
+      case 'en':
+        return 'Ranks Roadmap';
+      case 'ca':
+      default:
+        return 'Escala de Rànquings';
+    }
+  }
+
+  String get currentRankTag {
+    switch (languageCode) {
+      case 'es':
+        return 'ACTUAL';
+      case 'en':
+        return 'CURRENT';
+      case 'ca':
+      default:
+        return 'ACTUAL';
+    }
+  }
+
   // --- Edibilitat & Raresa ---
   String edibilityLabel(Edibilitat edibilitat) {
     switch (edibilitat) {

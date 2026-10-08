@@ -26,6 +26,7 @@ class SettingsScreen extends ConsumerWidget {
     final discoveryCountAsync = ref.watch(discoveryCountProvider);
     final avistamentsAsync = ref.watch(avistamentsProvider);
     final totalBolets = ref.watch(totalBoletsCountProvider);
+    final foragerLevel = ref.watch(foragerLevelProvider);
 
     final l10n = AppLocalizations.of(context);
     final discoveryCount = discoveryCountAsync.value ?? 0;
@@ -414,11 +415,12 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ),
                   title: l10n.settingsExpeditionStatus,
-                  description: l10n.speciesCatalogedStats(
+                  description:
+                      'LVL ${foragerLevel.level}: ${foragerLevel.title(l10n.languageCode)} (${foragerLevel.totalXp} XP)\n${l10n.speciesCatalogedStats(
                     discoveryCount,
                     totalBolets > 0 ? totalBolets : AppConstants.maxDexEntries,
                     avistamentCount,
-                  ),
+                  )}',
                 ),
               ],
             ),

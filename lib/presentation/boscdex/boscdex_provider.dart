@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/app_database.dart';
 import '../../providers/database_provider.dart';
 import '../../domain/models/edibilitat.dart';
+import '../../domain/models/forager_level.dart';
 
 /// Active section of the Boscdex catalog (Mushrooms vs. Trees).
 enum BoscdexSection {
@@ -175,5 +176,37 @@ final visitedArbresCountProvider = Provider<int>((ref) {
   return arbresAsync.maybeWhen(
     data: (entries) => entries.where((e) => e.isVisited).length,
     orElse: () => 0,
+  );
+});
+
+// ==========================================
+// FORAGER PROGRESSION & LEVEL PROVIDERS
+// ==========================================
+
+/// Reactive stream tracking the total count of badges awarded to the user.
+final awardedBadgesCountProvider = StreamProvider<int>((ref) {
+  final db = ref.watch(appDatabaseProvider);
+  return db.insigniaDao.watchAwardedInsignies().map((list) => list.length);
+});
+
+/// Reactive stream tracking the total count of user field sightings in the journal.
+final totalSightingsCountProvider = StreamProvider<int>((ref) {
+  final db = ref.watch(appDatabaseProvider);
+  return db.avistamentDao.getAllAvistaments().map((list) => list.length);
+});
+
+/// Reactive player forager rank and experience level dynamically computed
+/// from discoveries, tree sightings, unlocked badges, and journal entries.
+final foragerLevelProvider = Provider<ForagerLevel>((ref) {
+  final discoveries = ref.watch(discoveryCountProvider).value ?? 0;
+  final trees = ref.watch(visitedArbresCountProvider);
+  final badges = ref.watch(awardedBadgesCountProvider).value ?? 0;
+  final sightings = ref.watch(totalSightingsCountProvider).value ?? 0;
+
+  return ForagerLevel.calculate(
+    discoveredBolets: discoveries,
+    identifiedArbres: trees,
+    awardedBadges: badges,
+    totalSightings: sightings,
   );
 });

@@ -170,5 +170,40 @@ void main() {
 
       expect(container.read(visitedArbresCountProvider), equals(1));
     });
+
+    test(
+        'foragerLevelProvider dynamically updates XP and rank across database mutations',
+        () async {
+      // 1. Initial state (0 stats -> Level 1)
+      var level = container.read(foragerLevelProvider);
+      expect(level.level, equals(1));
+      expect(level.totalXp, equals(0));
+
+      // 2. Discover a mushroom (+100 XP from bolet discovery, +25 XP from sighting)
+      final now = DateTime.now();
+      await db.avistamentDao.insertAvistament(
+        AvistamentsCompanion.insert(
+          id: 'test-sighting-1',
+          boletId: const Value('lactarius_deliciosus'),
+          timestamp: now,
+        ),
+      );
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', now, 'test-sighting-1');
+
+      // 3. Award a badge (+150 XP)
+      await db.insigniaDao.awardInsignia('primer_pas_al_bosc', now);
+
+      // Drain stream events
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      level = container.read(foragerLevelProvider);
+      // 100 (bolet) + 25 (sighting) + 150 (badge) = 275 XP -> Level 3: Rastrejador Silvestre
+      expect(level.totalXp, equals(275));
+      expect(level.level, equals(3));
+      expect(level.title('ca'), equals('Rastrejador Silvestre'));
+      expect(level.title('es'), equals('Rastreador Silvestre'));
+      expect(level.title('en'), equals('Wilderness Tracker'));
+    });
   });
 }

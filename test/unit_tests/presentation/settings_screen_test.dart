@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:boscdex/domain/models/forager_level.dart';
 import 'package:boscdex/presentation/boscdex/boscdex_provider.dart';
 import 'package:boscdex/presentation/journal/journal_provider.dart';
 import 'package:boscdex/presentation/settings/settings_screen.dart';
@@ -28,6 +29,7 @@ void main() {
     Widget createWidgetUnderTest({
       int discoveryCount = 12,
       List<dynamic> avistaments = const [],
+      ForagerLevel? foragerLevel,
     }) {
       return ProviderScope(
         overrides: [
@@ -37,6 +39,15 @@ void main() {
           avistamentsProvider
               .overrideWith((ref) => Stream.value(avistaments.cast())),
           totalBoletsCountProvider.overrideWithValue(22),
+          foragerLevelProvider.overrideWithValue(
+            foragerLevel ??
+                ForagerLevel.calculate(
+                  discoveredBolets: discoveryCount,
+                  identifiedArbres: 0,
+                  awardedBadges: 0,
+                  totalSightings: 0,
+                ),
+          ),
         ],
         child: const MaterialApp(
           home: SettingsScreen(),
@@ -81,6 +92,8 @@ void main() {
       expect(find.text('Filtre de certesa IA (70%)'), findsOneWidget);
       expect(find.text('Xarxa Neuronal On-Device'), findsOneWidget);
       expect(find.text('Catàleg Relacional SQLite'), findsOneWidget);
+      expect(find.textContaining('LVL 5: Boletaire de Camp (1200 XP)'),
+          findsOneWidget);
       expect(find.textContaining('12 / 22 bolets catalogats'), findsOneWidget);
       expect(find.text('Compromís de Privacitat'), findsOneWidget);
 

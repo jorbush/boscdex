@@ -44,3 +44,55 @@ Tapping the trophy icon in the Boscdex AppBar displays the badges modal:
 * Top summary counter displaying awarded badges (e.g., `2/6`).
 * **Locked Badges:** Muted cards displaying current progress bar (e.g., `3/5 comparacions`).
 * **Awarded Badges:** Green surface highlight, gold verified badge icon, and golden border with `DESBLOQUEJAT` tag.
+* **Level Navigation Banner:** Tappable pill banner linking directly to the Forager Level dialog.
+
+---
+
+## 🌲 Forager Leveling System ("Nivell de Boletaire")
+
+Beyond individual trophy badges, Boscdex features an integrated player progression system that dynamically computes the user's forager rank, total experience points (XP), and progress towards subsequent titles based entirely on on-device field achievements.
+
+### 1. Activity Experience (XP) Multipliers
+
+XP is awarded transparently across core foraging milestones:
+
+| Activity | XP Awarded | Description |
+|---|:---:|---|
+| **Mushroom Cataloged** | `+100 XP` | Unlocking a new species in the Boscdex (`discoveryCount`). |
+| **Indicator Tree Identified** | `+75 XP` | Visiting/identifying a symbiotic host tree (`visitedArbresCount`). |
+| **Achievement Badge Awarded** | `+150 XP` | Completing any of the 6 starter badge milestones (`awardedBadgesCount`). |
+| **Journal Sighting Logged** | `+25 XP` | Recording a validated field observation in the offline logbook (`totalSightingsCount`). |
+
+### 2. The 10 Foraging Ranks & XP Thresholds
+
+Progression spans 10 distinct ranks with trilingual localization (`ca`, `es`, `en`):
+
+| Level | XP Threshold | Catalan Title | Spanish Title | English Title |
+|:---:|:---:|---|---|---|
+| **1** | `0 XP` | **Novell del Bosc** | Novato del Bosque | Forest Rookie |
+| **2** | `100 XP` | **Cercador Curiós** | Buscador Curioso | Curious Seeker |
+| **3** | `250 XP` | **Rastrejador Silvestre** | Rastreador Silvestre | Wilderness Tracker |
+| **4** | `500 XP` | **Explorador dels Pins** | Explorador de los Pinos | Pine Explorer |
+| **5** | `850 XP` | **Boletaire de Camp** | Recolector de Campo | Field Forager |
+| **6** | `1300 XP` | **Guia de la Fageda** | Guía del Hayedo | Beechwood Guide |
+| **7** | `1900 XP` | **Expert Micòleg** | Experto Micólogo | Expert Mycologist |
+| **8** | `2650 XP` | **Guardià del Sotabosc** | Guardián del Sotobosque | Understory Guardian |
+| **9** | `3550 XP` | **Cistell Daurat** | Cesta Dorada | Golden Basket |
+| **10** | `4600 XP` | **Mestre del Bosc** | Maestro del Bosque | Master of the Forest |
+
+### 3. Architecture & Reactive State Management
+
+The leveling engine is encapsulated in pure Dart domain models and wired reactively through Riverpod:
+
+* **Domain Model (`lib/domain/models/forager_level.dart`):** `ForagerLevel.calculate(...)` evaluates raw stats against the ascending thresholds, calculating proportional in-level progress (`0.0` to `1.0`), remaining XP required for the next rank, and localized titles.
+* **Provider (`lib/presentation/boscdex/boscdex_provider.dart`):** `foragerLevelProvider` watches `discoveryCountProvider`, `visitedArbresCountProvider`, `awardedBadgesCountProvider`, and `totalSightingsCountProvider` to compute level updates reactively whenever the local SQLite database mutates.
+
+### 4. User Interface Integrations
+
+* **Boscdex AppBar HUD Badge (`BoscdexScreen`):** Displays dynamic `LVL ${level.level}` in a 16-bit pixel font container. Tapping the badge triggers light haptic feedback and opens the detail dialog.
+* **Forager Level Modal Sheet (`ForagerLevelDialog`):**
+  * **Current Level Hero Card:** Retro card displaying current rank title, pixel level badge, total accumulated XP, segmented `RetroProgressBar`, and next-rank threshold countdown.
+  * **Experience Breakdown Matrix:** 4-card matrix itemizing points gained from bolets, trees, badges, and sightings.
+  * **Ranks Roadmap:** Full 10-tier roadmap highlighting current position with an `ACTUAL` badge, locked tiers, and required XP milestones.
+* **Insignies Dialog Banner (`InsigniesDialog`):** Level navigation pill header providing 1-tap navigation from the trophy case to the leveling breakdown.
+* **Settings Screen Status (`SettingsScreen`):** Displays current level title and XP in the Expedition Status diagnostic row.

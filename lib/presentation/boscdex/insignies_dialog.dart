@@ -7,6 +7,8 @@ import '../../core/theme/retro_decorations.dart';
 import '../../domain/models/insignia.dart' as domain;
 import '../../providers/database_provider.dart';
 import '../shared/pixel_icons.dart';
+import 'boscdex_provider.dart';
+import 'forager_level_dialog.dart';
 
 /// Auto-disposing FutureProvider loading fresh badge data each time the dialog opens.
 final insigniesProvider =
@@ -75,6 +77,7 @@ class InsigniesDialog extends ConsumerWidget {
         data: (badges) {
           final l10n = AppLocalizations.of(context);
           final awardedCount = badges.where((b) => b.isAwarded).length;
+          final foragerLevel = ref.watch(foragerLevelProvider);
 
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -153,7 +156,65 @@ class InsigniesDialog extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
+
+              // Forager Level Navigation Pill
+              GestureDetector(
+                key: const Key('insignies_lvl_banner'),
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  Navigator.of(context).pop();
+                  ForagerLevelDialog.show(context);
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: RetroColors.mintWash,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: RetroColors.ink, width: 1.5),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 1.5),
+                        decoration: BoxDecoration(
+                          color: RetroColors.forestGreen,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          'LVL ${foragerLevel.level}',
+                          style: const TextStyle(
+                            fontFamily: RetroFonts.pixel,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '${foragerLevel.title(l10n.languageCode)} • ${foragerLevel.totalXp} XP',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: RetroColors.ink,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        size: 18,
+                        color: RetroColors.ink,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
 
               // Badges Grid
               Expanded(

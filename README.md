@@ -19,6 +19,7 @@ Boscdex is a gamified, 100% offline field guide designed for mushroom foragers (
 - **📝 Sighting Journal** — Field log recording discoveries with dual list/map view, real photo thumbnails, confidence pills, and timestamps.
 - **🌐 Trilingual Localization** — Full Catalan (*Català*, default), Spanish (*Castellano*), and English support across all UI navigation, on-device settings, species morphology (cap, gills, stem, latex), safety warnings, lookalike comparisons, and 16-bit regional foraging maps.
 - **🏆 Badges & Achievements** — Local gamification milestones celebrating field achievements.
+- **🎖️ Forager Leveling & Progression System ("Nivell de Boletaire")** — Dynamic 10-tier experience system (*Novell del Bosc* to *Mestre del Bosc*). Accumulates XP from cataloging mushrooms (+100 XP), identifying trees (+75 XP), unlocking badges (+150 XP), and logging journal sightings (+25 XP). Features an interactive retro HUD badge in the Boscdex AppBar, progress bar, XP breakdown modal, and rank roadmap.
 
 ---
 

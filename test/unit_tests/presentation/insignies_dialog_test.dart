@@ -5,6 +5,8 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 
 import 'package:boscdex/data/database/app_database.dart';
+import 'package:boscdex/domain/models/forager_level.dart';
+import 'package:boscdex/presentation/boscdex/boscdex_provider.dart';
 import 'package:boscdex/presentation/boscdex/insignies_dialog.dart';
 import 'package:boscdex/providers/database_provider.dart';
 
@@ -25,6 +27,7 @@ void main() {
         ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(db),
+            foragerLevelProvider.overrideWithValue(ForagerLevel.initial()),
           ],
           child: const MaterialApp(
             home: Scaffold(
@@ -57,6 +60,7 @@ void main() {
           find.text('Mestre boletaire', skipOffstage: false), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(milliseconds: 100));
     });
 
     testWidgets('Reflects awarded badge state', (WidgetTester tester) async {
@@ -69,6 +73,7 @@ void main() {
         ProviderScope(
           overrides: [
             appDatabaseProvider.overrideWithValue(db),
+            foragerLevelProvider.overrideWithValue(ForagerLevel.initial()),
           ],
           child: const MaterialApp(
             home: Scaffold(
@@ -90,6 +95,7 @@ void main() {
       expect(find.text('DESBLOQUEJAT'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(milliseconds: 100));
     });
   });
 }

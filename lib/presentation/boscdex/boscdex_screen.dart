@@ -11,6 +11,7 @@ import '../../providers/sound_provider.dart';
 import '../shared/boscdex_logo.dart';
 import '../shared/pixel_icons.dart';
 import 'insignies_dialog.dart';
+import 'forager_level_dialog.dart';
 
 /// Main Boscdex screen supporting Dual-Dex modes: Bolets (Mushrooms) and Arbres (Indicator Trees).
 class BoscdexScreen extends ConsumerWidget {
@@ -35,6 +36,7 @@ class BoscdexScreen extends ConsumerWidget {
     final arbreFilter = ref.watch(arbreFilterProvider);
 
     final isBolets = section == BoscdexSection.bolets;
+    final foragerLevel = ref.watch(foragerLevelProvider);
 
     final l10n = AppLocalizations.of(context);
     return Scaffold(
@@ -69,21 +71,42 @@ class BoscdexScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: RetroColors.forestGreen,
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: RetroColors.ink, width: 1.5),
-                      ),
-                      child: const Text(
-                        'LVL 1',
-                        style: TextStyle(
-                          fontFamily: RetroFonts.pixel,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                    Semantics(
+                      button: true,
+                      label: l10n.levelWithTitle(foragerLevel.level,
+                          foragerLevel.title(l10n.languageCode)),
+                      child: GestureDetector(
+                        key: const Key('boscdex_lvl_badge'),
+                        onTap: () {
+                          ref.read(soundEffectServiceProvider).playBlip();
+                          HapticFeedback.selectionClick();
+                          ForagerLevelDialog.show(context);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 1),
+                          decoration: BoxDecoration(
+                            color: RetroColors.forestGreen,
+                            borderRadius: BorderRadius.circular(6),
+                            border:
+                                Border.all(color: RetroColors.ink, width: 1.5),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: RetroColors.ink,
+                                offset: Offset(1, 1),
+                                blurRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            'LVL ${foragerLevel.level}',
+                            style: const TextStyle(
+                              fontFamily: RetroFonts.pixel,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
