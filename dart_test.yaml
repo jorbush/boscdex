@@ -1,3 +1,5 @@
 tags:
   ml_benchmark:
     description: "Heavy Machine Learning empirical benchmark tests that execute TFLite inference over large on-disk photo collections. Excluded from standard CI runs."
+  golden:
+    description: "Visual regression and golden snapshot tests verifying retro pixel-art widget rendering."

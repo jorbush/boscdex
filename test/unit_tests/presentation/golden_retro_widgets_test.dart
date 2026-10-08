@@ -1,3 +1,6 @@
+@Tags(['golden'])
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:boscdex/core/theme/retro_decorations.dart';
@@ -7,8 +10,45 @@ import 'package:boscdex/presentation/shared/edibility_badge.dart';
 import 'package:boscdex/presentation/shared/offline_indicator.dart';
 import 'package:boscdex/presentation/shared/rarity_border.dart';
 
+/// Custom comparator allowing a cross-platform tolerance (10%)
+/// to account for Skia FreeType (Linux) vs CoreText (macOS) font antialiasing differences.
+class TolerantGoldenFileComparator extends LocalFileComparator {
+  final double tolerance;
+
+  TolerantGoldenFileComparator(Uri testFile, {this.tolerance = 0.10})
+      : super(testFile);
+
+  @override
+  Future<bool> compare(Uint8List imageBytes, Uri golden) async {
+    final ComparisonResult result = await GoldenFileComparator.compareLists(
+      imageBytes,
+      await getGoldenBytes(golden),
+    );
+
+    if (!result.passed && result.diffPercent <= tolerance) {
+      return true;
+    }
+
+    if (!result.passed) {
+      final String error = await generateFailureOutput(result, golden, basedir);
+      throw FlutterError(error);
+    }
+    return result.passed;
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() {
+    final currentComparator = goldenFileComparator;
+    if (currentComparator is LocalFileComparator) {
+      goldenFileComparator = TolerantGoldenFileComparator(
+        currentComparator.basedir.resolve('golden_retro_widgets_test.dart'),
+        tolerance: 0.10,
+      );
+    }
+  });
 
   group('Retro Pixel-Art Golden Snapshot Tests', () {
     testWidgets('Edibility badges golden matrix', (WidgetTester tester) async {
