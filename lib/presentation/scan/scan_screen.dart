@@ -14,10 +14,13 @@ import '../../providers/classifier_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/sound_provider.dart';
 import 'classification_result_sheet.dart';
+import 'icloud_photo_unavailable_sheet.dart';
 import 'tree_classification_result_sheet.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
-  const ScanScreen({super.key});
+  final ImagePicker? imagePicker;
+
+  const ScanScreen({Key? key, this.imagePicker}) : super(key: key);
 
   @override
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
@@ -37,11 +40,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   bool _hasCameraPermission = false;
   bool _isPermissionPermanentlyDenied = false;
   String? _cameraErrorMessage;
-  final ImagePicker _imagePicker = ImagePicker();
+  late final ImagePicker _imagePicker;
 
   @override
   void initState() {
     super.initState();
+    _imagePicker = widget.imagePicker ?? ImagePicker();
     WidgetsBinding.instance.addObserver(this);
     _animController = AnimationController(
       vsync: this,
@@ -231,14 +235,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         source: ImageSource.gallery,
         maxWidth: 1200,
         maxHeight: 1200,
+        requestFullMetadata: false,
       );
 
       if (pickedFile == null) return; // User canceled gallery selection
 
       final bytes = await pickedFile.readAsBytes();
+      if (bytes.isEmpty) return;
       await _processClassification(bytes);
     } catch (e) {
-      if (mounted) {
+      if (!mounted) return;
+      if (ICloudPhotoUnavailableSheet.isICloudOrCloudSyncError(e)) {
+        unawaited(ref.read(soundEffectServiceProvider).playBlip());
+        await ICloudPhotoUnavailableSheet.show(context);
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(l10n.errorLoadingGalleryImage(e.toString())),

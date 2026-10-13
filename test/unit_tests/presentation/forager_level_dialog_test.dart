@@ -125,11 +125,37 @@ void main() {
       await tester.tap(lvlBadge);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
-
-      // 3. Verify modal sheet appears
       expect(find.byType(ForagerLevelDialog), findsOneWidget);
 
-      // 4. Clean up modal and unmount
+      // Dismiss modal
+      Navigator.of(tester.element(find.byType(ForagerLevelDialog))).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(ForagerLevelDialog), findsNothing);
+
+      // 3. Tap on discovered count text to trigger bottom sheet
+      final discoveredText = find.byKey(const Key('boscdex_discovered_text'));
+      expect(discoveredText, findsOneWidget);
+      await tester.tap(discoveredText);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(ForagerLevelDialog), findsOneWidget);
+
+      // Dismiss modal
+      Navigator.of(tester.element(find.byType(ForagerLevelDialog))).pop();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(ForagerLevelDialog), findsNothing);
+
+      // 4. Tap on progress bar to trigger bottom sheet
+      final progressBar = find.byKey(const Key('boscdex_progress_bar'));
+      expect(progressBar, findsOneWidget);
+      await tester.tap(progressBar);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(ForagerLevelDialog), findsOneWidget);
+
+      // Clean up modal and unmount
       Navigator.of(tester.element(find.byType(ForagerLevelDialog))).pop();
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));

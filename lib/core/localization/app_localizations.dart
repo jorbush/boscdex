@@ -1527,6 +1527,20 @@ class AppLocalizations {
   }
 
   String errorLoadingGalleryImage(String error) {
+    if (error.contains('invalid_image') ||
+        error.contains('NSItemProviderErrorDomain') ||
+        error.contains('Cannot load representation') ||
+        error.contains('public.jpeg')) {
+      switch (languageCode) {
+        case 'es':
+          return 'Foto en iCloud no descargada en el dispositivo. Abre la app Fotos para descargarla antes de seleccionarla.';
+        case 'en':
+          return 'iCloud photo not downloaded on device. Open the Photos app to download it before selecting.';
+        case 'ca':
+        default:
+          return 'Foto a l\'iCloud no descarregada al dispositiu. Obre l\'app Fotos per descarregar-la abans de seleccionar-la.';
+      }
+    }
     switch (languageCode) {
       case 'es':
         return 'Error al cargar la imagen de la galería: $error';
@@ -2999,6 +3013,115 @@ class AppLocalizations {
       case 'ca':
       default:
         return '$displayName ($scientificName), fulla $leafType, ${isVisited ? "identificat" : "no explorat"}, $boletsCount bolets socis';
+    }
+  }
+
+  // --- iCloud Photo Synchronization Dialog ---
+  String get iCloudPhotoUnavailableTitle {
+    switch (languageCode) {
+      case 'es':
+        return 'Foto en iCloud no disponible';
+      case 'en':
+        return 'iCloud Photo Unavailable';
+      case 'ca':
+      default:
+        return 'Foto a l\'iCloud no disponible';
+    }
+  }
+
+  String get iCloudPhotoUnavailableSubtitle {
+    switch (languageCode) {
+      case 'es':
+        return 'Esta foto está almacenada en iCloud y no está descargada en el dispositivo.';
+      case 'en':
+        return 'This photo is stored in iCloud and is not downloaded to the device.';
+      case 'ca':
+      default:
+        return 'Aquesta foto està allotjada a l\'iCloud i no està descarregada al dispositiu.';
+    }
+  }
+
+  String get iCloudPhotoUnavailableOfflineNotice {
+    switch (languageCode) {
+      case 'es':
+        return 'Como Boscdex funciona 100% sin conexión en el bosque, los modelos de IA necesitan acceder al archivo descargado directamente en la memoria local.';
+      case 'en':
+        return 'Because Boscdex operates 100% offline in the wild, on-device AI models require the image to be downloaded into local device memory.';
+      case 'ca':
+      default:
+        return 'Com que Boscdex funciona 100% fora de línia al bosc, els models d\'IA necessiten accedir al fitxer descarregat directament a la memòria local.';
+    }
+  }
+
+  String get iCloudPhotoUnavailableHowToFix {
+    switch (languageCode) {
+      case 'es':
+        return 'CÓMO SOLUCIONARLO';
+      case 'en':
+        return 'HOW TO RESOLVE THIS';
+      case 'ca':
+      default:
+        return 'COM SOLUCIONAR-HO';
+    }
+  }
+
+  String get iCloudPhotoUnavailableStep1 {
+    switch (languageCode) {
+      case 'es':
+        return '1. Abre la app Fotos de Apple en tu iPhone.';
+      case 'en':
+        return '1. Open Apple\'s Photos app on your iPhone.';
+      case 'ca':
+      default:
+        return '1. Obre l\'aplicació Fotos d\'Apple al teu iPhone.';
+    }
+  }
+
+  String get iCloudPhotoUnavailableStep2 {
+    switch (languageCode) {
+      case 'es':
+        return '2. Toca esta foto para que se descargue (verás el círculo de progreso de iCloud).';
+      case 'en':
+        return '2. Tap this photo to download it (you will see the iCloud progress circle).';
+      case 'ca':
+      default:
+        return '2. Toca aquesta foto perquè es descarregui (veuràs el cercle de càrrega d\'iCloud).';
+    }
+  }
+
+  String get iCloudPhotoUnavailableStep3 {
+    switch (languageCode) {
+      case 'es':
+        return '3. Vuelve a Boscdex y selecciónala de nuevo desde la galería.';
+      case 'en':
+        return '3. Return to Boscdex and select it again from your gallery.';
+      case 'ca':
+      default:
+        return '3. Torna a Boscdex i selecciona-la de nou des de la galeria.';
+    }
+  }
+
+  String get iCloudPhotoUnavailableTip {
+    switch (languageCode) {
+      case 'es':
+        return 'Consejo: ¡También puedes tomar una foto directa con la cámara de Boscdex!';
+      case 'en':
+        return 'Tip: You can also take a direct photo using the Boscdex camera!';
+      case 'ca':
+      default:
+        return 'Consell: També pots fer una foto directa al bolet amb la càmera de Boscdex!';
+    }
+  }
+
+  String get understood {
+    switch (languageCode) {
+      case 'es':
+        return 'Entendido';
+      case 'en':
+        return 'Got it';
+      case 'ca':
+      default:
+        return 'Entès';
     }
   }
 }

@@ -113,31 +113,52 @@ class BoscdexScreen extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      isBolets
-                          ? l10n.discoveredRatio(boletCount, totalBolets)
-                          : l10n.identifiedTreesRatio(
-                              visitedCount, totalArbres),
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: RetroColors.inkSoft,
+                Semantics(
+                  button: true,
+                  label: isBolets
+                      ? '${l10n.discoveredRatio(boletCount, totalBolets)}, ${l10n.levelWithTitle(foragerLevel.level, foragerLevel.title(l10n.languageCode))}'
+                      : '${l10n.identifiedTreesRatio(visitedCount, totalArbres)}, ${l10n.levelWithTitle(foragerLevel.level, foragerLevel.title(l10n.languageCode))}',
+                  child: GestureDetector(
+                    key: const Key('boscdex_progress_row'),
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      ref.read(soundEffectServiceProvider).playBlip();
+                      HapticFeedback.selectionClick();
+                      ForagerLevelDialog.show(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isBolets
+                                ? l10n.discoveredRatio(boletCount, totalBolets)
+                                : l10n.identifiedTreesRatio(
+                                    visitedCount, totalArbres),
+                            key: const Key('boscdex_discovered_text'),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: RetroColors.inkSoft,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          SizedBox(
+                            key: const Key('boscdex_progress_bar'),
+                            width: 64,
+                            child: RetroProgressBar(
+                              progress:
+                                  isBolets ? boletProgress : arbreProgress,
+                              height: 8,
+                              totalSegments: 6,
+                              fillColor: RetroColors.forestGreen,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    SizedBox(
-                      width: 64,
-                      child: RetroProgressBar(
-                        progress: isBolets ? boletProgress : arbreProgress,
-                        height: 8,
-                        totalSegments: 6,
-                        fillColor: RetroColors.forestGreen,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),

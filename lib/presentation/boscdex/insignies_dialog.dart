@@ -48,206 +48,213 @@ class InsigniesDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final badgesAsync = ref.watch(insigniesProvider);
 
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.85,
-      ),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: RetroColors.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border.all(color: RetroColors.ink, width: 2.5),
-      ),
-      child: badgesAsync.when(
-        loading: () => const Center(
-          child: Padding(
-            padding: EdgeInsets.all(32.0),
-            child: CircularProgressIndicator(color: RetroColors.forestGreen),
-          ),
+    final mediaQuery = MediaQuery.of(context);
+    final sheetHeight = mediaQuery.size.height * 0.78;
+
+    return SafeArea(
+      top: true,
+      bottom: false,
+      child: Container(
+        constraints: BoxConstraints(
+          maxHeight: sheetHeight,
         ),
-        error: (err, _) => Center(
-          child: Text(
-            'Error carregant les insígnies: $err',
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              color: RetroColors.arcadeRed,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: RetroColors.background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border.all(color: RetroColors.ink, width: 2.5),
+        ),
+        child: badgesAsync.when(
+          loading: () => const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: CircularProgressIndicator(color: RetroColors.forestGreen),
             ),
           ),
-        ),
-        data: (badges) {
-          final l10n = AppLocalizations.of(context);
-          final awardedCount = badges.where((b) => b.isAwarded).length;
-          final foragerLevel = ref.watch(foragerLevelProvider);
+          error: (err, _) => Center(
+            child: Text(
+              'Error carregant les insígnies: $err',
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                color: RetroColors.arcadeRed,
+              ),
+            ),
+          ),
+          data: (badges) {
+            final l10n = AppLocalizations.of(context);
+            final awardedCount = badges.where((b) => b.isAwarded).length;
+            final foragerLevel = ref.watch(foragerLevelProvider);
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Drag handle
-              Center(
-                child: Container(
-                  width: 44,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: RetroColors.ink,
-                    borderRadius: BorderRadius.circular(3),
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Drag handle
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: RetroColors.ink,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-              // Title and count
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
+                // Title and count
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const PixelTrophyIcon(size: 28),
+                          const SizedBox(width: 10),
+                          Flexible(
+                            child: Text(
+                              l10n.myBadges,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 18,
+                                color: RetroColors.ink,
+                                letterSpacing: 0.3,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: RetroColors.goldCoin,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: RetroColors.ink, width: 2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: RetroColors.ink,
+                            offset: Offset(2, 2),
+                            blurRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        '$awardedCount/${badges.length}',
+                        style: const TextStyle(
+                          color: RetroColors.ink,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  l10n.badgeSubtitle,
+                  style: const TextStyle(
+                    color: RetroColors.inkSoft,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Forager Level Navigation Pill
+                GestureDetector(
+                  key: const Key('insignies_lvl_banner'),
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.of(context).pop();
+                    ForagerLevelDialog.show(context);
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                    decoration: BoxDecoration(
+                      color: RetroColors.mintWash,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: RetroColors.ink, width: 1.5),
+                    ),
                     child: Row(
                       children: [
-                        const PixelTrophyIcon(size: 28),
-                        const SizedBox(width: 10),
-                        Flexible(
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 1.5),
+                          decoration: BoxDecoration(
+                            color: RetroColors.forestGreen,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                           child: Text(
-                            l10n.myBadges,
+                            'LVL ${foragerLevel.level}',
                             style: const TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 18,
+                              fontFamily: RetroFonts.pixel,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '${foragerLevel.title(l10n.languageCode)} • ${foragerLevel.totalXp} XP',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
                               color: RetroColors.ink,
-                              letterSpacing: 0.3,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: RetroColors.goldCoin,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: RetroColors.ink, width: 2),
-                      boxShadow: const [
-                        BoxShadow(
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          size: 18,
                           color: RetroColors.ink,
-                          offset: Offset(2, 2),
-                          blurRadius: 0,
                         ),
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(height: 14),
+
+                // Badges Grid
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: badges.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final badge = badges[index];
+                      return _buildBadgeCard(context, badge);
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      HapticFeedback.selectionClick();
+                      Navigator.of(context).pop();
+                    },
                     child: Text(
-                      '$awardedCount/${badges.length}',
+                      l10n.settingsClose,
                       style: const TextStyle(
-                        color: RetroColors.ink,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
+                        color: RetroColors.inkSoft,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Text(
-                l10n.badgeSubtitle,
-                style: const TextStyle(
-                  color: RetroColors.inkSoft,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
                 ),
-              ),
-              const SizedBox(height: 10),
-
-              // Forager Level Navigation Pill
-              GestureDetector(
-                key: const Key('insignies_lvl_banner'),
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  Navigator.of(context).pop();
-                  ForagerLevelDialog.show(context);
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: RetroColors.mintWash,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: RetroColors.ink, width: 1.5),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 1.5),
-                        decoration: BoxDecoration(
-                          color: RetroColors.forestGreen,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'LVL ${foragerLevel.level}',
-                          style: const TextStyle(
-                            fontFamily: RetroFonts.pixel,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          '${foragerLevel.title(l10n.languageCode)} • ${foragerLevel.totalXp} XP',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            color: RetroColors.ink,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.chevron_right_rounded,
-                        size: 18,
-                        color: RetroColors.ink,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
-
-              // Badges Grid
-              Expanded(
-                child: ListView.separated(
-                  itemCount: badges.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final badge = badges[index];
-                    return _buildBadgeCard(context, badge);
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () {
-                    HapticFeedback.selectionClick();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    l10n.settingsClose,
-                    style: const TextStyle(
-                      color: RetroColors.inkSoft,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

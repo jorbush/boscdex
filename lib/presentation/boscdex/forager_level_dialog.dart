@@ -26,108 +26,115 @@ class ForagerLevelDialog extends ConsumerWidget {
     final foragerLevel = ref.watch(foragerLevelProvider);
     final l10n = AppLocalizations.of(context);
     final lang = l10n.languageCode;
+    final mediaQuery = MediaQuery.of(context);
+    // Sheet opens comfortably below top status bar, matching journal and badge sheets
+    final sheetHeight = mediaQuery.size.height * 0.75;
 
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.88,
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
-        color: RetroColors.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border.all(color: RetroColors.ink, width: 2.5),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              width: 44,
-              height: 5,
-              decoration: BoxDecoration(
-                color: RetroColors.ink,
-                borderRadius: BorderRadius.circular(3),
+    return SafeArea(
+      top: true,
+      bottom: false,
+      child: Container(
+        constraints: BoxConstraints(
+          maxHeight: sheetHeight,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          color: RetroColors.background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border.all(color: RetroColors.ink, width: 2.5),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Drag handle
+            Center(
+              child: Container(
+                width: 44,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: RetroColors.ink,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 14),
+            const SizedBox(height: 14),
 
-          // Header Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    const PixelBoletIcon(size: 26),
-                    const SizedBox(width: 10),
-                    Flexible(
-                      child: Text(
-                        l10n.foragerLevelHeader,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18,
-                          color: RetroColors.ink,
-                          letterSpacing: 0.3,
+            // Header Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      const PixelBoletIcon(size: 26),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: Text(
+                          l10n.foragerLevelHeader,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 18,
+                            color: RetroColors.ink,
+                            letterSpacing: 0.3,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: RetroColors.forestGreen,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: RetroColors.ink, width: 2),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: RetroColors.ink,
-                      offset: Offset(2, 2),
-                      blurRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Text(
-                  'LVL ${foragerLevel.level}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontFamily: RetroFonts.pixel,
-                    fontSize: 13,
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Scrollable Body
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                // 1. Current Level Hero Card
-                _buildCurrentRankCard(foragerLevel, l10n, lang),
-                const SizedBox(height: 16),
-
-                // 2. XP Breakdown Grid
-                _buildXpBreakdownCard(foragerLevel, l10n),
-                const SizedBox(height: 16),
-
-                // 3. Ranks Roadmap
-                _buildRanksRoadmap(foragerLevel, l10n, lang),
-                const SizedBox(height: 12),
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: RetroColors.forestGreen,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: RetroColors.ink, width: 2),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: RetroColors.ink,
+                        offset: Offset(2, 2),
+                        blurRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    'LVL ${foragerLevel.level}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: RetroFonts.pixel,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+
+            // Scrollable Body
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  // 1. Current Level Hero Card
+                  _buildCurrentRankCard(foragerLevel, l10n, lang),
+                  const SizedBox(height: 16),
+
+                  // 2. XP Breakdown Grid
+                  _buildXpBreakdownCard(foragerLevel, l10n),
+                  const SizedBox(height: 16),
+
+                  // 3. Ranks Roadmap
+                  _buildRanksRoadmap(foragerLevel, l10n, lang),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
