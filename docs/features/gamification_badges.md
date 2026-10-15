@@ -23,7 +23,7 @@ Boscdex features 14 achievement badges spanning collection milestones, symbiotic
 | `sentinella_toxic` | **Sentinella del Bosc** | 15 | Review 15 toxic lookalike alerts to sharpen field safety vigilance. |
 | `quadern_de_camp` | **Quadern de Camp** | 10 | Record 10 sightings in your offline field journal. |
 | `cartograf_del_bosc` | **Cartògraf del Bosc** | 5 | Record 5 sightings with GPS coordinates to map your field observations. |
-| `gran_enciclopedia` | **Gran Enciclopèdia** | 40 | Complete the catalog by discovering all 40 mushrooms in the Boscdex! |
+| `gran_enciclopedia` | **Gran Enciclopèdia** | 47 | Complete the catalog by discovering all 47 mushrooms in the Boscdex! |
 
 ---
 

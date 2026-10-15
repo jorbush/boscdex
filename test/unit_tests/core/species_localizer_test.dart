@@ -51,6 +51,37 @@ void main() {
             languageCode: 'en'),
         equals('Death Cap'),
       );
+
+      // Farinera pudent / Àngel de la mort (Amanita virosa)
+      expect(
+        SpeciesLocalizer.getMushroomName('amanita_virosa', languageCode: 'ca'),
+        contains('Farinera pudent'),
+      );
+      expect(
+        SpeciesLocalizer.getMushroomName('amanita_virosa', languageCode: 'es'),
+        contains('Ángel de la muerte'),
+      );
+      expect(
+        SpeciesLocalizer.getMushroomName('amanita_virosa', languageCode: 'en'),
+        equals('Destroying Angel'),
+      );
+
+      // Galerina mortal (Galerina marginata)
+      expect(
+        SpeciesLocalizer.getMushroomName('galerina_marginata',
+            languageCode: 'ca'),
+        contains('Galerina mortal'),
+      );
+      expect(
+        SpeciesLocalizer.getMushroomName('galerina_marginata',
+            languageCode: 'es'),
+        contains('Galerina rebordeada'),
+      );
+      expect(
+        SpeciesLocalizer.getMushroomName('galerina_marginata',
+            languageCode: 'en'),
+        equals('Funeral Bell / Deadly Galerina'),
+      );
     });
 
     test('Translates common tree names in ca, es, en', () {

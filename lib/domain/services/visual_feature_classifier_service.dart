@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import '../../core/localization/species_localizer.dart';
 import '../models/classificacio_result.dart';
 import 'classifier_service.dart';
 
@@ -347,6 +348,101 @@ class VisualFeatureClassifierService implements ClassifierService {
     scores['gyromitra_esculenta'] =
         (f.brownRatio * 2.2) + (f.redRatio * 1.2) - (f.whiteCreamRatio * 1.5);
 
+    // 29. Apagallums (Macrolepiota procera) - large scaly brownish cap + pale gills
+    scores['macrolepiota_procera'] =
+        (f.whiteCreamRatio * 1.8) + (f.brownRatio * 1.6) - (f.redRatio * 1.2);
+
+    // 30. Moixernó (Calocybe gambosa) - creamy white to pale buff cap
+    scores['calocybe_gambosa'] = (f.whiteCreamRatio * 2.8) +
+        (f.yellowRatio * 0.6) -
+        (f.charcoalRatio * 1.5);
+
+    // 31. Gírgola (Pleurotus ostreatus) - slate grey to brownish shell-shaped cap
+    scores['pleurotus_ostreatus'] = (f.greyRatio * 2.2) +
+        (f.charcoalRatio * 1.0) +
+        (f.whiteCreamRatio * 1.0);
+
+    // 32. Llengua de bou (Hydnum repandum) - pale cream to light salmon-buff
+    scores['hydnum_repandum'] = (f.whiteCreamRatio * 2.2) +
+        (f.orangeRatio * 1.0) +
+        (f.yellowRatio * 0.8);
+
+    // 33. Cualbra lloro (Russula cyanoxantha) - variable violet, slate grey and greenish cap
+    scores['russula_cyanoxantha'] =
+        (f.greyRatio * 1.8) + (f.greenRatio * 1.2) + (f.whiteCreamRatio * 1.0);
+
+    // 34. Gírgola d'olivera (Omphalotus olearius) - bright saffron-orange to copper
+    scores['omphalotus_olearius'] = (f.orangeRatio * 2.6) +
+        (f.yellowRatio * 1.2) -
+        (f.whiteCreamRatio * 1.0);
+
+    // 35. Pell d'àngel / Bolet enganyós (Entoloma sinuatum) - ochre-grey cap + pinkish gills
+    scores['entoloma_sinuatum'] =
+        (f.greyRatio * 2.0) + (f.yellowRatio * 1.0) + (f.whiteCreamRatio * 1.0);
+
+    // 36. Farinera vernal (Amanita verna) - immaculate shining white
+    scores['amanita_verna'] = (f.whiteCreamRatio * 3.2) -
+        (f.charcoalRatio * 2.0) -
+        (f.orangeRatio * 2.0);
+
+    // 37. Cortinari de muntanya (Cortinarius orellanus) - fiery tawny-cinnamon to fox-red
+    scores['cortinarius_orellanus'] =
+        (f.orangeRatio * 1.8) + (f.brownRatio * 1.8) + (f.redRatio * 1.0);
+
+    // 38. Rovelló d'obaga (Lactarius sanguifluus) - wine-red/vinaceous latex and tones
+    scores['lactarius_sanguifluus'] =
+        (f.orangeRatio * 2.2) + (f.redRatio * 1.5) - (f.charcoalRatio * 1.0);
+
+    // 39. Cama de perdiu (Chroogomphus rutilus) - copper-red to vinaceous brown
+    scores['chroogomphus_rutilus'] =
+        (f.brownRatio * 1.8) + (f.redRatio * 1.5) + (f.orangeRatio * 1.0);
+
+    // 40. Llenegot (Suillus luteus) - dark chocolate slime cap + bright yellow pores + membranous ring
+    scores['suillus_luteus'] =
+        (f.brownRatio * 2.0) + (f.yellowRatio * 1.6) - (f.charcoalRatio * 1.0);
+
+    // 41. Llenega d'alzina (Hygrophorus personii) - olive-brown slimy cap + white stem with zig-zag pattern
+    scores['hygrophorus_personii'] = (f.brownRatio * 1.8) +
+        (f.charcoalRatio * 1.2) +
+        (f.whiteCreamRatio * 0.8) -
+        (f.orangeRatio * 1.2);
+
+    // 42. Gírgola de panical (Pleurotus eryngii) - pale grey-brown cap + stout solid stem
+    scores['pleurotus_eryngii'] = (f.brownRatio * 1.5) +
+        (f.greyRatio * 1.5) +
+        (f.whiteCreamRatio * 1.2) -
+        (f.redRatio * 1.5);
+
+    // 43. Pinetell de sang (Lactarius semisanguifluus) - orange zoned cap with green verdigris + dark wine-red latex
+    scores['lactarius_semisanguifluus'] = (f.orangeRatio * 2.2) +
+        (f.greenRatio * 1.0) +
+        (f.redRatio * 0.8) -
+        (f.charcoalRatio * 1.0);
+
+    // 44. Pinet de pi bord (Suillus bellinii) - ivory-white sticky cap mottled brown + sulfur pores
+    scores['suillus_bellinii'] = (f.whiteCreamRatio * 1.8) +
+        (f.yellowRatio * 1.5) +
+        (f.brownRatio * 1.0) -
+        (f.charcoalRatio * 1.2);
+
+    // 45. Groguet (Tricholoma equestre) - bright sulfur-yellow cap, gills, and stem
+    scores['tricholoma_equestre'] = (f.yellowRatio * 2.6) +
+        (f.greenRatio * 0.8) -
+        (f.charcoalRatio * 1.5) -
+        (f.redRatio * 1.5);
+
+    // 46. Farinera pudent / Àngel de la mort (Amanita virosa) - pure white irregular conical cap + ragged ring
+    scores['amanita_virosa'] = (f.whiteCreamRatio * 3.2) -
+        (f.charcoalRatio * 1.8) -
+        (f.orangeRatio * 1.8) -
+        (f.redRatio * 1.8);
+
+    // 47. Galerina mortal (Galerina marginata) - honey-brown cap + ochre gills + ringed stem
+    scores['galerina_marginata'] = (f.brownRatio * 2.0) +
+        (f.yellowRatio * 1.2) +
+        (f.orangeRatio * 0.8) -
+        (f.charcoalRatio * 1.0);
+
     // Sort species by computed score descending
     final sorted = scores.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -451,89 +547,17 @@ class VisualFeatureClassifierService implements ClassifierService {
   }
 
   String _displayNameForBolet(String id) {
-    switch (id) {
-      case 'lactarius_deliciosus':
-        return 'Rovelló / Pinetell';
-      case 'hygrophorus_latitabundus':
-        return 'Llenega negra';
-      case 'amanita_caesarea':
-        return 'Ou de reig';
-      case 'boletus_edulis':
-        return 'Cep';
-      case 'cantharellus_cibarius':
-        return 'Rossinyol';
-      case 'tricholoma_terreum':
-        return 'Fredolic';
-      case 'craterellus_cornucopioides':
-        return 'Trompeta de la mort';
-      case 'amanita_muscaria':
-        return 'Reig bord';
-      case 'amanita_phalloides':
-        return 'Farinera borda';
-      case 'craterellus_lutescens':
-        return 'Camagroc';
-      case 'suillus_luteus':
-        return 'Llenegot';
-      case 'marasmius_oreades':
-        return 'Carrereta / Cama-sec';
-      case 'lactarius_chrysorrheus':
-        return 'Lleterola de llet groga / Fals rovelló';
-      case 'lepista_nuda':
-        return 'Pé blau / Pua blava';
-      case 'rubroboletus_satanas':
-        return 'Mataparent de Satanàs';
-      case 'russula_virescens':
-        return 'Palometa / Llora pigada';
-      case 'hygrophorus_eburneus':
-        return 'Llenega blanca / Mocosa blanca';
-      case 'tricholoma_pardinum':
-        return 'Fredolic bord / Griset bord';
-      case 'morchella_esculenta':
-        return 'Múrgola / Rabassola';
-      case 'lactarius_sanguifluus':
-        return "Rovelló d'obaga";
-      case 'chroogomphus_rutilus':
-        return 'Cama de perdiu';
-      case 'agaricus_campestris':
-        return 'Xampinyó silvestre / Guisana';
-      case 'agaricus_xanthodermus':
-        return 'Xampinyó groguenc / Xampinyó pudent';
-      case 'psathyrella_candolleana':
-        return 'Candol·lea / Psatirel·la de Candolle';
-      case 'suillus_granulatus':
-        return 'Molleric clapat / Pinetell de pi blanc';
-      case 'hygrophorus_russula':
-        return 'Carlet / Escarlet';
-      case 'boletus_aereus':
-        return 'Cep negre / Sureny fosc';
-      case 'coprinus_comatus':
-        return 'Bolet de tinta / Braguer de vaca';
-      case 'lactarius_torminosus':
-        return 'Cabra / Rovelló bord';
-      case 'amanita_pantherina':
-        return 'Pantera / Reig bord pigat';
-      case 'gyromitra_esculenta':
-        return 'Bolet de greix / Falsa múrgola';
-      default:
-        return id;
-    }
+    return SpeciesLocalizer.getMushroomName(
+      id,
+      languageCode: 'ca',
+    );
   }
 
   String _displayNameForArbre(String id) {
-    switch (id) {
-      case 'pinus_sylvestris':
-        return 'Pi roig';
-      case 'pinus_halepensis':
-        return 'Pi blanc';
-      case 'quercus_ilex':
-        return 'Alzina';
-      case 'fagus_sylvatica':
-        return 'Faig';
-      case 'castanea_sativa':
-        return 'Castanyer';
-      default:
-        return id;
-    }
+    return SpeciesLocalizer.getTreeName(
+      id,
+      languageCode: 'ca',
+    );
   }
 }
 

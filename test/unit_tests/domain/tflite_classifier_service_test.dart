@@ -23,7 +23,7 @@ void main() {
       await service.initialize();
 
       // Labels from assets/models/mushroom_labels.txt should be parsed
-      expect(service.labels.length, equals(21));
+      expect(service.labels.length, equals(47));
       expect(service.labels, contains('lactarius_deliciosus'));
       expect(service.labels, contains('amanita_caesarea'));
       expect(service.labels, contains('boletus_edulis'));

@@ -6,7 +6,7 @@ import 'package:boscdex/core/theme/retro_decorations.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('All 40 mushroom and 5 tree pixel art assets load via rootBundle',
+  test('All 47 mushroom and 5 tree pixel art assets load via rootBundle',
       () async {
     const mushrooms = [
       'lactarius_deliciosus',
@@ -49,6 +49,13 @@ void main() {
       'lactarius_torminosus',
       'amanita_pantherina',
       'gyromitra_esculenta',
+      'hygrophorus_personii',
+      'pleurotus_eryngii',
+      'lactarius_semisanguifluus',
+      'suillus_bellinii',
+      'tricholoma_equestre',
+      'amanita_virosa',
+      'galerina_marginata',
     ];
 
     for (final id in mushrooms) {
@@ -132,12 +139,12 @@ void main() {
         await rootBundle.load('assets/models/mushroom_classifier_head.bin');
     expect(headData.lengthInBytes, greaterThan(100 * 1024),
         reason:
-            'Classifier head should contain 21 biases + 21x1280 Float32 weights (~107 KB)');
+            'Classifier head should contain 47 biases + 47x1280 Float32 weights');
 
     final labelsString =
         await rootBundle.loadString('assets/models/mushroom_labels.txt');
     final labels = labelsString.trim().split('\n');
-    expect(labels.length, equals(21));
+    expect(labels.length, equals(47));
     expect(labels, contains('lactarius_deliciosus'));
     expect(labels, contains('amanita_caesarea'));
     expect(labels, contains('boletus_edulis'));

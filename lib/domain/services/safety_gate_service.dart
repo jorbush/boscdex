@@ -9,20 +9,53 @@ class SafetyGateService {
   final double confidenceThreshold;
   final double secondaryToxicConfidenceThreshold;
   final double overwhelmingConfidenceThreshold;
+  final double lethalConfidenceThreshold;
+
+  /// The 6 lethal Catalan taxa containing amatoxins, orellanine, or gyromitrin.
+  static const Set<String> lethalSpecies = {
+    'amanita_phalloides',
+    'amanita_verna',
+    'amanita_virosa',
+    'cortinarius_orellanus',
+    'galerina_marginata',
+    'gyromitra_esculenta',
+  };
 
   SafetyGateService({
     required Map<String, List<String>> toxicLookalikesData,
     this.confidenceThreshold = 0.70,
     this.secondaryToxicConfidenceThreshold = 0.15,
     this.overwhelmingConfidenceThreshold = 0.88,
+    this.lethalConfidenceThreshold = 0.10,
   }) : _toxicLookalikesData = toxicLookalikesData;
+
+  /// Detects whether any candidate in the top predictions is a lethal taxon
+  /// with confidence >= [lethalConfidenceThreshold].
+  ClassificacioResult? findLethalCandidate(
+    List<ClassificacioResult> results, {
+    Map<String, Edibilitat>? candidatesEdibility,
+    int maxCandidates = 3,
+  }) {
+    for (final candidate in results.take(maxCandidates)) {
+      final isLethalId = lethalSpecies.contains(candidate.boletId);
+      final isLethalEd =
+          candidatesEdibility?[candidate.boletId] == Edibilitat.mortal;
+      if ((isLethalId || isLethalEd) &&
+          candidate.confidence >= lethalConfidenceThreshold) {
+        return candidate;
+      }
+    }
+    return null;
+  }
 
   /// Evaluates safety level based on candidates, lookalikes, specimen edibility,
   /// and runner-up candidate toxicities.
   ///
   /// CRITICAL SAFETY PROTOCOL:
-  /// 1. If specimen itself is toxic or mortal, it is ALWAYS a danger ([NivellSeguretat.perill]),
-  ///    regardless of confidence score. Low-confidence mortal predictions must NEVER suppress warnings.
+  /// 1. Zero-Tolerance Lethal Gate: If ANY candidate in the top-3 predictions is a lethal
+  ///    taxon with confidence >= [lethalConfidenceThreshold] (10%), or specimen itself is toxic/mortal,
+  ///    it is ALWAYS escalated to danger ([NivellSeguretat.perill]). Low-confidence lethal predictions
+  ///    must NEVER be suppressed or overshadowed by an edible match.
   /// 2. If confidence is below threshold, it returns [NivellSeguretat.incert].
   /// 3. If high confidence but has known toxic lookalikes, it returns [NivellSeguretat.confusioPossible].
   /// 4. Top-N Multi-Candidate Toxicity Gate:
@@ -40,6 +73,16 @@ class SafetyGateService {
     if (results.isEmpty) return NivellSeguretat.incert;
 
     final topResult = results.first;
+
+    // 0. Zero-Tolerance Lethal Gate: If ANY candidate in top-3 is mortal (>=10%),
+    // immediately escalate to perill (danger).
+    final lethalCandidate = findLethalCandidate(
+      results,
+      candidatesEdibility: candidatesEdibility,
+    );
+    if (lethalCandidate != null) {
+      return NivellSeguretat.perill;
+    }
 
     // 1. Highest priority: specimen itself is toxic or mortal -> danger.
     // This MUST evaluate before the confidence threshold so that low-confidence

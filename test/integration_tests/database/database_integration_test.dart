@@ -17,7 +17,7 @@ void main() {
 
   test('Database populates seed data on creation', () async {
     final bolets = await db.boletDao.getAllBolets();
-    expect(bolets.length, equals(40));
+    expect(bolets.length, equals(47));
 
     final arbres = await db.arbreDao.getAllArbres();
     expect(arbres.length, equals(5));
@@ -116,13 +116,49 @@ void main() {
       phalloidesLookalikes.any((l) => l.id == 'macrolepiota_procera'),
       isTrue,
     );
+    expect(
+      phalloidesLookalikes.any((l) => l.id == 'hygrophorus_personii'),
+      isTrue,
+    );
+
+    // Verify lethal sentinels virosa and galerina
+    final virosaLookalikes =
+        await db.boletDao.getToxicLookalikes('amanita_virosa');
+    expect(
+      virosaLookalikes.any((l) => l.id == 'calocybe_gambosa'),
+      isTrue,
+    );
+    expect(
+      virosaLookalikes.any((l) => l.id == 'agaricus_campestris'),
+      isTrue,
+    );
+
+    final marginataLookalikes =
+        await db.boletDao.getToxicLookalikes('galerina_marginata');
+    expect(
+      marginataLookalikes.any((l) => l.id == 'pleurotus_ostreatus'),
+      isTrue,
+    );
+
+    final semisanguifluusLookalikes =
+        await db.boletDao.getToxicLookalikes('lactarius_semisanguifluus');
+    expect(
+      semisanguifluusLookalikes.any((l) => l.id == 'lactarius_chrysorrheus'),
+      isTrue,
+    );
+    expect(
+      semisanguifluusLookalikes.any((l) => l.id == 'lactarius_torminosus'),
+      isTrue,
+    );
   });
 
   test('BoletDao searchByName finds specimens by Catalan or scientific name',
       () async {
     final searchCatalan = await db.boletDao.searchByName('Rovelló');
-    expect(searchCatalan.length,
-        equals(4)); // Pinetell, Rovelló d'obaga, Fals rovelló & Rovelló bord
+    expect(
+        searchCatalan.length,
+        equals(
+            5)); // Pinetell, Rovelló d'obaga, Fals rovelló, Rovelló bord & Rovelló de pi negre
 
     final searchScientific = await db.boletDao.searchByName('Boletus');
     expect(searchScientific, isNotEmpty);

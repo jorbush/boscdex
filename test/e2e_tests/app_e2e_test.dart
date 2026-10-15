@@ -109,7 +109,7 @@ void main() {
 
       // 3. User lands on Boscdex Album tab
       expect(find.text('Boscdex'), findsWidgets);
-      expect(find.text('0/40 descoberts'), findsOneWidget);
+      expect(find.text('0/47 descoberts'), findsOneWidget);
 
       // 3b. User inspects an undiscovered bolet to check its habitat & location
       final undiscoveredCardFinder = find.text('#001 ???');
@@ -184,6 +184,23 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(registerButtonFinder);
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      // 6b. Botanical Safety Check Dialog appears because Rovelló has toxic lookalikes
+      expect(find.text('Comprovació Botànica de Seguretat'), findsOneWidget);
+      // Check all checklist items
+      final checkboxes = find.byType(Checkbox);
+      for (final checkbox in checkboxes.evaluate()) {
+        await tester.tap(find.byWidget(checkbox.widget));
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await tester.pumpAndSettle();
+
+      // Tap confirm in safety dialog
+      final confirmTraitsFinder = find.text('He comprovat aquests trets');
+      expect(confirmTraitsFinder, findsOneWidget);
+      await tester.tap(confirmTraitsFinder);
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pump(const Duration(milliseconds: 500));
 
@@ -199,7 +216,7 @@ void main() {
       await tester.pump();
 
       // Verify discovery counter has incremented from 0 to 1
-      expect(find.text('1/40 descoberts'), findsOneWidget);
+      expect(find.text('1/47 descoberts'), findsOneWidget);
 
       // 8. Tap on the unlocked card in Boscdex grid to verify navigation to detail
       final cardFinder = find.text('Rovelló / Pinetell');

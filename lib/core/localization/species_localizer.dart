@@ -205,6 +205,41 @@ class SpeciesLocalizer {
       'es': 'Bonete / Falsa colmenilla',
       'en': 'False Morel / Brain Mushroom',
     },
+    'hygrophorus_personii': {
+      'ca': 'Llenega d\'alzina / Llanega d\'alzina',
+      'es': 'Higróforo de encina / Llanega de encina',
+      'en': 'Dark Woodwax / Oak Woodwax',
+    },
+    'pleurotus_eryngii': {
+      'ca': 'Gírgola de panical / Bolet de card',
+      'es': 'Seta de cardo',
+      'en': 'King Oyster / King Trumpet',
+    },
+    'lactarius_semisanguifluus': {
+      'ca': 'Pinetell de sang / Rovelló de pi negre',
+      'es': 'Níscalo semirrojo / Falso níscalo de sangre',
+      'en': 'Highland Saffron Milkcap / Half-blood Milkcap',
+    },
+    'suillus_bellinii': {
+      'ca': 'Pinet de pi bord / Molleric de Bellini',
+      'es': 'Boleto de Bellini / Hongo de pino blanco',
+      'en': 'Bellini\'s Pine Bolete',
+    },
+    'tricholoma_equestre': {
+      'ca': 'Groguet / Verderol / Bolet dels cavallers',
+      'es': 'Seta de los caballeros / Verderol',
+      'en': 'Yellow Knight / Man on Horseback',
+    },
+    'amanita_virosa': {
+      'ca': 'Farinera pudent / Àngel de la mort',
+      'es': 'Cicuta fétida / Ángel de la muerte',
+      'en': 'Destroying Angel',
+    },
+    'galerina_marginata': {
+      'ca': 'Galerina mortal / Galerina vironosa',
+      'es': 'Galerina mortal / Galerina rebordeada',
+      'en': 'Funeral Bell / Deadly Galerina',
+    },
   };
 
   static const Map<String, Map<String, String>> _trees = {
@@ -1171,6 +1206,62 @@ class SpeciesLocalizer {
       'en':
           '3 to 6 cm, short, stout, hollow, irregularly grooved/wrinkled, whitish to pale yellowish-ochre.',
     },
+    'hygrophorus_personii': {
+      'ca':
+          'Esvelt, cilíndric i atenuat a la base. Blanc a la part superior i cobert d\'una beina viscosa amb dibuix tigrat bru olivaci per sota.',
+      'es':
+          'Esbelto, cilíndrico atenuado en la base. Blanco arriba y cubierto por una vaina viscosa atigrada pardo-olivácea abajo.',
+      'en':
+          'Slender, cylindrical tapering at base. White at apex, covered below in a viscid olive-brown snake-skin sheath.',
+    },
+    'pleurotus_eryngii': {
+      'ca':
+          'Gruixut, robust, massís, sovint excèntric, blanc a blanquinós atenuat a la base.',
+      'es':
+          'Grueso, robusto, macizo, a menudo excéntrico, blanco a blanquecino atenuado en la base.',
+      'en':
+          'Thick, stout, solid, often eccentric, white to off-white tapering at base.',
+    },
+    'lactarius_semisanguifluus': {
+      'ca':
+          'Curt, cilíndric, ataronjat amb petites escrobícules vinoses, buit amb l\'edat.',
+      'es':
+          'Corto, cilíndrico, anaranjado con pequeñas escrobículas vinosas, hueco de adulto.',
+      'en':
+          'Short, cylindrical, orange with small vinaceous pits, hollow when mature.',
+    },
+    'suillus_bellinii': {
+      'ca':
+          'Curt, rabassut, cilíndric, blanquinós cobert de granulacions i punts vermellosos/carmí molt evidents. Sense anell.',
+      'es':
+          'Corto, robusto, blanquecino densamente cubierto de granulaciones y puntos rojizo-carmín. Sin anillo.',
+      'en':
+          'Short, stout, off-white densely covered in crimson-brown glandular dots. Ringless.',
+    },
+    'tricholoma_equestre': {
+      'ca':
+          'Robust, sòlid, cilíndric, del mateix color groc que les làmines o lleugerament més pàl·lid, sense anell.',
+      'es':
+          'Robusto, macizo, cilíndrico, del mismo amarillo que las láminas o algo más pálido, sin anillo.',
+      'en':
+          'Stout, solid, cylindrical, sulfur-yellow like the gills, without any ring.',
+    },
+    'amanita_virosa': {
+      'ca':
+          'Alt, esvelt, blanc, cobert d\'esquames llanoses o flocoses marcades, amb un anell blanc estriat penjant i volva en sac a la base.',
+      'es':
+          'Alto, esbelto, blanco, cubierto de escamas lanosas muy visibles, con anillo membranoso colgante y volva en saco.',
+      'en':
+          'Tall, slender, white, covered in shaggy floccose scales, with a hanging ragged ring and saccate volva.',
+    },
+    'galerina_marginata': {
+      'ca':
+          'Prim, fibril·lós, bru fosc amb fibril·les blanquinoses a la part inferior i un anell membranós fugaç estret a la part superior.',
+      'es':
+          'Delgado, fibrilloso, pardo oscuro con fibrillas plateadas abajo y un anillo membranoso estrecho arriba.',
+      'en':
+          'Slender, fibrous, dark brown with silvery fibrils below and a delicate narrow membranous ring above.',
+    },
   };
 
   static const Map<String, Map<String, String>> _latexDescriptions = {
@@ -1693,6 +1784,62 @@ class SpeciesLocalizer {
           'La mortal oronja verde tiene anillo, volva membranosa en saco y láminas frágiles; la carbonera carece de anillo y volva y sus láminas son flexibles y grasientas al tacto (no se rompen).',
       'en':
           'The deadly Death Cap has a stem ring, sack-like volva, and brittle gills; the Charcoal Burner lacks both ring and volva and possesses lardaceous flexible gills that bend without breaking.',
+    },
+    'amanita_virosa:calocybe_gambosa': {
+      'ca':
+          'La mortal Farinera pudent té anell penjant al peu, volva en sac a la base i làmines lliures blanques; el Moixernó té làmines juntes sense anell ni volva i agradable olor de farina.',
+      'es':
+          'La mortal cicuta fétida tiene anillo, volva en saco y láminas libres; la seta de San Jorge carece de anillo y volva y huele a harina fresca.',
+      'en':
+          'Deadly Destroying Angel has a stem ring, saccate volva, and free gills; edible St. George mushroom lacks both ring and volva and smells of fresh meal.',
+    },
+    'amanita_virosa:agaricus_campestris': {
+      'ca':
+          'La mortal Farinera pudent té làmines blanques pures i volva en sac; el Xampinyó silvestre té làmines rosades a marró xocolata i mai té volva.',
+      'es':
+          'El mortal ángel de la muerte tiene láminas blancas puras y volva en saco; el champiñón silvestre tiene láminas rosadas a chocolate y carece de volva.',
+      'en':
+          'Deadly Destroying Angel has pure white gills and a saccate volva; Field mushroom has pink to chocolate gills and never has a volva.',
+    },
+    'galerina_marginata:pleurotus_ostreatus': {
+      'ca':
+          'La mortal Galerina vironosa és petita, ocre-marró, té anell membranós i espores marró rovell; la Gírgola és molt més gran, gris-blavosa, sense anell i amb esporada blanca.',
+      'es':
+          'La mortal Galerina marginata es pequeña, pardo-ocre, con anillo membranoso y esporada marrón óxido; la Seta de ostra es grisácea, sin anillo y esporada blanca.',
+      'en':
+          'Deadly Funeral Bell is small, ochre-brown, with a ring and rusty brown spores; Oyster mushroom is greyish, ringless, and has white spores.',
+    },
+    'lactarius_semisanguifluus:lactarius_chrysorrheus': {
+      'ca':
+          'El Pinetell de sang té làtex taronja que ràpidament es torna vi negre/porpra i s\'oxida a verd; el Fals rovelló tòxic té làtex blanc que vira a groc sofre.',
+      'es':
+          'El Níscalo semirrojo tiene látex naranja que vira a vino tinto y se mancha de verde; el Falso níscalo tóxico tiene látex blanco que vira a amarillo.',
+      'en':
+          'Highland Saffron Milkcap has orange milk turning wine-purple and bruising green; toxic False Milkcap has white milk turning yellow.',
+    },
+    'lactarius_semisanguifluus:lactarius_torminosus': {
+      'ca':
+          'La Cabra té marge barbós molt pelut i làtex blanc acre immutable; el Pinetell de sang té marge llis i làtex vinós.',
+      'es':
+          'El falso níscalo barbudo tiene margen muy lanoso/peludo y látex blanco acre; el níscalo semirrojo tiene margen liso y látex vinoso.',
+      'en':
+          'Woolly Milkcap has a heavily bearded margin and acrid white milk; Highland Saffron Milkcap has a smooth margin and vinaceous milk.',
+    },
+    'hygrophorus_personii:amanita_phalloides': {
+      'ca':
+          'La mortal Farinera borda té làmines lliures, anell i volva membranosa en sac; la Llenega d\'alzina té làmines gruixudes ceroses i beina viscosa tigrada sense volva.',
+      'es':
+          'La mortal Oronja verde tiene láminas libres, anillo y volva; el Higróforo de encina tiene láminas cerosas decurrentes y vaina viscosa sin volva.',
+      'en':
+          'Deadly Death Cap has free gills, a ring, and a sack volva; Dark Woodwax has thick waxy decurrent gills and a slimy sheath without a volva.',
+    },
+    'russula_cyanoxantha:tricholoma_equestre': {
+      'ca':
+          'El Groguet té làmines groc sofre i carn fibrosa; la Llora verda té làmines blanques lardàcies i carn trencadissa com guix.',
+      'es':
+          'La seta de los caballeros tiene láminas amarillo azufre y carne fibrosa; la carbonera tiene láminas blancas grasientas y carne quebradiza.',
+      'en':
+          'Yellow Knight has sulfur-yellow gills and fibrous flesh; Charcoal Burner has white flexible lardaceous gills and brittle chalky flesh.',
     },
   };
 

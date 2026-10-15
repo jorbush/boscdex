@@ -29,7 +29,7 @@ Boscdex is designed from the ground up as a **100% offline-first, client-only mo
 │                       Data Layer                       │
 │    (Type-Safe SQLite via Drift, Local Key-Value)       │
 ├────────────────────────────────────────────────────────┤
-│  • AppDatabase (Auto-seeded with 40 bolets + 5 trees)  │
+│  • AppDatabase (Auto-seeded with 47 bolets + 5 trees)  │
 │  • DAOs (Bolet, Arbre, Avistament, Descobriment, etc.) │
 │  • SharedPreferences (Disclaimer acceptance, counters) │
 └────────────────────────────────────────────────────────┘
@@ -41,7 +41,7 @@ Boscdex is designed from the ground up as a **100% offline-first, client-only mo
 
 ### 1. Data Layer (`lib/data/`)
 * **SQLite Engine:** Implemented via **Drift** (`drift`, `drift/native.dart`). Runs queries on a background isolate, eliminating UI jank.
-* **Auto-Seeding Migration:** The database seeds initial taxonomy companions on first creation (`MigrationStrategy.onCreate`), guaranteeing immediate availability of all 40 Catalan mushrooms, 5 indicator trees, toxic lookalike associations, and 14 achievement badges without external network downloads.
+* **Auto-Seeding Migration:** The database seeds initial taxonomy companions on first creation (`MigrationStrategy.onCreate`), guaranteeing immediate availability of all 47 Catalan mushrooms, 5 indicator trees, toxic lookalike associations, and 14 achievement badges without external network downloads.
 * **Local Persistence:** Uses `SharedPreferences` solely for low-overhead configuration flags (e.g., legal disclaimer acceptance, lookalike comparison counter).
 
 ### 2. Domain Layer (`lib/domain/`)
@@ -64,5 +64,5 @@ Boscdex is designed from the ground up as a **100% offline-first, client-only mo
 ### 4. Core & Localization Layer (`lib/core/localization/`)
 * **Trilingual Architecture:** Self-contained, zero-cloud localization engine providing runtime language switching across Catalan (`ca`, default), Spanish (`es`), and English (`en`).
 * **`AppLocalizations`:** Type-safe localization delegate providing UI labels, tab navigation, camera viewfinder cues, settings options, and warning banners.
-* **`SpeciesLocalizer`:** Curated multilingual catalog translating common names, detailed morphology traits (cap, gills, stem, latex), safety disclaimers, toxic lookalike comparative keys, and host tree traits for all 40 mushrooms and 5 indicator trees.
+* **`SpeciesLocalizer`:** Curated multilingual catalog translating common names, detailed morphology traits (cap, gills, stem, latex), safety disclaimers, toxic lookalike comparative keys, and host tree traits for all 47 mushrooms and 5 indicator trees.
 * **Reactive Persistence:** Active language selection persisted via `SharedPreferences` and propagated across the widget tree with Riverpod's `appLocaleProvider`.

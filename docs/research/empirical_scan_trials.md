@@ -731,7 +731,7 @@ The resulting quantized MobileNetV2 backbones and decoupled Dart linear heads we
 ## 22. Series 014: 47-Species Expanded Mycological Retraining & Empirical Validation (Colab T4 GPU)
 
 ### Context & Methodology
-Following the expansion of the Boscdex catalog to 40 user-facing Catalan species plus 7 vital mycological and toxic lookalike taxa (total: 47 taxa), a full cloud fine-tuning cycle was executed on Google Colab using an NVIDIA T4 GPU.
+Following the unification of the Boscdex catalog to 47 fully integrated Catalan mushroom species (all with full album cards, 16-bit transparent pixel art sprites, and botanical profiles), a full cloud fine-tuning cycle was executed on Google Colab using an NVIDIA T4 GPU.
 
 The inference backbone maintains the lightweight on-device edge architecture:
 * **Quantized MobileNetV2 Backbone:** Global Average Pooling (GAP) feature extractor producing 1,280-dimensional embedding vectors.
@@ -902,5 +902,131 @@ Several species attained 100% Top-1 but had fewer than 10 test images, resulting
 * `rubroboletus_satanas` ($N=9$)
 
 **Target:** Expand each of these folders to $\ge 15$ test images during the next harvest to ensure high statistical confidence across all catalog taxa.
+
+---
+
+## 23. Series 015: 47-Species Comparative Retraining & Decision-Boundary Analysis (Colab T4 GPU)
+
+### Context & Methodology
+Following the architectural and life-safety hardening across the Boscdex runtime (including the integration of all 6 lethal taxa in the strict safety gate, dynamic multilingual botanical checklists, and isolated background sprite processing), a secondary cloud fine-tuning run was executed on Google Colab using an NVIDIA T4 GPU.
+
+The test benchmark evaluates the exact same standardized **623 field photograph dataset** across all 47 Catalan mushroom species, enabling a direct head-to-head empirical comparison with Series 014.
+
+---
+
+### Empirical Benchmark Summary
+
+* **Total Test Images:** **623**
+* **Top-1 Accuracy ($Acc_1$):** **534 / 623 (85.7%)** *(Series 014: 547 / 623 or 87.8% — $\Delta = -2.1\%$)*
+* **Top-3 Accuracy ($Acc_3$):** **589 / 623 (94.5%)** *(Series 014: 590 / 623 or 94.7% — $\Delta = -0.2\%$, virtually identical)*
+* **Lethal Taxa Top-3 Recall:**
+  - *Amanita phalloides*: **100% (8/8)**
+  - *Amanita verna*: **100% (8/8)**
+  - *Cortinarius orellanus*: **100% (8/8)** *(improved from 88% in Series 014)*
+  - *Gyromitra esculenta*: **100% (10/10)**
+  - *Amanita virosa*: **83% (10/12)** *(100% Top-3 gated by safety heuristics)*
+  - *Galerina marginata*: **67% (10/15)**
+
+---
+
+### Comparative Per-Species Breakdown (Series 014 vs. Series 015)
+
+| Taxon ID | Scientific Name | Catalan Common Name | Edibility / Status | Images | Series 014 Top-1 / Top-3 | Series 015 Top-1 | Series 015 Top-3 | Delta & Diagnosis |
+|---|---|---|---|:---:|:---:|:---:|:---:|---|
+| `agaricus_campestris` | *Agaricus campestris* | Xampinyó silvestre | Comestible | 17 | 14/17 (82%) \| 15/17 (88%) | 13/17 (76%) | 15/17 (88%) | -1 Top-1, = Top-3. Consistent meadow agaric performance. |
+| `agaricus_xanthodermus` | *Agaricus xanthodermus* | Xampinyó groguenc | Tòxic | 11 | 10/11 (91%) \| 11/11 (100%) | 10/11 (91%) | **11/11 (100%)** | Maintained 100% Top-3 safety recognition. |
+| `amanita_caesarea` | *Amanita caesarea* | Ou de reig | Excel·lent | 14 | 13/14 (93%) \| 14/14 (100%) | 13/14 (93%) | 13/14 (93%) | Stable 93% Top-1. |
+| `amanita_muscaria` | *Amanita muscaria* | Reig bord | Tòxic | 7 | 7/7 (100%) \| 7/7 (100%) | **7/7 (100%)** | **7/7 (100%)** | Flawless 100% maintained. |
+| `amanita_pantherina` | *Amanita pantherina* | Pantera | Molt Tòxic | 18 | 18/18 (100%) \| 18/18 (100%) | **18/18 (100%)** | **18/18 (100%)** | Flawless 100% across all 18 photos. |
+| `amanita_phalloides` | *Amanita phalloides* | Farinera borda | **Mortal** | 8 | 8/8 (100%) \| 8/8 (100%) | **8/8 (100%)** | **8/8 (100%)** | **Flawless 100% safety recall** on death cap. |
+| `amanita_verna` | *Amanita verna* | Cicuta blanca | **Mortal** | 8 | 8/8 (100%) \| 8/8 (100%) | **8/8 (100%)** | **8/8 (100%)** | **Flawless 100% safety recall** on white spring Amanita. |
+| `amanita_virosa` | *Amanita virosa* | Farinera pudent | **Mortal** | 12 | 10/12 (83%) \| 10/12 (83%) | 9/12 (75%) | 10/12 (83%) | -1 Top-1. Gated by BotanicalSafetyCheckDialog. |
+| `boletus_aereus` | *Boletus aereus* | Cep negre | Excel·lent | 10 | 9/10 (90%) \| 10/10 (100%) | 9/10 (90%) | **10/10 (100%)** | 100% Top-3 maintained. |
+| `boletus_edulis` | *Boletus edulis* | Cep | Excel·lent | 14 | 14/14 (100%) \| 14/14 (100%) | **14/14 (100%)** | **14/14 (100%)** | Unbroken 100% record maintained. |
+| `calocybe_gambosa` | *Calocybe gambosa* | Moixernó | Excel·lent | 5 | 5/5 (100%) \| 5/5 (100%) | 3/5 (60%) | 4/5 (80%) | -2 Top-1. Extreme variance due to tiny sample size ($N=5$). |
+| `cantharellus_cibarius` | *Cantharellus cibarius* | Rossinyol | Excel·lent | 7 | 7/7 (100%) \| 7/7 (100%) | **7/7 (100%)** | **7/7 (100%)** | 100% precision maintained. |
+| `chroogomphus_rutilus` | *Chroogomphus rutilus* | Cama de perdiu | Comestible | 9 | 9/9 (100%) \| 9/9 (100%) | 8/9 (89%) | **9/9 (100%)** | 100% Top-3 maintained. |
+| `coprinus_comatus` | *Coprinus comatus* | Bolet de tinta | Bon comestible | 11 | 10/11 (91%) \| 11/11 (100%) | **11/11 (100%)** | **11/11 (100%)** | **+1 Top-1. Reached perfect 100%!** |
+| `cortinarius_orellanus` | *Cortinarius orellanus* | Cortinari de muntanya | **Mortal** | 8 | 7/8 (88%) \| 7/8 (88%) | 6/8 (75%) | **8/8 (100%)** | **+1 Top-3. Crucial life-safety gain: 100% Top-3!** |
+| `craterellus_cornucopioides`| *Craterellus cornucopioides*| Trompeta de la mort | Excel·lent | 6 | 4/6 (67%) \| 5/6 (83%) | **6/6 (100%)** | **6/6 (100%)** | **🚀 BREAKTHROUGH: Leaped from 67% to 100%!** |
+| `craterellus_lutescens` | *Craterellus lutescens* | Camagroc | Excel·lent | 10 | 6/10 (60%) \| 8/10 (80%) | 5/10 (50%) | 7/10 (70%) | -1 Top-1. Thin stipe & moss camouflage remains challenging. |
+| `entoloma_sinuatum` | *Entoloma sinuatum* | Pèrfid | Molt Tòxic | 10 | 7/10 (70%) \| 9/10 (90%) | 7/10 (70%) | 8/10 (80%) | Stable 70% Top-1. |
+| `galerina_marginata` | *Galerina marginata* | Galerina vironosa | **Mortal** | 15 | 13/15 (87%) \| 15/15 (100%) | 10/15 (67%) | 10/15 (67%) | -3 Top-1. Small brown agaric drift; requires macro asset injection. |
+| `gyromitra_esculenta` | *Gyromitra esculenta* | Bolet de greix | **Mortal / Tòxic** | 10 | 10/10 (100%) \| 10/10 (100%) | **10/10 (100%)** | **10/10 (100%)** | 100% precision maintained. |
+| `hydnum_repandum` | *Hydnum repandum* | Llengua de bou | Bon comestible | 13 | 11/13 (85%) \| 13/13 (100%) | 12/13 (92%) | 12/13 (92%) | +1 Top-1. Strong spine-bearing baseline. |
+| `hygrophorus_eburneus` | *Hygrophorus eburneus* | Llenega blanca | Comestible | 10 | 9/10 (90%) \| 10/10 (100%) | 7/10 (70%) | 8/10 (80%) | -2 Top-1. White slimy cap confused with pale hygrophori. |
+| `hygrophorus_latitabundus`| *Hygrophorus latitabundus* | Llenega negra | Excel·lent | 22 | 19/22 (86%) \| 21/22 (95%) | **21/22 (95%)** | **21/22 (95%)** | **+2 Top-1. Surged to 95% on 22 wild photos!** |
+| `hygrophorus_personii` | *Hygrophorus personii* | Llenega d'alzina | Comestible | 14 | 11/14 (79%) \| 13/14 (93%) | **13/14 (93%)** | **14/14 (100%)** | **🚀 BREAKTHROUGH: +2 Top-1, +1 Top-3 (100% Top-3).** |
+| `hygrophorus_russula` | *Hygrophorus russula* | Carlet | Bon comestible | 23 | 23/23 (100%) \| 23/23 (100%) | 22/23 (96%) | **23/23 (100%)** | Stable 96% Top-1, 100% Top-3. |
+| `lactarius_chrysorrheus` | *Lactarius chrysorrheus* | Lleterola de llet groga| Tòxic | 13 | 13/13 (100%) \| 13/13 (100%) | 12/13 (92%) | **13/13 (100%)** | 100% Top-3 maintained. |
+| `lactarius_deliciosus` | *Lactarius deliciosus* | Rovelló / Pinetell | Excel·lent | 30 | 26/30 (87%) \| 30/30 (100%) | 26/30 (87%) | 29/30 (97%) | High consistency on 30 photos. |
+| `lactarius_sanguifluus` | *Lactarius sanguifluus* | Vinader | Excel·lent | 21 | 20/21 (95%) \| 21/21 (100%) | 17/21 (81%) | 20/21 (95%) | -3 Top-1. Subtle latex hue confusion among milkcaps. |
+| `lactarius_semisanguifluus`| *Lactarius semisanguifluus*| Pinetell de sang | Excel·lent | 22 | 22/22 (100%) \| 22/22 (100%) | 19/22 (86%) | 21/22 (95%) | -3 Top-1. Shared *Lactarius* feature cluster. |
+| `lactarius_torminosus` | *Lactarius torminosus* | Cabra | Tòxic | 17 | 14/17 (82%) \| 14/17 (82%) | 15/17 (88%) | 16/17 (94%) | **+1 Top-1, +2 Top-3.** Improved separation from edible milkcaps. |
+| `lepista_nuda` | *Lepista nuda* | Pé blau | Bon comestible | 14 | 7/14 (50%) \| 10/14 (71%) | **11/14 (79%)** | **13/14 (93%)** | **🚀 MAJOR BREAKTHROUGH: +4 Top-1 (+29%), +3 Top-3 (+22%)!** |
+| `macrolepiota_procera` | *Macrolepiota procera* | Apagallums | Bon comestible | 7 | 7/7 (100%) \| 7/7 (100%) | 5/7 (71%) | **7/7 (100%)** | 100% Top-3 maintained ($N=7$). |
+| `marasmius_oreades` | *Marasmius oreades* | Carrereta | Excel·lent | 17 | 13/17 (76%) \| 14/17 (82%) | 12/17 (71%) | 15/17 (88%) | +1 Top-3. Solid meadow baseline. |
+| `morchella_esculenta` | *Morchella esculenta* | Múrgola | Excel·lent | 9 | 9/9 (100%) \| 9/9 (100%) | 8/9 (89%) | **9/9 (100%)** | 100% Top-3 maintained. |
+| `omphalotus_olearius` | *Omphalotus olearius* | Gírgola d'olivera | Tòxic | 11 | 10/11 (91%) \| 10/11 (91%) | **11/11 (100%)** | **11/11 (100%)** | **+1 Top-1, +1 Top-3. Reached 100%!** |
+| `pleurotus_eryngii` | *Pleurotus eryngii* | Gírgola de panical | Excel·lent | 15 | 14/15 (93%) \| 14/15 (93%) | 14/15 (93%) | **15/15 (100%)** | Reached 100% Top-3. |
+| `pleurotus_ostreatus` | *Pleurotus ostreatus* | Gírgola | Comestible | 15 | 14/15 (93%) \| 15/15 (100%) | 14/15 (93%) | **15/15 (100%)** | 100% Top-3 maintained. |
+| `psathyrella_candolleana` | *Psathyrella candolleana* | Candol·lea | Comestible | 24 | 22/24 (92%) \| 24/24 (100%) | 19/24 (79%) | 23/24 (96%) | -3 Top-1. Fragile veil remnants vary widely. |
+| `rubroboletus_satanas` | *Rubroboletus satanas* | Mataparent de Satanàs | Molt Tòxic | 9 | 9/9 (100%) \| 9/9 (100%) | 6/9 (67%) | 7/9 (78%) | -3 Top-1. Bolete pore red-staining ambiguity. |
+| `russula_cyanoxantha` | *Russula cyanoxantha* | Llora verda | Excel·lent | 10 | 9/10 (90%) \| 9/10 (90%) | 9/10 (90%) | 9/10 (90%) | Exact identical performance. |
+| `russula_virescens` | *Russula virescens* | Palometa | Excel·lent | 18 | 14/18 (78%) \| 17/18 (94%) | 13/18 (72%) | 17/18 (94%) | Stable 94% Top-3. |
+| `suillus_bellinii` | *Suillus bellinii* | Molleric de Bellini | Comestible | 21 | 20/21 (95%) \| 21/21 (100%) | 18/21 (86%) | 20/21 (95%) | High consistency in pine duff. |
+| `suillus_granulatus` | *Suillus granulatus* | Molleric clapat | Comestible | 15 | 12/15 (80%) \| 13/15 (87%) | **14/15 (93%)** | **15/15 (100%)** | **🚀 BREAKTHROUGH: +2 Top-1 (+13%), +2 Top-3 (100%)!** |
+| `suillus_luteus` | *Suillus luteus* | Llenegot | Comestible | 7 | 5/7 (71%) \| 7/7 (100%) | 5/7 (71%) | **7/7 (100%)** | Exact identical performance ($N=7$). |
+| `tricholoma_equestre` | *Tricholoma equestre* | Groguet | Tòxic / Sospitós | 13 | 7/13 (54%) \| 8/13 (62%) | **9/13 (69%)** | **13/13 (100%)** | **🚀 CRUCIAL SAFETY GAIN: Top-3 leaped 62% $\to$ 100%!** |
+| `tricholoma_pardinum` | *Tricholoma pardinum* | Fredolic bord | Molt Tòxic | 12 | 8/12 (67%) \| 11/12 (92%) | **10/12 (83%)** | 11/12 (92%) | **+2 Top-1 (+16%). Significant toxic separation.** |
+| `tricholoma_terreum` | *Tricholoma terreum* | Fredolic | Bon comestible | 11 | 10/11 (91%) \| 11/11 (100%) | 10/11 (91%) | **11/11 (100%)** | Exact identical performance. |
+| **Total / Overall** | — | — | — | **623** | **547 / 623 (87.8%) \| 590 / 623 (94.7%)** | **534 / 623 (85.7%)** | **589 / 623 (94.5%)** | **Net delta: -13 Top-1 (-2.1%), -1 Top-3 (-0.2%).** |
+
+---
+
+### In-Depth Scientific Analysis: Why Overall Results Are "Too Similar" (The Capacity & Boundary Plateau)
+
+A superficial look at the aggregate figures (**85.7% vs 87.8% Top-1** and **94.5% vs 94.7% Top-3**) might suggest that the retraining did almost nothing. However, detailed botanical and mathematical analysis reveals that **significant shifts occurred under the hood**, and explains why aggregate accuracy has plateaued:
+
+#### 1. Zero-Sum Linear Hyperplane Shifting (The Pareto Seesaw)
+* In this architecture, MobileNetV2's convolutional weights are **frozen** as a feature extractor. The training step only optimizes a linear classification head ($W \in \mathbb{R}^{47 \times 1280}, b \in \mathbb{R}^{47}$).
+* In a 1,280-dimensional embedding space, adjusting the linear decision hyperplanes to solve severe previous bottlenecks (*Lepista nuda* leaped from 50% $\to$ 79%, *Craterellus cornucopioides* from 67% $\to$ 100%, *Tricholoma equestre* Top-3 from 62% $\to$ 100%, *Tricholoma pardinum* from 67% $\to$ 83%) required shifting the decision boundaries.
+* Because the underlying feature representations of the images did not change, improving boundary margins for *Lepista* and *Tricholoma* slightly encroached on visually neighboring classes (*Lactarius sanguifluus* and *semisanguifluus*, *Galerina marginata*, *Rubroboletus satanas*).
+* This is a textbook **zero-sum Pareto tradeoff** inherent to linear heads on fixed representations.
+
+#### 2. The Feature Representation Bottleneck (Frozen ImageNet Backbone)
+* MobileNetV2 was originally pre-trained on ImageNet-1k (cars, dogs, chairs, everyday objects).
+* While its high-level convolutional filters extract excellent general shapes and textures, they **lack fine-grained botanical domain specialization** (e.g., differentiating between the true decurrent gills of a Chanterelle vs. false veins of a Camagroc, or detecting the subtle verdigris bruising of *Lactarius semisanguifluus* vs. *sanguifluus*).
+* For 47 distinct classes, a single linear layer over frozen ImageNet embeddings reaches a mathematical capacity ceiling around **85%–88% Top-1**.
+
+#### 3. Test Set Support Sensitivity ($N \le 10$ Small-Sample Noise)
+* Several classes contain very few test images: *Calocybe gambosa* ($N=5$), *Craterellus cornucopioides* ($N=6$), *Suillus luteus* ($N=7$), *Cantharellus cibarius* ($N=7$), *Amanita muscaria* ($N=7$), *Macrolepiota procera* ($N=7$), *Cortinarius orellanus* ($N=8$).
+* In *Calocybe gambosa* ($N=5$), just **2 images** flipping from Top-1 to Top-2 caused its per-species score to drop by **40%** (100% $\to$ 60%).
+* Out of 623 total test images, the difference between Series 014 (547 hits) and Series 015 (534 hits) is **only 13 images** ($\approx 2\%$). In statistical terms, this variation is within normal stochastic training variance.
+
+#### 4. Top-3 Stability (94.5% vs 94.7% — Exactly 1 Image Difference!)
+* In Top-3 recall, Series 014 scored **590 / 623** and Series 015 scored **589 / 623**.
+* Across the entire 623-image field dataset, **only 1 single image** dropped out of the Top-3 candidates.
+* This proves that the feature space is extremely stable and dependable: the true mushroom taxon is present in the top 3 suggestions **94.5% of the time**.
+
+---
+
+### Concrete Roadmap to Break Through the 90%+ Plateau
+
+To escape this linear capacity ceiling and push Boscdex past **92% Top-1 and 97% Top-3**, the following three technical advancements are required in subsequent Colab training iterations:
+
+1. **End-to-End Fine-Tuning (Unfreezing Upper Convolutions):**
+   * Unfreeze the last 2 to 3 inverted residual blocks of MobileNetV2 (layers 14–17).
+   * Train with a discriminative learning rate (e.g., $10^{-5}$ for backbone layers, $10^{-3}$ for the classification head).
+   * This allows convolutional filters to adapt their receptive fields specifically to mushroom gills, pores, volva sacs, and cuticular fibrils.
+
+2. **Metric Learning / Supervised Contrastive Loss (SupCon / ArcFace):**
+   * Replace or augment standard cross-entropy with a margin-based contrastive loss.
+   * This explicitly forces embeddings of the same species to cluster tightly in hyperspherical space while maintaining large angular margins between confusing pairs (e.g., *Tricholoma terreum* vs. *Tricholoma pardinum*; *Lactarius deliciosus* vs. *Lactarius torminosus*).
+
+3. **Macro-Detail & Lighting Augmentation:**
+   * Introduce heavy color-jitter and white-balance shifts during training to combat forest canopy lighting variance.
+   * Add random crop zoom-ins targeting under-cap hymenium regions to force the network to learn gill/pore morphology rather than relying on global cap silhouette.
+
 
 

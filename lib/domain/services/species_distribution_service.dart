@@ -242,6 +242,40 @@ class SpeciesDistributionService {
       CataloniaZone.altPirineu,
       CataloniaZone.prepirineuCentral,
     ],
+    'hygrophorus_personii': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'pleurotus_eryngii': [
+      CataloniaZone.ponent,
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'lactarius_semisanguifluus': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'suillus_bellinii': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.portsTerresEbre,
+    ],
+    'tricholoma_equestre': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+    ],
+    'amanita_virosa': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.transversalMontseny,
+    ],
+    'galerina_marginata': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+    ],
   };
 
   static const Map<String, List<CataloniaZone>> _treeZones = {

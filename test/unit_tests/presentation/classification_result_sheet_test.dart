@@ -10,6 +10,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:boscdex/core/localization/app_localizations.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/models/classificacio_result.dart';
+import 'package:boscdex/presentation/scan/botanical_safety_check_dialog.dart';
 import 'package:boscdex/presentation/scan/classification_result_sheet.dart';
 import 'package:boscdex/presentation/shared/safety_alert_box.dart';
 import 'package:boscdex/providers/database_provider.dart';
@@ -238,6 +239,22 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
+      // Handle Botanical Safety Check Dialog if displayed
+      final checkboxes = find.byType(Checkbox);
+      if (checkboxes.evaluate().isNotEmpty) {
+        for (final cb in checkboxes.evaluate()) {
+          await tester.tap(find.byWidget(cb.widget));
+          await tester.pump(const Duration(milliseconds: 50));
+        }
+        await tester.pumpAndSettle();
+        final confirmBtn = find.text('He comprovat aquests trets');
+        if (confirmBtn.evaluate().isNotEmpty) {
+          await tester.tap(confirmBtn);
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 300));
+        }
+      }
+
       // Verify record in database has GPS coordinates
       final avistaments = await db.select(db.avistaments).get();
       expect(avistaments.length, 1);
@@ -336,6 +353,93 @@ void main() {
         ),
         findsOneWidget,
       );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'prompts botanical safety checklist before registering low-confidence candidate',
+        (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(500, 1000));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: ClassificationResultSheet(
+                results: [
+                  ClassificacioResult(
+                    boletId: 'boletus_edulis',
+                    displayName: 'Cep',
+                    confidence: 0.55,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final registerButton = find.text('Registrar a la meva Boscdex');
+      expect(registerButton, findsOneWidget);
+      await tester.tap(registerButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BotanicalSafetyCheckDialog), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'prompts botanical safety checklist before registering when secondary candidate is toxic',
+        (WidgetTester tester) async {
+      await tester.binding.setSurfaceSize(const Size(500, 1000));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: ClassificationResultSheet(
+                results: [
+                  ClassificacioResult(
+                    boletId: 'calocybe_gambosa',
+                    displayName: 'Moixernó',
+                    confidence: 0.74,
+                  ),
+                  ClassificacioResult(
+                    boletId: 'entoloma_sinuatum',
+                    displayName: 'Pèrfid',
+                    confidence: 0.20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final registerButton = find.text('Registrar a la meva Boscdex');
+      expect(registerButton, findsOneWidget);
+      await tester.tap(registerButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(BotanicalSafetyCheckDialog), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
     });

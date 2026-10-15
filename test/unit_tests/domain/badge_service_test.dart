@@ -318,12 +318,12 @@ void main() {
       expect(badge.progressCount, equals(5));
     });
 
-    test('awards gran_enciclopedia when all 40 species are discovered',
+    test('awards gran_enciclopedia when all 47 species are discovered',
         () async {
       const initialBadges = Insignia.registry;
 
       final updated = await service.evaluateBadges(
-        discoveryCount: 40,
+        discoveryCount: 47,
         toxicComparisonViewCount: 0,
         hasTreeAlliance: false,
         currentBadges: initialBadges,
@@ -331,7 +331,7 @@ void main() {
 
       final badge = updated.firstWhere((b) => b.id == 'gran_enciclopedia');
       expect(badge.isAwarded, isTrue);
-      expect(badge.progressCount, equals(40));
+      expect(badge.progressCount, equals(47));
     });
   });
 }

@@ -98,13 +98,15 @@ Prioritized features before the initial public store release:
 4. **Trilingual Localization Engine (`AppLocalizations` & `SpeciesLocalizer`):**
    - [x] Complete offline, on-device localization framework supporting Catalan (`ca`, default), Spanish (`es`), and English (`en`).
    - [x] Dynamic in-app language switcher in `SettingsScreen` with instant reactive UI updates and `SharedPreferences` persistence (`appLocaleProvider`).
-   - [x] Dedicated `SpeciesLocalizer` catalog providing localized vernacular names, morphology traits (cap, gills, stem, latex), safety warnings, lookalike comparative keys, and host tree traits across all 40 mushroom species and 5 indicator trees.
+   - [x] Dedicated `SpeciesLocalizer` catalog providing localized vernacular names, morphology traits (cap, gills, stem, latex), safety warnings, lookalike comparative keys, and host tree traits across all 47 mushroom species and 5 indicator trees.
    - [x] Localized Catalonia foraging regions (`CataloniaZone`) with translated zone labels, short labels, and regional habitat notes.
    - [x] Dynamic Pokédex map section header ("Ubicació" / "Ubicación" / "Location") in `CataloniaPixelMap` and specimen sheets.
    - [x] Streamlined specimen detail view by removing redundant "Nova foto" shortcut from user captures gallery.
-   - [x] **Expanded Catalan Mycological Catalog (40 Species):** Integrated 10 iconic Catalan species (#031 to #040) spanning wild field stars (*Agaricus campestris*, *Psathyrella candolleana*, *Coprinus comatus*), lowland pine symbionts (*Suillus granulatus* under *Pinus halepensis*), Mediterranean culinary delicacies (*Hygrophorus russula*, *Boletus aereus*), and critical life-saving toxic lookalikes (*Agaricus xanthodermus*, *Lactarius torminosus*, *Amanita pantherina*, *Gyromitra esculenta*), complete with 1024x1024 16-bit transparent pixel art sprites and non-destructive SQLite onboarding.
-   - [x] **Expanded Gamification & Badges System (14 Badges):** Expanded the badge registry from 6 to 14 achievements covering king boletes (*Senyor dels Ceps*), Catalan culinary classics (*Gourmet del Bosc*), tree identification (*Amic dels Arbres*), spring foraging (*Esperit de Primavera*), advanced toxicity vigilance (*Sentinella del Bosc*), field journaling (*Quadern de Camp*), GPS cartography (*Cartògraf del Bosc*), and complete catalog mastery (*Gran Enciclopèdia*).
-   - [x] **Comprehensive Test Suite (289 Passing Tests):** 100% pass rate across 289 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`).
+   - [x] **Expanded Catalan Mycological Catalog (47 Species):** Fully expanded the app album to 47 species (#001 to #047) matching the retrained MobileNetV2 Edge ML model. Added 7 new species with 1024x1024 16-bit transparent pixel art sprites: *Hygrophorus personii* (Llenega d'alzina), *Pleurotus eryngii* (Gírgola de panical), *Lactarius semisanguifluus* (Pinetell de sang), *Suillus bellinii* (Pinet de pi bord), *Tricholoma equestre* (Groguet), and critical lethal lookalike sentinels *Amanita virosa* (Farinera pudent / Àngel de la mort) and *Galerina marginata* (Galerina mortal).
+   - [x] **Zero-Tolerance Lethal Gate & Safety Hardening:** Hardened `SafetyGateService` with zero-tolerance recall (10% confidence threshold) for all 6 lethal Catalan taxa (*Amanita phalloides*, *Amanita verna*, *Amanita virosa*, *Cortinarius orellanus*, *Galerina marginata*, *Gyromitra esculenta*), immediately escalating to `NivellSeguretat.perill`. Expanded `SeedData.toxicLookalikes` to 28 pairs.
+   - [x] **Interactive Botanical Safety Verification Checklist & Unified Registration Gate:** Implemented `BotanicalSafetyCheckDialog` and tailored checklists for high-risk foraged groups (*Morchella*, *Cantharellus*, *Lepista*, *Marasmius*, *Amanita caesarea*, *Boletus*, *Tricholoma*, and lethal sentinels). Harmonized registration gate so any non-`segur` classification (including $<70\%$ low confidence and $\ge 15\%$ toxic runner-up) requires physical verification before saving.
+   - [x] **Expanded Gamification & Badges System (14 Badges):** Expanded the badge registry from 6 to 14 achievements covering king boletes (*Senyor dels Ceps*), Catalan culinary classics (*Gourmet del Bosc*), tree identification (*Amic dels Arbres*), spring foraging (*Esperit de Primavera*), advanced toxicity vigilance (*Sentinella del Bosc*), field journaling (*Quadern de Camp*), GPS cartography (*Cartògraf del Bosc*), and complete catalog mastery (*Gran Enciclopèdia* for all 47 species).
+   - [x] **Comprehensive Test Suite (319 Passing Tests):** 100% pass rate across 319 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`) and 0 analyzer issues (`flutter analyze`).
 
 ---
 
@@ -119,8 +121,39 @@ Prioritized features before the initial public store release:
 
 ## 🔵 Planned for v2.0 (Taxonomy Expansion & Advanced Tools)
 
-- [ ] **Expanded Taxonomy:** Grow seed database from 40 species to the full 80 Catalan mushrooms and 12 indicator trees.
+- [ ] **Expanded Taxonomy:** Grow seed database from 47 species to the full 80 Catalan mushrooms and 12 indicator trees.
 - [ ] **Tree Classifier Head Refinement:** Further fine-tune leaves vs bark accuracy with expanded multi-season training set.
 - [ ] **Weather & Solunar Correlation:** Offline rain/temperature estimations based on local elevation and seasonality to suggest optimal foraging windows.
 - [ ] **Data Export & Backup:** Export sightings to CSV / GeoJSON and complete encrypted backup (database + scan photos).
+
+---
+
+## 🧠 Edge ML Optimization Proposals: Breaking Through to >92% Top-1 and >97% Top-3
+
+Following the Series 014 and Series 015 empirical benchmarks (where linear head retraining over frozen MobileNetV2 features plateaued at ~86–88% Top-1 / 94.5% Top-3 across 623 field photos), the following three high-impact proposals are scheduled for the next Google Colab training cycle:
+
+### Proposal 1: End-to-End Fine-Tuning (Unfreezing Upper Convolutions)
+* **Problem:** MobileNetV2's frozen backbone outputs generic 1,280-dimensional ImageNet embeddings optimized for macroscopic objects (cars, dogs). A single linear classification head cannot carve hyperplanes between visually identical fungal textures without zero-sum trade-offs.
+* **Architecture Change:** Unfreeze the top 2–3 inverted residual blocks of MobileNetV2 (layers 14 through 17) during fine-tuning.
+* **Training Protocol:**
+  - Differential learning rates: $\eta_{\text{backbone}} = 10^{-5}$ (conservative feature adaptation) vs. $\eta_{\text{head}} = 10^{-3}$ (rapid classifier convergence).
+  - Cosine annealing learning rate scheduler with warmup (5 epochs).
+* **Expected Outcome:** Convolutions adapt their receptive fields to recognize microscopic and structural botanical patterns: true decurrent gills vs. false hymenial folds (*Cantharellus* vs *Craterellus*), stem reticulation networks (*Boletus edulis* / *aereus*), and guttered volva rims (*Amanita pantherina*).
+
+### Proposal 2: Metric Learning & Supervised Contrastive Loss (SupCon / ArcFace)
+* **Problem:** Standard cross-entropy loss only seeks to make the correct logit higher than alternatives, leading to decision boundaries that sit dangerously close to confusing sister species in feature space (e.g. *Tricholoma terreum* vs toxic *Tricholoma pardinum*; edible *Lactarius deliciosus* vs *Lactarius sanguifluus*).
+* **Loss Function Overhaul:**
+  - Implement **Supervised Contrastive Loss (SupCon)** or **ArcFace (Additive Angular Margin Loss)**:
+    $$\mathcal{L}_{\text{ArcFace}} = -\log \frac{e^{s(\cos(\theta_{y_i} + m))}}{e^{s(\cos(\theta_{y_i} + m))} + \sum_{j \neq y_i} e^{s \cos \theta_j}}$$
+  - Pulls intra-class embeddings into dense, compact clusters while enforcing an explicit angular margin $m \ge 0.35\text{ rad}$ between different taxa.
+* **Expected Outcome:** Eliminates the "Pareto seesaw" where improving one difficult species drops accuracy on visually adjacent species. Enforces wide safety margins around lethal sentinels (*Amanita phalloides*, *Amanita verna*, *Cortinarius orellanus*, *Galerina marginata*).
+
+### Proposal 3: Macro Hymenium & Lighting Data Augmentations with Targeted Asset Collection
+* **Problem:** Field photos taken by foragers in Catalan forests suffer from extreme chromatic variation (deep pine canopy shade vs bright mountain sunlight) and heavy ground litter clutter (moss, pine duff, beech leaves).
+* **Augmentation Pipeline Enhancements:**
+  - **Hymenium Macro Cropping:** 40% probability of random localized crops centered on gills, pores, and stem collars to prevent the network from relying exclusively on global cap silhouettes.
+  - **Canopy Lighting Simulation:** Aggressive color jitter (brightness $\pm 0.3$, contrast $\pm 0.3$, saturation $\pm 0.25$, hue $\pm 0.05$) and random white-balance temperature shifts ($4500\text{K} \to 8000\text{K}$).
+* **Targeted Asset Acquisition ($N \ge 15$ per class):**
+  - Prioritize collecting fresh wild photography for volatile low-support classes: `calocybe_gambosa` ($N=5$), `craterellus_cornucopioides` ($N=6$), `suillus_luteus` ($N=7$), `cantharellus_cibarius` ($N=7$), `cortinarius_orellanus` ($N=8$), `rubroboletus_satanas` ($N=9$), and `galerina_marginata` ($N=15$).
+
 

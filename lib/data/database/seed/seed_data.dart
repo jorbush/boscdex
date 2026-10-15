@@ -878,6 +878,160 @@ class SeedData {
           imageAssetPath:
               Value('assets/images/mushrooms/gyromitra_esculenta.png'),
         ),
+        BoletsCompanion(
+          id: Value('hygrophorus_personii'),
+          catalanName: Value('Llenega d\'alzina / Llanega d\'alzina'),
+          scientificName: Value('Hygrophorus personii'),
+          family: Value('Hygrophoraceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[10,11,12]'),
+          altitudeMin: Value(100),
+          altitudeMax: Value(1200),
+          capDescription: Value(
+              'De 4 a 10 cm, de convex a aplanat amb un umbó central més fosc. Cutícula molt viscosa en temps humit, de color bru olivaci a marró castany.'),
+          gillsDescription: Value(
+              'Adnades o decurrents, gruixudes, ceroses, espaiades, blanques o amb tons crema.'),
+          stemDescription: Value(
+              'Esvelt, cilíndric i atenuat a la base. Blanc a la part superior i cobert d\'una beina viscosa amb dibuix tigrat bru olivaci per sota.'),
+          safetyNotes: Value(
+              'Comestible excel·lent típic d\'alzinars. Atenció a no confondre amb la Farinera borda mortal (Amanita phalloides), que té volva i anell membranós lliure.'),
+          dexNumber: Value(41),
+          imageAssetPath:
+              Value('assets/images/mushrooms/hygrophorus_personii.png'),
+        ),
+        BoletsCompanion(
+          id: Value('pleurotus_eryngii'),
+          catalanName: Value('Gírgola de panical / Bolet de card'),
+          scientificName: Value('Pleurotus eryngii'),
+          family: Value('Pleurotaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[9,10,11,12,3,4,5]'),
+          altitudeMin: Value(100),
+          altitudeMax: Value(1400),
+          capDescription: Value(
+              'De 4 a 12 cm, convex a deprimit, de color bru grisenc a marró ocre, amb el marge enrotllat inicialment.'),
+          gillsDescription: Value(
+              'Molt decurrents, espaiades, blanquinoses que passen a crema o gris pàl·lid.'),
+          stemDescription: Value(
+              'Gruixut, robust, massís, sovint excèntric, blanc a blanquinós atenuat a la base.'),
+          safetyNotes: Value(
+              'Excel·lent comestible que creix en pastures i erms associat a les arrels del panical (Eryngium campestre). Diferenciar de la tòxica Gírgola d\'olivera.'),
+          dexNumber: Value(42),
+          imageAssetPath:
+              Value('assets/images/mushrooms/pleurotus_eryngii.png'),
+        ),
+        BoletsCompanion(
+          id: Value('lactarius_semisanguifluus'),
+          catalanName: Value('Pinetell de sang / Rovelló de pi negre'),
+          scientificName: Value('Lactarius semisanguifluus'),
+          family: Value('Russulaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[9,10,11]'),
+          altitudeMin: Value(800),
+          altitudeMax: Value(2000),
+          capDescription: Value(
+              'De 4 a 10 cm, de convex a embutat, ataronjat amb tons rosats i zones concèntriques, que ràpidament s\'oxida i es taca de verdet intens.'),
+          gillsDescription: Value(
+              'Apretades, decurrents, de color taronja que ràpidament s\'enrogeixen i es taquen de verd fosc.'),
+          stemDescription: Value(
+              'Curt, cilíndric, ataronjat amb petites escrobícules vinoses, buit amb l\'edat.'),
+          latexDescription: Value(
+              'Taronja clar inicialment que en menys de 5-10 minuts vira a color vi negre/porpra intens.'),
+          safetyNotes: Value(
+              'Excel·lent comestible molt apreciat a les comarques pirinenques. Diferenciar del Fals rovelló (L. chrysorrheus) de llet blanca que es torna groga.'),
+          dexNumber: Value(43),
+          imageAssetPath:
+              Value('assets/images/mushrooms/lactarius_semisanguifluus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('suillus_bellinii'),
+          catalanName: Value('Pinet de pi bord / Molleric de Bellini'),
+          scientificName: Value('Suillus bellinii'),
+          family: Value('Suillaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[10,11,12]'),
+          altitudeMin: Value(0),
+          altitudeMax: Value(800),
+          capDescription: Value(
+              'De 5 a 12 cm, molt viscós i brillant en temps humit, de color blanquinós a crema marbrenc amb taques avellana.'),
+          gillsDescription: Value(
+              'Tubs curts i porus groc sofre viu que es tornen groc olivaci. Gotetes lleteres de jove.'),
+          stemDescription: Value(
+              'Curt, rabassut, cilíndric, blanquinós cobert de granulacions i punts vermellosos/carmí molt evidents. Sense anell.'),
+          safetyNotes: Value(
+              'Comestible de pi blanc i pinedes litorals. Cal treure la cutícula viscosa abans de coure per evitar efectes laxants.'),
+          dexNumber: Value(44),
+          imageAssetPath: Value('assets/images/mushrooms/suillus_bellinii.png'),
+        ),
+        BoletsCompanion(
+          id: Value('tricholoma_equestre'),
+          catalanName: Value('Groguet / Verderol / Bolet dels cavallers'),
+          scientificName: Value('Tricholoma equestre'),
+          family: Value('Tricholomataceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('toxic'),
+          fruitingSeason: Value('[10,11,12]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1600),
+          capDescription: Value(
+              'De 5 a 12 cm, convex a aplanat, viscós en temps humit, de color groc viu a groc verdós amb el centre marronós i fibril·lós.'),
+          gillsDescription: Value(
+              'Escotades, atapeïdes, de color groc sofre intens i immutable.'),
+          stemDescription: Value(
+              'Robust, sòlid, cilíndric, del mateix color groc que les làmines o lleugerament més pàl·lid, sense anell.'),
+          safetyNotes: Value(
+              'TÒXIC / SOSPITÓS: Tradicionalment consumit però actualment prohibit el seu consum i venda per risc de rabdomiòlisi greu (destrucció muscular) per consums repetits.'),
+          dexNumber: Value(45),
+          imageAssetPath:
+              Value('assets/images/mushrooms/tricholoma_equestre.png'),
+        ),
+        BoletsCompanion(
+          id: Value('amanita_virosa'),
+          catalanName: Value('Farinera pudent / Àngel de la mort'),
+          scientificName: Value('Amanita virosa'),
+          family: Value('Amanitaceae'),
+          rarityTier: Value('rar'),
+          edibility: Value('mortal'),
+          fruitingSeason: Value('[7,8,9,10]'),
+          altitudeMin: Value(700),
+          altitudeMax: Value(1900),
+          capDescription: Value(
+              'De 5 a 10 cm, cònic o campanulat asimètric, blanc pur lluent, llis, lleugerament viscós en temps humit.'),
+          gillsDescription: Value(
+              'Lliures, atapeïdes, blanques immutables, amb nombroses lamel·lules intercalades.'),
+          stemDescription: Value(
+              'Alt, esvelt, blanc, cobert d\'esquames llanoses o flocoses marcades, amb un anell blanc estriat penjant i volva en sac a la base.'),
+          safetyNotes: Value(
+              'MORTAL. Conté amatoxines letals que causen necrosi hepàtica fulminant irreversible. Diferenciar del Moixernó i Xampinyons per la presència de volva i làmines blanques.'),
+          dexNumber: Value(46),
+          imageAssetPath: Value('assets/images/mushrooms/amanita_virosa.png'),
+        ),
+        BoletsCompanion(
+          id: Value('galerina_marginata'),
+          catalanName: Value('Galerina mortal / Galerina vironosa'),
+          scientificName: Value('Galerina marginata'),
+          family: Value('Hymenogastraceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('mortal'),
+          fruitingSeason: Value('[8,9,10,11]'),
+          altitudeMin: Value(400),
+          altitudeMax: Value(1900),
+          capDescription: Value(
+              'De 1.5 a 4 cm, convex a aplanat, higròfan, de color bru groguenc a ocre mel amb el marge estriat per transparència quan és humit.'),
+          gillsDescription: Value(
+              'Adnades a lleugerament decurrents, juntes, inicialment ocre pàl·lid que passen a marró rovell amb les espores madures.'),
+          stemDescription: Value(
+              'Prim, fibril·lós, bru fosc amb fibril·les blanquinoses a la part inferior i un anell membranós fugaç estret a la part superior.'),
+          safetyNotes: Value(
+              'MORTAL. Conté amatoxines idèntiques a la Farinera borda. Creix sobre fusta de coníferes. MAI confondre amb la Gírgola ni amb la Carrereta.'),
+          dexNumber: Value(47),
+          imageAssetPath:
+              Value('assets/images/mushrooms/galerina_marginata.png'),
+        ),
       ];
 
   static List<ArbresCompanion> get arbres => const [
@@ -1161,6 +1315,30 @@ class SeedData {
         BoletArbreAssociationsCompanion(
             boletId: Value('gyromitra_esculenta'),
             arbreId: Value('pinus_sylvestris')),
+        // hygrophorus_personii -> quercus_ilex
+        BoletArbreAssociationsCompanion(
+            boletId: Value('hygrophorus_personii'),
+            arbreId: Value('quercus_ilex')),
+        // lactarius_semisanguifluus -> pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('lactarius_semisanguifluus'),
+            arbreId: Value('pinus_sylvestris')),
+        // suillus_bellinii -> pinus_halepensis
+        BoletArbreAssociationsCompanion(
+            boletId: Value('suillus_bellinii'),
+            arbreId: Value('pinus_halepensis')),
+        // tricholoma_equestre -> pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tricholoma_equestre'),
+            arbreId: Value('pinus_sylvestris')),
+        // amanita_virosa -> fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_virosa'),
+            arbreId: Value('fagus_sylvatica')),
+        // galerina_marginata -> pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('galerina_marginata'),
+            arbreId: Value('pinus_sylvestris')),
       ];
 
   static List<ToxicLookalikesCompanion> get toxicLookalikes => const [
@@ -1289,6 +1467,54 @@ class SeedData {
           lookalikeBoletId: Value('amanita_phalloides'),
           comparisonNotes: Value(
               'La mortal Farinera borda té anell al peu, volva membranosa en sac a la base i làmines fràgils; la Llora verda o Cuaverda mai té anell ni volva i les seves làmines són flexibles i lardàcies (no es trenquen en passar-hi el dit).'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('calocybe_gambosa'),
+          lookalikeBoletId: Value('amanita_virosa'),
+          comparisonNotes: Value(
+              'La mortal Farinera pudent té anell penjant al peu, volva en sac a la base i làmines lliures blanques; el Moixernó té làmines juntes sense anell ni volva i agradable olor de farina.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('agaricus_campestris'),
+          lookalikeBoletId: Value('amanita_virosa'),
+          comparisonNotes: Value(
+              'La mortal Farinera pudent té làmines blanques pures i volva en sac; el Xampinyó silvestre té làmines rosades a marró xocolata i mai té volva.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('hygrophorus_eburneus'),
+          lookalikeBoletId: Value('amanita_virosa'),
+          comparisonNotes: Value(
+              'La mortal Farinera pudent té anell i volva prominent en sac a la base; la Llenega blanca té làmines ceroses decurrents, barret viscós i mai té anell ni volva.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('pleurotus_ostreatus'),
+          lookalikeBoletId: Value('galerina_marginata'),
+          comparisonNotes: Value(
+              'La mortal Galerina vironosa és petita, ocre-marró, té anell membranós i espores marró rovell; la Gírgola és molt més gran, gris-blavosa, sense anell i amb esporada blanca.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('lactarius_semisanguifluus'),
+          lookalikeBoletId: Value('lactarius_chrysorrheus'),
+          comparisonNotes: Value(
+              'El Pinetell de sang té làtex taronja que ràpidament es torna vi negre/porpra i s\'oxida a verd; el Fals rovelló tòxic té làtex blanc que vira a groc sofre.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('lactarius_semisanguifluus'),
+          lookalikeBoletId: Value('lactarius_torminosus'),
+          comparisonNotes: Value(
+              'La Cabra té marge barbós molt pelut i làtex blanc acre immutable; el Pinetell de sang té marge llis i làtex vinós.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('hygrophorus_personii'),
+          lookalikeBoletId: Value('amanita_phalloides'),
+          comparisonNotes: Value(
+              'La mortal Farinera borda té làmines lliures, anell i volva membranosa en sac; la Llenega d\'alzina té làmines gruixudes ceroses i beina viscosa tigrada sense volva.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('russula_cyanoxantha'),
+          lookalikeBoletId: Value('tricholoma_equestre'),
+          comparisonNotes: Value(
+              'El Groguet té làmines groc sofre i carn fibrosa; la Llora verda té làmines blanques lardàcies i carn trencadissa com guix.'),
         ),
       ];
 

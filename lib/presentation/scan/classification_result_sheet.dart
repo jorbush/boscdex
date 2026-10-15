@@ -29,6 +29,7 @@ import '../journal/journal_map_projection.dart';
 import '../shared/edibility_badge.dart';
 import '../shared/safety_alert_box.dart';
 import '../boscdex/boscdex_provider.dart';
+import 'botanical_safety_check_dialog.dart';
 
 /// Modal bottom sheet displaying the top-3 ML mushroom classification candidates,
 /// confidence bars, safety gate alerts, and the registration CTA.
@@ -53,6 +54,24 @@ class MushroomClassificationResultSheet extends ConsumerStatefulWidget {
 
 /// Backwards-compatible alias for [MushroomClassificationResultSheet].
 typedef ClassificationResultSheet = MushroomClassificationResultSheet;
+
+class _SafetyEvaluation {
+  final SafetyGateService service;
+  final NivellSeguretat level;
+  final ClassificacioResult? lethalCandidate;
+  final bool isLethalRisk;
+  final bool isToxic;
+  final bool requiresSafetyCheck;
+
+  const _SafetyEvaluation({
+    required this.service,
+    required this.level,
+    this.lethalCandidate,
+    required this.isLethalRisk,
+    required this.isToxic,
+    required this.requiresSafetyCheck,
+  });
+}
 
 class _MushroomClassificationResultSheetState
     extends ConsumerState<MushroomClassificationResultSheet> {
@@ -126,8 +145,85 @@ class _MushroomClassificationResultSheetState
     }
   }
 
+  _SafetyEvaluation _evaluateCurrentSafety() {
+    if (widget.results.isEmpty) {
+      final dummyService = SafetyGateService(toxicLookalikesData: const {});
+      return _SafetyEvaluation(
+        service: dummyService,
+        level: NivellSeguretat.incert,
+        lethalCandidate: null,
+        isLethalRisk: false,
+        isToxic: false,
+        requiresSafetyCheck: true,
+      );
+    }
+
+    final topCandidate = widget.results.first;
+    final topEdibility = _topBolet != null
+        ? EdibilitatExtension.fromString(_topBolet!.edibility)
+        : null;
+
+    final service = SafetyGateService(
+      toxicLookalikesData: {
+        topCandidate.boletId: _lookalikes.map((l) => l.id).toList(),
+      },
+      confidenceThreshold: AppConstants.confidenceThreshold,
+    );
+
+    final level = service.evaluateSafety(
+      widget.results,
+      edibility: topEdibility,
+      candidatesEdibility: _candidateEdibilities,
+    );
+
+    final lethalCandidate = service.findLethalCandidate(
+      widget.results,
+      candidatesEdibility: _candidateEdibilities,
+    );
+
+    final isLethalRisk =
+        lethalCandidate != null || topEdibility == Edibilitat.mortal;
+    final isToxic = topEdibility == Edibilitat.toxic;
+
+    final requiresSafetyCheck = level != NivellSeguretat.segur ||
+        _lookalikes.isNotEmpty ||
+        isLethalRisk ||
+        isToxic;
+
+    return _SafetyEvaluation(
+      service: service,
+      level: level,
+      lethalCandidate: lethalCandidate,
+      isLethalRisk: isLethalRisk,
+      isToxic: isToxic,
+      requiresSafetyCheck: requiresSafetyCheck,
+    );
+  }
+
   Future<void> _registerSighting() async {
     if (widget.results.isEmpty || _isSaving) return;
+
+    final safety = _evaluateCurrentSafety();
+    final topCandidate = widget.results.first;
+
+    if (safety.requiresSafetyCheck) {
+      final l10n = AppLocalizations.of(context);
+      final confirmed = await BotanicalSafetyCheckDialog.show(
+        context,
+        speciesId: topCandidate.boletId,
+        speciesName: SpeciesLocalizer.getMushroomName(
+          topCandidate.boletId,
+          languageCode: l10n.languageCode,
+          fallbackName: topCandidate.displayName,
+        ),
+        isLethalRisk: safety.isLethalRisk,
+        isToxic: safety.isToxic,
+      );
+      if (!mounted) return;
+      if (!confirmed) {
+        return;
+      }
+    }
 
     setState(() => _isSaving = true);
 
@@ -265,20 +361,13 @@ class _MushroomClassificationResultSheetState
         ? EdibilitatExtension.fromString(_topBolet!.edibility)
         : null;
 
-    final safetyService = SafetyGateService(
-      toxicLookalikesData: {
-        top.boletId: _lookalikes.map((l) => l.id).toList(),
-      },
-      confidenceThreshold: AppConstants.confidenceThreshold,
-    );
-    final safetyLevel = safetyService.evaluateSafety(
-      widget.results,
-      edibility: edibilitat,
-      candidatesEdibility: _candidateEdibilities,
-    );
-
+    final safety = _evaluateCurrentSafety();
+    final safetyService = safety.service;
+    final safetyLevel = safety.level;
+    final lethalCandidate = safety.lethalCandidate;
+    final isLethalRisk = safety.isLethalRisk;
     final isLowConfidence = top.confidence < AppConstants.confidenceThreshold;
-    final isDanger = safetyLevel == NivellSeguretat.perill;
+    final isDanger = safetyLevel == NivellSeguretat.perill || isLethalRisk;
 
     // Collect secondary toxic candidate names for the alert box
     final secondaryToxicNames = <String>[];
@@ -508,7 +597,7 @@ class _MushroomClassificationResultSheetState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    edibilitat == Edibilitat.mortal
+                                    isLethalRisk
                                         ? l10n.dangerMortalAlertTitle
                                         : l10n.dangerToxicAlertTitle,
                                     style: const TextStyle(
@@ -520,7 +609,22 @@ class _MushroomClassificationResultSheetState
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    l10n.dangerAlertDescription,
+                                    lethalCandidate != null &&
+                                            lethalCandidate.boletId !=
+                                                top.boletId
+                                        ? l10n
+                                            .dangerLethalCandidateAlertDescription(
+                                            speciesName: SpeciesLocalizer
+                                                .getMushroomName(
+                                              lethalCandidate.boletId,
+                                              languageCode: l10n.languageCode,
+                                            ),
+                                            confidencePercent:
+                                                (lethalCandidate.confidence *
+                                                        100)
+                                                    .toInt(),
+                                          )
+                                        : l10n.dangerAlertDescription,
                                     style: const TextStyle(
                                       color: RetroColors.ink,
                                       fontSize: 12,
@@ -698,7 +802,19 @@ class _MushroomClassificationResultSheetState
                               },
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Text(
+                        l10n.educationalDisclaimerBanner,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: RetroColors.inkSoft,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
                     Center(
                       child: TextButton(
                         onPressed: () {

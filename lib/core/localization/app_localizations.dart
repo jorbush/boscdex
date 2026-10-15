@@ -2175,6 +2175,129 @@ class AppLocalizations {
     }
   }
 
+  String dangerLethalCandidateAlertDescription({
+    required String speciesName,
+    required int confidencePercent,
+  }) {
+    switch (languageCode) {
+      case 'es':
+        return '¡Atención! Se ha detectado una probabilidad del $confidencePercent% de $speciesName, una seta MORTAL. No consumir bajo ningún concepto.';
+      case 'en':
+        return 'Warning! A $confidencePercent% probability of $speciesName, a DEADLY mushroom, was detected. Do NOT consume.';
+      case 'ca':
+      default:
+        return 'Atenció màxima! S\'ha detectat un $confidencePercent% de probabilitat de $speciesName, un bolet MORTAL. No consumir en cap cas.';
+    }
+  }
+
+  String get botanicalCheckDialogTitle {
+    switch (languageCode) {
+      case 'es':
+        return 'Comprobación Botánica de Seguridad';
+      case 'en':
+        return 'Botanical Safety Verification';
+      case 'ca':
+      default:
+        return 'Comprovació Botànica de Seguretat';
+    }
+  }
+
+  String get botanicalCheckDialogLethalTitle {
+    switch (languageCode) {
+      case 'es':
+        return 'PELIGRO EXTREMO: CONFUSIÓN MORTAL';
+      case 'en':
+        return 'EXTREME RISK: DEADLY LOOKALIKE';
+      case 'ca':
+      default:
+        return 'RISC EXTREM: CONFUSIÓ MORTAL';
+    }
+  }
+
+  String get botanicalCheckDialogToxicTitle {
+    switch (languageCode) {
+      case 'es':
+        return 'AVISO: ESPECIE TÓXICA';
+      case 'en':
+        return 'WARNING: TOXIC SPECIES';
+      case 'ca':
+      default:
+        return 'AVÍS: ESPÈCIE TÒXICA';
+    }
+  }
+
+  String botanicalCheckDialogSubtitle(String speciesName) {
+    switch (languageCode) {
+      case 'es':
+        return 'Antes de registrar $speciesName, verifica estas características físicas para descartar confusiones peligrosas:';
+      case 'en':
+        return 'Before registering $speciesName, verify these physical botanical traits to rule out dangerous lookalikes:';
+      case 'ca':
+      default:
+        return 'Abans de registrar $speciesName, verifica aquests trets físics per descartar confusions perilloses:';
+    }
+  }
+
+  String botanicalCheckDialogDangerSubtitle(String speciesName) {
+    switch (languageCode) {
+      case 'es':
+        return 'Atención: $speciesName es una especie peligrosa o mortal. Confirma que has verificado su identidad exclusivamente con fines de estudio botánico:';
+      case 'en':
+        return 'Caution: $speciesName is a dangerous or deadly species. Confirm you have verified its identity solely for botanical study:';
+      case 'ca':
+      default:
+        return 'Atenció: $speciesName és una espècie perillosa o mortal. Confirma que n\'has verificat la identitat exclusivament amb fins d\'estudi botànic:';
+    }
+  }
+
+  String get botanicalCheckConfirmLabel {
+    switch (languageCode) {
+      case 'es':
+        return 'He verificado estos rasgos';
+      case 'en':
+        return 'I have verified these traits';
+      case 'ca':
+      default:
+        return 'He comprovat aquests trets';
+    }
+  }
+
+  String get botanicalCheckCancelLabel {
+    switch (languageCode) {
+      case 'es':
+        return 'Tengo dudas / Cancelar';
+      case 'en':
+        return 'I have doubts / Cancel';
+      case 'ca':
+      default:
+        return 'Tinc dubtes / Cancel·lar';
+    }
+  }
+
+  String get botanicalCheckDisclaimer {
+    switch (languageCode) {
+      case 'es':
+        return 'En caso de duda mínima, no recolectes ni consumas el ejemplar.';
+      case 'en':
+        return 'If you have any doubt, do not harvest or consume the mushroom.';
+      case 'ca':
+      default:
+        return 'En cas de dubte mínim, no culli ni consumeixi l\'exemplar.';
+    }
+  }
+
+  String get educationalDisclaimerBanner {
+    switch (languageCode) {
+      case 'es':
+        return 'Boscdex es una herramienta botánica educativa. NUNCA consumas setas basándote únicamente en la cámara.';
+      case 'en':
+        return 'Boscdex is an educational companion. NEVER consume wild mushrooms based solely on camera identification.';
+      case 'ca':
+      default:
+        return 'Boscdex és una eina d\'estudi botànic. Mai consumiu cap bolet basant-vos únicament en la càmera.';
+    }
+  }
+
   String get searchingGpsSignal {
     switch (languageCode) {
       case 'es':

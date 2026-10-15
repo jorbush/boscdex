@@ -103,7 +103,7 @@ void main() {
                 .overrideWith((ref) => Stream.value(<ArbreBoscdexEntry>[])),
             discoveryCountProvider.overrideWith((ref) => Stream.value(5)),
             visitedArbresCountProvider.overrideWithValue(2),
-            totalBoletsCountProvider.overrideWithValue(40),
+            totalBoletsCountProvider.overrideWithValue(47),
             boletIdsWithTreesProvider
                 .overrideWith((ref) => Future.value(<String>{})),
           ],
