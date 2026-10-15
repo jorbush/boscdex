@@ -21,7 +21,7 @@ void main() {
       db = AppDatabase.forTesting(NativeDatabase.memory());
     });
 
-    testWidgets('Renders all 6 badges with initial locked states',
+    testWidgets('Renders all 14 badges with initial locked states',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
@@ -46,18 +46,15 @@ void main() {
 
       // Title and trophy icon
       expect(find.text('Les Meves Insígnies'), findsOneWidget);
-      expect(find.text('0/6'), findsOneWidget);
+      expect(find.text('0/14'), findsOneWidget);
 
       // Verify canonical badge names appear
       expect(find.text('Primer pas al bosc'), findsOneWidget);
       expect(find.text('Caçador de rovellons'), findsOneWidget);
       expect(find.text('Micòleg prudent'), findsOneWidget);
-      expect(
-          find.text('Aliança silvestre', skipOffstage: false), findsOneWidget);
-      expect(
-          find.text('Cistell de tardor', skipOffstage: false), findsOneWidget);
-      expect(
-          find.text('Mestre boletaire', skipOffstage: false), findsOneWidget);
+
+      await tester.scrollUntilVisible(find.text('Gran enciclopèdia'), 300);
+      expect(find.text('Gran enciclopèdia'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pump(const Duration(milliseconds: 100));
@@ -90,8 +87,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
 
-      // Now 1 out of 6 should be awarded
-      expect(find.text('1/6'), findsOneWidget);
+      // Now 1 out of 14 should be awarded
+      expect(find.text('1/14'), findsOneWidget);
       expect(find.text('DESBLOQUEJAT'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());

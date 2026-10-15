@@ -4,9 +4,9 @@ Boscdex gamifies field exploration without requiring a remote server or social n
 
 ---
 
-## 🎖️ The 6 Starter Badges
+## 🎖️ The 14 Achievement Badges
 
-The starter list of badges focuses on exploration milestones and safety habits:
+Boscdex features 14 achievement badges spanning collection milestones, symbiotic pairings, culinary classics, safety vigilance, and field journaling:
 
 | Badge ID | Catalan Title | Target | Unlock Condition |
 |---|---|:---:|---|
@@ -15,16 +15,25 @@ The starter list of badges focuses on exploration milestones and safety habits:
 | `micoleg_prudent` | **Micòleg Prudent** | 5 | Tap into the "Confusió Perillosa" comparison screen 5 times (encourages safety). |
 | `alianca_silvestre` | **Aliança Silvestre** | 1 | Discover both a mushroom and its associated indicator tree. |
 | `cistell_de_tardor` | **Cistell de Tardor** | 15 | Register at least 15 different species in the Boscdex. |
-| `mestre_boletaire` | **Mestre Boletaire** | 20 | Register 20+ different species in the Boscdex (out of the 22 cataloged starter species). |
+| `mestre_boletaire` | **Mestre Boletaire** | 20 | Register 20 different species in the Boscdex. |
+| `senyor_dels_ceps` | **Senyor dels Ceps** | 2 | Discover both the noble King Bolete (*Boletus edulis*) and Dark Cep (*Boletus aereus*). |
+| `gourmet_del_bosc` | **Gourmet del Bosc** | 4 | Discover 4 culinary stars: Cep, Ou de reig, Rossinyol, and Trompeta de la mort. |
+| `amic_dels_arbres` | **Amic dels Arbres** | 5 | Identify all 5 indicator trees of Catalonia (Pi roig, Pi blanc, Alzina, Faig, Castanyer). |
+| `esperit_de_primavera` | **Esperit de Primavera** | 3 | Discover 3 iconic spring mushrooms: Múrgola, Moixernó, and Carrereta. |
+| `sentinella_toxic` | **Sentinella del Bosc** | 15 | Review 15 toxic lookalike alerts to sharpen field safety vigilance. |
+| `quadern_de_camp` | **Quadern de Camp** | 10 | Record 10 sightings in your offline field journal. |
+| `cartograf_del_bosc` | **Cartògraf del Bosc** | 5 | Record 5 sightings with GPS coordinates to map your field observations. |
+| `gran_enciclopedia` | **Gran Enciclopèdia** | 40 | Complete the catalog by discovering all 40 mushrooms in the Boscdex! |
 
 ---
 
 ## ⚙️ Trigger Evaluation Engine (`BadgeService` & `BadgeProgressionService`)
 
 Badge evaluation runs seamlessly in the background whenever the user:
-1. **Registers a specimen from the scan sheet:** Triggers checks for `primer_pas_al_bosc`, `cacador_de_rovellons`, `alianca_silvestre`, `cistell_de_tardor`, and `mestre_boletaire`.
-2. **Inspects a toxic lookalike comparison card:** Increments `toxicComparisonViewCount` and evaluates `micoleg_prudent`.
-3. **Visits an indicator tree:** Triggers checks for `alianca_silvestre` when host trees are inspected.
+1. **Registers a specimen from the scan sheet:** Triggers checks for discovery-based badges (`primer_pas_al_bosc`, `cacador_de_rovellons`, `senyor_dels_ceps`, `gourmet_del_bosc`, `esperit_de_primavera`, `cistell_de_tardor`, `mestre_boletaire`, `gran_enciclopedia`).
+2. **Inspects a toxic lookalike comparison card:** Increments `toxicComparisonViewCount` and evaluates `micoleg_prudent` (5) and `sentinella_toxic` (15).
+3. **Visits an indicator tree:** Triggers checks for `alianca_silvestre` and `amic_dels_arbres` (5 trees).
+4. **Logs journal observations with coordinates:** Triggers checks for `quadern_de_camp` (10 sightings) and `cartograf_del_bosc` (5 GPS sightings).
 
 The pure domain logic is evaluated by `BadgeService` and coordinated with SQLite persistence via `BadgeProgressionService`:
 
@@ -41,9 +50,9 @@ await BadgeProgressionService().syncBadgeProgression(
 ## 🏆 Insignies Dialog UI (`InsigniesDialog`)
 
 Tapping the trophy icon in the Boscdex AppBar displays the badges modal:
-* Top summary counter displaying awarded badges (e.g., `2/6`).
+* Top summary counter displaying awarded badges (e.g., `2/14`).
 * **Locked Badges:** Muted cards displaying current progress bar (e.g., `3/5 comparacions`).
-* **Awarded Badges:** Green surface highlight, gold verified badge icon, and golden border with `DESBLOQUEJAT` tag.
+* **Awarded Badges:** Green surface highlight, themed medal icon, and golden border with `DESBLOQUEJAT` tag.
 * **Level Navigation Banner:** Tappable pill banner linking directly to the Forager Level dialog.
 
 ---
@@ -60,7 +69,7 @@ XP is awarded transparently across core foraging milestones:
 |---|:---:|---|
 | **Mushroom Cataloged** | `+100 XP` | Unlocking a new species in the Boscdex (`discoveryCount`). |
 | **Indicator Tree Identified** | `+75 XP` | Visiting/identifying a symbiotic host tree (`visitedArbresCount`). |
-| **Achievement Badge Awarded** | `+150 XP` | Completing any of the 6 starter badge milestones (`awardedBadgesCount`). |
+| **Achievement Badge Awarded** | `+150 XP` | Completing any of the 14 badge milestones (`awardedBadgesCount`). |
 | **Journal Sighting Logged** | `+25 XP` | Recording a validated field observation in the offline logbook (`totalSightingsCount`). |
 
 ### 2. The 10 Foraging Ranks & XP Thresholds

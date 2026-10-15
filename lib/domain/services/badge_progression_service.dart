@@ -1,4 +1,5 @@
 import 'dart:developer' as developer;
+import 'package:drift/drift.dart' as drift;
 import '../../data/database/app_database.dart' as db_pkg;
 import '../models/insignia.dart';
 import 'badge_service.dart';
@@ -20,17 +21,17 @@ class BadgeProgressionService {
     try {
       final allDiscoveries = await db.descobrimentDao.getAllDiscoveries();
       final allDbInsignies = await db.insigniaDao.getAllInsignies();
+      final sightingCount = await db.avistamentDao.countAvistaments();
+      final gpsSightingCount = await db.avistamentDao.countGpsAvistaments();
 
-      final hasRovello =
-          allDiscoveries.any((d) => d.boletId == 'lactarius_deliciosus');
-      final hasPinetell =
-          allDiscoveries.any((d) => d.boletId == 'lactarius_sanguifluus');
+      final discoveredBoletIds = allDiscoveries.map((d) => d.boletId).toSet();
+      final hasRovello = discoveredBoletIds.contains('lactarius_deliciosus');
+      final hasPinetell = discoveredBoletIds.contains('lactarius_sanguifluus');
 
       // Check tree alliance:
       // Either user inspected an indicator tree whose associated mushrooms are discovered,
       // or user discovered a mushroom whose associated tree has been visited.
       bool hasTreeAlliance = false;
-      final discoveredBoletIds = allDiscoveries.map((d) => d.boletId).toSet();
 
       final effectiveVisitedTreeIds =
           (visitedTreeIds != null && visitedTreeIds.isNotEmpty)
@@ -52,18 +53,20 @@ class BadgeProgressionService {
         }
       }
 
-      final registryMap = {for (final b in Insignia.registry) b.id: b};
+      final visitedTreeCount = effectiveVisitedTreeIds.length;
 
-      final currentDomainBadges = allDbInsignies.map((dbBadge) {
-        final reg = registryMap[dbBadge.id];
+      final dbMap = {for (final b in allDbInsignies) b.id: b};
+
+      final currentDomainBadges = Insignia.registry.map((reg) {
+        final dbRow = dbMap[reg.id];
         return Insignia(
-          id: dbBadge.id,
-          nom: reg?.nom ?? dbBadge.id,
-          descripcio: reg?.descripcio ?? '',
-          iconPath: reg?.iconPath ?? '',
-          progressCount: dbBadge.progressCount,
-          targetCount: reg?.targetCount ?? 1,
-          awardedAt: dbBadge.awardedAt,
+          id: reg.id,
+          nom: reg.nom,
+          descripcio: reg.descripcio,
+          iconPath: reg.iconPath,
+          progressCount: dbRow?.progressCount ?? 0,
+          targetCount: reg.targetCount,
+          awardedAt: dbRow?.awardedAt,
         );
       }).toList();
 
@@ -74,16 +77,30 @@ class BadgeProgressionService {
         toxicComparisonViewCount: toxicComparisonViewCount,
         hasTreeAlliance: hasTreeAlliance,
         currentBadges: currentDomainBadges,
+        discoveredBoletIds: discoveredBoletIds,
+        visitedTreeCount: visitedTreeCount,
+        sightingCount: sightingCount,
+        gpsSightingCount: gpsSightingCount,
       );
 
-      final oldDbMap = {for (final b in allDbInsignies) b.id: b};
       for (final b in updatedBadges) {
-        final old = oldDbMap[b.id];
-        if (old == null || old.progressCount != b.progressCount) {
-          await db.insigniaDao.updateProgress(b.id, b.progressCount);
-        }
-        if (b.isAwarded && b.awardedAt != null && old?.awardedAt == null) {
-          await db.insigniaDao.awardInsignia(b.id, b.awardedAt!);
+        final old = dbMap[b.id];
+        if (old == null) {
+          await db.into(db.insignies).insert(
+                db_pkg.InsigniesCompanion(
+                  id: drift.Value(b.id),
+                  progressCount: drift.Value(b.progressCount),
+                  awardedAt: drift.Value(b.awardedAt),
+                ),
+                mode: drift.InsertMode.insertOrReplace,
+              );
+        } else {
+          if (old.progressCount != b.progressCount) {
+            await db.insigniaDao.updateProgress(b.id, b.progressCount);
+          }
+          if (b.isAwarded && b.awardedAt != null && old.awardedAt == null) {
+            await db.insigniaDao.awardInsignia(b.id, b.awardedAt!);
+          }
         }
       }
 

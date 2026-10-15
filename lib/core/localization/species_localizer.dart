@@ -115,6 +115,96 @@ class SpeciesLocalizer {
       'es': 'Pata de perdiz / Piquigrueso',
       'en': 'Copper Spike / Pine Spike',
     },
+    'marasmius_oreades': {
+      'ca': 'Carrereta / Cama-sec',
+      'es': 'Senderuela / Carrerilla',
+      'en': 'Fairy Ring Champignon / Scotch Bonnet',
+    },
+    'lactarius_chrysorrheus': {
+      'ca': 'Lleterola de llet groga / Fals rovelló',
+      'es': 'Falso níscalo / Lactario de leche dorada',
+      'en': 'Yellow-drop Milkcap',
+    },
+    'lepista_nuda': {
+      'ca': 'Pé blau / Pua blava',
+      'es': 'Pie azul',
+      'en': 'Wood Blewit',
+    },
+    'rubroboletus_satanas': {
+      'ca': 'Mataparent de Satanàs',
+      'es': 'Boleto de Satanás',
+      'en': 'Satan\'s Bolete',
+    },
+    'russula_virescens': {
+      'ca': 'Palometa / Llora pigada',
+      'es': 'Gibelurdiñ / Seta de cura',
+      'en': 'Green-cracked Brittlegill',
+    },
+    'hygrophorus_eburneus': {
+      'ca': 'Llenega blanca / Mocosa blanca',
+      'es': 'Higróforo blanco / Llanega blanca',
+      'en': 'Ivory Woodwax',
+    },
+    'tricholoma_pardinum': {
+      'ca': 'Fredolic bord / Griset bord',
+      'es': 'Tricoloma atigrado / Negrilla bastarda',
+      'en': 'Poison Knight / Tiger Tricholoma',
+    },
+    'morchella_esculenta': {
+      'ca': 'Múrgola / Rabassola',
+      'es': 'Colmenilla / Morchela común',
+      'en': 'Morel / Yellow Morel',
+    },
+    'agaricus_campestris': {
+      'ca': 'Xampinyó silvestre / Guisana',
+      'es': 'Champiñón silvestre / Campestre',
+      'en': 'Field Mushroom / Meadow Mushroom',
+    },
+    'agaricus_xanthodermus': {
+      'ca': 'Xampinyó groguenc / Xampinyó pudent',
+      'es': 'Champiñón amarilleante / Nocivo',
+      'en': 'Yellow-staining Mushroom',
+    },
+    'psathyrella_candolleana': {
+      'ca': 'Candol·lea / Psatirel·la de Candolle',
+      'es': 'Psatirela de Candolle',
+      'en': 'Candolle\'s Bonnet',
+    },
+    'suillus_granulatus': {
+      'ca': 'Molleric clapat / Pinetell de pi blanc',
+      'es': 'Boleto granulado / Hongo de pino',
+      'en': 'Weeping Bolete',
+    },
+    'hygrophorus_russula': {
+      'ca': 'Carlet / Escarlet',
+      'es': 'Higróforo escarlata / Carleta',
+      'en': 'False Chanterelle / Russula Woodwax',
+    },
+    'boletus_aereus': {
+      'ca': 'Cep negre / Sureny fosc',
+      'es': 'Boleto negro / Hongo negro',
+      'en': 'Dark Bolete / Queen Bolete',
+    },
+    'coprinus_comatus': {
+      'ca': 'Bolet de tinta / Braguer de vaca',
+      'es': 'Coprino barbudo / Barbuda',
+      'en': 'Shaggy Mane / Lawyer\'s Wig',
+    },
+    'lactarius_torminosus': {
+      'ca': 'Cabra / Rovelló bord',
+      'es': 'Falso níscalo peludo / Lactario de abedul',
+      'en': 'Woolly Milkcap',
+    },
+    'amanita_pantherina': {
+      'ca': 'Pantera / Reig bord pigat',
+      'es': 'Amanita pantera',
+      'en': 'Panther Cap',
+    },
+    'gyromitra_esculenta': {
+      'ca': 'Bolet de greix / Falsa múrgola',
+      'es': 'Bonete / Falsa colmenilla',
+      'en': 'False Morel / Brain Mushroom',
+    },
   };
 
   static const Map<String, Map<String, String>> _trees = {
@@ -322,6 +412,150 @@ class SpeciesLocalizer {
       'en':
           '4 to 10 cm, convex with a sharp prominent central umbo. Smooth and slimy when wet, copper-brown to reddish with vinous sheen.',
     },
+    'marasmius_oreades': {
+      'ca':
+          'De 2 a 6 cm, campanulat que passa a convex i aplanat amb un mamelló central obtús. Color crema clar a ocre canyella, més pàl·lid en eixut (higròfan). Marge lleugerament estriat per transparència.',
+      'es':
+          'De 2 a 6 cm, campanulado que pasa a convexo y aplanado con un mamelón central obtuso. Color crema claro a ocre canela, más pálido al secarse (higrófano). Margen ligeramente estriado.',
+      'en':
+          '2 to 6 cm, campanulate becoming convex and flattened with an obtuse central umbo. Pale cream to cinnamon-buff, fading when dry (hygrophanous). Margins faintly striate.',
+    },
+    'lactarius_chrysorrheus': {
+      'ca':
+          'De 4 a 10 cm, convex i després deprimit, de color salmó pàl·lid o ocre rosat amb zones concèntriques de taques més fosques. Marge enrotllat inicialment.',
+      'es':
+          'De 4 a 10 cm, convexo y luego deprimido, de color salmón pálido u ocre rosado con zonas concéntricas más oscuras. Margen enrollado al principio.',
+      'en':
+          '4 to 10 cm, convex becoming depressed, pale salmon to pinkish-buff with concentric darker zonate blotches. Initially inrolled margin.',
+    },
+    'lepista_nuda': {
+      'ca':
+          'De 6 a 15 cm, convex i després aplanat amb marge ondulat i enrotllat. Color blau violaci o lila viu de jove, que vira a marró bru o lilaci apagat amb l\'edat. Cutícula llisa i separable.',
+      'es':
+          'De 6 a 15 cm, convexo y luego aplanado con margen ondulado y enrollado. Color azul violáceo o lila vivo de joven, que vira a pardo o liláceo apagado con la edad. Cutícula lisa.',
+      'en':
+          '6 to 15 cm, convex flattening with a wavy inrolled margin. Bright blue-violet or lilac when young, fading to brownish-lilac with age. Smooth peelable cuticle.',
+    },
+    'rubroboletus_satanas': {
+      'ca':
+          'Molt voluminós (10 a 30 cm), robust i massís. Cutícula llisa, de color blanc guix, gris perla o blanquinós brut, mai marró fosc com el cep.',
+      'es':
+          'Muy voluminoso (10 a 30 cm), robusto y macizo. Cutícula lisa, de color blanco tiza, gris perla o blanquecino sucio, nunca marrón oscuro como el boletus.',
+      'en':
+          'Very large (10 to 30 cm), thick and massive. Smooth cuticle, chalk-white, pearl-grey or dirty whitish, never dark brown like the Porcini.',
+    },
+    'russula_virescens': {
+      'ca':
+          'De 5 a 15 cm, globós i després convex-deprimit. Cutícula seca, de color verd grisenc a verd maragda pàl·lid, típicament clivellada o esquamosa formant un mosaic de petites crostes poligonals.',
+      'es':
+          'De 5 a 15 cm, globoso y luego convexo-deprimido. Cutícula seca, de color verde grisáceo a verde esmeralda pálido, típicamente cuarteada formando un mosaico de costras poligonales.',
+      'en':
+          '5 to 15 cm, globose becoming convex-depressed. Dry cuticle, grey-green to pale emerald green, characteristically cracked into a mosaic of polygonal patches.',
+    },
+    'hygrophorus_eburneus': {
+      'ca':
+          'De 4 a 10 cm, convex a lleugerament umbonat, tot de color blanc ivori lluent. Cutícula molt mucosa i viscosa en temps humit, lluent quan s\'asseca.',
+      'es':
+          'De 4 a 10 cm, convexo a ligeramente umbonado, enteramente blanco marfil brillante. Cutícula muy mucosa y viscosa con humedad, brillante al secarse.',
+      'en':
+          '4 to 10 cm, convex to slightly umbonate, shining ivory-white. Very glutinous and slimy in wet conditions, lustrous when dry.',
+    },
+    'tricholoma_pardinum': {
+      'ca':
+          'Molt robust i carnós (6 a 15 cm), campanulat i després aplanat. Cutícula de color gris platejat a gris fosc, coberta d\'esquames concèntriques amples i fosques disposades com teules (aspecte tigrat o de lleopard).',
+      'es':
+          'Muy robusto y carnoso (6 a 15 cm), campanulado y luego aplanado. Cutícula gris plateada a gris oscura, cubierta de escamas concéntricas anchas y oscuras como tejas (aspecto atigrado).',
+      'en':
+          'Very robust and fleshy (6 to 15 cm), campanulate becoming plane. Silver-grey to dark grey cuticle covered with broad dark concentric shingle-like scales (tiger/leopard pattern).',
+    },
+    'morchella_esculenta': {
+      'ca':
+          'De 4 a 10 cm d\'alçada, ovoide o arrodonit, buit per dins. Superfície formada per alvèols o cel·les profundes i irregulars (com una bresca d\'abelles), de color groc ocre, beix o mel pàl·lid.',
+      'es':
+          'De 4 a 10 cm de altura, ovoide o redondeado, hueco por dentro. Superficie con alvéolos profundos e irregulares (como un panal de abejas), de color amarillo ocre, beis o miel pálido.',
+      'en':
+          '4 to 10 cm tall, ovoid or rounded, hollow inside. Surface pitted with deep irregular alveoli (honeycomb-like ridges), pale ochre-yellow, beige or honey-buff.',
+    },
+    'agaricus_campestris': {
+      'ca':
+          'De 4 a 10 cm, convex a aplanat, carnós, sec i blanc o blanquinós sedós, de vegades amb fines esquames ocre clar al centre.',
+      'es':
+          'De 4 a 10 cm, convexo a aplanado, carnoso, seco y blanco o blanquecino sedoso, a veces con finas escamas ocre claro en el centro.',
+      'en':
+          '4 to 10 cm, convex becoming flattened, fleshy, dry and silky white or pale whitish, occasionally with subtle pale ochre scales at the disc.',
+    },
+    'agaricus_xanthodermus': {
+      'ca':
+          'De 5 a 12 cm, inicialment trapezoidal o troncocònic (pla per dalt), després convex. Blanc a grisaci clar, que es taca d\'un groc crom intens al tacte o fregament.',
+      'es':
+          'De 5 a 12 cm, inicialmente trapezoidal o troncocónico (plano arriba), luego convexo. Blanco a grisáceo claro, tiñéndose de amarillo cromo vivo al roce.',
+      'en':
+          '5 to 12 cm, initially trapezoidal or flat-topped then convex. White to pale greyish, bruising vibrant chrome-yellow upon scratching or rubbing.',
+    },
+    'psathyrella_candolleana': {
+      'ca':
+          'De 3 a 7 cm, fràgil i prim, hemisfèric i després aplanat amb umbó obtús. Higròfan, de color mel pàl·lid, ocre clar o blanquinós en assecar-se. Marge guarnit de flocs i restes blanques del vel parcial festonat.',
+      'es':
+          'De 3 a 7 cm, frágil y delgado, hemisférico y luego aplanado con umbón obtuso. Higrófano, color miel pálido, ocre claro o blanquecino al secarse. Margen con restos blancos festoneados del velo.',
+      'en':
+          '3 to 7 cm, thin and fragile, hemispherical becoming convex-expanded with an obtuse umbo. Hygrophanous, pale honey, buff or whitish when dry. Margin fringed with delicate white veil remnants.',
+    },
+    'suillus_granulatus': {
+      'ca':
+          'De 5 a 12 cm, convex i després aplanat. Cutícula molt viscosa en temps humit, fàcilment separable de la carn, de color bru groguenc, vermellós o canyella càlid.',
+      'es':
+          'De 5 a 12 cm, convexo luego aplanado. Cutícula muy viscosa en tiempo húmedo, fácilmente separable, de color pardo amarillento, rojizo o canela cálido.',
+      'en':
+          '5 to 12 cm, convex then flattened. Very slimy/viscid cuticle in moist weather, easily peeling, yellowish-brown, reddish-tawny or warm cinnamon.',
+    },
+    'hygrophorus_russula': {
+      'ca':
+          'De 5 a 15 cm, molt massís i carnós, convex i després aplanat. Color rosa vinós a vermell púrpura amb taques i vetes vinoses sobre fons blanquinós. Cutícula una mica viscosa en humit.',
+      'es':
+          'De 5 a 15 cm, muy macizo y carnoso, convexo luego aplanado. Color rosa vinoso a rojo púrpura con manchas y vetas vinosas sobre fondo blanquecino. Cutícula algo viscosa en húmedo.',
+      'en':
+          '5 to 15 cm, very firm and fleshy, convex then flattened. Pinkish-vinaceous to purplish-red streaked with vinous spots over a pale whitish background. Slightly viscid when damp.',
+    },
+    'boletus_aereus': {
+      'ca':
+          'De 7 a 20 cm, molt ferm i compacte, hemisfèric i després convex. Cutícula vellutada, de color bru xocolata molt fosc, bronzejat o gairebé negre, sovint amb clapes més clares de color ocre o coure.',
+      'es':
+          'De 7 a 20 cm, muy firme y compacto, hemisférico luego convexo. Cutícula aterciopelada, pardo chocolate muy oscuro, bronceado o casi negro, a menudo con zonas ocres o cobrizas.',
+      'en':
+          '7 to 20 cm, very firm and compact, hemispherical to convex. Velvety cuticle, deep dark chocolate-brown, bronze or almost black, often with subtle ochre or coppery patches.',
+    },
+    'coprinus_comatus': {
+      'ca':
+          'De 5 a 15 cm d\'alçada, cilíndric o acampanat estret. Superfície blanca coberta d\'esquames blanes, fibroses i llanoses corbades cap amunt. En madurar, el marge es desfà ràpidament en un líquid negre com la tinta (deliquescència).',
+      'es':
+          'De 5 a 15 cm de altura, cilíndrico o acampanado estrecho. Superficie blanca con escamas blandas y lanosas curvadas hacia arriba. Al madurar, el margen se disuelve rápidamente en tinta negra (delicuescencia).',
+      'en':
+          '5 to 15 cm tall, tall cylindrical bell-shaped. White surface densely covered in shaggy, fibrous upturned scales. Deliquesces at the margin into black liquid ink as spores mature.',
+    },
+    'lactarius_torminosus': {
+      'ca':
+          'De 4 a 12 cm, deprimit al centre amb marge molt enrotllat i cobert d\'una llana o borra abundant de pèls llanosos blanquinosos (barbat). Color rosa maduixa o salmó amb cercles concèntrics més foscos.',
+      'es':
+          'De 4 a 12 cm, deprimido en el centro con margen muy enrollado y cubierto de abundante vello lanoso blanquecino (barbado). Color rosa fresa o salmón con círculos concéntricos más oscuros.',
+      'en':
+          '4 to 12 cm, depressed center with strongly inrolled margin covered with a thick shaggy woolly fringe of pale hairs (bearded). Strawberry-pink to salmon with darker concentric rings.',
+    },
+    'amanita_pantherina': {
+      'ca':
+          'De 5 a 12 cm, hemisfèric i després convex-estès, de color bru avellana, bru ocre o terrós fosc, amb el marge clarament estriat. Cobert de nombroses berrugues piramidals o escates petites d\'un blanc pur i farinós.',
+      'es':
+          'De 5 a 12 cm, hemisférico luego convexo-extendido, pardo avellana, ocre o parduzco oscuro, con margen claramente estriado. Cubierto de numerosas verrugas piramidales blanco puro harinosas.',
+      'en':
+          '5 to 12 cm, hemispherical to expanded-convex, hazel-brown to dark olive-brown with distinctly striate margin. Sprinkled with numerous pure white crumbly pyramidal warts.',
+    },
+    'gyromitra_esculenta': {
+      'ca':
+          'De 4 a 10 cm, arrodonit, irregular, buit, amb la superfície fortament plegada i ondulada en lòbuls sinuosos que recorden les circumvolucions d\'un cervell humà. Color bru vermellós fosc, castany o xocolata.',
+      'es':
+          'De 4 a 10 cm, redondeado, irregular, hueco, con la superficie fuertemente plegada en lóbulos sinuosos que recuerdan las circunvoluciones cerebrales. Color pardo rojizo oscuro, castaño o chocolate.',
+      'en':
+          '4 to 10 cm, irregular, rounded, hollow, with deeply convoluted, brain-like folded lobes resembling human brain tissue. Dark reddish-brown, chestnut or chocolate.',
+    },
   };
 
   static const Map<String, Map<String, String>> _gillsDescriptions = {
@@ -482,6 +716,146 @@ class SpeciesLocalizer {
           'Fuertemente decurrentes, gruesas y espaciadas, ocre anaranjadas oscureciendo a pardo púrpura negruzco con esporas oscuras.',
       'en':
           'Deeply decurrent, thick, distant and arched, orange-ochre turning dark purple-brown/blackish as spores mature.',
+    },
+    'marasmius_oreades': {
+      'ca':
+          'Lliures o lleugerament adnades, amples, força separades entre elles, intercalades amb lamel·lules, de color blanquinós a crema ocraci clar.',
+      'es':
+          'Libres o ligeramente adnadas, anchas, bastante separadas entre sí, intercaladas con lamelulas, de color blanquecino a crema ocráceo claro.',
+      'en':
+          'Free or slightly adnate, broad, distant and well spaced, interspersed with lamellulae, whitish to pale cream-buff.',
+    },
+    'lactarius_chrysorrheus': {
+      'ca':
+          'Atapeïdes, lleugerament decurrents, de color crema pàl·lid a ocre rosat amb l\'edat.',
+      'es':
+          'Apretadas, ligeramente decurrentes, de color crema pálido a ocre rosado con la edad.',
+      'en': 'Crowded, slightly decurrent, pale cream to pinkish-buff with age.',
+    },
+    'lepista_nuda': {
+      'ca':
+          'Atapeïdes, sinuades a escotades, d\'un color blau violaci o lavanda molt viu, fàcilment separables de la carn del barret.',
+      'es':
+          'Apretadas, sinuadas a escotadas, de un color azul violáceo o lavanda muy vivo, fácilmente separables de la carne del sombrero.',
+      'en':
+          'Crowded, sinuate to emarginate, vibrant lilac-violet to lavender, easily separable from the cap flesh.',
+    },
+    'rubroboletus_satanas': {
+      'ca':
+          'Tubs grocs i porus molt fins, inicialment groguencs que ràpidament passen a vermell sang o carmí intens. Blavegen lleugerament a la pressió.',
+      'es':
+          'Tubos amarillos y poros muy finos, inicialmente amarillentos que pronto pasan a rojo sangre o carmín intenso. Azulean suavemente a la presión.',
+      'en':
+          'Yellow tubes and very fine pores, starting yellowish then rapidly turning deep blood-red or carmine. Bruising faintly blue on pressure.',
+    },
+    'russula_virescens': {
+      'ca':
+          'Lliures o adnades, atapeïdes, blanques o crema clar, molt fràgils i trencadisses com el guix (típic del gènere Russula).',
+      'es':
+          'Libres o adnadas, apretadas, blancas o crema claro, muy frágiles y quebradizas como tiza (típico del género Russula).',
+      'en':
+          'Free or adnate, crowded, white to pale cream, very brittle and chalky (characteristic of genus Russula).',
+    },
+    'hygrophorus_eburneus': {
+      'ca':
+          'Decurrents, espaiades, gruixudes i dures, d\'un color blanc pur immutable que pot groguejar molt lleugerament amb l\'edat.',
+      'es':
+          'Decurrentes, espaciadas, gruesas y duras, de un blanco puro inmutable que puede amarillear ligeramente con la edad.',
+      'en':
+          'Decurrent, distant, thick and waxy, pure unchanging white, rarely yellowing faintly with age.',
+    },
+    'tricholoma_pardinum': {
+      'ca':
+          'Escotades, juntes, blanquinoses amb reflexos groguencs o verdosos en envellir, sovint suant petites gotetes d\'aigua en temps humit.',
+      'es':
+          'Escotadas, apretadas, blanquecinas con reflejos amarillentos o verdosos al envejecer, a menudo exudando pequeñas gotitas de agua con humedad.',
+      'en':
+          'Emarginate, crowded, whitish with yellowish or greenish tints when old, often weeping water droplets in wet weather.',
+    },
+    'morchella_esculenta': {
+      'ca':
+          'No té làmines; la part fèrtil (himeni) recobreix l\'interior de les cel·les alvelolars del barret.',
+      'es':
+          'No tiene láminas; el himenio fértil tapiza el interior de los alvéolos del sombrero.',
+      'en':
+          'Lacks gills; fertile hymenium lines the interior of the honeycomb alveoli on the cap.',
+    },
+    'agaricus_campestris': {
+      'ca':
+          'Lliures, atapeïdes, inicialment d\'un bell color rosa viu o salmó delicat, que amb la maduració de les espores esdevenen marró xocolata fosc o negroses.',
+      'es':
+          'Libres, apretadas, inicialmente de un hermoso color rosa vivo o salmón delicado, volviéndose marrón chocolate oscuro a negruzco al madurar.',
+      'en':
+          'Free, crowded, initially bright flesh-pink to delicate salmon, turning dark chocolate-brown to blackish with spore maturity.',
+    },
+    'agaricus_xanthodermus': {
+      'ca':
+          'Lliures, serrades, inicialment blanquinoses o rosa molt pàl·lid brut, virant després a bru xocolata grisós fosc.',
+      'es':
+          'Libres, apretadas, inicialmente blanquecinas o rosa muy pálido sucio, pasando después a pardo chocolate grisáceo oscuro.',
+      'en':
+          'Free, crowded, initially whitish to pale dull greyish-pink, darkening to dark greyish chocolate-brown.',
+    },
+    'psathyrella_candolleana': {
+      'ca':
+          'Adnates, molt atapeïdes, inicialment blanquinoses, passant a lila grisenc pàl·lid i finalment bru porpra fosc.',
+      'es':
+          'Adnadas, muy apretadas, inicialmente blanquecinas, pasando a lila grisáceo pálido y finalmente pardo púrpura oscuro.',
+      'en':
+          'Adnate, very crowded, initially whitish, becoming pale greyish-lilac and finally dark purple-brown.',
+    },
+    'suillus_granulatus': {
+      'ca':
+          'Format per tubs i porus fins (no làmines), de color groc pàl·lid a groc viu, que en exemplars joves degoten gotetes d\'un líquid lletós blanquinós.',
+      'es':
+          'Formado por tubos y poros finos (no láminas), amarillo pálido a amarillo vivo, que en ejemplares jóvenes exudan gotitas lechosas blanquecinas.',
+      'en':
+          'Pores and fine tubes (no gills), pale yellow to bright yellow, exuding tiny milky droplets in young specimens.',
+    },
+    'hygrophorus_russula': {
+      'ca':
+          'Subdecurrents a decurrents, una mica ceroses i espaiades, blanques al principi i amb taques vinòs-vermelloses característiques en madurar.',
+      'es':
+          'Subdecurrentes a decurrentes, algo cerosas y espaciadas, blancas al principio y con manchas vinoso-rojizas características al madurar.',
+      'en':
+          'Subdecurrent to decurrent, slightly waxy and distant, white initially and developing characteristic vinous-reddish spots with maturity.',
+    },
+    'boletus_aereus': {
+      'ca':
+          'Porus fins i arrodonits (tubs), molt atapeïts, de color blanc immaculat en joventut, passant a groc ocre en madurar, sense blavejar al tacte.',
+      'es':
+          'Poros finos y redondeados (tubos), muy apretados, blanco inmaculado en juventud, pasando a amarillo ocre al madurar, sin azulear.',
+      'en':
+          'Fine round pores (tubes), very dense, pristine white when young, turning ochre-yellow with age, never staining blue.',
+    },
+    'coprinus_comatus': {
+      'ca':
+          'Molt atapeïdes, lliures, amples, inicialment d\'un blanc pur, després rosades des de baix i ràpidament es tornen negres i líquides.',
+      'es':
+          'Muy apretadas, libres, anchas, inicialmente blanco puro, luego rosadas desde abajo y rápidamente negras y líquidas.',
+      'en':
+          'Very crowded, free, broad, pure white initially, becoming pinkish from the base and rapidly turning into black liquid ink.',
+    },
+    'lactarius_torminosus': {
+      'ca':
+          'Decurrents, juntes, pàl·lides de color crema a rosa blanquinós. En trencar-se exsuden un làtex blanc abundant, immutable a l\'aire i d\'un gust extremadament coent i picant.',
+      'es':
+          'Decurrentes, apretadas, crema pálido a rosa blanquecino. Al cortarse brota abundante látex blanco inmutable, de sabor extremadamente acre y picante.',
+      'en':
+          'Decurrent, crowded, pale cream to pinkish-white. Exudes abundant unchanging white latex that is fiercely acrid and peppery.',
+    },
+    'amanita_pantherina': {
+      'ca': 'Lliures, atapeïdes, desiguals, d\'un color blanc pur immutable.',
+      'es': 'Libres, apretadas, desiguales, de un blanco puro inmutable.',
+      'en': 'Free, crowded, unequal, pure unchanging white.',
+    },
+    'gyromitra_esculenta': {
+      'ca':
+          'Sense làmines; l\'himeni fèrtil recobreix tota la superfície externa dels plecs cerebriformes del barret.',
+      'es':
+          'Sin láminas; el himenio fértil recubre toda la superficie externa de los pliegues cerebriformes del sombrero.',
+      'en':
+          'No gills; the fertile hymenium lines the entire outer surface of the brain-like convoluted cap folds.',
     },
   };
 
@@ -653,6 +1027,150 @@ class SpeciesLocalizer {
       'en':
           '5 to 10 cm, cylindrical tapering to a pointed base (partridge leg). Ochre-salmon, often with lemon-yellow mycelium at base.',
     },
+    'marasmius_oreades': {
+      'ca':
+          'De 3 a 7 cm de llarg, molt prim (3-5 mm), cilíndric, tenaç i elàstic (es pot cargolar sobre ell mateix sense trencar-se). Del mateix color que el barret o més clar.',
+      'es':
+          'De 3 a 7 cm de largo, muy delgado (3-5 mm), cilíndrico, tenaz y elástico (se puede retorcer sobre sí mismo sin romperse). Del mismo color del sombrero o más claro.',
+      'en':
+          '3 to 7 cm long, very slender (3-5 mm), cylindrical, tough and pliant (can be twisted without breaking). Buff or paler than the cap.',
+    },
+    'lactarius_chrysorrheus': {
+      'ca':
+          'Cilíndric, curt, llis, blanquinós a salmó clar, sense escrobícules apreciables.',
+      'es':
+          'Cilíndrico, corto, liso, blanquecino a salmón claro, sin escrobículas visibles.',
+      'en':
+          'Cylindrical, short, smooth, whitish to pale salmon, without noticeable scrobicules.',
+    },
+    'lepista_nuda': {
+      'ca':
+          'Robust, cilíndric amb base bulbosa coberta de miceli blavós, fibrós, del mateix color violaci que les làmines.',
+      'es':
+          'Robusto, cilíndrico con base bulbosa cubierta de micelio azulado, fibroso, del mismo color violáceo que las láminas.',
+      'en':
+          'Robust, cylindrical with a swollen base covered in violet mycelial down, fibrous, violet like the gills.',
+    },
+    'rubroboletus_satanas': {
+      'ca':
+          'Molt gros, inflat, obès o esfèric a la base. Groc a la part alta i vermell carmí o porpra al centre i base, cobert d\'un reticle fi.',
+      'es':
+          'Muy grueso, hinchado, obeso o esférico en la base. Amarillo en la parte alta y rojo carmín o púrpura al centro y base, con fino retículo.',
+      'en':
+          'Very stout, bulbous, swollen or spherical at base. Yellow near top, carmine or purple-red in middle and base, adorned with a fine net.',
+    },
+    'russula_virescens': {
+      'ca':
+          'Robust, cilíndric, massís, blanc pur, rugós, que es trenca netament com una barra de guix.',
+      'es':
+          'Robusto, cilíndrico, macizo, blanco puro, rugoso, que se rompe netamente como una barra de tiza.',
+      'en':
+          'Robust, cylindrical, solid, pure white, rugged, snapping cleanly like a stick of chalk.',
+    },
+    'hygrophorus_eburneus': {
+      'ca':
+          'De 5 a 10 cm, cilíndric, atenuat cap a la base, blanc, molt viscós com el barret, amb petites granulacions a la part superior.',
+      'es':
+          'De 5 a 10 cm, cilíndrico, atenuado hacia la base, blanco, muy viscoso como el sombrero, con finas granulaciones en el ápice.',
+      'en':
+          '5 to 10 cm, cylindrical, tapering towards the base, white, very slimy like the cap, with fine granules at the apex.',
+    },
+    'tricholoma_pardinum': {
+      'ca':
+          'Gruixut, massís, blanc a ocre clar, atenuat o bulbós cap a la base, molt més gros i sòlid que el del fredolic comú.',
+      'es':
+          'Grueso, macizo, blanco a ocre claro, atenuado o bulboso hacia la base, mucho más grueso y sólido que el de la negrilla común.',
+      'en':
+          'Thick, solid, white to pale buff, tapering or swollen at base, much stouter and firmer than the grey knight.',
+    },
+    'morchella_esculenta': {
+      'ca':
+          'De 3 a 8 cm, blanc a crema clar, cilíndric, engruixit a la base, buit per dins en continuïtat directa amb el barret.',
+      'es':
+          'De 3 a 8 cm, blanco a crema claro, cilíndrico, engrosado en la base, hueco por dentro en continuidad directa con el sombrero.',
+      'en':
+          '3 to 8 cm, white to pale cream, cylindrical, enlarged at base, hollow inside in direct continuity with the cap.',
+    },
+    'agaricus_campestris': {
+      'ca':
+          'De 3 a 7 cm, cilíndric, blanc, atenuat a la base, amb un anell membranós simple, fràgil i fugaç que sovint desapareix en envellir.',
+      'es':
+          'De 3 a 7 cm, cilíndrico, blanco, atenuado en la base, con anillo membranoso simple, frágil y fugaz que a menudo desaparece al envejecer.',
+      'en':
+          '3 to 7 cm, cylindrical, white, tapering at the base, with a delicate single membranous ring that often collapses or falls away with age.',
+    },
+    'agaricus_xanthodermus': {
+      'ca':
+          'De 6 a 12 cm, blanc, esvelt, amb un anell doble i ample en faldó. La base té un bulb prominent que al tall o rascada es tenyeix immediatament de groc sofre o crom elèctric molt intens.',
+      'es':
+          'De 6 a 12 cm, blanco, esbelto, con anillo doble y amplio en falda. La base bulbosa se tiñe inmediatamente de amarillo cromo eléctrico al corte o roce.',
+      'en':
+          '6 to 12 cm, white, slender, with a broad skirt-like double ring. The bulbous base stains intensely chrome-yellow immediately when cut or scratched.',
+    },
+    'psathyrella_candolleana': {
+      'ca':
+          'De 4 a 9 cm, molt prim (3-6 mm), blanc sedós, buit, cilíndric, extremadament trencadís i delicat, sense anell persistent.',
+      'es':
+          'De 4 a 9 cm, muy delgado (3-6 mm), blanco sedoso, hueco, cilíndrico, sumamente quebradizo y delicado, sin anillo persistente.',
+      'en':
+          '4 to 9 cm, very slender (3-6 mm), silky white, hollow, cylindrical, extremely brittle and fragile, without persistent ring.',
+    },
+    'suillus_granulatus': {
+      'ca':
+          'De 4 a 8 cm, cilíndric, massís, groguenc, sense anell. Presenta característiques granulacions o punts petits de color marró ocre a la part superior.',
+      'es':
+          'De 4 a 8 cm, cilíndrico, macizo, amarillento, sin anillo. Presenta granulaciones o punteaduras características de color pardo ocre en la parte superior.',
+      'en':
+          '4 to 8 cm, cylindrical, solid, yellowish, ringless. Dotted at the apex with characteristic fine brownish-orange granules (glandular dots).',
+    },
+    'hygrophorus_russula': {
+      'ca':
+          'De 4 a 9 cm, curt, robust, massís, atenuat a la base, blanc tacat o pigat de vermell vinós a la part mitjana i inferior.',
+      'es':
+          'De 4 a 9 cm, corto, robusto, macizo, atenuado en la base, blanco manchado o moteado de rojo vinoso en la parte media e inferior.',
+      'en':
+          '4 to 9 cm, stout, robust, solid, tapering at base, white flecked or mottled with vinous-red spots on the lower half.',
+    },
+    'boletus_aereus': {
+      'ca':
+          'De 6 a 14 cm, molt corpulent, ventrut o bulbós, de color bru canyella clar o ocre daurat, cobert d\'un fi reticle blanc a la part superior.',
+      'es':
+          'De 6 a 14 cm, muy corpulento, ventrudo o bulboso, pardo canela claro u ocre dorado, cubierto de un fino retículo blanco en la parte superior.',
+      'en':
+          '6 to 14 cm, very stout, ventricose or bulbous, pale cinnamon-brown to golden-ochre, covered with a delicate white network (reticulum) above.',
+    },
+    'coprinus_comatus': {
+      'ca':
+          'De 8 a 20 cm, esvelt, buit, fibrós, blanc sedós, atenuat cap a dalt amb un bulb basal i un petit anell mòbil que sovint cau a la base.',
+      'es':
+          'De 8 a 20 cm, esbelto, hueco, fibroso, blanco sedoso, atenuado arriba con bulbo basal y un pequeño anillo móvil que a menudo cae hacia la base.',
+      'en':
+          '8 to 20 cm, tall, slender, hollow, fibrous, silky white with a bulbous base and a narrow movable white ring that often slides down.',
+    },
+    'lactarius_torminosus': {
+      'ca':
+          'De 3 a 7 cm, cilíndric, buit, dur, de color rosa pàl·lid o groguenc clar, sovint amb petits clotets foscos (escrobícules).',
+      'es':
+          'De 3 a 7 cm, cilíndrico, hueco, duro, rosa pálido o amarillento claro, a menudo con pequeñas fositas oscuras (escrobículas).',
+      'en':
+          '3 to 7 cm, cylindrical, hollow, firm, pale pink to light yellowish, often pitted with small shallow dark spots (scrobiculate).',
+    },
+    'amanita_pantherina': {
+      'ca':
+          'De 6 a 12 cm, cilíndric, blanc, atenuat cap amunt. Té un anell membranós blanc baix i penjant, i una base bulbosa arrodonida envoltada per 1 o 2 anells concèntrics o rodetes helicoïdals (volva dissociada en collarets).',
+      'es':
+          'De 6 a 12 cm, cilíndrico, blanco, atenuado hacia arriba. Posee anillo membranoso bajo y colgante, y base bulbosa rodeada de 1 o 2 rodetes helicoidales concéntricos (volva en collares).',
+      'en':
+          '6 to 12 cm, cylindrical, white, tapering upward. Features a low hanging white membranous ring and a swollen base encircled by 1-2 distinct stepped rim gutters (volva collars).',
+    },
+    'gyromitra_esculenta': {
+      'ca':
+          'De 3 a 6 cm, curt, gruixut, buit, irregularment arrugat, de color blanc a ocre groguenc pàl·lid.',
+      'es':
+          'De 3 a 6 cm, corto, grueso, hueco, irregularmente arrugado, de color blanco a ocre amarillento pálido.',
+      'en':
+          '3 to 6 cm, short, stout, hollow, irregularly grooved/wrinkled, whitish to pale yellowish-ochre.',
+    },
   };
 
   static const Map<String, Map<String, String>> _latexDescriptions = {
@@ -668,6 +1186,22 @@ class SpeciesLocalizer {
       'ca': 'De color vermell vinós o sang fosc, de gust dolç o suau.',
       'es': 'De color rojo vinoso o sangre oscuro, de sabor dulce o suave.',
       'en': 'Deep wine-red or bloody dark red, mild or pleasant taste.',
+    },
+    'lactarius_chrysorrheus': {
+      'ca':
+          'Làtex blanc abundant que vira a groc sofre intens en pocs segons. Molt picant i amarg.',
+      'es':
+          'Látex blanco abundante que vira a amarillo azufre intenso en pocos segundos. Muy picante y amargo.',
+      'en':
+          'Abundant white latex rapidly turning bright sulfur-yellow within seconds. Very acrid and peppery.',
+    },
+    'lactarius_torminosus': {
+      'ca':
+          'Làtex blanc abundant, immutable a l\'aire, d\'un gust extremadament coent, picant i acre.',
+      'es':
+          'Látex blanco abundante, inmutable al aire, de sabor extremadamente acre y picante.',
+      'en':
+          'Abundant white latex, unchanging in air, fiercely acrid, burning and peppery.',
     },
   };
 
@@ -845,6 +1379,150 @@ class SpeciesLocalizer {
       'en':
           'Good edible. Salmon flesh turns distinct dark violet-purple upon cooking. Distinguished from toxic Cortinarius by deeply decurrent gills and lack of cortina.',
     },
+    'marasmius_oreades': {
+      'ca':
+          'Excel·lent comestible, clau en el fricandó tradicional. Atenció: no confondre amb clitocibes blancs tòxics de prat (Clitocybe dealbata, C. rivulosa), que tenen làmines molt juntes i decurrents i cama fràgil no elàstica.',
+      'es':
+          'Excelente comestible, esencial en guisos tradicionales. Atención: no confundir con clitocibes blancos tóxicos de prado (Clitocybe dealbata, C. rivulosa), de láminas apretadas y decurrentes y pie frágil.',
+      'en':
+          'Excellent edible, cherished in traditional Catalan fricandó. Caution: do not confuse with toxic white lawn clitocybes (Clitocybe dealbata, C. rivulosa), which have crowded decurrent gills and brittle stems.',
+    },
+    'lactarius_chrysorrheus': {
+      'ca':
+          'TÒXIC. Provoca trastorns gastrointestinals severs. És la confusió més freqüent amb el rovelló (L. deliciosus); es distingeix fàcilment perquè el seu làtex és blanc i es torna groc sofre, mai taronja ni vinós.',
+      'es':
+          'TÓXICO. Provoca trastornos gastrointestinales severos. Es la confusión más frecuente con el níscalo (L. deliciosus); se distingue porque su látex es blanco y vira a amarillo azufre, nunca naranja.',
+      'en':
+          'TOXIC. Causes acute gastrointestinal distress. It is the most common toxic lookalike of the saffron milk cap (L. deliciosus); distinguished easily by its white latex turning sulfur-yellow, never orange.',
+    },
+    'lepista_nuda': {
+      'ca':
+          'Bon comestible prèvia cocció (tòxic en cru com molts bolets). Té una forta olor afruitada o anisada agradable. Es diferencia dels cortinaris violacis per la seva esporada blanca-rosada i per l\'absència total de cortina.',
+      'es':
+          'Buen comestible previa cocción (tóxico en crudo). Agradable olor afrutado. Se diferencia de los cortinarios violetas por su esporada blanquecina-rosada y por la ausencia total de cortina.',
+      'en':
+          'Good edible when well cooked (toxic raw). Pleasant fruity fragrance. Distinguished from violet webcaps by pale pinkish-white spores and complete lack of a cortina.',
+    },
+    'rubroboletus_satanas': {
+      'ca':
+          'TÒXIC. Causa intoxicacions gastrointestinals severes amb vòmits i deshidratació. Olor desagradable a carronya en envellir. Confusió perillosa amb el cep (Boletus edulis); es diferencia pel barret blanquinós i els porus vermell sang.',
+      'es':
+          'TÓXICO. Causa severa intoxicación gastrointestinal con vómitos intensos. Olor desagradable al envejecer. Peligrosa confusión con el boletus (B. edulis); se distingue por el sombrero blanquecino y poros rojo sangre.',
+      'en':
+          'TOXIC. Causes severe gastroenteritis with heavy vomiting. Unpleasant cadaverous odor when old. Dangerous confusion with Porcini (B. edulis); recognized by its pale chalky cap and vivid blood-red pores.',
+    },
+    'russula_virescens': {
+      'ca':
+          'Excel·lent comestible, una de les millors llores de Catalunya. ALERTA VITAL: cal no confondre amb la farinera borda (Amanita phalloides), que també pot tenir el barret verdós, però la farinera té anell, volva i carn fibrosa (mai trencadissa com el guix).',
+      'es':
+          'Excelente comestible, una de las mejores rúsulas. ALERTA VITAL: no confundir con la mortal oronja verde (Amanita phalloides), que también tiene sombrero verdoso pero posee anillo, volva y carne fibrosa (nunca quebradiza).',
+      'en':
+          'Choice edible, one of the finest brittlegills. CRITICAL WARNING: do not confuse with the deadly Death Cap (Amanita phalloides), which may have a greenish cap but always has a ring, volva, and fibrous non-crumbly flesh.',
+    },
+    'hygrophorus_eburneus': {
+      'ca':
+          'Comestible tradicional molt apreciat a les comarques interiors, germana de la llenega negra (H. latitabundus). Olor característica suau i agradable. Es renta la cutícula viscosa abans de cuinar.',
+      'es':
+          'Comestible tradicional apreciado en comarcas interiores, hermana de la llanega negra (H. latitabundus). Agradable olor suave. Se retira la viscosidad antes de cocinar.',
+      'en':
+          'Traditional edible prized alongside the black slimy cap (H. latitabundus). Subtle pleasant scent. Viscid cuticle is wiped or washed before culinary preparation.',
+    },
+    'tricholoma_pardinum': {
+      'ca':
+          'TÒXIC GRAU. Causa greus gastroenteritis amb vòmits incoercibles i forta deshidratació. Gran perill de confusió amb el fredolic (T. terreum); es diferencia per ser molt més massís i gran, amb esquames gruixudes concèntriques i peu no buit i fràgil.',
+      'es':
+          'TÓXICO GRAVE. Causa severa gastroenteritis con vómitos incoercibles. Gran peligro de confusión con la negrilla (T. terreum); se diferencia por ser mucho más macizo y grande, con escamas concéntricas y pie robusto.',
+      'en':
+          'SEVERELY TOXIC. Causes intense gastrointestinal distress with violent vomiting. Dangerous confusion with grey knight (T. terreum); distinguished by its massive robust stature, prominent concentric scales, and solid stem.',
+    },
+    'morchella_esculenta': {
+      'ca':
+          'EXCEL·LENT COMESTIBLE PRIMAVERAL molt cotitzat. ATENCIÓ: és tòxica en cru (conté hemolisines); cal coure-la bé o assecar-la abans del consum. Compte amb el bolet de greix (Gyromitra esculenta), que té plecs cerebriformes (no alvèols) i és altament perillós.',
+      'es':
+          'EXCELENTE COMESTIBLE PRIMAVERAL muy cotizado. ATENCIÓN: tóxica en crudo (contiene hemolisinas); debe cocinarse a fondo o desecarse. Cuidado con la falsa colmenilla (Gyromitra esculenta), de pliegues cerebriformes y muy peligrosa.',
+      'en':
+          'CHOICE SPRING EDIBLE highly prized. CAUTION: toxic when raw (contains hemolysins); must be thoroughly cooked or dried before consumption. Beware of false morels (Gyromitra esculenta), which have brain-like folds and are toxic.',
+    },
+    'agaricus_campestris': {
+      'ca':
+          'Molt bon comestible tradicional dels prats i clarianes de bosc. ATENCIÓ: no confondre amb el xampinyó groguenc (A. xanthodermus), que grogueja intensament a la base del peu i fa olor de tinta/fenol, ni amb les amanites blanques mortals (A. verna, A. phalloides), que tenen sempre làmines blanques i volva a la base.',
+      'es':
+          'Muy buen comestible tradicional de prados y claros de bosque. ATENCIÓN: no confundir con el champiñón amarilleante (A. xanthodermus), que amarillea intensamente en la base y huele a tinta/fenol, ni con amanitas blancas mortales (A. verna, A. phalloides), de láminas blancas y volva.',
+      'en':
+          'Choice traditional edible of meadows and grassy forest clearings. CAUTION: do not confuse with yellow-stainer (A. xanthodermus), which stains bright chrome-yellow at base and smells of phenol/ink, nor with deadly white amanitas (A. verna, A. phalloides), which always have pure white gills and a basal volva.',
+    },
+    'agaricus_xanthodermus': {
+      'ca':
+          'TÒXIC GASTROINTESTINAL. Causa nàusees, vòmits i dolors abdominals aguts. Es reconeix infal·liblement pel fort viratge a groc crom de la base del peu i per una olor penetrant i desagradable de tinta, iode o àcid fènol, que s\'intensifica fortament en coure\'s.',
+      'es':
+          'TÓXICO GASTROINTESTINAL. Causa náuseas, vómitos y fuertes dolores abdominales. Se reconoce por el rápido viraje a amarillo cromo en la base del pie y por su penetrante olor a tinta o fenol, que se intensifica al calentarse.',
+      'en':
+          'GASTROINTESTINALLY TOXIC. Causes nausea, vomiting and acute abdominal cramps. Infallibly identified by the instant chrome-yellow bruising at the base of the stipe and an unpleasant carbolic/ink odor that intensifies when heated.',
+    },
+    'psathyrella_candolleana': {
+      'ca':
+          'Sense interès culinari per la seva carn prima i fràgil, tot i que no és tòxica. Creix sovint en flotes nombroses vora soques podrides, fusta enterrada o prats sota pins (Pinus halepensis) i planifolis.',
+      'es':
+          'Sin valor culinario por su carne delgada y frágil, aunque no es tóxica. Crece en grupos numerosos sobre madera enterrada o bajo pinos (Pinus halepensis) y frondosas.',
+      'en':
+          'Inedible / no culinary value due to thin, fragile flesh, though not toxic. Frequently grows in dense clusters on buried wood or lawns under pines (Pinus halepensis) and broadleaf trees.',
+    },
+    'suillus_granulatus': {
+      'ca':
+          'Comestible apreciat si es pela la cutícula viscosa (que té efectes lleugerament laxants) i s\'eliminen els tubs tous. És el molleric més abundant i característic dels boscos de pi blanc (Pinus halepensis) a tot el litoral i prelitoral català.',
+      'es':
+          'Comestible apreciado retirando la cutícula viscosa (ligeramente laxante) y los tubos blandos. Es el boleto más abundante y característico de los pinares de pino carrasco (Pinus halepensis) en el litoral y prelitoral.',
+      'en':
+          'Prized edible when the slimy cuticle (which has mild laxative effects) is peeled away and spongy tubes removed. The classic companion of Aleppo pine (Pinus halepensis) across the Mediterranean coast.',
+    },
+    'hygrophorus_russula': {
+      'ca':
+          'EXCEL·LENT COMESTIBLE TRADICIONAL molt valorat a la cuina catalana ("el rei de la cassola"), ideal per a guisats de carn. Olor suau fúngica i gust lleugerament amargant que s\'esvaeix amb una bona cocció. Creix en alzinars i rouredes tèbies.',
+      'es':
+          'EXCELENTE COMESTIBLE TRADICIONAL muy apreciado en la cocina catalana ("el rei de la cassola"), ideal para guisados. Olor fúngico suave y sabor ligeramente amargo que desaparece con la cocción. Crece en encinares y robledales.',
+      'en':
+          'TRADITIONAL CHOICE EDIBLE highly celebrated in Catalan cuisine ("king of the casserole"), ideal for hearty stews. Mild mushroom aroma and pleasantly bitter taste that turns savory with thorough cooking. Grows in warm oak forests.',
+    },
+    'boletus_aereus': {
+      'ca':
+          'EXCEL·LENT COMESTIBLE DE MÀXIMA QUALITAT, considerat per molts boletaires el millor dels ceps per la seva carn blanca, dura i intensament aromàtica. Termòfil, típic dels alzinars, suredes i rouredes mediterrànies.',
+      'es':
+          'EXCELENTE COMESTIBLE DE MÁXIMA CALIDAD, considerado por muchos el mejor de los boletus por su carne blanca, dura e intensamente aromática. Termófilo, típico de encinares, alcornocales y robledales.',
+      'en':
+          'PRIME QUALITY CHOICE EDIBLE, revered as the finest of all Porcini boletes for its dense, firm white flesh and extraordinary aroma. Thermophilic, characteristic of Mediterranean oak and cork woods.',
+    },
+    'coprinus_comatus': {
+      'ca':
+          'DELICIÓS COMESTIBLE QUAN ÉS JOVE (quan les làmines són completament blanques). S\'ha de cuinar ràpidament després de la collita abans que comenci a liquefactar-se. A diferència del coprí gris (Coprinopsis atramentaria), aquest NO conté coprina i es pot consumir amb alcohol amb moderació.',
+      'es':
+          'DELICIOSO COMESTIBLE JOVEN (mientras las láminas permanezcan completamente blancas). Cocinar poco después de cosechar antes de que licúe. A diferencia del coprino antialcohólico, NO contiene coprina.',
+      'en':
+          'DELICIOUS EDIBLE WHEN YOUNG (while gills remain pure white). Must be prepared soon after foraging before it deliquesces into black ink. Unlike the inky cap, this species does NOT contain coprine and is safe with alcohol.',
+    },
+    'lactarius_torminosus': {
+      'ca':
+          'TÒXIC GRAU. Provoca còlics dolorosos, nàusees i gastroenteritis severa (síndrome resinoidiana). Es distingeix clarament del rovelló (L. deliciosus) pel seu marge abundantment llanós i pel làtex blanc i extremadament picant (mai taronja).',
+      'es':
+          'TÓXICO GRAVE. Provoca cólicos dolorosos, náuseas y gastroenteritis severa (síndrome resinoidiano). Se distingue del níscalo (L. deliciosus) por su margen densamente lanoso y látex blanco muy picante.',
+      'en':
+          'SEVERELY TOXIC. Causes painful gastrointestinal poisoning with vomiting and colic. Distinctly separated from Saffron Milk Cap (L. deliciosus) by its shaggy woolly margin and burning white latex (never orange).',
+    },
+    'amanita_pantherina': {
+      'ca':
+          'MOLT TÒXIC I PERILLÓS (síndrome panterínica o anticolinèrgica per àcid ibotènic i muscimol). Provoca deliris, convulsions, al·lucinacions i coma. Perill de confusió amb la cua de cavall comestible (Amanita rubescens), que enrogeix a la carn i té marge no estriat.',
+      'es':
+          'MUY TÓXICO Y PELIGROSO (síndrome panterínico por ácido iboténico y muscimol). Provoca delirios, convulsiones y coma. Peligro de confusión con la amanita rojiza (A. rubescens), de carne enrojeciente y margen no estriado.',
+      'en':
+          'HIGHLY TOXIC AND DANGEROUS (pantherina syndrome via ibotenic acid and muscimol). Causes severe neurological symptoms, delirium, and coma. Confusable with edible Blusher (A. rubescens), which bruises wine-red and has non-striate margins.',
+    },
+    'gyromitra_esculenta': {
+      'ca':
+          'MORTAL. Conté giromitrina, una toxina acumulativa que a l\'organisme es degrada en monometilhidrazina (combustible de coets), destruint glòbuls vermells i causant greus danys hepàtics i renals sovint mortals. Gran perill de confusió a la primavera amb la múrgola (Morchella esculenta), que té alvèols regulars tipus bresca i mai plecs cerebriformes.',
+      'es':
+          'MORTAL. Contiene giromitrina, toxina acumulativa que se transforma en monometilhidrazina, destruyendo hematíes y causando fallo hepático y renal fulminante. Gran peligro de confusión primaveral con la colmenilla (Morchella esculenta).',
+      'en':
+          'DEADLY POISONOUS. Contains gyromitrin, a cumulative toxin metabolised into monomethylhydrazine, destroying red blood cells and inducing lethal liver and kidney failure. Dangerous spring lookalike to edible true Morels (Morchella esculenta).',
+    },
   };
 
   static const Map<String, Map<String, String>> _lookalikeComparisons = {
@@ -903,6 +1581,118 @@ class SpeciesLocalizer {
           'La pata de perdiz tiene láminas muy decurrentes y carne que vira a violácea al cocinar, sin cortina; el cortinario mortal tiene láminas oxidadas y cortina filamentosa.',
       'en':
           'The pine spike has deeply decurrent gills and flesh turning purple upon cooking, with no cortina; the deadly webcap has rusty adnate gills and a fibrous cortina.',
+    },
+    'lactarius_deliciosus:lactarius_chrysorrheus': {
+      'ca':
+          'El Fals rovelló o Lleterola té làtex blanc que es torna groc sofre intens en segons i és molt picant, mentre que el Rovelló té làtex ataronjat immutable.',
+      'es':
+          'El falso níscalo tiene látex blanco que vira a amarillo azufre intenso en segundos y es muy picante, mientras que el níscalo tiene látex naranja inmutable.',
+      'en':
+          'The yellow-drop milkcap has white latex that turns bright sulfur-yellow within seconds and is strongly acrid, whereas the saffron milkcap has unchanging orange milk.',
+    },
+    'boletus_edulis:rubroboletus_satanas': {
+      'ca':
+          'El Mataparent de Satanàs té barret blanquinós o gris perla, porus vermell sang i blaveja al tall, mentre que el Cep té barret marró fosc, porus blancs o groguencs i no blaveja mai.',
+      'es':
+          'El boleto de Satanás tiene sombrero blanquecino o gris perla, poros rojo sangre y azulea al corte, mientras que el boletus tiene sombrero marrón oscuro, poros blancos o amarillos y nunca azulea.',
+      'en':
+          'Satan\'s bolete has a chalky-white cap, blood-red pores and stains blue on cutting, whereas Porcini has a dark brown cap, white/yellow pores and never turns blue.',
+    },
+    'tricholoma_terreum:tricholoma_pardinum': {
+      'ca':
+          'El Fredolic bord és molt més robust i gros, amb esquames concèntriques amples com teules i peu sòlid, mentre que el Fredolic és menut, fràgil i té peu buit.',
+      'es':
+          'La negrilla bastarda es mucho más robusta y grande, con escamas concéntricas como tejas y pie sólido, mientras que la negrilla común es pequeña, frágil y de pie hueco.',
+      'en':
+          'The poison knight is much larger and stockier, with broad concentric scales like tiles and a solid stem, while the true grey knight is small, brittle, and hollow-stemmed.',
+    },
+    'russula_virescens:amanita_phalloides': {
+      'ca':
+          'La Palometa té carn trencadissa com el guix, barret verd clivellat en mosaic i mai té anell ni volva; la Farinera borda és mortal i té sempre anell, volva i carn fibrosa.',
+      'es':
+          'La seta de cura tiene carne quebradiza como tiza, sombrero verde cuarteado en mosaico y carece de anillo y volva; la oronja verde es mortal y siempre tiene anillo, volva y carne fibrosa.',
+      'en':
+          'The green-cracked brittlegill has crumbly chalk-like flesh, a cracked green mosaic cap, and never has a ring or volva; the deadly death cap always has a ring, volva, and fibrous flesh.',
+    },
+    'agaricus_campestris:agaricus_xanthodermus': {
+      'ca':
+          'El Xampinyó groguenc grogueja intensament a la base del peu en tallar-lo o rascar-lo i fa una forta olor desagradable de tinta o fenol; el Xampinyó silvestre mai grogueja a la base i fa bona olor d\'anís o ametlla.',
+      'es':
+          'El champiñón amarilleante amarillea intensamente en la base del pie al corte y desprende fuerte olor a tinta o fenol; el champiñón silvestre nunca amarillea en la base y huele agradablemente.',
+      'en':
+          'The yellow-stainer stains bright chrome-yellow at the stipe base upon cutting and smells strongly of ink/carbolic acid; the field mushroom never stains yellow at the base and has a pleasant sweet scent.',
+    },
+    'morchella_esculenta:gyromitra_esculenta': {
+      'ca':
+          'La Múrgola té cel·les o alvèols regulars com una bresca d\'abelles, mentre que el Bolet de greix té plecs cerebriformes ondulats com un cervell i és mortal.',
+      'es':
+          'La colmenilla tiene celdas regulares como un panal de abejas, mientras que la falsa colmenilla tiene pliegues cerebriformes como un cerebro y es mortal.',
+      'en':
+          'The true Morel has a pitted cap with neat honeycomb alveoli, whereas the False Morel has brain-like lobed convolutions and is lethally toxic.',
+    },
+    'lactarius_deliciosus:lactarius_torminosus': {
+      'ca':
+          'La Cabra o Rovelló bord té el marge del barret molt llanós i pelut (barbat) i exsuda làtex blanc molt coent; el Rovelló té el marge llis i làtex sempre ataronjat.',
+      'es':
+          'El falso níscalo peludo tiene el margen del sombrero lanoso y barbado y exuda látex blanco muy picante; el níscalo tiene margen liso y látex siempre naranja.',
+      'en':
+          'The Woolly Milkcap has a strongly bearded, woolly fringed cap margin and burning acrid white milk; the Saffron Milk Cap has a smooth margin and orange milk.',
+    },
+    'macrolepiota_procera:amanita_pantherina': {
+      'ca':
+          'L\'Apagallums té un anell doble mòbil que llisca pel peu i mai té volva; la Pantera és molt tòxica, té un anell fix i una volva dissociada en anells concèntrics a la base del peu.',
+      'es':
+          'El parasol tiene un anillo doble móvil que se desliza por el pie y carece de volva; la pantera es muy tóxica, tiene anillo fijo y volva en anillos concéntricos en la base.',
+      'en':
+          'The Parasol has a sliding movable double ring and never has a volva; the toxic Panther Cap has an attached ring and distinct stepped volva collars at the base.',
+    },
+    'lactarius_sanguifluus:lactarius_chrysorrheus': {
+      'ca':
+          'El Fals rovelló o Lleterola té làtex blanc que en pocs segons vira a groc sofre intens i és molt picant; el Rovelló d\'obaga (de sang) té làtex vinós o vermell fosc i mai exsuda llet blanca o groga.',
+      'es':
+          'El falso níscalo tiene látex blanco que vira a amarillo azufre en segundos y es muy picante; el níscalo de sangre tiene látex vinoso o rojo púrpura y nunca blanco.',
+      'en':
+          'The yellow-drop milkcap exudes white latex rapidly turning sulfur-yellow and is strongly acrid; the bloody milkcap has wine-red or purplish latex and never white or yellow milk.',
+    },
+    'lactarius_sanguifluus:lactarius_torminosus': {
+      'ca':
+          'La Cabra o Rovelló bord té el marge del barret densament llanós i pelut (barbat) i exsuda làtex blanc molt coent; el Rovelló d\'obaga (de sang) té el marge llis i làtex de color sang vinós.',
+      'es':
+          'El falso níscalo peludo tiene el margen del sombrero lanoso y barbado con látex blanco ardiente; el níscalo de sangre tiene margen glabro y látex rojo vinoso.',
+      'en':
+          'The Woolly Milkcap has a heavily bearded, shaggy-haired margin and burning white latex; the bloody milkcap has a smooth margin and deep wine-red latex.',
+    },
+    'agaricus_campestris:amanita_verna': {
+      'ca':
+          'La mortal Cicuta blanca té làmines sempre d\'un blanc immaculat i una volva membranosa en sac a la base; el Xampinyó silvestre té làmines rosades de jove que enfosqueixen a xocolata i mai té volva.',
+      'es':
+          'La mortal cicuta blanca tiene láminas siempre blancas y una volva membranosa en la base; el champiñón silvestre tiene láminas rosadas que viran a chocolate y carece de volva.',
+      'en':
+          'The deadly Spring Amanita has pure white gills and a distinct sack-like basal volva; the field mushroom has delicate pink gills turning chocolate-brown and lacks a volva.',
+    },
+    'boletus_aereus:rubroboletus_satanas': {
+      'ca':
+          'El Mataparent de Satanàs té barret blanquinós o grisenc, porus vermells i blaveja ràpidament al tall; el Cep negre té barret bronze o xocolata fosc, porus blancs o groguencs i carn immutable que no blaveja mai.',
+      'es':
+          'El boleto de Satanás tiene sombrero blanquecino, poros rojo sangre y azulea al corte; el boleto negro tiene sombrero bronce oscuro, poros blancos o amarillos y carne blanca inmutable.',
+      'en':
+          'Satan\'s bolete has a chalky-white cap, blood-red pores and stains blue on bruising; the Dark Bolete has a dark bronze-brown cap, white to yellowish pores and unchanging white flesh.',
+    },
+    'hygrophorus_eburneus:amanita_verna': {
+      'ca':
+          'La mortal Cicuta blanca té làmines lliures, anell penjant al peu i volva prominent en sac a la base; la Llenega blanca té làmines ceroses decurrents, barret molt viscós i mai té anell ni volva.',
+      'es':
+          'La mortal cicuta blanca tiene láminas libres, anillo en el pie y volva membranosa; la llanega blanca (babosa blanca) tiene láminas decurrentes cerosas, sombrero muy viscoso y carece de anillo y volva.',
+      'en':
+          'The deadly Spring Amanita has free gills, a stem ring, and a prominent sack volva; the Ivory Woodwax has waxy decurrent gills, a very slimy cap, and lacks both ring and volva.',
+    },
+    'russula_cyanoxantha:amanita_phalloides': {
+      'ca':
+          'La mortal Farinera borda té anell al peu, volva membranosa en sac a la base i làmines fràgils; la Llora verda o Cuaverda mai té anell ni volva i les seves làmines són flexibles i lardàcies (no es trenquen en passar-hi el dit).',
+      'es':
+          'La mortal oronja verde tiene anillo, volva membranosa en saco y láminas frágiles; la carbonera carece de anillo y volva y sus láminas son flexibles y grasientas al tacto (no se rompen).',
+      'en':
+          'The deadly Death Cap has a stem ring, sack-like volva, and brittle gills; the Charcoal Burner lacks both ring and volva and possesses lardaceous flexible gills that bend without breaking.',
     },
   };
 
@@ -1113,7 +1903,9 @@ class SpeciesLocalizer {
   }) {
     if (boletId == null || lookalikeId == null) return fallback ?? '';
     final key = '$boletId:$lookalikeId';
-    final trans = _lookalikeComparisons[key];
+    final reverseKey = '$lookalikeId:$boletId';
+    final trans =
+        _lookalikeComparisons[key] ?? _lookalikeComparisons[reverseKey];
     if (trans != null) {
       return trans[languageCode] ?? trans['ca'] ?? fallback ?? '';
     }

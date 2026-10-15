@@ -31,7 +31,7 @@ final insigniesProvider =
   }).toList();
 });
 
-/// Modal bottom sheet showcasing the 6 starter badges in a retro arcade trophy case.
+/// Modal bottom sheet showcasing the Boscdex achievement badges in a retro arcade trophy case.
 class InsigniesDialog extends ConsumerWidget {
   const InsigniesDialog({super.key});
 
@@ -299,7 +299,7 @@ class InsigniesDialog extends ConsumerWidget {
                 border: Border.all(color: RetroColors.ink, width: 2),
               ),
               child: Icon(
-                isUnlocked ? Icons.verified : Icons.lock_outline,
+                isUnlocked ? _getBadgeIcon(badge.id) : Icons.lock_outline,
                 color: isUnlocked ? RetroColors.ink : RetroColors.inkSoft,
                 size: 26,
               ),
@@ -385,5 +385,43 @@ class InsigniesDialog extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  IconData _getBadgeIcon(String id) {
+    switch (id) {
+      case 'primer_pas':
+      case 'primer_pas_al_bosc':
+        return Icons.hiking_rounded;
+      case 'cacador_rovellons':
+      case 'cacador_de_rovellons':
+        return Icons.shopping_basket_rounded;
+      case 'micoleg_prudent':
+        return Icons.health_and_safety_rounded;
+      case 'alianca_silvestre':
+        return Icons.park_rounded;
+      case 'cistell_tardor':
+      case 'cistell_de_tardor':
+        return Icons.inventory_2_rounded;
+      case 'mestre_boletaire':
+        return Icons.military_tech_rounded;
+      case 'senyor_dels_ceps':
+        return Icons.workspace_premium_rounded;
+      case 'gourmet_del_bosc':
+        return Icons.restaurant_menu_rounded;
+      case 'amic_dels_arbres':
+        return Icons.forest_rounded;
+      case 'esperit_de_primavera':
+        return Icons.wb_sunny_rounded;
+      case 'sentinella_toxic':
+        return Icons.shield_rounded;
+      case 'quadern_de_camp':
+        return Icons.menu_book_rounded;
+      case 'cartograf_del_bosc':
+        return Icons.explore_rounded;
+      case 'gran_enciclopedia':
+        return Icons.auto_stories_rounded;
+      default:
+        return Icons.verified;
+    }
   }
 }

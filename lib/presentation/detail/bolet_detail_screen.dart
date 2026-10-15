@@ -421,34 +421,36 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   ],
                   const SizedBox(height: 20),
 
-                  // For discovered species: user captures & toxic lookalikes
+                  // Critical Safety Alerts: Toxic Lookalike Warnings (Always visible for safety)
+                  if (_toxicLookalikes.isNotEmpty) ...[
+                    for (final twin in _toxicLookalikes)
+                      ToxicTwinAlert(
+                        lookalikeName: SpeciesLocalizer.getMushroomName(
+                          twin.lookalike.id,
+                          languageCode: l10n.languageCode,
+                          fallbackName: twin.lookalike.catalanName,
+                        ),
+                        comparisonNotes: SpeciesLocalizer.getComparisonNotes(
+                          bolet.id,
+                          twin.lookalike.id,
+                          languageCode: l10n.languageCode,
+                          fallback: twin.comparisonNotes,
+                        ),
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          ref
+                              .read(toxicComparisonViewCountProvider.notifier)
+                              .increment();
+                          context.push('/boscdex/${twin.lookalike.id}');
+                        },
+                      ),
+                    const SizedBox(height: 20),
+                  ],
+
+                  // For discovered species: user captures
                   if (_isDiscovered) ...[
                     _buildUserCapturesSection(context),
                     const SizedBox(height: 24),
-                    if (_toxicLookalikes.isNotEmpty) ...[
-                      for (final twin in _toxicLookalikes)
-                        ToxicTwinAlert(
-                          lookalikeName: SpeciesLocalizer.getMushroomName(
-                            twin.lookalike.id,
-                            languageCode: l10n.languageCode,
-                            fallbackName: twin.lookalike.catalanName,
-                          ),
-                          comparisonNotes: SpeciesLocalizer.getComparisonNotes(
-                            bolet.id,
-                            twin.lookalike.id,
-                            languageCode: l10n.languageCode,
-                            fallback: twin.comparisonNotes,
-                          ),
-                          onTap: () {
-                            HapticFeedback.lightImpact();
-                            ref
-                                .read(toxicComparisonViewCountProvider.notifier)
-                                .increment();
-                            context.push('/boscdex/${twin.lookalike.id}');
-                          },
-                        ),
-                      const SizedBox(height: 20),
-                    ],
                   ],
 
                   // HABITAT & DISTRIBUTION (Location - Pokémon Pokédex feature)

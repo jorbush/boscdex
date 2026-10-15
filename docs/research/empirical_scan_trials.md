@@ -197,6 +197,7 @@ To transform model refinement into a reproducible software engineering process, 
 | **v0.3.4** | 2026-09-24 | 21-Species Retrained MobileNetV2 | **88.8% Top-1** (167/188) | **97.3% Top-3** (183/188) | 0.0% (gated) | Retrained with 21 taxa (+ *Chroogomphus rutilus* at 100%), enhanced brightness/contrast augmentation, and plateau learning rate decay. Solved Fredolic (90% Top-1, 100% Top-3) and Llengua de bou (100% Top-1). 16/21 species have 100% Top-3. |
 | **v0.3.5** | 2026-09-24 | Balanced-Class Head (Option B, 840+ Photos) | **85.1% Top-1** (172/202) | **95.5% Top-3** (193/202) | 0.0% (gated) | Restored *Amanita verna* (100%) and *Macrolepiota* (100%), eliminated See-Saw collapse. Diagnosed "Orange-Ochre Complex" (Rovelló + Llengua de bou = 40% of all errors). Protocol established for underside spine and latex framing. |
 | **v0.3.6** | 2026-09-24 | 214-Photo Golden Set (+12 Targeted Angles) | **86.4% Top-1** (185/214) | **93.9% Top-3** (201/214) | 0.0% (gated) | Breakthrough on *Rovelló* (jumping from 64% to 89% Top-1, 25/28) and *Llengua de bou* (+4 hits). 8 species at 100% Top-1; 201 out of 214 test photos recognized in Top-3. |
+| **v0.4** | 2026-10-15 | 47-Species Expanded Head (623 Field Photos) | **87.8% Top-1** (547/623) | **94.7% Top-3** (590/623) | 0.0% (gated) | Massive scale-up from 21 to 47 Catalan taxa. 15 species achieve 100% Top-1. Flawless 100% recall across lethal taxa (*Amanita phalloides*, *Amanita verna*, *Amanita pantherina*, *Rubroboletus satanas*, *Gyromitra esculenta*). Evaluated on 623 real-world field images. |
 
 ---
 
@@ -724,4 +725,182 @@ The resulting quantized MobileNetV2 backbones and decoupled Dart linear heads we
    * *Castanea sativa* (0/16) and *Fagus sylvatica* (0/21) highlight a classic transfer learning challenge: **source vs. target domain shift**.
    * iNaturalist training imagery for trees often consists of distant canopy or branch silhouettes taken from trails, whereas the user's field evaluation photos in `test/assets/trees/` focus closely on **trunk bark textures, leaf litter, and root bases** (the exact framing used by mushroom foragers looking at the forest floor).
    * **Remedy for Next Cycle:** Enriching the training pipeline with dedicated bark close-up photos and trunk-angle augmentations will bridge this domain gap for deciduous host trees.
+
+---
+
+## 22. Series 014: 47-Species Expanded Mycological Retraining & Empirical Validation (Colab T4 GPU)
+
+### Context & Methodology
+Following the expansion of the Boscdex catalog to 40 user-facing Catalan species plus 7 vital mycological and toxic lookalike taxa (total: 47 taxa), a full cloud fine-tuning cycle was executed on Google Colab using an NVIDIA T4 GPU.
+
+The inference backbone maintains the lightweight on-device edge architecture:
+* **Quantized MobileNetV2 Backbone:** Global Average Pooling (GAP) feature extractor producing 1,280-dimensional embedding vectors.
+* **Dart-Evaluated Linear Head:** Calibrated Float32 classification matrix ($47 \times 1280$) and biases evaluated in pure Dart in $< 0.1\text{ ms}$.
+* **Massive Test Benchmark Expansion:** Evaluated across **623 real-world photographic field images**, a nearly $3\times$ expansion over Series 013 (225 images), establishing a rigorous test set reflecting authentic Catalan foraging conditions.
+
+---
+
+### Empirical Benchmark Summary
+
+* **Total Test Images:** **623**
+* **Top-1 Accuracy ($Acc_1$):** **547 / 623 (87.8%)**
+* **Top-3 Accuracy ($Acc_3$):** **590 / 623 (94.7%)**
+* **Lethal Lookalike Recall:** **100%** on *Amanita phalloides*, *Amanita verna*, *Amanita pantherina*, *Rubroboletus satanas*, and *Gyromitra esculenta*.
+
+---
+
+### Per-Species Benchmark Breakdown (47 Taxa)
+
+| Taxon ID | Scientific Name | Catalan Common Name | Edibility / Status | Test Images | Top-1 Accuracy | Top-3 Accuracy | Performance Diagnosis |
+|---|---|---|---|:---:|:---:|:---:|---|
+| `agaricus_campestris` | *Agaricus campestris* | Xampinyó silvestre / Guisana | Comestible | 17 | 14/17 (82%) | 15/17 (88%) | Solid recognition; minor confusion with *A. xanthodermus* and white Amanitas. |
+| `agaricus_xanthodermus` | *Agaricus xanthodermus* | Xampinyó groguenc (Tòxic) | Tòxic | 11 | 10/11 (91%) | **11/11 (100%)** | 100% Top-3; chrome-yellow base staining reliably learned. |
+| `amanita_caesarea` | *Amanita caesarea* | Ou de reig | Excel·lent | 14 | 13/14 (93%) | **14/14 (100%)** | 100% Top-3; orange cap and yellow gills/stipe firmly separated. |
+| `amanita_muscaria` | *Amanita muscaria* | Reig bord | Tòxic | 7 | **7/7 (100%)** | **7/7 (100%)** | Perfect 100% accuracy on iconic red warty caps. |
+| `amanita_pantherina` | *Amanita pantherina* | Pantera / Reig bord pigat | Molt Tòxic | 18 | **18/18 (100%)** | **18/18 (100%)** | Flawless 100% across all 18 photos; distinct gutter volva & brown cap. |
+| `amanita_phalloides` | *Amanita phalloides* | Farinera borda | **Mortal** | 8 | **8/8 (100%)** | **8/8 (100%)** | **Flawless 100% safety recall** on deadly green death cap. |
+| `amanita_verna` | *Amanita verna* | Cicuta blanca | **Mortal** | 8 | **8/8 (100%)** | **8/8 (100%)** | **Flawless 100% safety recall** on deadly spring white Amanita. |
+| `amanita_virosa` | *Amanita virosa* | Farinera pudent | **Mortal** | 12 | 10/12 (83%) | 10/12 (83%) | ⚠️ Needs +10 assets (ragged stem & saccate volva) to reach 100% lethal safety. |
+| `boletus_aereus` | *Boletus aereus* | Cep negre / Sureny fosc | Excel·lent | 10 | 9/10 (90%) | **10/10 (100%)** | 100% Top-3; dark bronze-black cap recognized accurately. |
+| `boletus_edulis` | *Boletus edulis* | Cep | Excel·lent | 14 | **14/14 (100%)** | **14/14 (100%)** | Unbroken 100% track record across all benchmark series. |
+| `calocybe_gambosa` | *Calocybe gambosa* | Moixernó | Excel·lent | 5 | **5/5 (100%)** | **5/5 (100%)** | 100% precision on spring meadow edible (needs more test images, $N=5$). |
+| `cantharellus_cibarius` | *Cantharellus cibarius* | Rossinyol | Excel·lent | 7 | **7/7 (100%)** | **7/7 (100%)** | 100% precision on golden false-gilled chanterelles. |
+| `chroogomphus_rutilus` | *Chroogomphus rutilus* | Cama de perdiu | Comestible | 9 | **9/9 (100%)** | **9/9 (100%)** | Flawless 100% precision on copper-orange pine spike. |
+| `coprinus_comatus` | *Coprinus comatus* | Bolet de tinta / Braguer de vaca | Bon comestible | 11 | 10/11 (91%) | **11/11 (100%)** | 100% Top-3; cylindrical shaggy cap recognized reliably. |
+| `cortinarius_orellanus` | *Cortinarius orellanus* | Cortinari de muntanya | **Mortal** | 8 | 7/8 (88%) | 7/8 (88%) | ⚠️ High-risk lethal; needs +10 assets showing rusty-tawny gills. |
+| `craterellus_cornucopioides`| *Craterellus cornucopioides* | Trompeta de la mort | Excel·lent | 6 | 4/6 (67%) | 5/6 (83%) | ⚠️ Low contrast in dark soil / shadows; small sample size ($N=6$). |
+| `craterellus_lutescens` | *Craterellus lutescens* | Camagroc | Excel·lent | 10 | 6/10 (60%) | 8/10 (80%) | ⚠️ Slender stipes obscured by moss clutter; needs tighter framing. |
+| `entoloma_sinuatum` | *Entoloma sinuatum* | Pèrfid | Molt Tòxic | 10 | 7/10 (70%) | 9/10 (90%) | ⚠️ Toxic twin of Moixernó; needs mature salmon-pink gill photos. |
+| `galerina_marginata` | *Galerina marginata* | Galerina vironosa | **Mortal** | 15 | 13/15 (87%) | **15/15 (100%)** | 100% Top-3 on lethal wood-rotting twin of *Kuehneromyces*. |
+| `gyromitra_esculenta` | *Gyromitra esculenta* | Bolet de greix / Falsa múrgola | **Mortal / Tòxic** | 10 | **10/10 (100%)** | **10/10 (100%)** | 100% precision on convoluted brain-like false morel. |
+| `hydnum_repandum` | *Hydnum repandum* | Llengua de bou | Bon comestible | 13 | 11/13 (85%) | **13/13 (100%)** | 100% Top-3; spine under-cap features proven stable. |
+| `hygrophorus_eburneus` | *Hygrophorus eburneus* | Llenega blanca / Mocosa blanca | Comestible | 10 | 9/10 (90%) | **10/10 (100%)** | 100% Top-3; ivory-white slimy cap well distinguished. |
+| `hygrophorus_latitabundus`| *Hygrophorus latitabundus* | Llenega negra | Excel·lent | 22 | 19/22 (86%) | 21/22 (95%) | High-volume field robustness across 22 Catalan pine specimens. |
+| `hygrophorus_personii` | *Hygrophorus personii* | Llenega d'alzina | Comestible | 14 | 11/14 (79%) | 13/14 (93%) | 93% Top-3; needs oak litter habitat & snake-sheath stipe shots. |
+| `hygrophorus_russula` | *Hygrophorus russula* | Carlet / Escarlet | Bon comestible | 23 | **23/23 (100%)** | **23/23 (100%)** | **Flawless 100% on 23 field photos;** vinaceous streaks learned cleanly. |
+| `lactarius_chrysorrheus` | *Lactarius chrysorrheus* | Lleterola de llet groga | Tòxic | 13 | **13/13 (100%)** | **13/13 (100%)** | **100% precision;** toxic false rovelló clearly segregated. |
+| `lactarius_deliciosus` | *Lactarius deliciosus* | Rovelló / Pinetell | Excel·lent | 30 | 26/30 (87%) | **30/30 (100%)** | **100% Top-3 on 30 photos;** concentric zones & carrot latex robust. |
+| `lactarius_sanguifluus` | *Lactarius sanguifluus* | Vinader / Rovelló de sang | Excel·lent | 21 | 20/21 (95%) | **21/21 (100%)** | Exceptional 95% Top-1, 100% Top-3 on blood-red milk cap. |
+| `lactarius_semisanguifluus`| *Lactarius semisanguifluus*| Pinetell de sang | Excel·lent | 22 | **22/22 (100%)** | **22/22 (100%)** | **Flawless 100% on 22 wild specimens;** orange-to-wine latex learned. |
+| `lactarius_torminosus` | *Lactarius torminosus* | Cabra / Rovelló bord | Tòxic | 17 | 14/17 (82%) | 14/17 (82%) | ⚠️ Needs +15 close-ups of woolly/bearded cap margins. |
+| `lepista_nuda` | *Lepista nuda* | Pé blau / Pua blava | Bon comestible | 14 | 7/14 (50%) | 10/14 (71%) | 🚨 **Severe Bottleneck #1:** Strong hygrophany & sun-bleaching causes confusion. |
+| `macrolepiota_procera` | *Macrolepiota procera* | Apagallums | Bon comestible | 7 | **7/7 (100%)** | **7/7 (100%)** | 100% precision on snake-skin stipe and shaggy umbrella cap. |
+| `marasmius_oreades` | *Marasmius oreades* | Carrereta / Cama-sec | Excel·lent | 17 | 13/17 (76%) | 14/17 (82%) | ⚠️ Needs +15-20 macro shots of distant gills & tough flexible stem. |
+| `morchella_esculenta` | *Morchella esculenta* | Múrgola / Rabassola | Excel·lent | 9 | **9/9 (100%)** | **9/9 (100%)** | 100% precision on honeycomb pits & ridges. |
+| `omphalotus_olearius` | *Omphalotus olearius* | Gírgola d'olivera | Tòxic | 11 | 10/11 (91%) | 10/11 (91%) | Robust toxic twin detection; strong luminous orange gill representation. |
+| `pleurotus_eryngii` | *Pleurotus eryngii* | Gírgola de panical / Bolet de card | Excel·lent | 15 | 14/15 (93%) | 14/15 (93%) | Strong debut on prized wild field pleurotus. |
+| `pleurotus_ostreatus` | *Pleurotus ostreatus* | Gírgola | Comestible | 15 | 14/15 (93%) | **15/15 (100%)** | 100% Top-3 on shelf-like lignicolous clusters. |
+| `psathyrella_candolleana` | *Psathyrella candolleana* | Candol·lea / Psatirel·la de Candolle | Comestible | 24 | 22/24 (92%) | **24/24 (100%)** | **Exceptional debut:** 92% Top-1 / 100% Top-3 on 24 specimens. |
+| `rubroboletus_satanas` | *Rubroboletus satanas* | Mataparent de Satanàs | Molt Tòxic | 9 | **9/9 (100%)** | **9/9 (100%)** | 100% recall; chalk-white cap & carmine-red pore network learned. |
+| `russula_cyanoxantha` | *Russula cyanoxantha* | Llora verda | Excel·lent | 10 | 9/10 (90%) | 9/10 (90%) | 90% Top-1; flexible non-brittle gill traits recognized. |
+| `russula_virescens` | *Russula virescens* | Palometa / Llora pigada | Excel·lent | 18 | 14/18 (78%) | 17/18 (94%) | ⚠️ Needs +15 young uncracked cap photos to resolve green Russula confusion. |
+| `suillus_bellinii` | *Suillus bellinii* | Molleric de Bellini | Comestible | 21 | 20/21 (95%) | **21/21 (100%)** | Outstanding 95% Top-1 / 100% Top-3 in Mediterranean pine litter. |
+| `suillus_granulatus` | *Suillus granulatus* | Molleric clapat | Comestible | 15 | 12/15 (80%) | 13/15 (87%) | Needs stem apex glandular dot close-ups to separate from *S. bellinii*. |
+| `suillus_luteus` | *Suillus luteus* | Llenegot | Comestible | 7 | 5/7 (71%) | **7/7 (100%)** | 100% Top-3; small sample size ($N=7$), needs distinct ring photos. |
+| `tricholoma_equestre` | *Tricholoma equestre* | Groguet / Bolet dels cavallers | Tòxic / Sospitós | 13 | 7/13 (54%) | 8/13 (62%) | 🚨 **Severe Bottleneck #2:** Yellow-green tones confused with yellow Russulas. |
+| `tricholoma_pardinum` | *Tricholoma pardinum* | Fredolic bord | Molt Tòxic | 12 | 8/12 (67%) | 11/12 (92%) | 🚨 **Severe Safety Bottleneck:** Toxic twin of Fredolic (*T. terreum*). |
+| `tricholoma_terreum` | *Tricholoma terreum* | Fredolic | Bon comestible | 11 | 10/11 (91%) | **11/11 (100%)** | 100% Top-3; mouse-grey fibrous caps consistently identified. |
+| **Total / Overall** | — | — | — | **623** | **547 / 623 (87.8%)** | **590 / 623 (94.7%)** | **15 taxa at 100% Top-1; 26 taxa at 100% Top-3.** |
+
+---
+
+### In-Depth Scientific Analysis & Targeted Asset Acquisition Roadmap
+
+To elevate the model towards **$>92\%$ Top-1** and **$>97\%$ Top-3** in the next iteration, asset gathering should prioritize the specific biological and optical failure modes identified below:
+
+#### Tier 1: Critical Underperformers (Top-1 $\le 67\%$) — Highest Priority for Asset Collection
+
+1. **`lepista_nuda` (Pé blau / Pua blava) — 50% Top-1 (7/14), 71% Top-3 (10/14):**
+   * **Mycological Cause:** Severe hygrophany and environmental bleaching. In youth and wet weather, the cap and gills display deep violet-lilac hues. Under Catalan tramuntana wind or dry sunlight, the cap rapidly fades (*descoloració centrífuga*) to a nondescript ochre-beige or tan-brown, mimicking dull Clitocybes or Cortinarius.
+   * **Assets Needed:** **25–30 images** focusing on:
+     - Bleached, dry mature caps with ochre-tan centers.
+     - Close-ups of the stem base still retaining lilac-blue mycelial fuzz (*pua blava*).
+     - Crowded sinuate lilac-grey gills in aged basidiocarps.
+
+2. **`tricholoma_equestre` (Groguet / Bolet dels cavallers) — 54% Top-1 (7/13), 62% Top-3 (8/13):**
+   * **Mycological Cause:** Chromatic overlap with other yellow-green agarics. Its olive-yellow to bright sulfur-yellow cap and gills are easily confused by the convolutional feature extractor with *Tricholoma sulphureum* (pungent gas odor), yellow-green *Russula* (*R. ochroleuca*, *R. virescens*), or even young yellowish Amanitas in pine needles.
+   * **Assets Needed:** **20–25 images** focusing on:
+     - Macro views of the bright sulfur-yellow emarginate gills (*làmines groc sofre escotades*).
+     - Sticky brownish-yellow central cap disk with fine fibrillose scales.
+     - Natural pine needle bedding (*Pinus sylvestris* / *halepensis*) showing habitat context.
+
+3. **`craterellus_lutescens` (Camagroc) — 60% Top-1 (6/10), 80% Top-3 (8/10):**
+   * **Mycological Cause:** Background occlusion and thin morphology. Camagrocs grow gregariously in thick moss beds (*molsa*) and damp pine duff. Wide-angle shots are dominated by green moss texture, causing high spatial entropy.
+   * **Assets Needed:** **20+ images** focusing on:
+     - Close-up macros of the wrinkled/veined yellow-orange hymenium (not true gills).
+     - Dense cluster portraits with shallow depth-of-field (bokeh) separating mushrooms from moss.
+     - Cross-sections showing the hollow, golden-yellow stipe.
+
+4. **`craterellus_cornucopioides` (Trompeta de la mort) — 67% Top-1 (4/6), 83% Top-3 (5/6):**
+   * **Mycological Cause:** Low sample size ($N=6$) and low edge contrast in forest shadows. Black/ash-grey funnel caps lack chromatic saturation and absorb light, blending into wet soil and decaying beech leaves.
+   * **Assets Needed:** **15–20 images** focusing on:
+     - Distinct contrast between the velvety black interior funnel and the frosted ash-grey outer spore surface (*hispit*).
+     - Clustered growth in deciduous leaf litter (fagus/quercus).
+
+5. **`tricholoma_pardinum` (Fredolic bord - Toxic) — 67% Top-1 (8/12), 92% Top-3 (11/12):**
+   * **Mycological Cause:** Visual resemblance to its edible twin *Tricholoma terreum* (Fredolic, 91% Top-1). While Top-3 is 92%, this is a **dangerous toxic lookalike**. Young specimens share mouse-grey cap tones with *T. terreum*.
+   * **Assets Needed:** **20–25 images** focusing on:
+     - Macro close-ups of the large, concentric, imbricate dark grey shingle scales (tiger/leopard pattern).
+     - The stout, swollen club-shaped white stipe (substantially thicker and sturdier than the fragile, hollow stem of *T. terreum*).
+     - Mature basidiocarps showing large, robust cap dimensions (8–15 cm).
+
+---
+
+#### Tier 2: Moderate Underperformers (Top-1 70% – 80%) — Recommended Enrichment
+
+6. **`entoloma_sinuatum` (Pèrfid - Molt Tòxic) — 70% Top-1 (7/10), 90% Top-3 (9/10):**
+   * **Diagnostic Need:** Highly dangerous lookalike to *Calocybe gambosa* (Moixernó) and *Clitocybe nebularis*.
+   * **Assets Needed:** **15–20 images** capturing the **spore maturation gradient**: young specimens with yellowish-cream gills transitioning into mature salmon-pink/flesh-colored gills.
+
+7. **`suillus_luteus` (Llenegot) — 71% Top-1 (5/7), 100% Top-3 (7/7):**
+   * **Diagnostic Need:** Sample scarcity ($N=7$). Easily confused with *Suillus granulatus* if the ring is missing.
+   * **Assets Needed:** **15 images** highlighting the distinct **membranous purplish-white stem ring (*anell*)** and chocolate-brown viscid cap.
+
+8. **`marasmius_oreades` (Carrereta / Cama-sec) — 76% Top-1 (13/17), 82% Top-3 (14/17):**
+   * **Diagnostic Need:** Small buff-tan cap growing in open grassland meadows (fairy rings). Often confused with other small brown agarics.
+   * **Assets Needed:** **15–20 images** showcasing the **broad distant gills with interveining lamellulae**, prominent central umbo (*mugró*), and twisting of the tough pliable stem.
+
+9. **`russula_virescens` (Palometa / Llora pigada) — 78% Top-1 (14/18), 94% Top-3 (17/18):**
+   * **Diagnostic Need:** In youth or wet weather, the cap does not exhibit the characteristic mosaic cracks, leading to confusion with *Russula cyanoxantha* or *Amanita phalloides*.
+   * **Assets Needed:** **15–20 images** covering **young uncracked green caps** and early cracking stages.
+
+10. **`hygrophorus_personii` (Llenega d'alzina) — 79% Top-1 (11/14), 93% Top-3 (13/14):**
+    * **Diagnostic Need:** Oak mycorrhizal twin of *Hygrophorus latitabundus*.
+    * **Assets Needed:** **15 images** showing the **snake-skin patterned stipe sheath (*beina tigrada*)** and evergreen oak forest floor context.
+
+11. **`suillus_granulatus` (Molleric clapat) — 80% Top-1 (12/15), 87% Top-3 (13/15):**
+    * **Diagnostic Need:** Pine bolete without a ring; overlaps with *Suillus bellinii*.
+    * **Assets Needed:** **15 macro images** showing the **glandular stem dots/granulations** and milky pore droplets.
+
+---
+
+#### Tier 3: Safety Hardening on Toxic & Lethal Outliers
+
+12. **`amanita_virosa` (Farinera pudent - Mortal) — 83% Top-1 (10/12), 83% Top-3 (10/12):**
+    * **Life-Safety Requirement:** While *A. phalloides* and *A. verna* achieved 100%, *A. virosa* should also achieve 100% recall.
+    * **Assets Needed:** **10–15 images** showing the **ragged, shaggy/scaly stem**, asymmetrical oblique membranous ring, and saccate volva.
+
+13. **`lactarius_torminosus` (Cabra / Rovelló bord - Tòxic) — 82% Top-1 (14/17), 82% Top-3 (14/17):**
+    * **Lookalike Safety:** Toxic twin of *Lactarius deliciosus*.
+    * **Assets Needed:** **15 images** focusing tightly on the **shaggy, bearded woolly margin (*pèls llanosos*)** and white acrid milk.
+
+14. **`cortinarius_orellanus` (Cortinari de muntanya - Mortal) — 88% Top-1 (7/8), 88% Top-3 (7/8):**
+    * **Life-Safety Requirement:** Small sample size ($N=8$).
+    * **Assets Needed:** **10–15 images** of rusty-tawny/cinnamon gills and fibrous cap in deciduous woodland.
+
+---
+
+#### Tier 4: Statistical Reliability — Small Test Sample Expansion ($N < 10$)
+
+Several species attained 100% Top-1 but had fewer than 10 test images, resulting in wider confidence intervals:
+* `calocybe_gambosa` ($N=5$)
+* `amanita_muscaria` ($N=7$)
+* `cantharellus_cibarius` ($N=7$)
+* `macrolepiota_procera` ($N=7$)
+* `chroogomphus_rutilus` ($N=9$)
+* `morchella_esculenta` ($N=9$)
+* `rubroboletus_satanas` ($N=9$)
+
+**Target:** Expand each of these folders to $\ge 15$ test images during the next harvest to ensure high statistical confidence across all catalog taxa.
+
 

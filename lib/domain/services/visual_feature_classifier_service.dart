@@ -241,6 +241,112 @@ class VisualFeatureClassifierService implements ClassifierService {
     scores['craterellus_lutescens'] =
         (f.yellowRatio * 1.5) + (f.brownRatio * 1.0) + (f.orangeRatio * 0.5);
 
+    // 11. Carrereta (Marasmius oreades) - pale cream/buff cap + slender pale stem
+    scores['marasmius_oreades'] = (f.whiteCreamRatio * 2.0) +
+        (f.brownRatio * 1.0) -
+        (f.charcoalRatio * 1.5) -
+        (f.redRatio * 1.5);
+
+    // 12. Lleterola de llet groga (Lactarius chrysorrheus) - salmon-buff cap + sulfur yellow hints
+    scores['lactarius_chrysorrheus'] = (f.orangeRatio * 1.5) +
+        (f.yellowRatio * 1.2) +
+        (f.whiteCreamRatio * 0.8) -
+        (f.charcoalRatio * 1.2);
+
+    // 13. Pé blau (Lepista nuda) - vibrant violet/lilac and grey tones
+    scores['lepista_nuda'] = (f.greyRatio * 1.8) +
+        (f.charcoalRatio * 0.8) +
+        (f.whiteCreamRatio * 0.6) -
+        (f.orangeRatio * 1.5) -
+        (f.yellowRatio * 1.5);
+
+    // 14. Mataparent de Satanàs (Rubroboletus satanas) - chalk-white cap + blood-red pores/stem
+    scores['rubroboletus_satanas'] = (f.whiteCreamRatio * 2.0) +
+        (f.redRatio * 2.2) +
+        (f.yellowRatio * 0.6) -
+        (f.charcoalRatio * 1.0);
+
+    // 15. Palometa (Russula virescens) - green mosaic cap + white crumbly stem
+    scores['russula_virescens'] = (f.greenRatio * 2.5) +
+        (f.whiteCreamRatio * 1.8) -
+        (f.charcoalRatio * 1.2) -
+        (f.orangeRatio * 1.5);
+
+    // 16. Llenega blanca (Hygrophorus eburneus) - pure shining ivory-white
+    scores['hygrophorus_eburneus'] = (f.whiteCreamRatio * 3.2) -
+        (f.charcoalRatio * 2.0) -
+        (f.orangeRatio * 2.0) -
+        (f.redRatio * 2.0);
+
+    // 17. Fredolic bord (Tricholoma pardinum) - heavy grey & dark charcoal shingle scales
+    scores['tricholoma_pardinum'] = (f.charcoalRatio * 2.2) +
+        (f.greyRatio * 2.0) +
+        (f.whiteCreamRatio * 0.5) -
+        (f.orangeRatio * 1.5) -
+        (f.yellowRatio * 1.5);
+
+    // 18. Múrgola (Morchella esculenta) - honey/ochre alveoli honeycomb
+    scores['morchella_esculenta'] = (f.yellowRatio * 1.8) +
+        (f.brownRatio * 1.8) +
+        (f.whiteCreamRatio * 0.6) -
+        (f.redRatio * 1.5);
+
+    // 19. Xampinyó silvestre (Agaricus campestris) - white silky cap + pink/salmon gill cues
+    scores['agaricus_campestris'] = (f.whiteCreamRatio * 2.2) +
+        (f.redRatio * 0.8) -
+        (f.charcoalRatio * 1.5);
+
+    // 20. Xampinyó groguenc (Agaricus xanthodermus) - white cap with bright yellow/chrome staining
+    scores['agaricus_xanthodermus'] = (f.whiteCreamRatio * 1.8) +
+        (f.yellowRatio * 1.5) -
+        (f.charcoalRatio * 1.2);
+
+    // 21. Candol·lea (Psathyrella candolleana) - pale honey/buff cap + white veil remnants
+    scores['psathyrella_candolleana'] = (f.yellowRatio * 1.2) +
+        (f.whiteCreamRatio * 1.5) +
+        (f.greyRatio * 0.8) -
+        (f.redRatio * 1.5);
+
+    // 22. Molleric clapat (Suillus granulatus) - tawny-ochre cap + yellow pores with droplets
+    scores['suillus_granulatus'] = (f.yellowRatio * 1.8) +
+        (f.brownRatio * 1.4) +
+        (f.orangeRatio * 0.8) -
+        (f.charcoalRatio * 1.0);
+
+    // 23. Carlet (Hygrophorus russula) - vinaceous purplish-red streaks on pale cap
+    scores['hygrophorus_russula'] = (f.redRatio * 1.8) +
+        (f.whiteCreamRatio * 1.2) +
+        (f.greyRatio * 0.5) -
+        (f.charcoalRatio * 1.2);
+
+    // 24. Cep negre (Boletus aereus) - deep dark chocolate brown / bronze velvety cap
+    scores['boletus_aereus'] = (f.brownRatio * 2.5) +
+        (f.charcoalRatio * 1.8) -
+        (f.orangeRatio * 1.2) -
+        (f.redRatio * 1.2);
+
+    // 25. Bolet de tinta (Coprinus comatus) - tall shaggy white cylinder with black deliquescence
+    scores['coprinus_comatus'] = (f.whiteCreamRatio * 2.5) +
+        (f.charcoalRatio * 1.2) -
+        (f.orangeRatio * 1.8) -
+        (f.redRatio * 1.8);
+
+    // 26. Cabra (Lactarius torminosus) - zoned strawberry-pink with bearded woolly edge
+    scores['lactarius_torminosus'] = (f.redRatio * 1.6) +
+        (f.orangeRatio * 1.4) +
+        (f.whiteCreamRatio * 0.9) -
+        (f.charcoalRatio * 1.2);
+
+    // 27. Pantera (Amanita pantherina) - olive-brown cap + crisp white warts
+    scores['amanita_pantherina'] = (f.brownRatio * 1.8) +
+        (f.whiteCreamRatio * 1.4) +
+        (f.greyRatio * 0.8) -
+        (f.orangeRatio * 1.2);
+
+    // 28. Bolet de greix (Gyromitra esculenta) - dark brain-like reddish-brown lobes
+    scores['gyromitra_esculenta'] =
+        (f.brownRatio * 2.2) + (f.redRatio * 1.2) - (f.whiteCreamRatio * 1.5);
+
     // Sort species by computed score descending
     final sorted = scores.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -368,6 +474,46 @@ class VisualFeatureClassifierService implements ClassifierService {
         return 'Camagroc';
       case 'suillus_luteus':
         return 'Llenegot';
+      case 'marasmius_oreades':
+        return 'Carrereta / Cama-sec';
+      case 'lactarius_chrysorrheus':
+        return 'Lleterola de llet groga / Fals rovelló';
+      case 'lepista_nuda':
+        return 'Pé blau / Pua blava';
+      case 'rubroboletus_satanas':
+        return 'Mataparent de Satanàs';
+      case 'russula_virescens':
+        return 'Palometa / Llora pigada';
+      case 'hygrophorus_eburneus':
+        return 'Llenega blanca / Mocosa blanca';
+      case 'tricholoma_pardinum':
+        return 'Fredolic bord / Griset bord';
+      case 'morchella_esculenta':
+        return 'Múrgola / Rabassola';
+      case 'lactarius_sanguifluus':
+        return "Rovelló d'obaga";
+      case 'chroogomphus_rutilus':
+        return 'Cama de perdiu';
+      case 'agaricus_campestris':
+        return 'Xampinyó silvestre / Guisana';
+      case 'agaricus_xanthodermus':
+        return 'Xampinyó groguenc / Xampinyó pudent';
+      case 'psathyrella_candolleana':
+        return 'Candol·lea / Psatirel·la de Candolle';
+      case 'suillus_granulatus':
+        return 'Molleric clapat / Pinetell de pi blanc';
+      case 'hygrophorus_russula':
+        return 'Carlet / Escarlet';
+      case 'boletus_aereus':
+        return 'Cep negre / Sureny fosc';
+      case 'coprinus_comatus':
+        return 'Bolet de tinta / Braguer de vaca';
+      case 'lactarius_torminosus':
+        return 'Cabra / Rovelló bord';
+      case 'amanita_pantherina':
+        return 'Pantera / Reig bord pigat';
+      case 'gyromitra_esculenta':
+        return 'Bolet de greix / Falsa múrgola';
       default:
         return id;
     }

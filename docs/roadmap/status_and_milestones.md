@@ -98,11 +98,13 @@ Prioritized features before the initial public store release:
 4. **Trilingual Localization Engine (`AppLocalizations` & `SpeciesLocalizer`):**
    - [x] Complete offline, on-device localization framework supporting Catalan (`ca`, default), Spanish (`es`), and English (`en`).
    - [x] Dynamic in-app language switcher in `SettingsScreen` with instant reactive UI updates and `SharedPreferences` persistence (`appLocaleProvider`).
-   - [x] Dedicated `SpeciesLocalizer` catalog providing localized vernacular names, morphology traits (cap, gills, stem, latex), safety warnings, lookalike comparative keys, and host tree traits across all 22 mushroom species and 5 indicator trees.
+   - [x] Dedicated `SpeciesLocalizer` catalog providing localized vernacular names, morphology traits (cap, gills, stem, latex), safety warnings, lookalike comparative keys, and host tree traits across all 40 mushroom species and 5 indicator trees.
    - [x] Localized Catalonia foraging regions (`CataloniaZone`) with translated zone labels, short labels, and regional habitat notes.
    - [x] Dynamic Pokédex map section header ("Ubicació" / "Ubicación" / "Location") in `CataloniaPixelMap` and specimen sheets.
    - [x] Streamlined specimen detail view by removing redundant "Nova foto" shortcut from user captures gallery.
-   - [x] **Comprehensive Test Suite (224 Passing Tests):** 100% pass rate across 224 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`).
+   - [x] **Expanded Catalan Mycological Catalog (40 Species):** Integrated 10 iconic Catalan species (#031 to #040) spanning wild field stars (*Agaricus campestris*, *Psathyrella candolleana*, *Coprinus comatus*), lowland pine symbionts (*Suillus granulatus* under *Pinus halepensis*), Mediterranean culinary delicacies (*Hygrophorus russula*, *Boletus aereus*), and critical life-saving toxic lookalikes (*Agaricus xanthodermus*, *Lactarius torminosus*, *Amanita pantherina*, *Gyromitra esculenta*), complete with 1024x1024 16-bit transparent pixel art sprites and non-destructive SQLite onboarding.
+   - [x] **Expanded Gamification & Badges System (14 Badges):** Expanded the badge registry from 6 to 14 achievements covering king boletes (*Senyor dels Ceps*), Catalan culinary classics (*Gourmet del Bosc*), tree identification (*Amic dels Arbres*), spring foraging (*Esperit de Primavera*), advanced toxicity vigilance (*Sentinella del Bosc*), field journaling (*Quadern de Camp*), GPS cartography (*Cartògraf del Bosc*), and complete catalog mastery (*Gran Enciclopèdia*).
+   - [x] **Comprehensive Test Suite (289 Passing Tests):** 100% pass rate across 289 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`).
 
 ---
 
@@ -117,7 +119,7 @@ Prioritized features before the initial public store release:
 
 ## 🔵 Planned for v2.0 (Taxonomy Expansion & Advanced Tools)
 
-- [ ] **Expanded Taxonomy:** Grow seed database from 20 species to the full 80 Catalan mushrooms and 12 indicator trees.
+- [ ] **Expanded Taxonomy:** Grow seed database from 40 species to the full 80 Catalan mushrooms and 12 indicator trees.
 - [ ] **Tree Classifier Head Refinement:** Further fine-tune leaves vs bark accuracy with expanded multi-season training set.
 - [ ] **Weather & Solunar Correlation:** Offline rain/temperature estimations based on local elevation and seasonality to suggest optimal foraging windows.
 - [ ] **Data Export & Backup:** Export sightings to CSV / GeoJSON and complete encrypted backup (database + scan photos).

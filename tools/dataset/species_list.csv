@@ -22,20 +22,27 @@ cortinarius_orellanus,Cortinarius orellanus,Cortinari de muntanya,125751,mortal,
 lactarius_sanguifluus,Lactarius sanguifluus,Rovelló de sang,118207,excellent,300
 boletus_aereus,Boletus aereus,Cep negre,326791,excellent,300
 morchella_esculenta,Morchella esculenta,Múrgola,48089,excellent,250
-marasmius_oreades,Marasmius oreades,Carrereta,47285,comestible,250
-suillus_granulatus,Suillus granulatus,Pinetell de bou,48530,comestible,250
-hygrophorus_russula,Hygrophorus russula,Carlet,350225,comestible,300
+marasmius_oreades,Marasmius oreades,Carrereta,47285,excellent,250
+suillus_granulatus,Suillus granulatus,Molleric clapat / Pinetell de pi blanc,48530,comestible,250
+hygrophorus_russula,Hygrophorus russula,Carlet / Escarlet,350225,excellent,300
 hygrophorus_personii,Hygrophorus personii,Llenega d'alzina,624781,comestible,250
 pleurotus_eryngii,Pleurotus eryngii,Gírgola de panical,53711,comestible,300
-agaricus_campestris,Agaricus campestris,Xampinyó de prat,60321,comestible,250
-coprinus_comatus,Coprinus comatus,Bolet de tinta,48098,comestible,250
-russula_virescens,Russula virescens,Llora,118228,comestible,250
+agaricus_campestris,Agaricus campestris,Xampinyó silvestre / Guisana,60321,comestible,250
+coprinus_comatus,Coprinus comatus,Bolet de tinta / Braguer de vaca,48098,comestible,250
+russula_virescens,Russula virescens,Palometa / Llora pigada,118228,excellent,250
 lactarius_semisanguifluus,Lactarius semisanguifluus,Pinetell de sang,372821,comestible,250
 suillus_bellinii,Suillus bellinii,Pinet de pi bord,366841,comestible,250
-amanita_pantherina,Amanita pantherina,Pantera,52858,toxic,300
-agaricus_xanthodermus,Agaricus xanthodermus,Xampinyó groguejant,126614,toxic,300
-lactarius_chrysorrheus,Lactarius chrysorrheus,Lleterola de llet groga,154044,toxic,250
+amanita_pantherina,Amanita pantherina,Pantera / Reig bord pigat,52858,toxic,300
+agaricus_xanthodermus,Agaricus xanthodermus,Xampinyó groguenc / Xampinyó pudent,126614,toxic,300
+lactarius_chrysorrheus,Lactarius chrysorrheus,Lleterola de llet groga / Fals rovelló,154044,toxic,250
 tricholoma_equestre,Tricholoma equestre,Verderol,118100,toxic,250
 amanita_virosa,Amanita virosa,Àngel de la mort,62706,mortal,300
 galerina_marginata,Galerina marginata,Galerina mortal,55848,mortal,300
 chroogomphus_rutilus,Chroogomphus rutilus,Cama de perdiu,48714,comestible,300
+lepista_nuda,Lepista nuda,Pé blau / Pua blava,351427,comestible,250
+rubroboletus_satanas,Rubroboletus satanas,Mataparent de Satanàs,544548,toxic,250
+hygrophorus_eburneus,Hygrophorus eburneus,Llenega blanca / Mocosa blanca,67331,comestible,250
+tricholoma_pardinum,Tricholoma pardinum,Fredolic bord / Griset bord,341772,toxic,250
+psathyrella_candolleana,Candolleomyces candolleanus,Candol·lea / Psatirel·la de Candolle,1179922,sense_valor,250
+lactarius_torminosus,Lactarius torminosus,Cabra / Rovelló bord,68310,toxic,300
+gyromitra_esculenta,Gyromitra esculenta,Bolet de greix / Falsa múrgola,85120,mortal,300

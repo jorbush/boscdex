@@ -100,4 +100,4 @@ Tracks whether a species has been registered in the user's Pokédex album. Popul
 * `firstAvistamentId`: Foreign key to `avistaments(id)` configured with `onDelete: KeyAction.setNull`. This guarantees that deleting a sighting entry from the journal gracefully clears the reference without causing SQL foreign key constraint violations or deleting species discovery history.
 
 ### 7. `insignies`
-Tracks player progression for the 6 field guide badges. Stores the current count (`progressCount`) and timestamp of award (`awardedAt`).
+Tracks player progression for the 14 field guide badges. Stores the current count (`progressCount`) and timestamp of award (`awardedAt`).

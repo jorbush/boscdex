@@ -75,34 +75,39 @@ class BoletDao extends DatabaseAccessor<AppDatabase> with _$BoletDaoMixin {
     return result.map((row) => row.readTable(bolets)).toList();
   }
 
-  /// Retrieves toxic lookalike specimens for a given mushroom.
-  Future<List<Bolet>> getToxicLookalikes(String boletId) async {
-    final query = select(bolets).join([
-      innerJoin(toxicLookalikes,
-          toxicLookalikes.lookalikeBoletId.equalsExp(bolets.id)),
-    ])
-      ..where(toxicLookalikes.boletId.equals(boletId));
-
-    final result = await query.get();
-    return result.map((row) => row.readTable(bolets)).toList();
-  }
-
-  /// Retrieves toxic lookalikes joined with specific morphological comparison notes.
+  /// Retrieves toxic lookalikes joined with specific morphological comparison notes (bidirectional lookup).
   Future<List<ToxicLookalikeWithNotes>> getToxicLookalikesWithNotes(
       String boletId) async {
     final query = select(bolets).join([
-      innerJoin(toxicLookalikes,
-          toxicLookalikes.lookalikeBoletId.equalsExp(bolets.id)),
-    ])
-      ..where(toxicLookalikes.boletId.equals(boletId));
+      innerJoin(
+        toxicLookalikes,
+        (toxicLookalikes.boletId.equals(boletId) &
+                toxicLookalikes.lookalikeBoletId.equalsExp(bolets.id)) |
+            (toxicLookalikes.lookalikeBoletId.equals(boletId) &
+                toxicLookalikes.boletId.equalsExp(bolets.id)),
+      ),
+    ]);
 
-    final result = await query.get();
-    return result
-        .map((row) => ToxicLookalikeWithNotes(
-              lookalike: row.readTable(bolets),
-              comparisonNotes: row.readTable(toxicLookalikes).comparisonNotes,
-            ))
-        .toList();
+    final rows = await query.get();
+    final seenIds = <String>{};
+    final list = <ToxicLookalikeWithNotes>[];
+
+    for (final row in rows) {
+      final b = row.readTable(bolets);
+      if (seenIds.add(b.id)) {
+        list.add(ToxicLookalikeWithNotes(
+          lookalike: b,
+          comparisonNotes: row.readTable(toxicLookalikes).comparisonNotes,
+        ));
+      }
+    }
+    return list;
+  }
+
+  /// Retrieves toxic lookalike specimens for a given mushroom (bidirectional lookup).
+  Future<List<Bolet>> getToxicLookalikes(String boletId) async {
+    final lookalikesWithNotes = await getToxicLookalikesWithNotes(boletId);
+    return lookalikesWithNotes.map((e) => e.lookalike).toList();
   }
 
   /// Retrieves indicator trees associated with a specific mushroom.

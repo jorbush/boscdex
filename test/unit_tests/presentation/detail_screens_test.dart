@@ -116,8 +116,8 @@ void main() {
       expect(find.text('Claus Morfològiques Bloquejades'), findsOneWidget);
       expect(find.text('Morfologia'), findsNothing);
 
-      // Verify toxic twin alert is hidden:
-      expect(find.byType(ToxicTwinAlert), findsNothing);
+      // Verify toxic twin alert is ALWAYS visible for safety even when undiscovered:
+      expect(find.byType(ToxicTwinAlert), findsWidgets);
 
       // Verify Camera CTA:
       expect(find.text('Cercar amb la càmera'), findsOneWidget);
@@ -521,12 +521,12 @@ void main() {
 
       // Scroll down to make ToxicTwinAlert visible
       final alertFinder = find.byType(ToxicTwinAlert);
-      expect(alertFinder, findsOneWidget);
-      await tester.ensureVisible(alertFinder);
+      expect(alertFinder, findsNWidgets(3));
+      await tester.ensureVisible(alertFinder.first);
       await tester.pumpAndSettle();
 
-      // Tap ToxicTwinAlert
-      await tester.tap(alertFinder);
+      // Tap first ToxicTwinAlert (amanita_muscaria)
+      await tester.tap(alertFinder.first);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
 

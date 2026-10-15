@@ -13,7 +13,7 @@ The **Boscdex Album** (`/boscdex`) is the central gamified field guide modeled a
   * Tapping navigates directly to the detailed sheet in **Pokédex Area / Habitat Inspection mode** (`/boscdex/:id`):
     * **Veiled Identity:** Dark silhouette image, `#001 ???` title, `Espècie per catalogar` scientific subtitle, and mystery locked status (`🔒 No descobert`).
     * **Visible Location & Habitat ("On trobar-lo"):** Associated indicator trees (interactive chips linking to tree profiles), 12-month fruiting season calendar, and altitudinal elevation range.
-    * **Locked Morphology & Safety:** Cap, gills, stem, latex, and toxic twins remain sealed behind a retro lock card until field discovery.
+    * **Locked Morphology with Unlocked Safety:** Cap, gills, stem, and latex remain sealed behind a retro lock card until field discovery, but critical toxic lookalike alerts (`ToxicTwinAlert`) remain prominently visible at all times to protect foragers in the field.
     * **Expedition CTA:** Quick button to open the live camera scanner (`/scan`).
 
 * **Discovered State:**

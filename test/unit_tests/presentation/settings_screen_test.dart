@@ -38,7 +38,7 @@ void main() {
               .overrideWith((ref) => Stream.value(discoveryCount)),
           avistamentsProvider
               .overrideWith((ref) => Stream.value(avistaments.cast())),
-          totalBoletsCountProvider.overrideWithValue(22),
+          totalBoletsCountProvider.overrideWithValue(40),
           foragerLevelProvider.overrideWithValue(
             foragerLevel ??
                 ForagerLevel.calculate(
@@ -94,7 +94,7 @@ void main() {
       expect(find.text('Catàleg Relacional SQLite'), findsOneWidget);
       expect(find.textContaining('LVL 5: Boletaire de Camp (1200 XP)'),
           findsOneWidget);
-      expect(find.textContaining('12 / 22 bolets catalogats'), findsOneWidget);
+      expect(find.textContaining('12 / 40 bolets catalogats'), findsOneWidget);
       expect(find.text('Compromís de Privacitat'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox());

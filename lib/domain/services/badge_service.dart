@@ -3,11 +3,15 @@ import '../models/insignia.dart';
 class BadgeService {
   Future<List<Insignia>> evaluateBadges({
     required int discoveryCount,
-    required bool hasRovello,
-    required bool hasPinetell,
+    bool hasRovello = false,
+    bool hasPinetell = false,
     required int toxicComparisonViewCount,
     required bool hasTreeAlliance,
     required List<Insignia> currentBadges,
+    Set<String> discoveredBoletIds = const {},
+    int visitedTreeCount = 0,
+    int sightingCount = 0,
+    int gpsSightingCount = 0,
   }) async {
     final updatedBadges = <Insignia>[];
 
@@ -27,7 +31,11 @@ class BadgeService {
           break;
         case 'cacador_rovellons':
         case 'cacador_de_rovellons':
-          newProgress = (hasRovello ? 1 : 0) + (hasPinetell ? 1 : 0);
+          final r =
+              hasRovello || discoveredBoletIds.contains('lactarius_deliciosus');
+          final p = hasPinetell ||
+              discoveredBoletIds.contains('lactarius_sanguifluus');
+          newProgress = (r ? 1 : 0) + (p ? 1 : 0);
           break;
         case 'micoleg_prudent':
           newProgress = toxicComparisonViewCount;
@@ -40,6 +48,42 @@ class BadgeService {
           newProgress = discoveryCount;
           break;
         case 'mestre_boletaire':
+          newProgress = discoveryCount;
+          break;
+        case 'senyor_dels_ceps':
+          newProgress = [
+            'boletus_edulis',
+            'boletus_aereus',
+          ].where((id) => discoveredBoletIds.contains(id)).length;
+          break;
+        case 'gourmet_del_bosc':
+          newProgress = [
+            'boletus_edulis',
+            'amanita_caesarea',
+            'cantharellus_cibarius',
+            'craterellus_cornucopioides',
+          ].where((id) => discoveredBoletIds.contains(id)).length;
+          break;
+        case 'amic_dels_arbres':
+          newProgress = visitedTreeCount;
+          break;
+        case 'esperit_de_primavera':
+          newProgress = [
+            'morchella_esculenta',
+            'calocybe_gambosa',
+            'marasmius_oreades',
+          ].where((id) => discoveredBoletIds.contains(id)).length;
+          break;
+        case 'sentinella_toxic':
+          newProgress = toxicComparisonViewCount;
+          break;
+        case 'quadern_de_camp':
+          newProgress = sightingCount;
+          break;
+        case 'cartograf_del_bosc':
+          newProgress = gpsSightingCount;
+          break;
+        case 'gran_enciclopedia':
           newProgress = discoveryCount;
           break;
       }

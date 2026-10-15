@@ -6,7 +6,7 @@ import 'package:boscdex/core/theme/retro_decorations.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('All 22 mushroom and 5 tree pixel art assets load via rootBundle',
+  test('All 40 mushroom and 5 tree pixel art assets load via rootBundle',
       () async {
     const mushrooms = [
       'lactarius_deliciosus',
@@ -31,6 +31,24 @@ void main() {
       'cortinarius_orellanus',
       'lactarius_sanguifluus',
       'chroogomphus_rutilus',
+      'marasmius_oreades',
+      'lactarius_chrysorrheus',
+      'lepista_nuda',
+      'rubroboletus_satanas',
+      'russula_virescens',
+      'hygrophorus_eburneus',
+      'tricholoma_pardinum',
+      'morchella_esculenta',
+      'agaricus_campestris',
+      'agaricus_xanthodermus',
+      'psathyrella_candolleana',
+      'suillus_granulatus',
+      'hygrophorus_russula',
+      'boletus_aereus',
+      'coprinus_comatus',
+      'lactarius_torminosus',
+      'amanita_pantherina',
+      'gyromitra_esculenta',
     ];
 
     for (final id in mushrooms) {

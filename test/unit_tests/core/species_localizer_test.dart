@@ -180,6 +180,44 @@ void main() {
         ),
         contains('bright red cap'),
       );
+
+      // Bidirectional resolution: reverse order lookup yields identical note
+      expect(
+        SpeciesLocalizer.getComparisonNotes(
+          'amanita_muscaria',
+          'lactarius_deliciosus',
+          languageCode: 'ca',
+        ),
+        contains('barret vermell brillant'),
+      );
+
+      // Newly added lookalike: Xampinyó silvestre vs Cicuta blanca (Amanita verna)
+      expect(
+        SpeciesLocalizer.getComparisonNotes(
+          'agaricus_campestris',
+          'amanita_verna',
+          languageCode: 'ca',
+        ),
+        contains('Cicuta blanca'),
+      );
+      expect(
+        SpeciesLocalizer.getComparisonNotes(
+          'amanita_verna',
+          'agaricus_campestris',
+          languageCode: 'en',
+        ),
+        contains('Spring Amanita'),
+      );
+
+      // Newly added lookalike: Cep negre vs Mataparent de Satanàs
+      expect(
+        SpeciesLocalizer.getComparisonNotes(
+          'boletus_aereus',
+          'rubroboletus_satanas',
+          languageCode: 'ca',
+        ),
+        contains('Mataparent de Satanàs'),
+      );
     });
 
     test('Localizes tree traits across ca, es, en', () {

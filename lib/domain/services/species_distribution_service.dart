@@ -138,6 +138,110 @@ class SpeciesDistributionService {
       CataloniaZone.serraladaSudPrades,
       CataloniaZone.portsTerresEbre,
     ],
+    'marasmius_oreades': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.ponent,
+    ],
+    'lactarius_chrysorrheus': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.portsTerresEbre,
+    ],
+    'lepista_nuda': [
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.serraladaSudPrades,
+    ],
+    'rubroboletus_satanas': [
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.serraladaSudPrades,
+    ],
+    'russula_virescens': [
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.serraladaSudPrades,
+    ],
+    'hygrophorus_eburneus': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+    ],
+    'tricholoma_pardinum': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'morchella_esculenta': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+    ],
+    'agaricus_campestris': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.ponent,
+      CataloniaZone.serraladaSudPrades,
+    ],
+    'agaricus_xanthodermus': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.ponent,
+    ],
+    'psathyrella_candolleana': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.serraladaSudPrades,
+    ],
+    'suillus_granulatus': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.portsTerresEbre,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'hygrophorus_russula': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.serraladaSudPrades,
+      CataloniaZone.prepirineuCentral,
+    ],
+    'boletus_aereus': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.serraladaSudPrades,
+    ],
+    'coprinus_comatus': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.ponent,
+    ],
+    'lactarius_torminosus': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.transversalMontseny,
+    ],
+    'amanita_pantherina': [
+      CataloniaZone.litoralPrelitoral,
+      CataloniaZone.transversalMontseny,
+      CataloniaZone.prepirineuCentral,
+      CataloniaZone.serraladaSudPrades,
+    ],
+    'gyromitra_esculenta': [
+      CataloniaZone.altPirineu,
+      CataloniaZone.prepirineuCentral,
+    ],
   };
 
   static const Map<String, List<CataloniaZone>> _treeZones = {

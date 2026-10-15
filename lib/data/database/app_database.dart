@@ -139,8 +139,20 @@ class AppDatabase extends _$AppDatabase {
             "UPDATE avistaments SET photo_path = substr(photo_path, instr(photo_path, 'scans/')) WHERE photo_path LIKE '%scans/%' AND photo_path NOT LIKE 'scans/%';",
           );
 
-          // Backfill imageAssetPath only for pre-existing databases
+          // Sync newly added seed species, trees, associations, and lookalikes for pre-existing databases
           if (!details.wasCreated) {
+            await batch((b) {
+              b.insertAll(bolets, SeedData.bolets,
+                  mode: InsertMode.insertOrIgnore);
+              b.insertAll(arbres, SeedData.arbres,
+                  mode: InsertMode.insertOrIgnore);
+              b.insertAll(boletArbreAssociations, SeedData.associations,
+                  mode: InsertMode.insertOrIgnore);
+              b.insertAll(toxicLookalikes, SeedData.toxicLookalikes,
+                  mode: InsertMode.insertOrReplace);
+              b.insertAll(insignies, SeedData.insignies,
+                  mode: InsertMode.insertOrIgnore);
+            });
             await customStatement(
               "UPDATE bolets SET image_asset_path = 'assets/images/mushrooms/' || id || '.png' WHERE image_asset_path IS NULL OR image_asset_path = '';",
             );

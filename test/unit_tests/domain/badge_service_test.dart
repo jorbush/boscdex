@@ -181,5 +181,157 @@ void main() {
       expect(cistell.progressCount, equals(15)); // Target is 15, count was 25
       expect(cistell.isAwarded, isTrue);
     });
+
+    test('awards senyor_dels_ceps when both ceps are discovered', () async {
+      const initialBadges = Insignia.registry;
+
+      var updated = await service.evaluateBadges(
+        discoveryCount: 1,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        discoveredBoletIds: {'boletus_edulis'},
+      );
+
+      var badge = updated.firstWhere((b) => b.id == 'senyor_dels_ceps');
+      expect(badge.isAwarded, isFalse);
+      expect(badge.progressCount, equals(1));
+
+      updated = await service.evaluateBadges(
+        discoveryCount: 2,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        discoveredBoletIds: {'boletus_edulis', 'boletus_aereus'},
+      );
+
+      badge = updated.firstWhere((b) => b.id == 'senyor_dels_ceps');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(2));
+    });
+
+    test('awards gourmet_del_bosc when all 4 culinary stars are discovered',
+        () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 4,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        discoveredBoletIds: {
+          'boletus_edulis',
+          'amanita_caesarea',
+          'cantharellus_cibarius',
+          'craterellus_cornucopioides',
+        },
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'gourmet_del_bosc');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(4));
+    });
+
+    test('awards amic_dels_arbres when all 5 indicator trees are visited',
+        () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 0,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        visitedTreeCount: 5,
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'amic_dels_arbres');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(5));
+    });
+
+    test(
+        'awards esperit_de_primavera when all 3 spring mushrooms are discovered',
+        () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 3,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        discoveredBoletIds: {
+          'morchella_esculenta',
+          'calocybe_gambosa',
+          'marasmius_oreades',
+        },
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'esperit_de_primavera');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(3));
+    });
+
+    test('awards sentinella_toxic after 15 toxic comparisons', () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 0,
+        toxicComparisonViewCount: 15,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'sentinella_toxic');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(15));
+    });
+
+    test('awards quadern_de_camp after 10 field sightings', () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 0,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        sightingCount: 10,
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'quadern_de_camp');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(10));
+    });
+
+    test('awards cartograf_del_bosc after 5 GPS sightings', () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 0,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        gpsSightingCount: 5,
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'cartograf_del_bosc');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(5));
+    });
+
+    test('awards gran_enciclopedia when all 40 species are discovered',
+        () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 40,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'gran_enciclopedia');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(40));
+    });
   });
 }

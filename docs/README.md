@@ -17,7 +17,7 @@ Welcome to the official technical and product documentation for **Boscdex**, the
 * [**Safety Gates & Toxic Lookalikes**](features/safety_and_toxic_lookalikes.md) — Confidence thresholds, "Confusió Perillosa" alerts, and side-by-side morphological checks.
 * [**Indicator Trees Companion Guide**](features/indicator_trees.md) — Symbiotic host trees of Catalonia (*Pi roig, Alzina, Faig...*) and mycorrhizal partnerships.
 * [**Offline Sighting Journal & Catalonia Field Map**](features/sighting_journal.md) — Private, non-cloud GPS logbook ("El Meu Diari"), 16-bit interactive Catalonia field map, and specimen sprite pins.
-* [**Gamification, Badges & Forager Levels**](features/gamification_badges.md) — 6 starter badges, 10-tier forager leveling system ("Nivell de Boletaire"), XP multipliers, and rank roadmap.
+* [**Gamification, Badges & Forager Levels**](features/gamification_badges.md) — 14 achievement badges, 10-tier forager leveling system ("Nivell de Boletaire"), XP multipliers, and rank roadmap.
 
 ### 3. Workflows
 * [**Scan-to-Log Workflow**](workflows/scan_to_log.md) — Complete user journey from camera detection to Boscdex unlock and journal record.

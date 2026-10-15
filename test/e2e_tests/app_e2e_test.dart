@@ -109,7 +109,7 @@ void main() {
 
       // 3. User lands on Boscdex Album tab
       expect(find.text('Boscdex'), findsWidgets);
-      expect(find.text('0/22 descoberts'), findsOneWidget);
+      expect(find.text('0/40 descoberts'), findsOneWidget);
 
       // 3b. User inspects an undiscovered bolet to check its habitat & location
       final undiscoveredCardFinder = find.text('#001 ???');
@@ -199,7 +199,7 @@ void main() {
       await tester.pump();
 
       // Verify discovery counter has incremented from 0 to 1
-      expect(find.text('1/22 descoberts'), findsOneWidget);
+      expect(find.text('1/40 descoberts'), findsOneWidget);
 
       // 8. Tap on the unlocked card in Boscdex grid to verify navigation to detail
       final cardFinder = find.text('Rovelló / Pinetell');

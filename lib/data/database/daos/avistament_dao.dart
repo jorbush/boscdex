@@ -23,6 +23,32 @@ class AvistamentDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
+  Future<List<Avistament>> getAllAvistamentsList() {
+    return (select(avistaments)
+          ..orderBy([
+            (t) =>
+                OrderingTerm(expression: t.timestamp, mode: OrderingMode.desc)
+          ]))
+        .get();
+  }
+
+  Future<int> countAvistaments() async {
+    final countExp = avistaments.id.count();
+    final query = selectOnly(avistaments)..addColumns([countExp]);
+    final result = await query.getSingle();
+    return result.read(countExp) ?? 0;
+  }
+
+  Future<int> countGpsAvistaments() async {
+    final countExp = avistaments.id.count();
+    final query = selectOnly(avistaments)
+      ..where(
+          avistaments.latitude.isNotNull() & avistaments.longitude.isNotNull())
+      ..addColumns([countExp]);
+    final result = await query.getSingle();
+    return result.read(countExp) ?? 0;
+  }
+
   Future<Avistament?> getAvistamentById(String id) {
     return (select(avistaments)..where((t) => t.id.equals(id)))
         .getSingleOrNull();

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/models/edibilitat.dart';
 import '../../domain/models/raritat_tier.dart';
+import '../constants/app_constants.dart';
 
 /// App localization strings supporting Catalan (`ca` - default), Spanish (`es`), and English (`en`).
 class AppLocalizations {
@@ -1882,6 +1883,86 @@ class AppLocalizations {
           default:
             return 'Mestre boletaire';
         }
+      case 'senyor_dels_ceps':
+        switch (languageCode) {
+          case 'es':
+            return 'Señor de los boletus';
+          case 'en':
+            return 'Lord of the Boletes';
+          case 'ca':
+          default:
+            return 'Senyor dels ceps';
+        }
+      case 'gourmet_del_bosc':
+        switch (languageCode) {
+          case 'es':
+            return 'Gourmet del bosque';
+          case 'en':
+            return 'Forest Gourmet';
+          case 'ca':
+          default:
+            return 'Gourmet del bosc';
+        }
+      case 'amic_dels_arbres':
+        switch (languageCode) {
+          case 'es':
+            return 'Amigo de los árboles';
+          case 'en':
+            return 'Tree Whisperer';
+          case 'ca':
+          default:
+            return 'Amic dels arbres';
+        }
+      case 'esperit_de_primavera':
+        switch (languageCode) {
+          case 'es':
+            return 'Espíritu de primavera';
+          case 'en':
+            return 'Spring Spirit';
+          case 'ca':
+          default:
+            return 'Esperit de primavera';
+        }
+      case 'sentinella_toxic':
+        switch (languageCode) {
+          case 'es':
+            return 'Centinela del bosque';
+          case 'en':
+            return 'Forest Sentinel';
+          case 'ca':
+          default:
+            return 'Sentinella del bosc';
+        }
+      case 'quadern_de_camp':
+        switch (languageCode) {
+          case 'es':
+            return 'Cuaderno de campo';
+          case 'en':
+            return 'Field Journal';
+          case 'ca':
+          default:
+            return 'Quadern de camp';
+        }
+      case 'cartograf_del_bosc':
+        switch (languageCode) {
+          case 'es':
+            return 'Cartógrafo del bosque';
+          case 'en':
+            return 'Forest Cartographer';
+          case 'ca':
+          default:
+            return 'Cartògraf del bosc';
+        }
+      case 'gran_enciclopedia':
+        switch (languageCode) {
+          case 'es':
+            return 'Gran enciclopedia';
+          case 'en':
+            return 'Great Encyclopedia';
+          case 'ca':
+          default:
+            return 'Gran enciclopèdia';
+        }
       default:
         return id;
     }
@@ -1942,12 +2023,92 @@ class AppLocalizations {
       case 'mestre_boletaire':
         switch (languageCode) {
           case 'es':
-            return 'Completa el catálogo descubriendo 50 especies.';
+            return 'Descubre 20 especies diferentes en la Boscdex.';
           case 'en':
-            return 'Complete the catalog by discovering 50 species.';
+            return 'Discover 20 distinct species in the Boscdex.';
           case 'ca':
           default:
-            return 'Completa el catàleg descobrint 50 espècies.';
+            return 'Descobreix 20 espècies diferents a la Boscdex.';
+        }
+      case 'senyor_dels_ceps':
+        switch (languageCode) {
+          case 'es':
+            return 'Encuentra tanto el boletus común como el negro (Boletus edulis y Boletus aereus).';
+          case 'en':
+            return 'Find both the King Bolete and Dark Cep (Boletus edulis and Boletus aereus).';
+          case 'ca':
+          default:
+            return 'Troba tant el cep com el cep negre (Boletus edulis i Boletus aereus).';
+        }
+      case 'gourmet_del_bosc':
+        switch (languageCode) {
+          case 'es':
+            return 'Descubre 4 joyas gastronómicas: boletus, amanita cesárea, rebozuelo y trompeta de los muertos.';
+          case 'en':
+            return 'Discover 4 gastronomic treasures: Porcini, Caesar\'s Mushroom, Chanterelle, and Black Trumpet.';
+          case 'ca':
+          default:
+            return 'Descobreix 4 joies gastronòmiques: cep, ou de reig, rossinyol i trompeta de la mort.';
+        }
+      case 'amic_dels_arbres':
+        switch (languageCode) {
+          case 'es':
+            return 'Identifica los 5 árboles indicadores de Cataluña (pino silvestre, carrasco, encina, haya y castaño).';
+          case 'en':
+            return 'Identify all 5 indicator trees of Catalonia (Scots pine, Aleppo pine, holm oak, beech, and sweet chestnut).';
+          case 'ca':
+          default:
+            return 'Identifica els 5 arbres indicadors de Catalunya (pi roig, pi blanc, alzina, faig i castanyer).';
+        }
+      case 'esperit_de_primavera':
+        switch (languageCode) {
+          case 'es':
+            return 'Encuentra 3 setas emblemáticas de primavera: colmenilla, perrechico y senderuela.';
+          case 'en':
+            return 'Find 3 emblematic spring mushrooms: Yellow Morel, St. George\'s Mushroom, and Fairy Ring Champignon.';
+          case 'ca':
+          default:
+            return 'Troba 3 bolets emblemàtics de primavera: múrgola, moixernó i carrereta.';
+        }
+      case 'sentinella_toxic':
+        switch (languageCode) {
+          case 'es':
+            return 'Consulta 15 advertencias de confusión peligrosa para extremar tu prudencia.';
+          case 'en':
+            return 'Review 15 toxic lookalike alerts to sharpen your field safety vigilance.';
+          case 'ca':
+          default:
+            return 'Consulta 15 alertes de confusió perillosa per forjar la teva màxima prudència.';
+        }
+      case 'quadern_de_camp':
+        switch (languageCode) {
+          case 'es':
+            return 'Registra 10 avistamientos en tu diario de campo.';
+          case 'en':
+            return 'Log 10 sightings in your field journal.';
+          case 'ca':
+          default:
+            return 'Registra 10 avistaments al teu diari de camp.';
+        }
+      case 'cartograf_del_bosc':
+        switch (languageCode) {
+          case 'es':
+            return 'Registra 5 avistamientos con coordenadas GPS para cartografiar tus hallazgos.';
+          case 'en':
+            return 'Log 5 sightings with GPS coordinates to map your field observations.';
+          case 'ca':
+          default:
+            return 'Registra 5 avistaments amb coordenades GPS per mapejar les teves troballes.';
+        }
+      case 'gran_enciclopedia':
+        switch (languageCode) {
+          case 'es':
+            return '¡Completa el catálogo descubriendo las ${AppConstants.catalogSpeciesCount} setas de la Boscdex!';
+          case 'en':
+            return 'Complete the catalog by discovering all ${AppConstants.catalogSpeciesCount} mushrooms in the Boscdex!';
+          case 'ca':
+          default:
+            return 'Completa el catàleg descobrint tots els ${AppConstants.catalogSpeciesCount} bolets de la Boscdex!';
         }
       default:
         return '';

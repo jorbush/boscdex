@@ -17,13 +17,13 @@ void main() {
 
   test('Database populates seed data on creation', () async {
     final bolets = await db.boletDao.getAllBolets();
-    expect(bolets.length, equals(22));
+    expect(bolets.length, equals(40));
 
     final arbres = await db.arbreDao.getAllArbres();
     expect(arbres.length, equals(5));
 
     final insignies = await db.insigniaDao.getAllInsignies();
-    expect(insignies.length, equals(6));
+    expect(insignies.length, equals(14));
   });
 
   test('BoletDao queries work correctly', () async {
@@ -32,18 +32,97 @@ void main() {
     expect(rovello!.catalanName, contains('Rovelló'));
     expect(rovello.scientificName, equals('Lactarius deliciosus'));
 
+    final carrereta = await db.boletDao.getBoletById('marasmius_oreades');
+    expect(carrereta, isNotNull);
+    expect(carrereta!.catalanName, contains('Carrereta'));
+    expect(carrereta.edibility, equals('excellent'));
+
+    final carlet = await db.boletDao.getBoletById('hygrophorus_russula');
+    expect(carlet, isNotNull);
+    expect(carlet!.catalanName, contains('Carlet'));
+    expect(carlet.edibility, equals('excellent'));
+
     final edibles = await db.boletDao.getBoletsByEdibility('excellent');
-    expect(edibles.length, greaterThanOrEqualTo(5));
+    expect(edibles.length, greaterThanOrEqualTo(10));
 
     final lookalikes =
         await db.boletDao.getToxicLookalikes('lactarius_deliciosus');
     expect(lookalikes, isNotEmpty);
+    expect(
+      lookalikes.any((l) => l.id == 'lactarius_chrysorrheus'),
+      isTrue,
+    );
+    expect(
+      lookalikes.any((l) => l.id == 'lactarius_torminosus'),
+      isTrue,
+    );
+
+    final xampinyoLookalikes =
+        await db.boletDao.getToxicLookalikes('agaricus_campestris');
+    expect(
+      xampinyoLookalikes.any((l) => l.id == 'agaricus_xanthodermus'),
+      isTrue,
+    );
+    expect(
+      xampinyoLookalikes.any((l) => l.id == 'amanita_verna'),
+      isTrue,
+    );
+
+    // Verify newly added dangerous confusion companions
+    final sanguifluusLookalikes =
+        await db.boletDao.getToxicLookalikes('lactarius_sanguifluus');
+    expect(
+      sanguifluusLookalikes.any((l) => l.id == 'lactarius_chrysorrheus'),
+      isTrue,
+    );
+    expect(
+      sanguifluusLookalikes.any((l) => l.id == 'lactarius_torminosus'),
+      isTrue,
+    );
+
+    final aereusLookalikes =
+        await db.boletDao.getToxicLookalikes('boletus_aereus');
+    expect(
+      aereusLookalikes.any((l) => l.id == 'rubroboletus_satanas'),
+      isTrue,
+    );
+
+    final eburneusLookalikes =
+        await db.boletDao.getToxicLookalikes('hygrophorus_eburneus');
+    expect(
+      eburneusLookalikes.any((l) => l.id == 'amanita_verna'),
+      isTrue,
+    );
+
+    final cyanoxanthaLookalikes =
+        await db.boletDao.getToxicLookalikes('russula_cyanoxantha');
+    expect(
+      cyanoxanthaLookalikes.any((l) => l.id == 'amanita_phalloides'),
+      isTrue,
+    );
+
+    // Verify bidirectional lookups from the toxic mushroom side
+    final phalloidesLookalikes =
+        await db.boletDao.getToxicLookalikes('amanita_phalloides');
+    expect(
+      phalloidesLookalikes.any((l) => l.id == 'russula_virescens'),
+      isTrue,
+    );
+    expect(
+      phalloidesLookalikes.any((l) => l.id == 'russula_cyanoxantha'),
+      isTrue,
+    );
+    expect(
+      phalloidesLookalikes.any((l) => l.id == 'macrolepiota_procera'),
+      isTrue,
+    );
   });
 
   test('BoletDao searchByName finds specimens by Catalan or scientific name',
       () async {
     final searchCatalan = await db.boletDao.searchByName('Rovelló');
-    expect(searchCatalan.length, equals(2)); // Pinetell & Rovelló d'obaga
+    expect(searchCatalan.length,
+        equals(4)); // Pinetell, Rovelló d'obaga, Fals rovelló & Rovelló bord
 
     final searchScientific = await db.boletDao.searchByName('Boletus');
     expect(searchScientific, isNotEmpty);
@@ -71,6 +150,17 @@ void main() {
     expect(entry.lookalike.id, equals('amanita_muscaria'));
     expect(entry.comparisonNotes, contains('Reig bord'));
     expect(entry.comparisonNotes, isNotEmpty);
+
+    // Verify reverse lookup with notes from the toxic mushroom side
+    final phalloidesNotes =
+        await db.boletDao.getToxicLookalikesWithNotes('amanita_phalloides');
+    expect(phalloidesNotes, isNotEmpty);
+    expect(
+      phalloidesNotes.any((n) =>
+          n.lookalike.id == 'russula_virescens' &&
+          n.comparisonNotes.contains('Palometa')),
+      isTrue,
+    );
   });
 
   test('BoletDao relational tree associations work correctly', () async {
