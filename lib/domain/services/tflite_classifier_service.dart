@@ -337,8 +337,7 @@ class TfliteClassifierService implements ClassifierService {
         final off11 = (y1 * _inputSize + x1) * 4;
 
         for (int c = 0; c < 3; c++) {
-          final top =
-              pixels[off00 + c] * (1.0 - wx) + pixels[off01 + c] * wx;
+          final top = pixels[off00 + c] * (1.0 - wx) + pixels[off01 + c] * wx;
           final bottom =
               pixels[off10 + c] * (1.0 - wx) + pixels[off11 + c] * wx;
           floatList[pIdx++] = top * (1.0 - wy) + bottom * wy;

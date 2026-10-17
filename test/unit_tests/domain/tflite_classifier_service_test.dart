@@ -101,7 +101,8 @@ void main() {
       }
     });
 
-    test('All 47 model labels resolve non-empty Catalan names via SpeciesLocalizer',
+    test(
+        'All 47 model labels resolve non-empty Catalan names via SpeciesLocalizer',
         () async {
       await service.initialize();
 
@@ -117,7 +118,8 @@ void main() {
         expect(
           caName,
           isNot(equals(label)),
-          reason: 'Expected localized Catalan display name rather than raw ID for $label',
+          reason:
+              'Expected localized Catalan display name rather than raw ID for $label',
         );
       }
     });
