@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/localization/app_localizations.dart';
 import '../../core/theme/retro_decorations.dart';
+import '../../providers/app_info_provider.dart';
 import '../../providers/preferences_provider.dart';
 import '../../providers/sound_provider.dart';
 import '../boscdex/boscdex_provider.dart';
@@ -27,10 +28,19 @@ class SettingsScreen extends ConsumerWidget {
     final avistamentsAsync = ref.watch(avistamentsProvider);
     final totalBolets = ref.watch(totalBoletsCountProvider);
     final foragerLevel = ref.watch(foragerLevelProvider);
+    final appInfoAsync = ref.watch(appInfoProvider);
 
     final l10n = AppLocalizations.of(context);
     final discoveryCount = discoveryCountAsync.value ?? 0;
     final avistamentCount = avistamentsAsync.value?.length ?? 0;
+    final versionDisplay = appInfoAsync.maybeWhen(
+      data: (info) => info.displayVersion,
+      orElse: () => 'v${AppConstants.appVersion}',
+    );
+    final fullVersionDisplay = appInfoAsync.maybeWhen(
+      data: (info) => info.fullDisplayVersion,
+      orElse: () => 'v${AppConstants.appVersion}',
+    );
 
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
@@ -117,12 +127,15 @@ class SettingsScreen extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: RetroColors.ink, width: 1.5),
                       ),
-                      child: const Text(
-                        'v${AppConstants.appVersion}',
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w900,
-                          color: RetroColors.forestGreen,
+                      child: Tooltip(
+                        message: fullVersionDisplay,
+                        child: Text(
+                          versionDisplay,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            color: RetroColors.forestGreen,
+                          ),
                         ),
                       ),
                     ),

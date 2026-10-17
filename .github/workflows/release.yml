@@ -1,0 +1,53 @@
+name: Build & Release APK
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on version tags, e.g. v1.0.0, v1.1.0, v1.2.0
+
+permissions:
+  contents: write
+
+jobs:
+  build_release_apk:
+    name: Build & Release Standalone APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.3.3'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run code analysis & unit tests
+        run: |
+          flutter analyze --fatal-infos --fatal-warnings
+          flutter test test/unit_tests/ --exclude-tags "ml_benchmark,golden"
+
+      - name: Build Standalone Release APK
+        run: flutter build apk --release
+
+      - name: Create GitHub Release & Upload APK Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
+          name: Boscdex ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
