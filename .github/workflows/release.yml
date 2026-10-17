@@ -1,4 +1,4 @@
-name: Build & Release APK
+name: Build & Release Multi-Artifact Packages
 
 on:
   push:
@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  build_release_apk:
-    name: Build & Release Standalone APK
+  build_release:
+    name: Build Multi-Artifact Release Packages
     runs-on: ubuntu-latest
 
     steps:
@@ -38,14 +38,30 @@ jobs:
           flutter analyze --fatal-infos --fatal-warnings
           flutter test test/unit_tests/ --exclude-tags "ml_benchmark,golden"
 
-      - name: Build Standalone Release APK
+      - name: Build Universal Release APK (~100 MB)
         run: flutter build apk --release
 
-      - name: Create GitHub Release & Upload APK Asset
+      - name: Build Lightweight Split-per-ABI APKs (~30 MB)
+        run: flutter build apk --split-per-abi
+
+      - name: Build Google Play App Bundle (.aab, ~25 MB)
+        run: flutter build appbundle --release
+
+      - name: Create GitHub Release & Upload Multi-Artifacts
         uses: softprops/action-gh-release@v1
         with:
-          files: build/app/outputs/flutter-apk/app-release.apk
+          files: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
           name: Boscdex ${{ github.ref_name }}
+          body: |
+            ### 📦 Download Assets & Recommendations
+            * **`app-arm64-v8a-release.apk`** (~30 MB) — **⭐ Recommended**: Ultra-lightweight APK optimized for modern 64-bit Android smartphones.
+            * **`app-release.apk`** (~100 MB) — Universal standalone APK bundling all CPU architectures (works on any Android device).
+            * **`app-armeabi-v7a-release.apk`** (~30 MB) — Lightweight APK for legacy 32-bit Android devices.
+            * **`app-release.aab`** (~25 MB) — Production Android App Bundle for Google Play Console submission.
           draft: false
           prerelease: false
           generate_release_notes: true
