@@ -49,7 +49,7 @@ Boscdex is designed from the ground up as a **100% offline-first, client-only mo
 * **Services:**
   * `SafetyGateService`: Enforces safety algorithms (evaluating confidence scores and cross-checking known toxic lookalikes).
   * `BadgeService`: Re-evaluates player achievements whenever discoveries or user actions occur.
-  * `ClassifierService`: Abstract interface decoupled from the underlying inference engine.
+  * `ClassifierService` & `TfliteClassifierService`: Decoupled Edge-ML inference engine combining a quantized MobileNetV2 Global Average Pooling feature extractor (`mushroom_classifier.tflite`, 1,280-D embeddings) with a pure-Dart linear classification head (`mushroom_classifier_head.bin`, 47 classes). Uses **3-View Test-Time Augmentation (TTA)** (55% Full Frame + 25% Horizontal Flip + 20% Central 80% Macro Crop) and resolves localized display names via `SpeciesLocalizer`.
 
 ### 3. Presentation Layer (`lib/presentation/`)
 * **State Management:** **Flutter Riverpod** without code-generation to maintain strict compatibility with Dart 2.18 / Flutter 3.3.3.

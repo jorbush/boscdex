@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
+import '../../core/localization/species_localizer.dart';
 import '../models/classificacio_result.dart';
 import 'classifier_service.dart';
 import 'visual_feature_classifier_service.dart';
@@ -15,11 +16,12 @@ import 'visual_feature_classifier_service.dart';
 /// and a high-performance linear classification head (`assets/models/mushroom_classifier_head.bin`).
 ///
 /// Architecture & Performance:
-/// - Pre-processes camera frames into contiguous [1, 224, 224, 3] Float32 tensors.
+/// - Pre-processes camera frames into 3 complementary [1, 224, 224, 3] Float32 tensors
+///   using Test-Time Augmentation (Full Frame + Horizontal Flip + 80% Central Macro Crop).
 /// - MobileNetV2 backbone computes 1,280 Global Average Pooling (GAP) deep features via TFLite.
-/// - Classification head (21 classes x 1280 features) executes in Dart in <0.05ms,
+/// - Classification head (47 classes x 1280 features) executes in Dart in <0.05ms,
 ///   guaranteeing 100% platform portability across all iOS and Android TFLite C runtime versions.
-/// - Evaluates 21 Catalan fungal taxa with sub-80ms on-device latency.
+/// - Evaluates all 47 Catalan fungal taxa with sub-80ms on-device latency.
 /// - Gracefully falls back to [VisualFeatureClassifierService] if native TFLite C bindings
 ///   are unavailable (e.g. headless unit tests or mock environments).
 class TfliteClassifierService implements ClassifierService {
@@ -38,56 +40,11 @@ class TfliteClassifierService implements ClassifierService {
   static const int _inputSize = 224;
   static const int _featureDim = 1280;
 
-  static const Map<String, String> _catalanSpeciesNames = {
-    'amanita_caesarea': 'Ou de reig',
-    'amanita_muscaria': 'Reig bord',
-    'amanita_phalloides': 'Farinera borda',
-    'amanita_verna': 'Cicuta blanca',
-    'boletus_edulis': 'Cep',
-    'calocybe_gambosa': 'Moixernó',
-    'cantharellus_cibarius': 'Rossinyol',
-    'chroogomphus_rutilus': 'Cama de perdiu',
-    'cortinarius_orellanus': 'Cortinari de muntanya',
-    'craterellus_cornucopioides': 'Trompeta de la mort',
-    'craterellus_lutescens': 'Camagroc',
-    'entoloma_sinuatum': 'Pèrfid',
-    'hydnum_repandum': 'Llengua de bou',
-    'hygrophorus_latitabundus': 'Llenega negra',
-    'lactarius_deliciosus': 'Rovelló / Pinetell',
-    'lactarius_sanguifluus': "Rovelló d'obaga",
-    'macrolepiota_procera': 'Apagallums',
-    'omphalotus_olearius': "Gírgola d'olivera",
-    'pleurotus_ostreatus': 'Gírgola',
-    'russula_cyanoxantha': 'Llora verda',
-    'suillus_luteus': 'Llenegot',
-    'tricholoma_terreum': 'Fredolic',
-    'marasmius_oreades': 'Carrereta / Cama-sec',
-    'lactarius_chrysorrheus': 'Lleterola de llet groga / Fals rovelló',
-    'lepista_nuda': 'Pé blau / Pua blava',
-    'rubroboletus_satanas': 'Mataparent de Satanàs',
-    'russula_virescens': 'Palometa / Llora pigada',
-    'hygrophorus_eburneus': 'Llenega blanca / Mocosa blanca',
-    'tricholoma_pardinum': 'Fredolic bord / Griset bord',
-    'morchella_esculenta': 'Múrgola / Rabassola',
-    'agaricus_campestris': 'Xampinyó silvestre / Guisana',
-    'agaricus_xanthodermus': 'Xampinyó groguenc / Xampinyó pudent',
-    'psathyrella_candolleana': 'Candol·lea / Psatirel·la de Candolle',
-    'suillus_granulatus': 'Molleric clapat / Pinetell de pi blanc',
-    'hygrophorus_russula': 'Carlet / Escarlet',
-    'boletus_aereus': 'Cep negre / Sureny fosc',
-    'coprinus_comatus': 'Bolet de tinta / Braguer de vaca',
-    'lactarius_torminosus': 'Cabra / Rovelló bord',
-    'amanita_pantherina': 'Pantera / Reig bord pigat',
-    'gyromitra_esculenta': 'Bolet de greix / Falsa múrgola',
-  };
-
-  static const Map<String, String> _catalanTreeNames = {
-    'pinus_sylvestris': 'Pi roig',
-    'pinus_halepensis': 'Pi blanc',
-    'quercus_ilex': 'Alzina',
-    'fagus_sylvatica': 'Faig',
-    'castanea_sativa': 'Castanyer',
-  };
+  // Test-Time Augmentation (TTA) view fusion weights (sum = 1.0)
+  static const double _weightFullView = 0.55;
+  static const double _weightFlipView = 0.25;
+  static const double _weightMacroView = 0.20;
+  static const double _macroCropFraction = 0.80;
 
   final VisualFeatureClassifierService _fallbackClassifier;
   Interpreter? _interpreter;
@@ -130,7 +87,7 @@ class TfliteClassifierService implements ClassifierService {
           .where((line) => line.isNotEmpty)
           .toList();
 
-      final numClasses = _labels.isNotEmpty ? _labels.length : 20;
+      final numClasses = _labels.isNotEmpty ? _labels.length : 47;
 
       // 2. Load classification head weights and biases
       final headData = await rootBundle.load(_headAssetPath);
@@ -154,7 +111,7 @@ class TfliteClassifierService implements ClassifierService {
       }
 
       // 3. Initialize TFLite Interpreter (MobileNetV2 feature extractor)
-      final options = InterpreterOptions()..threads = 2;
+      final options = InterpreterOptions()..threads = 4;
       _interpreter = await Interpreter.fromAsset(
         _modelAssetPath,
         options: options,
@@ -219,24 +176,28 @@ class TfliteClassifierService implements ClassifierService {
 
       final pixels = byteData.buffer.asUint8List();
 
-      // 2. Fast contiguous Float32 input tensor [1, 224, 224, 3]
-      final floatList = Float32List(_inputSize * _inputSize * 3);
-      int pIdx = 0;
-      for (int y = 0; y < _inputSize; y++) {
-        for (int x = 0; x < _inputSize; x++) {
-          final offset = (y * _inputSize + x) * 4;
-          floatList[pIdx++] = pixels[offset].toDouble();
-          floatList[pIdx++] = pixels[offset + 1].toDouble();
-          floatList[pIdx++] = pixels[offset + 2].toDouble();
-        }
+      // 2. Build 3-View Test-Time Augmentation (TTA) tensors:
+      //    - View 1: Standard 224x224 full frame
+      //    - View 2: Horizontal mirror (exploits radial symmetry of basidiocarps)
+      //    - View 3: 80% central macro crop (suppresses peripheral moss/litter clutter)
+      final fullTensor = _buildFullTensor(pixels);
+      final flipTensor = _buildHorizontalFlipTensor(pixels);
+      final macroTensor =
+          _buildMacroCropTensor(pixels, cropFraction: _macroCropFraction);
+
+      // 3. Extract 1,280-D GAP embeddings for each view and fuse
+      final gapFull = _runFeatureExtractor(fullTensor);
+      final gapFlip = _runFeatureExtractor(flipTensor);
+      final gapMacro = _runFeatureExtractor(macroTensor);
+
+      final gapFeatures = Float32List(_featureDim);
+      for (int j = 0; j < _featureDim; j++) {
+        gapFeatures[j] = (_weightFullView * gapFull[j]) +
+            (_weightFlipView * gapFlip[j]) +
+            (_weightMacroView * gapMacro[j]);
       }
 
-      // 3. Run MobileNetV2 backbone to extract 1280 Global Average Pooling features
-      final gapOutput = List.filled(_featureDim, 0.0).reshape([1, _featureDim]);
-      _interpreter!.run(floatList.buffer, gapOutput);
-      final gapFeatures = (gapOutput[0] as List).cast<double>();
-
-      // 4. Project features through classification head: logits[i] = dot(weights[i], features) + bias[i]
+      // 4. Project fused features through classification head: logits[i] = dot(weights[i], features) + bias[i]
       final numClasses = _labels.length;
       final logits = List<double>.generate(numClasses, (i) {
         double sum = _biases![i];
@@ -271,14 +232,19 @@ class TfliteClassifierService implements ClassifierService {
 
       scored.sort((a, b) => b.value.compareTo(a.value));
 
-      // Return top-3 predictions
+      // Return top-3 predictions with localized Catalan names across all 47 species
       final top3 = scored.take(3).toList();
       final results = top3.map((entry) {
         final speciesId = entry.key;
         final rawConfidence = entry.value;
         final roundedConfidence =
             double.parse(rawConfidence.toStringAsFixed(2));
-        final displayName = _catalanSpeciesNames[speciesId] ?? speciesId;
+        final localizedName = SpeciesLocalizer.getMushroomName(
+          speciesId,
+          languageCode: 'ca',
+        );
+        final displayName =
+            localizedName.isNotEmpty ? localizedName : speciesId;
 
         return MushroomClassificationResult(
           boletId: speciesId,
@@ -307,6 +273,79 @@ class TfliteClassifierService implements ClassifierService {
       image?.dispose();
       codec?.dispose();
     }
+  }
+
+  List<double> _runFeatureExtractor(Float32List inputTensor) {
+    final gapOutput = List.filled(_featureDim, 0.0).reshape([1, _featureDim]);
+    _interpreter!.run(inputTensor.buffer, gapOutput);
+    return (gapOutput[0] as List).cast<double>();
+  }
+
+  Float32List _buildFullTensor(Uint8List pixels) {
+    final floatList = Float32List(_inputSize * _inputSize * 3);
+    int pIdx = 0;
+    for (int y = 0; y < _inputSize; y++) {
+      for (int x = 0; x < _inputSize; x++) {
+        final offset = (y * _inputSize + x) * 4;
+        floatList[pIdx++] = pixels[offset].toDouble();
+        floatList[pIdx++] = pixels[offset + 1].toDouble();
+        floatList[pIdx++] = pixels[offset + 2].toDouble();
+      }
+    }
+    return floatList;
+  }
+
+  Float32List _buildHorizontalFlipTensor(Uint8List pixels) {
+    final floatList = Float32List(_inputSize * _inputSize * 3);
+    int pIdx = 0;
+    for (int y = 0; y < _inputSize; y++) {
+      for (int x = 0; x < _inputSize; x++) {
+        final mirrorX = _inputSize - 1 - x;
+        final offset = (y * _inputSize + mirrorX) * 4;
+        floatList[pIdx++] = pixels[offset].toDouble();
+        floatList[pIdx++] = pixels[offset + 1].toDouble();
+        floatList[pIdx++] = pixels[offset + 2].toDouble();
+      }
+    }
+    return floatList;
+  }
+
+  Float32List _buildMacroCropTensor(
+    Uint8List pixels, {
+    required double cropFraction,
+  }) {
+    final floatList = Float32List(_inputSize * _inputSize * 3);
+    final margin = (1.0 - cropFraction) * 0.5 * (_inputSize - 1);
+    final span = cropFraction * (_inputSize - 1);
+    int pIdx = 0;
+
+    for (int y = 0; y < _inputSize; y++) {
+      final srcY = margin + (y / (_inputSize - 1)) * span;
+      final y0 = srcY.floor().clamp(0, _inputSize - 1);
+      final y1 = (y0 + 1).clamp(0, _inputSize - 1);
+      final wy = srcY - y0;
+
+      for (int x = 0; x < _inputSize; x++) {
+        final srcX = margin + (x / (_inputSize - 1)) * span;
+        final x0 = srcX.floor().clamp(0, _inputSize - 1);
+        final x1 = (x0 + 1).clamp(0, _inputSize - 1);
+        final wx = srcX - x0;
+
+        final off00 = (y0 * _inputSize + x0) * 4;
+        final off01 = (y0 * _inputSize + x1) * 4;
+        final off10 = (y1 * _inputSize + x0) * 4;
+        final off11 = (y1 * _inputSize + x1) * 4;
+
+        for (int c = 0; c < 3; c++) {
+          final top =
+              pixels[off00 + c] * (1.0 - wx) + pixels[off01 + c] * wx;
+          final bottom =
+              pixels[off10 + c] * (1.0 - wx) + pixels[off11 + c] * wx;
+          floatList[pIdx++] = top * (1.0 - wy) + bottom * wy;
+        }
+      }
+    }
+    return floatList;
   }
 
   Future<void> _ensureTreeModelLoaded() async {
@@ -465,7 +504,12 @@ class TfliteClassifierService implements ClassifierService {
         final rawConfidence = entry.value;
         final roundedConfidence =
             double.parse(rawConfidence.toStringAsFixed(2));
-        final displayName = _catalanTreeNames[treeId] ?? treeId;
+        final localizedTreeName = SpeciesLocalizer.getTreeName(
+          treeId,
+          languageCode: 'ca',
+        );
+        final displayName =
+            localizedTreeName.isNotEmpty ? localizedTreeName : treeId;
 
         return TreeClassificationResult(
           arbreId: treeId,

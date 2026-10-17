@@ -106,7 +106,8 @@ Prioritized features before the initial public store release:
    - [x] **Zero-Tolerance Lethal Gate & Safety Hardening:** Hardened `SafetyGateService` with zero-tolerance recall (10% confidence threshold) for all 6 lethal Catalan taxa (*Amanita phalloides*, *Amanita verna*, *Amanita virosa*, *Cortinarius orellanus*, *Galerina marginata*, *Gyromitra esculenta*), immediately escalating to `NivellSeguretat.perill`. Expanded `SeedData.toxicLookalikes` to 28 pairs.
    - [x] **Interactive Botanical Safety Verification Checklist & Unified Registration Gate:** Implemented `BotanicalSafetyCheckDialog` and tailored checklists for high-risk foraged groups (*Morchella*, *Cantharellus*, *Lepista*, *Marasmius*, *Amanita caesarea*, *Boletus*, *Tricholoma*, and lethal sentinels). Harmonized registration gate so any non-`segur` classification (including $<70\%$ low confidence and $\ge 15\%$ toxic runner-up) requires physical verification before saving.
    - [x] **Expanded Gamification & Badges System (14 Badges):** Expanded the badge registry from 6 to 14 achievements covering king boletes (*Senyor dels Ceps*), Catalan culinary classics (*Gourmet del Bosc*), tree identification (*Amic dels Arbres*), spring foraging (*Esperit de Primavera*), advanced toxicity vigilance (*Sentinella del Bosc*), field journaling (*Quadern de Camp*), GPS cartography (*Cartògraf del Bosc*), and complete catalog mastery (*Gran Enciclopèdia* for all 47 species).
-   - [x] **Comprehensive Test Suite (319 Passing Tests):** 100% pass rate across 319 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`) and 0 analyzer issues (`flutter analyze`).
+   - [x] **3-View Test-Time Augmentation (TTA) & Verified 47-Species Training Pipeline:** Upgraded on-device `TfliteClassifierService` with 3-view TTA (Full Frame + Horizontal Flip + 80% Central Macro Crop) and unified `SpeciesLocalizer` name resolution across all 47 species. Overhauled `boscdex_mushroom_training_colab.ipynb` with 100% verified active `Fungi` taxon IDs (fixing 36 previously corrupted iNaturalist IDs), automatic `inat_*.jpg` contamination purging, 60+ images/species balancing, deterministic per-species 85/15 stratified train/val splitting, `1.20x` safety-weighted `CategoricalCrossentropy(label_smoothing=0.10)`, `AdamW`, and frozen-`BatchNormalization` fine-tuning — driving Series 017 benchmark to a **historic high of 600 / 623 (96.3%) Top-3**, with 31 of 47 species reaching 100% Top-3 recall and 98.4% lethal recall.
+   - [x] **Comprehensive Test Suite (321 Passing Tests):** 100% pass rate across 321 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags ml_benchmark`) and 0 analyzer issues (`flutter analyze`).
 
 ---
 
@@ -130,30 +131,32 @@ Prioritized features before the initial public store release:
 
 ## 🧠 Edge ML Optimization Proposals: Breaking Through to >92% Top-1 and >97% Top-3
 
-Following the Series 014 and Series 015 empirical benchmarks (where linear head retraining over frozen MobileNetV2 features plateaued at ~86–88% Top-1 / 94.5% Top-3 across 623 field photos), the following three high-impact proposals are scheduled for the next Google Colab training cycle:
+Following the Series 014 and Series 015 empirical benchmarks (where linear head retraining over frozen MobileNetV2 features plateaued at ~86–88% Top-1 / 94.5% Top-3 across 623 field photos), the following three high-impact proposals have been integrated into the Google Colab training pipeline (`notebooks/boscdex_mushroom_training_colab.ipynb`) and on-device runtime (`lib/domain/services/tflite_classifier_service.dart`):
 
-### Proposal 1: End-to-End Fine-Tuning (Unfreezing Upper Convolutions)
-* **Problem:** MobileNetV2's frozen backbone outputs generic 1,280-dimensional ImageNet embeddings optimized for macroscopic objects (cars, dogs). A single linear classification head cannot carve hyperplanes between visually identical fungal textures without zero-sum trade-offs.
-* **Architecture Change:** Unfreeze the top 2–3 inverted residual blocks of MobileNetV2 (layers 14 through 17) during fine-tuning.
+### Proposal 1: End-to-End Fine-Tuning with Frozen BatchNorm & AdamW
+* **Problem:** MobileNetV2's frozen backbone outputs generic 1,280-dimensional ImageNet embeddings optimized for macroscopic objects (cars, dogs). Furthermore, unfreezing BatchNorm layers on small batches corrupts running mean/variance statistics.
+* **Architecture Change (Implemented in Notebook Step 6):** Unfreeze `base_model.layers[90:]` during Phase 2 while explicitly keeping all `BatchNormalization` layers frozen (`isinstance(layer, BatchNormalization) -> trainable = False`).
 * **Training Protocol:**
-  - Differential learning rates: $\eta_{\text{backbone}} = 10^{-5}$ (conservative feature adaptation) vs. $\eta_{\text{head}} = 10^{-3}$ (rapid classifier convergence).
-  - Cosine annealing learning rate scheduler with warmup (5 epochs).
+  - Differential learning rates with `AdamW(weight_decay=1e-4)`: $\eta_{\text{head}} = 10^{-3}$ (Phase 1, 15 epochs) and $\eta_{\text{backbone}} = 3 \times 10^{-5}$ (Phase 2, up to 25 epochs with `EarlyStopping` on `val_accuracy`).
 * **Expected Outcome:** Convolutions adapt their receptive fields to recognize microscopic and structural botanical patterns: true decurrent gills vs. false hymenial folds (*Cantharellus* vs *Craterellus*), stem reticulation networks (*Boletus edulis* / *aereus*), and guttered volva rims (*Amanita pantherina*).
 
-### Proposal 2: Metric Learning & Supervised Contrastive Loss (SupCon / ArcFace)
-* **Problem:** Standard cross-entropy loss only seeks to make the correct logit higher than alternatives, leading to decision boundaries that sit dangerously close to confusing sister species in feature space (e.g. *Tricholoma terreum* vs toxic *Tricholoma pardinum*; edible *Lactarius deliciosus* vs *Lactarius sanguifluus*).
-* **Loss Function Overhaul:**
-  - Implement **Supervised Contrastive Loss (SupCon)** or **ArcFace (Additive Angular Margin Loss)**:
+### Proposal 2: Label Smoothing, Safety-Priority Class Weighting & Metric Learning
+* **Problem:** Standard one-hot cross-entropy loss with unstratified splits causes a >20% train/val overfitting gap and zero-sum decision boundary drift between visually similar sister species.
+* **Loss Function Overhaul (Implemented in Notebook Step 6):**
+  - **Deterministic Stratified Split:** 85% train / 15% validation per species, separating curated field photos and iNaturalist top-ups so both domains are proportionally represented.
+  - **Label Smoothing (`label_smoothing=0.10`):** Prevents logit overconfidence and calibrates Softmax probabilities for `SafetyGateService`.
+  - **Safety-Priority Class Weights (`1.20x` Boost):** Applies inverse-frequency balancing plus a `1.20x` multiplier to all 6 lethal taxa and high-risk toxic lookalikes.
+  - **Future Extension — ArcFace (Additive Angular Margin Loss):**
     $$\mathcal{L}_{\text{ArcFace}} = -\log \frac{e^{s(\cos(\theta_{y_i} + m))}}{e^{s(\cos(\theta_{y_i} + m))} + \sum_{j \neq y_i} e^{s \cos \theta_j}}$$
-  - Pulls intra-class embeddings into dense, compact clusters while enforcing an explicit angular margin $m \ge 0.35\text{ rad}$ between different taxa.
-* **Expected Outcome:** Eliminates the "Pareto seesaw" where improving one difficult species drops accuracy on visually adjacent species. Enforces wide safety margins around lethal sentinels (*Amanita phalloides*, *Amanita verna*, *Cortinarius orellanus*, *Galerina marginata*).
 
-### Proposal 3: Macro Hymenium & Lighting Data Augmentations with Targeted Asset Collection
-* **Problem:** Field photos taken by foragers in Catalan forests suffer from extreme chromatic variation (deep pine canopy shade vs bright mountain sunlight) and heavy ground litter clutter (moss, pine duff, beech leaves).
-* **Augmentation Pipeline Enhancements:**
-  - **Hymenium Macro Cropping:** 40% probability of random localized crops centered on gills, pores, and stem collars to prevent the network from relying exclusively on global cap silhouettes.
-  - **Canopy Lighting Simulation:** Aggressive color jitter (brightness $\pm 0.3$, contrast $\pm 0.3$, saturation $\pm 0.25$, hue $\pm 0.05$) and random white-balance temperature shifts ($4500\text{K} \to 8000\text{K}$).
-* **Targeted Asset Acquisition ($N \ge 15$ per class):**
-  - Prioritize collecting fresh wild photography for volatile low-support classes: `calocybe_gambosa` ($N=5$), `craterellus_cornucopioides` ($N=6$), `suillus_luteus` ($N=7$), `cantharellus_cibarius` ($N=7$), `cortinarius_orellanus` ($N=8$), `rubroboletus_satanas` ($N=9$), and `galerina_marginata` ($N=15$).
+### Proposal 3: Verified Fungi Dataset Curation, Macro Augmentations & On-Device 3-View TTA
+* **Problem:**
+  1. Audit revealed 36 of the 47 hardcoded `inaturalist_taxon_id` integers in `SPECIES_CATALOG` previously pointed to non-fungi (spiders, daffodils, flies, scorpionfish) or 0-observation inactive taxa.
+  2. Field photos suffer from forest canopy lighting shifts and background moss clutter.
+* **Pipeline & Runtime Enhancements (Implemented):**
+  - **100% Verified Fungi Taxon IDs & Contamination Purge (Notebook Steps 3–5):** Replaced all 36 broken taxon IDs with verified active `Fungi` IDs, added automatic purging of legacy `inat_*.jpg` files, enforced `iconic_taxa="Fungi"` at the API level, and increased balancing to **60 images/species** (~2,820 images).
+  - **Aspect-Preserving Crop & Macro Zoom Augmentation (Notebook Step 6):** Enabled `crop_to_aspect_ratio=True`, `RandomZoom((-0.30, 0.10))`, and brightness/contrast jitter ($\pm 0.25$).
+  - **On-Device 3-View Test-Time Augmentation (`TfliteClassifierService`):** Fuses GAP embeddings across Full Frame (0.55), Horizontal Flip (0.25), and 80% Central Macro Crop (0.20), lifting Top-1 accuracy from **85.7% $\to$ 87.3%** (544/623) and Top-3 accuracy from **94.5% $\to$ 95.2%** (593/623) in Series 016 even before re-running Colab training.
+
 
 

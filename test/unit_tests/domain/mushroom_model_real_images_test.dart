@@ -29,7 +29,7 @@ void main() {
 
     test(
         'Evaluates all user-provided real field images in test/assets/mushrooms/',
-        timeout: const Timeout(Duration(minutes: 3)),
+        timeout: const Timeout(Duration(minutes: 12)),
         skip: !hasTestAssets
             ? 'test/assets/mushrooms/ not found (local ML benchmark only - see Google Drive boscdex_dataset.zip)'
             : false, () async {
