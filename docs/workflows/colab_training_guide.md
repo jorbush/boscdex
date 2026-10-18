@@ -27,7 +27,7 @@ Before training in Colab, you can feed real field photographs from `test/assets/
 
 > [!IMPORTANT]
 > The dataset images are split into two separate directories:
-> * `test/assets/mushrooms/` (21 mushroom species directories)
+> * `test/assets/mushrooms/` (47 mushroom species directories)
 > * `test/assets/trees/` (5 indicator tree species directories)
 > 
 > The archives **must** contain the species directories at the root of the zip (e.g. `amanita_muscaria/image1.jpg` or `pinus_sylvestris/photo1.jpg`), without extra parent directory nesting, and with macOS `.DS_Store` metadata stripped.
@@ -89,9 +89,9 @@ make zip-trees
    * **Step 2:** Install dependencies (`pyinaturalist`, `requests`, `tqdm`, `pillow`, `tensorflow`).
    * **Step 3:** Mount Google Drive.
    * **Step 4:** Ingest `boscdex_dataset.zip` or `tree_dataset.zip` from Drive.
-   * **Step 5:** Concurrently download research-grade observations from iNaturalist to balance all classes.
-   * **Step 6:** Fine-tune **MobileNetV2** backbone with cosine decay learning rate and data augmentation.
-   * **Step 7:** Export the quantized **INT8 TFLite model** and standalone Dart classification head.
+   * **Step 5:** Concurrently download verified research-grade observations from iNaturalist using explicit Fungi kingdom taxon IDs (preventing non-fungal data corruption).
+   * **Step 6:** Fine-tune **MobileNetV2** backbone with AdamW optimizer ($1\times 10^{-4}$ weight decay), label smoothing ($\alpha = 0.10$), frozen BatchNormalization layers, and safety-priority inverse-frequency class weighting ($1.20\times$ multiplier on lethal species).
+   * **Step 7:** Export the quantized **INT8 TFLite model** and standalone Dart classification head (`mushroom_classifier_head.bin`, 240.8 KB).
    * **Step 8:** Automatically package and download the output artifacts.
 
 ### Step 4: Drop Output Files into Boscdex
@@ -116,15 +116,16 @@ Once the training finishes:
 
 ---
 
-## 📊 Verified Real-World Performance (Series 008 Benchmark)
+## 📊 Verified Real-World Performance (Series 017 Benchmark)
 
-When trained on the hybrid dataset (`boscdex_dataset.zip` + iNaturalist Catalan top-up), the 21-species model achieves:
+When trained on the curated dataset (`boscdex_dataset.zip` + verified Catalan iNaturalist observations) with 3-View Test-Time Augmentation (TTA), the 47-species model achieves:
 
-* **Training Duration:** ~10–15 minutes on Colab T4 GPU.
-* **Top-1 Accuracy:** **88.8%** (167 / 188 real field photos).
-* **Top-3 Accuracy:** **97.3%** (183 / 188 real field photos).
-* **Standout Taxa:** *Chroogomphus rutilus* (100% Top-1), *Boletus edulis* (100% Top-1), *Hydnum repandum* (100% Top-1), *Amanita caesarea* (100% Top-1), *Amanita muscaria* (100% Top-1), *Amanita verna* (100% Top-1), *Cantharellus cibarius* (100% Top-1), *Craterellus cornucopioides* (100% Top-1), *Pleurotus ostreatus* (100% Top-1), *Omphalotus olearius* (100% Top-1), *Hygrophorus latitabundus* (93% Top-1), *Tricholoma terreum* (90% Top-1 / 100% Top-3), *Lactarius deliciosus* (100% Top-3).
-* **Model Footprint:** ~2.5 MB TFLite backbone + 107.6 KB classification head (vastly below the 18 MB mobile budget).
+* **Training Duration:** ~15–20 minutes on Colab T4 GPU.
+* **Top-1 Accuracy:** **85.1%** (530 / 623 real field photos).
+* **Top-3 Accuracy:** **96.3%** (600 / 623 real field photos).
+* **Lethal Species Safety Recall:** **98.4%** (60 / 61 photos correctly detected in top candidates across *Amanita phalloides*, *Amanita verna*, *Amanita virosa*, *Galerina marginata*, *Cortinarius orellanus*).
+* **Standout Taxa (100% Top-1):** *Amanita caesarea*, *Amanita muscaria*, *Amanita verna*, *Chroogomphus rutilus*, *Coprinus comatus*, *Cortinarius orellanus*, *Craterellus cornucopioides*, *Craterellus lutescens*, *Lactarius sanguifluus*, *Macrolepiota procera*, *Marasmius oreades*, *Morchella esculenta*.
+* **Model Footprint:** ~2.50 MB TFLite backbone + 240.8 KB classification head (vastly below the 18 MB mobile budget).
 
 ---
 

@@ -8,6 +8,7 @@ import 'package:boscdex/domain/models/forager_level.dart';
 import 'package:boscdex/presentation/boscdex/boscdex_provider.dart';
 import 'package:boscdex/presentation/journal/journal_provider.dart';
 import 'package:boscdex/presentation/settings/settings_screen.dart';
+import 'package:boscdex/providers/app_info_provider.dart';
 import 'package:boscdex/providers/preferences_provider.dart';
 
 void main() {
@@ -214,6 +215,50 @@ void main() {
 
       expect(navigatedPath, '/disclaimer');
       expect(find.text('Disclaimer Page'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+    });
+
+    testWidgets(
+        'Renders dynamic version badge and tooltip from appInfoProvider',
+        (tester) async {
+      await tester.binding.setSurfaceSize(const Size(500, 1200));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      const customAppInfo = AppInfo(
+        appName: 'Boscdex Pro',
+        packageName: 'cat.boscdex.pro',
+        version: '2.5.0',
+        buildNumber: '88',
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            discoveryCountProvider.overrideWith((ref) => Stream.value(0)),
+            avistamentsProvider.overrideWith((ref) => Stream.value([])),
+            appInfoProvider.overrideWith((ref) => Future.value(customAppInfo)),
+          ],
+          child: const MaterialApp(
+            home: SettingsScreen(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Verify dynamic short version is displayed
+      expect(find.text('v2.5.0'), findsOneWidget);
+
+      // Verify tooltip on version badge contains full display version (including build number)
+      final versionTooltip = tester.widget<Tooltip>(
+        find.ancestor(
+          of: find.text('v2.5.0'),
+          matching: find.byType(Tooltip),
+        ),
+      );
+      expect(versionTooltip.message, equals('v2.5.0+88'));
 
       await tester.pumpWidget(const SizedBox());
       await tester.pump();

@@ -10,21 +10,21 @@ Now, how does the model convert those 1,280 numbers into a prediction like *"Rov
 
 The **Classification Head** is a single **Dense (Fully Connected) Linear Layer**.
 
-It takes the 1,280 input features from GAP and computes a raw score for each of our 20 Catalan species:
+It takes the 1,280 input features from GAP and computes a raw score for each of our 47 Catalan species:
 
 ```
-    GAP Features (1,280 floats)         Weights Matrix (1280 x 20)           Logits (20 floats)
+    GAP Features (1,280 floats)         Weights Matrix (1280 x 47)           Logits (47 floats)
     ┌───────────────────────────┐         ┌────────────────────────┐         ┌─────────────────┐
-    │ x₀:  0.428 (orange hue)   │         │ W (25,600 weights)     │         │ z₀:  +3.42 (Rovelló)
+    │ x₀:  0.428 (orange hue)   │         │ W (60,160 weights)     │         │ z₀:  +3.42 (Rovelló)
     │ x₁:  1.891 (decurrent gill│    •    │                        │    + b  │ z₁:  -1.20 (Cep)
-    │ x₂:  0.050 (scales)       │         │ + 20 class biases      │         │ z₂:  +0.15 (Rossinyol)
+    │ x₂:  0.050 (scales)       │         │ + 47 class biases      │         │ z₂:  +0.15 (Rossinyol)
     │ ...                       │         │                        │         │ ...             │
-    │ x₁₂₇₉: 0.112 (pore sponge)│         └────────────────────────┘         │ z₁₉: -2.85 (Pèrfid)
+    │ x₁₂₇₉: 0.112 (pore sponge)│         └────────────────────────┘         │ z₄₆: -2.85 (Fredolic)
     └───────────────────────────┘                                            └─────────────────┘
 ```
 
 ### The Math Behind the Head:
-For each species $i$ (from 0 to 19):
+For each species $i$ (from 0 to 46):
 
 $$\text{logit}_i = \left( \sum_{j=0}^{1279} W_{j, i} \cdot x_j \right) + b_i$$
 
@@ -34,9 +34,9 @@ $$\text{logit}_i = \left( \sum_{j=0}^{1279} W_{j, i} \cdot x_j \right) + b_i$$
 * $b_i$ is the **bias** (the default baseline score for that species).
 
 **Total Parameters in Head:**
-$$1,280 \times 20 = 25,600 \text{ weights} + 20 \text{ biases} = \mathbf{25,620 \text{ numbers}}$$
+$$1,280 \times 47 = 60,160 \text{ weights} + 47 \text{ biases} = \mathbf{60,207 \text{ numbers (240.8 KB)}}$$
 
-The resulting 20 numbers ($z_0, z_1, \dots, z_{19}$) are called **Logits**. Logits are unconstrained real numbers: they can be negative ($-4.5$), positive ($+6.2$), or zero.
+The resulting 47 numbers ($z_0, z_1, \dots, z_{46}$) are called **Logits**. Logits are unconstrained real numbers: they can be negative ($-4.5$), positive ($+6.2$), or zero.
 
 ---
 
@@ -44,9 +44,9 @@ The resulting 20 numbers ($z_0, z_1, \dots, z_{19}$) are called **Logits**. Logi
 
 Users don't want to see a raw logit like `logit: 3.42`. They want to see a confidence percentage: *"82% confidence"*.
 
-To turn 20 arbitrary real numbers into a valid probability distribution where **all values are between 0% and 100% and their sum equals exactly 100%**, we apply the **Softmax function**:
+To turn 47 arbitrary real numbers into a valid probability distribution where **all values are between 0% and 100% and their sum equals exactly 100%**, we apply the **Softmax function**:
 
-$$P(\text{species}_i) = \frac{e^{\text{logit}_i}}{\sum_{k=0}^{19} e^{\text{logit}_k}}$$
+$$P(\text{species}_i) = \frac{e^{\text{logit}_i}}{\sum_{k=0}^{46} e^{\text{logit}_k}}$$
 
 ```
      Raw Logit (z)                   Exponent e^z                     Softmax Probability
@@ -64,7 +64,7 @@ $$P(\text{species}_i) = \frac{e^{\text{logit}_i}}{\sum_{k=0}^{19} e^{\text{logit
 ### The Numerical Stability Trick:
 When calculating $e^z$, if a logit is large (e.g. $z = 100$), $e^{100} \approx 2.6 \times 10^{43}$, which triggers an arithmetic overflow error in 32-bit floating point hardware.
 
-To prevent this, our Flutter implementation in [`TfliteClassifierService`](file:///Users/jordi/dev/boscdex/lib/domain/services/tflite_classifier_service.dart#L189-L202) subtracts the maximum logit before exponentiating:
+To prevent this, our Flutter implementation in [`TfliteClassifierService`](file:///Users/jordi/dev/boscdex/lib/domain/services/tflite_classifier_service.dart) subtracts the maximum logit before exponentiating:
 
 $$\text{exp}(z_i - \max(z))$$
 
@@ -81,7 +81,10 @@ $$y = [1.0, 0.0, 0.0, \dots, 0.0]$$
 
 The cross-entropy loss formula is:
 
-$$\mathcal{L} = -\sum_{i=0}^{19} y_i \ln(p_i) = -\ln(p_{\text{correct}})$$
+$$\mathcal{L} = -\sum_{i=0}^{46} y_i \ln(p_i) = -\ln(p_{\text{correct}})$$
+
+> [!TIP]
+> **Modern Advancement — Label Smoothing:** In production, hard one-hot targets cause overconfidence and logit saturation. See [Chapter 6: Modern Optimization & TTA](06_modern_optimization_and_tta.md) for how Boscdex replaced hard cross-entropy with **Label-Smoothed Cross-Entropy ($\alpha = 0.10$)** and **Safety-Priority Class Weights**, lifting Top-3 accuracy to 96.3%.
 
 The loss is simply the **negative natural logarithm of the probability assigned to the correct class**:
 

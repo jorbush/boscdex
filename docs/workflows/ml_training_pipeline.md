@@ -22,14 +22,14 @@ To understand what is happening inside the app when you scan a specimen, conside
                            ▼
 ┌────────────────────────────────────────────────────────┐
 │  2. THE BRAIN (Classification Head)                    │
-│  File: assets/models/mushroom_classifier_head.bin (107K)│
+│  File: assets/models/mushroom_classifier_head.bin(241K)│
 │  • Knows the mathematical recipe for each species:     │
 │    "If high orange rings + carrot latex = Rovelló"     │
 │    "If spongy brown pores + fat stipe = Cep"           │
 │  • Multiplies the 1,280 traits by a weight matrix      │
-│    to score our 21 Catalan species.                    │
+│    to score our 47 Catalan species.                    │
 └──────────────────────────┬─────────────────────────────┘
-                           │ 21 raw scores (Logits)
+                           │ 47 raw scores (Logits)
                            ▼
 ┌────────────────────────────────────────────────────────┐
 │  3. TAXONOMIC TRANSLATION & PROBABILITIES              │
@@ -44,8 +44,8 @@ To understand what is happening inside the app when you scan a specimen, conside
 | File | Size | Role | Description |
 |---|---|---|---|
 | `mushroom_classifier.tflite` | 2.50 MB | Backbone (Eyes) | Quantized MobileNetV2 (INT8) extracting 1,280 visual features (GAP). |
-| `mushroom_classifier_head.bin` | 107.6 KB | Head (Brain) | Flat Float32 weight matrix ($21 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$. |
-| `mushroom_labels.txt` | 400 B | Class Index | Maps numerical logit positions to database IDs (`lactarius_deliciosus`, etc.). |
+| `mushroom_classifier_head.bin` | 240.8 KB | Head (Brain) | Flat Float32 weight matrix ($47 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$. |
+| `mushroom_labels.txt` | 950 B | Class Index | Maps numerical logit positions to 47 database IDs (`lactarius_deliciosus`, etc.). |
 | `tree_classifier.tflite` | 2.50 MB | Tree Backbone | Feature extractor specialized for foliage, needles, and bark textures. |
 | `tree_classifier_head.bin` | 25.6 KB | Tree Head | Float32 weight matrix ($5 \times 1280$) and biases for the 5 indicator trees. |
 | `tree_labels.txt` | 80 B | Tree Index | Maps output indices to tree IDs (`pinus_sylvestris`, `quercus_ilex`, etc.). |
@@ -60,14 +60,14 @@ In standard TensorFlow Lite setups, both the feature extractor and the classific
 ### The Boscdex Solution:
 1. **Cut at Global Average Pooling (GAP):** We truncate the neural network right after feature pooling. The `.tflite` model only outputs a fixed array of **1,280 numbers**.
 2. **Export the Linear Head as Raw Binary:** We export the final Dense layer's weights ($N_{\text{classes}} \times 1280$) and biases into a tiny `.bin` file.
-3. **Compute Dot Product in Native Dart:** In [`lib/domain/services/tflite_classifier_service.dart`](file:///Users/jordi/dev/boscdex/lib/domain/services/tflite_classifier_service.dart), Dart loads this 107 KB matrix into a `Float32List`. When TFLite gives Dart the 1,280 features:
+3. **Compute Dot Product in Native Dart:** In [`lib/domain/services/tflite_classifier_service.dart`](file:///Users/jordi/dev/boscdex/lib/domain/services/tflite_classifier_service.dart), Dart loads this 240.8 KB matrix into a `Float32List`. When TFLite gives Dart the 1,280 features:
    $$\text{Score}_i = \sum_{j=1}^{1280} (\text{Feature}_j \times \text{Weight}_{i,j}) + \text{Bias}_i$$
-   Dart computes this linear dot product for all 21 classes in **$<0.05\text{ ms}$** ($0.00005\text{ seconds}$). It then applies standard Softmax to compute percentages.
+   Dart computes this linear dot product for all 47 classes in **$<0.05\text{ ms}$** ($0.00005\text{ seconds}$). It then applies standard Softmax to compute percentages.
 
 ### Key Benefits:
 - **100% Crash-Proof:** Eliminates all TFLite Dense/Softmax opcode incompatibilities across iOS and Android.
 - **Microsecond Speed:** Dart's AOT compiler optimizes flat typed float arrays into vectorized SIMD instructions.
-- **Zero-Recompilation Updates:** Tuning or adding new species only requires updating the 107 KB `.bin` and labels file without retraining or rebuilding the 2.5 MB convolutional backbone.
+- **Zero-Recompilation Updates:** Tuning or adding new species only requires updating the 240.8 KB `.bin` and labels file without retraining or rebuilding the 2.5 MB convolutional backbone.
 
 ---
 
@@ -111,18 +111,18 @@ In standard TensorFlow Lite setups, both the feature extractor and the classific
 │   Outputs: assets/models/mushroom_classifier.tflite (2.5 MB)│
 └──────────────────────────────┬──────────────────────────────┘
                                │
-                               ▼
+                                ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                 6. Head Decoupling                          │
 │   Export Linear weights & biases to Float32 binary file     │
-│   Outputs: assets/models/mushroom_classifier_head.bin       │
+│   Outputs: assets/models/mushroom_classifier_head.bin(241KB)│
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                 7. Mobile Deployment & Golden Benchmark     │
-│   Flutter unit test suite against 225 real field photos     │
-│   Result: 87.1% Top-1, 93.8% Top-3 on Series 013            │
+│   Flutter test suite against 623 real field photos (47 taxa)│
+│   Result: 85.1% Top-1, 96.3% Top-3 on Series 017            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -130,7 +130,7 @@ In standard TensorFlow Lite setups, both the feature extractor and the classific
 
 ### Stage 1: Data Gathering (Quality > Quantity)
 - **Script:** [`tools/dataset/download_inat.py`](file:///Users/jordi/dev/boscdex/tools/dataset/download_inat.py)
-- **Source:** Open research-grade observations from [iNaturalist](https://www.inaturalist.org) filtered strictly to Catalonia (`place_id=7525`).
+- **Source:** Open research-grade observations from [iNaturalist](https://www.inaturalist.org) filtered strictly to Catalonia (`place_id=7525`) and validated against Fungi kingdom taxon IDs to ensure no non-fungal flora contamination.
 - **Why regional filtering matters:** Fungi adapt their morphology and symbiotic hosts to local Mediterranean soils and climate. A Catalan *Lactarius deliciosus* growing under Montseny pines looks subtly different in cap weathering and surrounding pine litter than one from Scandinavia.
 - **The Golden Ratio of Angles:**
   - **40% Top-down cap view:** Concentric zonations (*Rovelló*), velar warts (*Reig bord*), scales (*Apagallums*), viscid slime (*Llenega negra*).
@@ -149,14 +149,15 @@ Before training, each training photograph is dynamically transformed to teach th
 Training a deep convolutional network from absolute scratch requires millions of images and weeks of cluster computing. Instead, we use **Transfer Learning**:
 - We start with **MobileNetV2**, an ultra-lightweight neural network pre-trained on the ImageNet dataset (1.4 million images across 1,000 object categories).
 - The lower and middle convolutional layers already know how to detect gradients, edges, circular contours, and surface textures.
-- We freeze those general visual filters and only retrain the higher-level representations for Catalan mycological taxa.
+- We freeze those general visual filters, freeze all `BatchNormalization` layers to preserve calibrated population statistics, and retrain higher-level representations for Catalan mycological taxa.
 
 ### Stage 4: GPU Training on Google Colab
-- Packaged in [`notebooks/boscdex_tree_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_tree_training_colab.ipynb) and [`tools/training/train_classifier.py`](file:///Users/jordi/dev/boscdex/tools/training/train_classifier.py).
+- Packaged in [`notebooks/boscdex_mushroom_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/notebooks/boscdex_mushroom_training_colab.ipynb) and [`tools/training/train_classifier.py`](file:///Users/jordi/dev/boscdex/tools/training/train_classifier.py).
 - Uses Google Colab's free NVIDIA Tesla T4 GPU (16 GB VRAM).
-- Optimizes weights using **Categorical Cross-Entropy Loss** with the Adam optimizer:
-  - If the model confuses a deadly *Amanita phalloides* with an edible *Amanita caesarea*, the loss function applies a high penalty and backpropagation updates the weights accordingly.
-  - Training runs for 25–40 epochs until validation loss stabilizes.
+- Optimizes weights using **AdamW** (decoupled weight decay $1\times 10^{-4}$) and **Categorical Cross-Entropy Loss with Label Smoothing** ($\alpha = 0.10$):
+  - Label smoothing mitigates overconfident probability spikes on ambiguous specimens.
+  - Applies **Safety-Priority Inverse-Frequency Class Weighting** ($1.20\times$ multiplier on lethal species) to ensure lethal species (*Amanita phalloides*, *Amanita verna*, *Amanita virosa*, *Galerina marginata*, *Cortinarius orellanus*) receive zero false negatives.
+  - Training runs for 25–40 epochs with cosine decay learning rate until validation loss stabilizes.
 
 ### Stage 5: INT8 Quantization (Post-Training Quantization)
 - **Script:** [`tools/export/quantize_export.py`](file:///Users/jordi/dev/boscdex/tools/export/quantize_export.py)
@@ -167,14 +168,15 @@ Training a deep convolutional network from absolute scratch requires millions of
 
 ### Stage 6: Binary Head Export
 - The weights and biases of the final linear classification layer are exported into flat binary files (`mushroom_classifier_head.bin` and `tree_classifier_head.bin`).
-- For the 21 mushroom classes: $21 \times 1280 \times 4\text{ bytes} + 21 \times 4\text{ bytes} = 107,604\text{ bytes}$ (107.6 KB).
+- For the 47 mushroom classes: $47 \times 1280 \times 4\text{ bytes} + 47 \times 4\text{ bytes} = 240,828\text{ bytes}$ (240.8 KB).
 - For the 5 indicator trees: $5 \times 1280 \times 4\text{ bytes} + 5 \times 4\text{ bytes} = 25,620\text{ bytes}$ (25.6 KB).
 
 ### Stage 7: Automated Empirical Verification (The Golden Set)
 To prevent regressions after code changes, Boscdex bundles an on-device empirical test suite:
-- **Mushroom Benchmark:** [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart) runs the real `.tflite` model and `.bin` head against **225 real Catalan field photos**:
-  - **87.1% Top-1 Accuracy** (196 / 225 photos classified correctly on the first candidate).
-  - **93.8% Top-3 Accuracy** (211 / 225 photos contain the true species in the top 3).
+- **Mushroom Benchmark:** [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart) runs the real `.tflite` model and `.bin` head with 3-View TTA against **623 real Catalan field photos**:
+  - **85.1% Top-1 Accuracy** (530 / 623 photos classified correctly on the first candidate).
+  - **96.3% Top-3 Accuracy** (600 / 623 photos contain the true species in the top 3).
+  - **98.4% Lethal Species Safety Recall** (60 / 61 photos across lethal taxa).
 - **Indicator Tree Benchmark:** [`test/unit_tests/domain/tree_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/tree_model_real_images_test.dart) tests **79 real Catalan tree photos**:
   - **80.0% Top-1 Accuracy** and **96.0% Top-2 Accuracy**.
 
@@ -189,17 +191,21 @@ When a forager taps the shutter button in the Catalan forest:
         │
 10 ms   High-resolution photo captured & read into memory (Uint8List)
         │
-15 ms   Image decoded, center-cropped, and scaled to 224x224 RGB
+15 ms   3-View Test-Time Augmentation (TTA) pre-processes 3 crops:
+        • View 1: 100% Full Canvas Center-Crop (224x224 RGB)
+        • View 2: Horizontal Mirror Flip (224x224 RGB)
+        • View 3: 80% Central Macro-Crop (224x224 RGB)
         │
 25 ms   TFLite Interpreter invoked (CoreML / GPU / CPU delegate)
-        MobileNetV2 convolutional layers process pixels
+        MobileNetV2 processes each view and outputs 1,280 GAP feature vectors
         │
-85 ms   TFLite outputs 1,280 GAP feature numbers
+85 ms   TTA Feature Embedding Fusion:
+        F_fused = 0.55 * F_full + 0.25 * F_flip + 0.20 * F_macro
         │
-86 ms   Dart computes vector dot product with mushroom_classifier_head.bin
+86 ms   Dart computes vector dot product with mushroom_classifier_head.bin (240.8 KB)
         Dart applies Softmax to calculate percentage probabilities (<0.05 ms)
         │
-87 ms   Top-3 candidate species extracted and mapped to mushroom_labels.txt
+87 ms   Top-3 candidate species extracted and mapped to mushroom_labels.txt (47 taxa)
         │
 90 ms   SafetyGateService evaluates lookalike tables in local SQLite DB:
         • If top confidence < 70% -> Flag as Incert

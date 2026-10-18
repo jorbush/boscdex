@@ -40,5 +40,27 @@ void main() {
       expect(appInfo.version, isNotEmpty);
       expect(appInfo.displayVersion, startsWith('v'));
     });
+
+    test('appInfoProvider can be cleanly overridden with custom AppInfo',
+        () async {
+      const customInfo = AppInfo(
+        appName: 'Boscdex Test',
+        packageName: 'cat.boscdex.test',
+        version: '9.9.9',
+        buildNumber: '100',
+      );
+
+      final container = ProviderContainer(
+        overrides: [
+          appInfoProvider.overrideWith((ref) => Future.value(customInfo)),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final result = await container.read(appInfoProvider.future);
+      expect(result.appName, equals('Boscdex Test'));
+      expect(result.displayVersion, equals('v9.9.9'));
+      expect(result.fullDisplayVersion, equals('v9.9.9+100'));
+    });
   });
 }

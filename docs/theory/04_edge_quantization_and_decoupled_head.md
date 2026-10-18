@@ -91,11 +91,11 @@ We split the model into two specialized pieces:
                                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │ PART 2: Portable Linear Classification Head                     │
-│ Asset: assets/models/mushroom_classifier_head.bin (107.6 KB)    │
+│ Asset: assets/models/mushroom_classifier_head.bin (240.8 KB)    │
 │ Engine: Pure Native Dart in TfliteClassifierService             │
 │ Operation: Dot Product (W • x + b)                              │
 │ Latency: < 0.05 ms (< 50 microseconds!)                         │
-│ Output: 21 Species Logits -> Numerically Stable Softmax         │
+│ Output: 47 Species Logits -> Numerically Stable Softmax         │
 └─────────────────────────────────────────────────────────────────┘
                                  │
                                  ▼
@@ -115,11 +115,11 @@ Because this model contains only convolutional and pooling operations (which hav
 
 ### How Part 2 Works (`mushroom_classifier_head.bin`):
 We export the Dense layer's weights and biases into a tiny raw binary file:
-* **20 Biases:** 20 float32s $\times$ 4 bytes = 80 bytes.
-* **Weights Matrix:** 20 classes $\times$ 1,280 features $\times$ 4 bytes = 102,400 bytes.
-* **Total File Size:** Exactly **102,480 bytes (~102.5 KB)**.
+* **47 Biases:** 47 float32s $\times$ 4 bytes = 188 bytes.
+* **Weights Matrix:** 47 classes $\times$ 1,280 features $\times$ 4 bytes = 240,640 bytes.
+* **Total File Size:** Exactly **240,828 bytes (~240.8 KB)**.
 
-In [`lib/domain/services/tflite_classifier_service.dart`](file:///Users/jordi/dev/boscdex/lib/domain/services/tflite_classifier_service.dart#L177-L186), the classification dot product runs directly in native Dart:
+In [`lib/domain/services/tflite_classifier_service.dart`](file:///Users/jordi/dev/boscdex/lib/domain/services/tflite_classifier_service.dart), the classification dot product runs directly in native Dart:
 
 ```dart
 final logits = List<double>.generate(numClasses, (i) {
@@ -132,7 +132,15 @@ final logits = List<double>.generate(numClasses, (i) {
 });
 ```
 
+### Advanced On-Device Inference: 3-View Test-Time Augmentation (TTA)
+In production, instead of passing a single camera frame through Part 1, `TfliteClassifierService` generates **3 complementary views** in memory:
+1. Full Frame ($0.55$)
+2. Horizontal Mirror ($0.25$) — exploiting basidiocarp radial symmetry
+3. 80% Central Macro Crop ($0.20$) — suppressing peripheral forest floor clutter
+
+The three 1,280-D vectors are fused into a single representation before projecting through Part 2. See [Chapter 6: Modern Optimization & TTA](06_modern_optimization_and_tta.md) for full mathematical formulation.
+
 ### Why This Architecture is a Masterstroke:
-1. **Ultra-Fast Execution:** Computing 25,600 floating-point multiplications in Dart takes less than **0.05 milliseconds** ($< 50 \mu\text{s}$). It is completely imperceptible to the human eye.
+1. **Ultra-Fast Execution:** Computing 60,160 floating-point multiplications in Dart takes less than **0.05 milliseconds** ($< 50 \mu\text{s}$). It is completely imperceptible to the human eye.
 2. **Zero Version Incompatibility:** Dart runs everywhere Flutter runs. No C++ FlatBuffer opcode incompatibilities can ever break the classification head.
-3. **Instant Model Calibrations:** If we ever want to fine-tune the classifier head on new species or adjust biases for safety lookalikes, we only need to update a tiny 102 KB file rather than re-exporting and re-validating the entire TFLite graph!
+3. **Instant Model Calibrations:** If we ever want to fine-tune the classifier head on new species or adjust biases for safety lookalikes, we only need to update a tiny 240.8 KB file rather than re-exporting and re-validating the entire TFLite graph!
