@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/database/app_database.dart';
 import '../../providers/database_provider.dart';
+import '../../domain/models/culinary_recipe.dart';
 import '../../domain/models/edibilitat.dart';
 import '../../domain/models/forager_level.dart';
 
@@ -31,6 +32,7 @@ class BoscdexEntry {
 enum BoletFilter {
   all,
   edibles,
+  gourmet,
   toxic,
   partnerTrees,
 }
@@ -79,6 +81,11 @@ final filteredBoscdexEntriesProvider = Provider<List<BoscdexEntry>>((ref) {
             final ed = EdibilitatExtension.fromString(e.bolet.edibility);
             return ed.isEdible;
           }).toList();
+        case BoletFilter.gourmet:
+          return entries
+              .where(
+                  (e) => CulinaryRecipe.gourmetSpeciesIds.contains(e.bolet.id))
+              .toList();
         case BoletFilter.toxic:
           return entries.where((e) {
             final ed = EdibilitatExtension.fromString(e.bolet.edibility);

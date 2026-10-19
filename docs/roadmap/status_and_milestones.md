@@ -113,8 +113,12 @@ Prioritized features before the initial public store release:
 
 ---
 
-## 🚀 Milestone v1.3: Store Release (App Store & Google Play)
-
+## 🚀 Milestone v1.3: Catalan Culinary Expansion & Store Readiness
+- [x] **62-Species Catalan Culinary Catalog Expansion:** Expanded taxonomy from 47 to 62 species (+31.9%), adding 10 iconic Catalan culinary legends (*Tuber melanosporum*, *Infundibulicybe geotropa*, *Boletus pinophilus*, *Neoboletus luridiformis*, *Boletus reticulatus*, *Hygrophorus marzuolus*, *Russula aurea*, *Craterellus tubaeformis*, *Agaricus arvensis*, *Hydnum rufescens*) and 5 critical toxic/bitter lookalikes (*Scleroderma citrinum*, *Clitocybe nebularis*, *Suillellus luridus*, *Tylopilus felleus*, *Russula emetica*).
+- [x] **15 Custom 16-Bit Retro Arcade Pixel-Art Sprites:** Generated authentic RGBA transparent sprites for all 15 new species under `assets/images/mushrooms/`.
+- [x] **Traditional Catalan Recipe Cards:** Integrated `TraditionalRecipeCard` on discovered edible species, featuring authentic recipes, culinary safety cooking warnings, difficulty ratings, and Catalan wine pairings (Priorat, Montsant, Empordà, Cava Brut Nature, Penedès Xarel·lo).
+- [x] **Gourmet Gamification & Catalog Filtering:** Added 3 new achievement badges (`joies_de_la_cuina`, `mestre_tofoner`, `cuina_sense_ensurts`) and a dedicated "Gourmet" filter chip in the Boscdex.
+- [x] **Series 018 Empirical Benchmark Record (855 Field Photos):** Reached an all-time record **88.4% Top-1 (756 / 855)** and **96.7% Top-3 (827 / 855)** across 62 species (and **88.9% Top-1** across the 47 legacy taxa), with 43 of 62 taxa achieving 100% Top-3 accuracy and 96.7% Top-3 lethal recall (59 / 61).
 - [x] **Android App Bundle (.aab):** Automated generation of optimized release bundle (`app-release.aab`, ~25 MB) in GitHub Actions release workflow ready for Google Play Console submission.
 - [ ] **iOS Archive (.ipa):** Create signed App Store release archive for TestFlight distribution.
 - [ ] **App Assets & Icons:** Finalize adaptive launcher icons (`ic_launcher` / `AppIcon`) with pixel-art Boscdex identity across all density buckets.

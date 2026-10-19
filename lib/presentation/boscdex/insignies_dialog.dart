@@ -420,6 +420,12 @@ class InsigniesDialog extends ConsumerWidget {
         return Icons.explore_rounded;
       case 'gran_enciclopedia':
         return Icons.auto_stories_rounded;
+      case 'joies_de_la_cuina':
+        return Icons.restaurant_rounded;
+      case 'mestre_tofoner':
+        return Icons.diamond_rounded;
+      case 'cuina_sense_ensurts':
+        return Icons.verified_user_rounded;
       default:
         return Icons.verified;
     }

@@ -240,6 +240,81 @@ class SpeciesLocalizer {
       'es': 'Galerina mortal / Galerina rebordeada',
       'en': 'Funeral Bell / Deadly Galerina',
     },
+    'tuber_melanosporum': {
+      'ca': 'Tòfona negra / Trufa negra',
+      'es': 'Trufa negra',
+      'en': 'Black Truffle / Périgord Truffle',
+    },
+    'scleroderma_citrinum': {
+      'ca': 'Patac d\'ase / Tòfona borda',
+      'es': 'Falsa trufa / Patata de tierra',
+      'en': 'Common Earthball / Pigskin Poison Puffball',
+    },
+    'infundibulicybe_geotropa': {
+      'ca': 'Pampa / Candela de bruixa / Cap d\'orinal',
+      'es': 'Platera / Cabeza de fraile',
+      'en': 'Trooping Funnel / Monk\'s Head',
+    },
+    'clitocybe_nebularis': {
+      'ca': 'Pampa de boira / Boira / Burell',
+      'es': 'Pardilla / Seta de brezo',
+      'en': 'Clouded Agaric / Clouded Funnel',
+    },
+    'boletus_pinophilus': {
+      'ca': 'Cep vermell / Cep de pi / Sureny vermell',
+      'es': 'Boleto pinícola / Hongo de pino',
+      'en': 'Pine Bolete',
+    },
+    'neoboletus_luridiformis': {
+      'ca': 'Mataparent de peu vermell / Bolet de bou',
+      'es': 'Boleto de pie rojo',
+      'en': 'Scarletina Bolete / Dotted-Stem Bolete',
+    },
+    'suillellus_luridus': {
+      'ca': 'Mataparent de bou / Fals bolet de bou',
+      'es': 'Boleto lúrido',
+      'en': 'Lurid Bolete',
+    },
+    'tylopilus_felleus': {
+      'ca': 'Mataparent amarg / Cep amarg',
+      'es': 'Boleto amargo / Hongo amargo',
+      'en': 'Bitter Bolete',
+    },
+    'boletus_reticulatus': {
+      'ca': 'Cep d\'estiu / Siuró d\'estiu',
+      'es': 'Boleto reticulado / Boleto de verano',
+      'en': 'Summer Bolete',
+    },
+    'hygrophorus_marzuolus': {
+      'ca': 'Marçot / Bolet de març',
+      'es': 'Marzuelo / Seta de marzo',
+      'en': 'March Mushroom / Snowdrop Woodwax',
+    },
+    'russula_aurea': {
+      'ca': 'Llora daurada / Cuaverda daurada',
+      'es': 'Rúsula dorada',
+      'en': 'Gilded Brittlegill',
+    },
+    'russula_emetica': {
+      'ca': 'Rússula emètica / Cua cremosa',
+      'es': 'Rúsula emética',
+      'en': 'The Sickener / Vomiting Russula',
+    },
+    'craterellus_tubaeformis': {
+      'ca': 'Rossinyol de bosc / Trompeta groga / Rossinyolic',
+      'es': 'Trompeta amarilla / Angula de monte',
+      'en': 'Trumpet Chanterelle / Yellowfoot',
+    },
+    'agaricus_arvensis': {
+      'ca': 'Bola de neu / Xampinyó d\'anís / Terrerol gros',
+      'es': 'Champiñón anisado / Bola de nieve',
+      'en': 'Horse Mushroom',
+    },
+    'hydnum_rufescens': {
+      'ca': 'Llengua de bou rogenca / Llengua de gat',
+      'es': 'Lengua de vaca rojiza / Gamuza rojiza',
+      'en': 'Terracotta Hedgehog / Rufous Wood Hedgehog',
+    },
   };
 
   static const Map<String, Map<String, String>> _trees = {
@@ -1840,6 +1915,110 @@ class SpeciesLocalizer {
           'La seta de los caballeros tiene láminas amarillo azufre y carne fibrosa; la carbonera tiene láminas blancas grasientas y carne quebradiza.',
       'en':
           'Yellow Knight has sulfur-yellow gills and fibrous flesh; Charcoal Burner has white flexible lardaceous gills and brittle chalky flesh.',
+    },
+    'tuber_melanosporum:scleroderma_citrinum': {
+      'ca':
+          'La Tòfona negra és subterrània i aromàtica amb gleba negrosa marbrada per venes blanques; el Patac d\'ase té pell dura berrugosa groga i gleba negra homogènia sense vetes blanques.',
+      'es':
+          'La trufa negra es subterránea y muy aromática con interior veteado de blanco; la falsa trufa o patata de tierra tiene piel correosa amarillenta y gleba negra uniforme sin vetas, siendo muy tóxica.',
+      'en':
+          'The Black Truffle grows underground and has marbled black flesh with white veins; the toxic Common Earthball grows on the surface with a tough yellowish warty skin and solid black interior without veins.',
+    },
+    'infundibulicybe_geotropa:clitocybe_nebularis': {
+      'ca':
+          'La Pampa és de color beix ocre amb un mamelló central prominent (umbó); la Pampa de boira té un barret pla o deprimit gris cendra sense mamelló i és tòxica/indigesta.',
+      'es':
+          'La platera tiene color ocre claro con un mamelón central muy evidente; la pardilla tiene sombrero gris ceniza sin mamelón y resulta indigesta o tóxica para muchas personas.',
+      'en':
+          'The Trooping Funnel is buff-ochre with a prominent central nipple (umbo); the Clouded Funnel has a flat or depressed ash-grey cap without a central nipple and is indigestible or toxic.',
+    },
+    'boletus_edulis:tylopilus_felleus': {
+      'ca':
+          'El Mataparent amarg té porus rosats a la maduresa i un reticle marró fosc prominent al peu; a més té un sabor extremadament amarg que arruïna qualsevol guisat.',
+      'es':
+          'El boleto amargo tiene poros que viran a rosa y un retículo pardo oscuro muy marcado en el pie; su sabor es intensamente amargo y estropea cualquier plato.',
+      'en':
+          'The Bitter Bolete has pores that turn dirty pink with age and a dark coarse mesh on the stem; its intensely bitter taste ruins any dish.',
+    },
+    'boletus_pinophilus:tylopilus_felleus': {
+      'ca':
+          'El Mataparent amarg té porus rosats de madur i reticle fosc marcat al peu, a diferència dels porus groguencs-oliva del Cep vermell, i és immensament amarg.',
+      'es':
+          'El boleto amargo presenta poros rosados de adulto y retículo oscuro en el pie a diferencia de los poros amarillo-oliva del boleto pinícola, y es incomible por amargo.',
+      'en':
+          'The Bitter Bolete shows pinkish mature pores and a coarse dark net on the stipe, unlike the yellowish-olive pores of the Pine Bolete, and is intolerably bitter.',
+    },
+    'neoboletus_luridiformis:suillellus_luridus': {
+      'ca':
+          'El Mataparent de peu vermell té peu puntejat de grans vermells sense reticle; el Mataparent de bou (tòxic en cru i amb alcohol) té una xarxa vermella molt marcada sobre fons groc.',
+      'es':
+          'El boleto de pie rojo tiene el pie punteado de gránulos rojos sin red; el boleto lúrido (tóxico en crudo y con alcohol) presenta una red o retículo rojo muy visible en relieve sobre fondo amarillo.',
+      'en':
+          'Scarletina Bolete has red dots/granules on its stem without a mesh; Lurid Bolete (toxic raw and with alcohol) has a prominent crimson net/mesh pattern over yellow.',
+    },
+    'russula_aurea:russula_emetica': {
+      'ca':
+          'La Llora daurada té làmines i peu d\'un groc daurat lluminós i carn dolça; la Rússula emètica té làmines i peu d\'un blanc immaculat i és extremadament picant i tòxica.',
+      'es':
+          'La rúsula dorada tiene láminas y pie de un amarillo dorado luminoso y carne dulce; la rúsula emética tiene láminas y pie de un blanco puro inmaculado y es intensamente picante y vomitiva.',
+      'en':
+          'Gilded Brittlegill has brilliant golden-yellow gills and stem with mild sweet flesh; the Sickener has pure white gills and stem, burning acrid taste, and causes vomiting.',
+    },
+    'agaricus_arvensis:agaricus_xanthodermus': {
+      'ca':
+          'La Bola de neu fa olor suau d\'anís i té anell en roda dentada; el Xampinyó groguenc grogueja a l\'instant a la base del peu i fa una forta olor de tinta o fenol.',
+      'es':
+          'La bola de nieve huele agradablemente a anís y tiene anillo en rueda dentada; el champiñón amarilleante vira a amarillo cromo instantáneo en la base del pie y huele fuertemente a tinta o fenol.',
+      'en':
+          'Horse Mushroom smells sweetly of anise and has a cogwheel ring; Yellow-staining Mushroom stains vivid chrome yellow instantly at the base and smells of phenol/ink.',
+    },
+    'agaricus_arvensis:amanita_verna': {
+      'ca':
+          'La mortal Cicuta blanca té làmines sempre d\'un blanc pur i volva membranosa en sac; la Bola de neu té làmines que passen de gris-rosat a xocolata i no té mai volva.',
+      'es':
+          'La mortal cicuta blanca tiene láminas siempre blancas y volva envolvente en saco; la bola de nieve tiene láminas que oscurecen a rosadas y chocolate y carece de volva.',
+      'en':
+          'Deadly Spring Amanita has permanently pure white gills and a sack-like basal volva; Horse Mushroom has gills maturing from pinkish-grey to chocolate brown and lacks a volva.',
+    },
+    'clitocybe_nebularis:entoloma_sinuatum': {
+      'ca':
+          'El molt tòxic Pèrfid té làmines groguenques a rosades escotades i olor de farina rància; la Pampa de boira té làmines blanquinoses decurrents i forta olor de fenc/boira.',
+      'es':
+          'La engañosa (muy tóxica) tiene láminas escotadas que viran a rosa y olor a harina rancia; la pardilla tiene láminas decurrentes blanquecinas y olor fuerte a moho/paja.',
+      'en':
+          'The highly toxic Pinkgill has notched yellowish-pink gills and rancid flour odor; the Clouded Agaric has decurrent whitish gills and a strong pungent clouded odor.',
+    },
+    'agaricus_arvensis:amanita_phalloides': {
+      'ca':
+          'En fase de botó, la mortal Farinera borda es pot confondre amb el jove xampinyó, però l\'Amanita té volva membranosa en sac a la base i làmines sempre blanques pures.',
+      'es':
+          'En estado de botón, la mortal oronja verde puede confundirse con el champiñón joven, pero la Amanita tiene volva basal en saco y láminas permanentemente blancas.',
+      'en':
+          'In button stage, the deadly Death Cap can resemble young horse mushrooms, but the Amanita has a sack-like basal volva and permanently pure white gills.',
+    },
+    'agaricus_arvensis:amanita_virosa': {
+      'ca':
+          'La mortal Farinera pudent és completament blanca, té peu llanós-esquamós, anell penjant i volva en sac; la Bola de neu mai té volva i les làmines enfosqueixen a xocolata.',
+      'es':
+          'La mortal cicuta fétida es enteramente blanca, con pie lanoso-escamoso, anillo colgante y volva en saco; la bola de nieve no tiene volva y sus láminas oscurecen.',
+      'en':
+          'The deadly Destroying Angel is completely white with a shaggy stem, pendulous ring, and basal volva; Horse Mushroom never has a volva and its gills darken to chocolate.',
+    },
+    'boletus_reticulatus:tylopilus_felleus': {
+      'ca':
+          'El Mataparent amarg té porus rosats de madur i un reticle marró fosc amb malles amples al peu; a diferència del reticle blanc fi del Cep d\'estiu, és insuportablement amarg.',
+      'es':
+          'El boleto amargo tiene poros que viran a rosa sucio y un retículo oscuro de malla ancha; a diferencia del fino retículo blanco del boleto estival, es intocablemente amargo.',
+      'en':
+          'The Bitter Bolete develops dirty pink pores and a coarse dark mesh on the stem; unlike the fine white net of the Summer Bolete, it is completely inedible due to extreme bitterness.',
+    },
+    'neoboletus_luridiformis:rubroboletus_satanas': {
+      'ca':
+          'El molt tòxic Mataparent de Satanàs té barret blanquinós-grisenc i reticle vermell al peu; el Mataparent de peu vermell té barret marró xocolata vellutat i peu pigallat de puntets sense xarxa.',
+      'es':
+          'El muy tóxico boleto de Satanás tiene sombrero blanquecino-ceniza y retículo rojo en el pie; el boleto de pie rojo tiene sombrero marrón terciopelo y pie punteado sin red.',
+      'en':
+          'The highly toxic Satan\'s Bolete has a chalky whitish-grey cap and red stem reticulation; Scarletina Bolete has a velvety chocolate-brown cap and a punctate dotted stem without a mesh.',
     },
   };
 

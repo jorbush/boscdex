@@ -1,7 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
+import 'package:boscdex/core/constants/app_constants.dart';
 import 'package:boscdex/data/database/app_database.dart';
+import 'package:boscdex/domain/models/insignia.dart' as domain;
 
 void main() {
   late AppDatabase db;
@@ -17,13 +19,13 @@ void main() {
 
   test('Database populates seed data on creation', () async {
     final bolets = await db.boletDao.getAllBolets();
-    expect(bolets.length, equals(47));
+    expect(bolets.length, equals(AppConstants.catalogSpeciesCount));
 
     final arbres = await db.arbreDao.getAllArbres();
     expect(arbres.length, equals(5));
 
     final insignies = await db.insigniaDao.getAllInsignies();
-    expect(insignies.length, equals(14));
+    expect(insignies.length, equals(domain.Insignia.registry.length));
   });
 
   test('BoletDao queries work correctly', () async {

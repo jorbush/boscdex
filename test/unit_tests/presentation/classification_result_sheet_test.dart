@@ -389,6 +389,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       final registerButton = find.text('Registrar a la meva Boscdex');
+      await tester.ensureVisible(registerButton);
+      await tester.pumpAndSettle();
       expect(registerButton, findsOneWidget);
       await tester.tap(registerButton);
       await tester.pumpAndSettle();

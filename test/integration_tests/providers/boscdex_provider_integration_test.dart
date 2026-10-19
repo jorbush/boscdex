@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:boscdex/core/constants/app_constants.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/presentation/boscdex/boscdex_provider.dart';
 import 'package:boscdex/providers/database_provider.dart';
@@ -34,13 +35,25 @@ void main() {
       await db.close();
     });
 
-    test('boscdexEntriesProvider loads all 47 seeded species', () async {
+    test(
+        'boscdexEntriesProvider loads all ${AppConstants.catalogSpeciesCount} seeded species',
+        () async {
       final entries = await container.read(boscdexEntriesProvider.future);
-      expect(entries.length, equals(47));
+      expect(entries.length, equals(AppConstants.catalogSpeciesCount));
 
       // All initial entries should be undiscovered
       final discoveredCount = entries.where((e) => e.isDiscovered).length;
       expect(discoveredCount, equals(0));
+    });
+
+    test('filteredBoscdexEntriesProvider correctly filters gourmet bolets',
+        () async {
+      container.read(boscdexFilterProvider.notifier).state =
+          BoletFilter.gourmet;
+      await container.read(boscdexEntriesProvider.future);
+      final filtered = container.read(filteredBoscdexEntriesProvider);
+      expect(filtered.length, equals(16));
+      expect(filtered.any((e) => e.bolet.id == 'tuber_melanosporum'), isTrue);
     });
 
     test('filteredBoscdexEntriesProvider correctly filters comestibles',

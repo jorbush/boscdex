@@ -6,6 +6,7 @@ import 'package:drift/native.dart';
 
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/models/forager_level.dart';
+import 'package:boscdex/domain/models/insignia.dart' as domain;
 import 'package:boscdex/presentation/boscdex/boscdex_provider.dart';
 import 'package:boscdex/presentation/boscdex/insignies_dialog.dart';
 import 'package:boscdex/providers/database_provider.dart';
@@ -46,7 +47,7 @@ void main() {
 
       // Title and trophy icon
       expect(find.text('Les Meves Insígnies'), findsOneWidget);
-      expect(find.text('0/14'), findsOneWidget);
+      expect(find.text('0/${domain.Insignia.registry.length}'), findsOneWidget);
 
       // Verify canonical badge names appear
       expect(find.text('Primer pas al bosc'), findsOneWidget);
@@ -87,8 +88,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
 
-      // Now 1 out of 14 should be awarded
-      expect(find.text('1/14'), findsOneWidget);
+      // Now 1 out of total should be awarded
+      expect(find.text('1/${domain.Insignia.registry.length}'), findsOneWidget);
       expect(find.text('DESBLOQUEJAT'), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());

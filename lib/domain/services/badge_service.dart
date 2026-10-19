@@ -86,6 +86,25 @@ class BadgeService {
         case 'gran_enciclopedia':
           newProgress = discoveryCount;
           break;
+        case 'joies_de_la_cuina':
+          newProgress = [
+            'infundibulicybe_geotropa',
+            'boletus_pinophilus',
+            'tuber_melanosporum',
+            'hygrophorus_marzuolus',
+            'neoboletus_luridiformis',
+          ].where((id) => discoveredBoletIds.contains(id)).length;
+          break;
+        case 'mestre_tofoner':
+          newProgress = [
+            'tuber_melanosporum',
+            'scleroderma_citrinum',
+          ].where((id) => discoveredBoletIds.contains(id)).length;
+          break;
+        case 'cuina_sense_ensurts':
+          newProgress =
+              discoveredBoletIds.contains('tylopilus_felleus') ? 1 : 0;
+          break;
       }
 
       if (newProgress >= badge.targetCount) {

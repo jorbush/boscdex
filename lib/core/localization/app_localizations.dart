@@ -539,6 +539,56 @@ class AppLocalizations {
     }
   }
 
+  String get filterGourmet => 'Gourmet';
+
+  String get traditionalRecipes {
+    switch (languageCode) {
+      case 'es':
+        return 'Recetario Tradicional Catalán';
+      case 'en':
+        return 'Traditional Catalan Recipes';
+      case 'ca':
+      default:
+        return 'Receptari Tradicional Català';
+    }
+  }
+
+  String get culinaryPreparation {
+    switch (languageCode) {
+      case 'es':
+        return 'Preparación en los fogones';
+      case 'en':
+        return 'Kitchen Preparation';
+      case 'ca':
+      default:
+        return 'Preparació als fogons';
+    }
+  }
+
+  String get cookingTip {
+    switch (languageCode) {
+      case 'es':
+        return 'Consejo culinario y seguridad';
+      case 'en':
+        return 'Culinary tip & safety';
+      case 'ca':
+      default:
+        return 'Consell culinari i seguretat';
+    }
+  }
+
+  String get winePairing {
+    switch (languageCode) {
+      case 'es':
+        return 'Maridaje recomendado';
+      case 'en':
+        return 'Recommended Pairing';
+      case 'ca':
+      default:
+        return 'Maridatge recomanat';
+    }
+  }
+
   String get filterTreePartners {
     switch (languageCode) {
       case 'es':
@@ -1963,6 +2013,36 @@ class AppLocalizations {
           default:
             return 'Gran enciclopèdia';
         }
+      case 'joies_de_la_cuina':
+        switch (languageCode) {
+          case 'es':
+            return 'Las Joyas de la Cocina';
+          case 'en':
+            return 'Culinary Jewels';
+          case 'ca':
+          default:
+            return 'Les Joies de la Cuina';
+        }
+      case 'mestre_tofoner':
+        switch (languageCode) {
+          case 'es':
+            return 'El Maestro Trufero';
+          case 'en':
+            return 'Master Truffle Hunter';
+          case 'ca':
+          default:
+            return 'El Mestre Tofoner';
+        }
+      case 'cuina_sense_ensurts':
+        switch (languageCode) {
+          case 'es':
+            return 'Cocina sin Sustos';
+          case 'en':
+            return 'Safe Kitchen';
+          case 'ca':
+          default:
+            return 'Cuina sense Ensurts';
+        }
       default:
         return id;
     }
@@ -2109,6 +2189,36 @@ class AppLocalizations {
           case 'ca':
           default:
             return 'Completa el catàleg descobrint tots els ${AppConstants.catalogSpeciesCount} bolets de la Boscdex!';
+        }
+      case 'joies_de_la_cuina':
+        switch (languageCode) {
+          case 'es':
+            return 'Descubre 5 leyendas gastronómicas: platera, boleto pinícola, trufa negra, marzuelo y boleto de pie rojo.';
+          case 'en':
+            return 'Discover 5 culinary legends: Monk\'s Head, Pine Bolete, Black Truffle, March Mushroom, and Scarletina Bolete.';
+          case 'ca':
+          default:
+            return 'Descobreix 5 llegendes gastronòmiques: pampa, cep vermell, tòfona negra, marçot i mataparent de peu vermell.';
+        }
+      case 'mestre_tofoner':
+        switch (languageCode) {
+          case 'es':
+            return 'Encuentra la apreciada trufa negra y aprende a distinguirla del hongo patata venenoso.';
+          case 'en':
+            return 'Find the prized Black Truffle and learn to distinguish it from the toxic Earthball.';
+          case 'ca':
+          default:
+            return 'Troba la preuada tòfona negra i aprèn a distingir-la del patac d\'ase tòxic.';
+        }
+      case 'cuina_sense_ensurts':
+        switch (languageCode) {
+          case 'es':
+            return 'Identifica el boleto amargo para proteger tu cazuela de boletus.';
+          case 'en':
+            return 'Identify the Bitter Bolete to protect your pan of porcini.';
+          case 'ca':
+          default:
+            return 'Identifica el mataparent amarg per protegir la teva cassola de ceps.';
         }
       default:
         return '';

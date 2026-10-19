@@ -24,7 +24,7 @@ void main() {
       await service.initialize();
 
       // Labels from assets/models/mushroom_labels.txt should be parsed
-      expect(service.labels.length, equals(47));
+      expect(service.labels.length, equals(62));
       expect(service.labels, contains('lactarius_deliciosus'));
       expect(service.labels, contains('amanita_caesarea'));
       expect(service.labels, contains('boletus_edulis'));
@@ -102,11 +102,11 @@ void main() {
     });
 
     test(
-        'All 47 model labels resolve non-empty Catalan names via SpeciesLocalizer',
+        'All 62 model labels resolve non-empty Catalan names via SpeciesLocalizer',
         () async {
       await service.initialize();
 
-      expect(service.labels.length, equals(47));
+      expect(service.labels.length, equals(62));
       for (final label in service.labels) {
         final caName =
             SpeciesLocalizer.getMushroomName(label, languageCode: 'ca');
@@ -124,8 +124,7 @@ void main() {
       }
     });
 
-    test('3-view TTA classifies newly added 47-catalog species sprite cleanly',
-        () async {
+    test('3-view TTA classifies catalog species sprite cleanly', () async {
       await service.initialize();
 
       final sampleFile = File('assets/images/mushrooms/amanita_virosa.png');

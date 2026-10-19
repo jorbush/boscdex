@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:boscdex/core/constants/app_constants.dart';
 import 'package:boscdex/domain/models/insignia.dart';
 import 'package:boscdex/domain/services/badge_service.dart';
 
@@ -318,12 +319,13 @@ void main() {
       expect(badge.progressCount, equals(5));
     });
 
-    test('awards gran_enciclopedia when all 47 species are discovered',
+    test(
+        'awards gran_enciclopedia when all ${AppConstants.catalogSpeciesCount} species are discovered',
         () async {
       const initialBadges = Insignia.registry;
 
       final updated = await service.evaluateBadges(
-        discoveryCount: 47,
+        discoveryCount: AppConstants.catalogSpeciesCount,
         toxicComparisonViewCount: 0,
         hasTreeAlliance: false,
         currentBadges: initialBadges,
@@ -331,7 +333,67 @@ void main() {
 
       final badge = updated.firstWhere((b) => b.id == 'gran_enciclopedia');
       expect(badge.isAwarded, isTrue);
-      expect(badge.progressCount, equals(47));
+      expect(badge.progressCount, equals(AppConstants.catalogSpeciesCount));
+    });
+
+    test('awards joies_de_la_cuina when 5 culinary legends are discovered',
+        () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 5,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        discoveredBoletIds: {
+          'infundibulicybe_geotropa',
+          'boletus_pinophilus',
+          'tuber_melanosporum',
+          'hygrophorus_marzuolus',
+          'neoboletus_luridiformis',
+        },
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'joies_de_la_cuina');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(5));
+    });
+
+    test('awards mestre_tofoner when both truffle and earthball are known',
+        () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 2,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        discoveredBoletIds: {
+          'tuber_melanosporum',
+          'scleroderma_citrinum',
+        },
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'mestre_tofoner');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(2));
+    });
+
+    test('awards cuina_sense_ensurts when bitter bolete is identified',
+        () async {
+      const initialBadges = Insignia.registry;
+
+      final updated = await service.evaluateBadges(
+        discoveryCount: 1,
+        toxicComparisonViewCount: 0,
+        hasTreeAlliance: false,
+        currentBadges: initialBadges,
+        discoveredBoletIds: {'tylopilus_felleus'},
+      );
+
+      final badge = updated.firstWhere((b) => b.id == 'cuina_sense_ensurts');
+      expect(badge.isAwarded, isTrue);
+      expect(badge.progressCount, equals(1));
     });
   });
 }

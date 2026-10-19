@@ -1032,6 +1032,333 @@ class SeedData {
           imageAssetPath:
               Value('assets/images/mushrooms/galerina_marginata.png'),
         ),
+        BoletsCompanion(
+          id: Value('tuber_melanosporum'),
+          catalanName: Value('Tòfona negra / Trufa negra'),
+          scientificName: Value('Tuber melanosporum'),
+          family: Value('Tuberaceae'),
+          rarityTier: Value('llegendari'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[11,12,1,2,3]'),
+          altitudeMin: Value(400),
+          altitudeMax: Value(1400),
+          capDescription: Value(
+              'Bolet subterrani (hipogeu) de 2 a 10 cm, globular o arrodonit de forma irregular. Peridi (pell externa) negre carbó o bru fosc, cobert de berrugues piramidals poligonals molt dures.'),
+          gillsDescription: Value(
+              'No té làmines ni porus. Gleba (massa interna) sòlida, ferma, compacta, de color marró-negre a violaci fosc, densament marbrejada de fines venes blanques ramificades.'),
+          stemDescription: Value(
+              'Massa fúngica sense peu ni tija, unida al sòl calcari per un petit cordó miceliar basal.'),
+          safetyNotes: Value(
+              'Excel·lentíssim comestible de màxima categoria gastronòmica. ATENCIÓ: No confondre amb el Patac d\'ase (Scleroderma citrinum), tòxic, de pell groguenca berrugosa i interior negre sense venes blanques.'),
+          dexNumber: Value(48),
+          imageAssetPath:
+              Value('assets/images/mushrooms/tuber_melanosporum.png'),
+        ),
+        BoletsCompanion(
+          id: Value('infundibulicybe_geotropa'),
+          catalanName: Value('Pampa / Candela de bruixa'),
+          scientificName: Value('Infundibulicybe geotropa'),
+          family: Value('Tricholomataceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[10,11,12]'),
+          altitudeMin: Value(300),
+          altitudeMax: Value(1500),
+          capDescription: Value(
+              'Gran i imponent (10-25 cm), convex d\'inici que s\'embuta profundament amb l\'edat, amb un característic mugró o bony central prominent. De color beix ocre pàl·lid, camussa o cafè amb llet clar.'),
+          gillsDescription: Value(
+              'Molt decurrents (baixen molt pel peu), atapeïdes, del mateix color crema blanquinós que el barret.'),
+          stemDescription: Value(
+              'Robust, alt (10-20 cm), fibril·lós, del mateix color que el barret, engruixit i cotonós a la base.'),
+          safetyNotes: Value(
+              'Estrella del fricandó i dels guisats tradicionals catalans per la seva carn ferma i aromàtica. No confondre amb la Pampa de boira (Clitocybe nebularis), tòxica en cru i sovint indigesta, de barret gris cendrós sense mugró central.'),
+          dexNumber: Value(49),
+          imageAssetPath:
+              Value('assets/images/mushrooms/infundibulicybe_geotropa.png'),
+        ),
+        BoletsCompanion(
+          id: Value('boletus_pinophilus'),
+          catalanName: Value('Cep vermell / Cep de pi'),
+          scientificName: Value('Boletus pinophilus'),
+          family: Value('Boletaceae'),
+          rarityTier: Value('rar'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[8,9,10,11]'),
+          altitudeMin: Value(800),
+          altitudeMax: Value(2100),
+          capDescription: Value(
+              'Massís i corpulent (8-25 cm), convex, de color caoba fosc, bru rogenc o coure vermellós amb reflexos granats, amb una superfície rugosa finament vellutada.'),
+          gillsDescription: Value(
+              'Tubs i porus fins, inicialment blancs immaculats, que passen a groc daurat i finalment a verd oliva en madurar. No blavegen al toc.'),
+          stemDescription: Value(
+              'Molt gruixut, ventrut o bulbós, de color canyella pàl·lid o ocre rogenc, amb un reticle fi blanquinós a la part superior.'),
+          safetyNotes: Value(
+              'Excel·lent comestible de primera classe (el tercer cep reial català). Es pot menjar cru en carpaccio o a la brasa. Compte amb el Mataparent amarg (Tylopilus felleus), de porus rosats i sabor insuportablement amarg.'),
+          dexNumber: Value(50),
+          imageAssetPath:
+              Value('assets/images/mushrooms/boletus_pinophilus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('neoboletus_luridiformis'),
+          catalanName: Value('Mataparent de peu vermell'),
+          scientificName: Value('Neoboletus luridiformis'),
+          family: Value('Boletaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[7,8,9,10,11]'),
+          altitudeMin: Value(600),
+          altitudeMax: Value(1900),
+          capDescription: Value(
+              'De 6 a 20 cm, hemisfèric a convex, vellutat, de color marró xocolata fosc, marró vellut o bru sutge.'),
+          gillsDescription: Value(
+              'Porus petits, rodons, de color vermell sang viu o vermell ataronjat, que blavegen intensament al mínim frec o pressió.'),
+          stemDescription: Value(
+              'Gruixut, robust, groc de fons però densament pigallat de granulacions o punts vermells (MAI amb reticle o xarxa).'),
+          safetyNotes: Value(
+              'BON COMESTIBLE UN COP CUIT. Tòxic en cru: conté hemolisines termolàbils que es destrueixen completament amb una cocció perllongada d\'almenys 15-20 minuts. Mai s\'ha de consumir cru o poc fet. DIFERENCIACIÓ CLAU: El perillós Mataparent de Satanàs té barret blanquinós i peu reticulat; el Mataparent de bou (S. luridus) té reticle al peu i és tòxic en cru.'),
+          dexNumber: Value(51),
+          imageAssetPath:
+              Value('assets/images/mushrooms/neoboletus_luridiformis.png'),
+        ),
+        BoletsCompanion(
+          id: Value('boletus_reticulatus'),
+          catalanName: Value('Cep d\'estiu / Siuró d\'estiu'),
+          scientificName: Value('Boletus reticulatus'),
+          family: Value('Boletaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[5,6,7,8,9,10]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1400),
+          capDescription: Value(
+              'De 7 a 22 cm, convex, sec, finament vellutat, de color beix ocre clar, avellana o cafè amb llet, sovint clivellat en petits mosaics en temps sec.'),
+          gillsDescription: Value(
+              'Tubs i porus blancs en exemplars joves, que es tornen groguencs i verdosos amb l\'edat. No canvien de color al tacte.'),
+          stemDescription: Value(
+              'Robust, cilíndric o bombat a la base, marró clar, cobert de dalt a baix per una xarxa o reticle blanquinós molt marcat i evident.'),
+          safetyNotes: Value(
+              'Excel·lent comestible d\'olor intensament afruitada i dolça d\'avellana. És el primer cep en aparèixer a la primavera i estiu sota roures, alzines i castanyers.'),
+          dexNumber: Value(52),
+          imageAssetPath:
+              Value('assets/images/mushrooms/boletus_reticulatus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('hygrophorus_marzuolus'),
+          catalanName: Value('Marçot / Bolet de març'),
+          scientificName: Value('Hygrophorus marzuolus'),
+          family: Value('Hygrophoraceae'),
+          rarityTier: Value('rar'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[2,3,4]'),
+          altitudeMin: Value(700),
+          altitudeMax: Value(1800),
+          capDescription: Value(
+              'De 4 a 12 cm, carnós, irregularment convex, de color gris plom, gris cendra fosc a negre sutge, sovint clapat de blanquinós en estar enterrat sota la pinassa.'),
+          gillsDescription: Value(
+              'Làmines ceroses, una mica espaiades, adnades a lleugerament decurrents, blanques al principi i grisoses en envellir.'),
+          stemDescription: Value(
+              'Curt, robust, massís, blanc a grisenc, fibril·lós, sovint corbat per la pressió de la pinassa.'),
+          safetyNotes: Value(
+              'Excel·lent comestible molt buscat. És el bolet més primerenc de Catalunya: surt a finals d\'hivern i principis de primavera just després del desglaç sota pins i faigs.'),
+          dexNumber: Value(53),
+          imageAssetPath:
+              Value('assets/images/mushrooms/hygrophorus_marzuolus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('russula_aurea'),
+          catalanName: Value('Llora daurada / Cuaverda daurada'),
+          scientificName: Value('Russula aurea'),
+          family: Value('Russulaceae'),
+          rarityTier: Value('rar'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[6,7,8,9,10]'),
+          altitudeMin: Value(300),
+          altitudeMax: Value(1500),
+          capDescription: Value(
+              'De 5 a 10 cm, convex que s\'aplana, de color vermell vermelló viu amb taques groc daurat o crom llimona característiques, especialment al marge.'),
+          gillsDescription: Value(
+              'Lliures o adnades, fràgils, de color groc llimona a daurat viu molt cridaner (mai blanques), amb les arestes més intensament grogues.'),
+          stemDescription: Value(
+              'Cilíndric, carnós, blanc tacat o completament tenyit de groc llimona daurat.'),
+          safetyNotes: Value(
+              'Excel·lent comestible de sabor dolç d\'avellana. Es distingeix de les rússules vermelles tòxiques (com la Rússula emètica) perquè aquesta té les làmines i el peu de color groc daurat, i no pica.'),
+          dexNumber: Value(54),
+          imageAssetPath: Value('assets/images/mushrooms/russula_aurea.png'),
+        ),
+        BoletsCompanion(
+          id: Value('craterellus_tubaeformis'),
+          catalanName: Value('Rossinyol de bosc / Trompeta groga'),
+          scientificName: Value('Craterellus tubaeformis'),
+          family: Value('Cantharellaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[9,10,11,12]'),
+          altitudeMin: Value(400),
+          altitudeMax: Value(1800),
+          capDescription: Value(
+              'De 2 a 6 cm, en forma d\'embut o trompeta perforada al centre fins a l\'interior buit del peu. De color marró fosc, bru groguenc o bistre amb vores ondulades.'),
+          gillsDescription: Value(
+              'No té làmines veritables, sinó plecs gruixuts, espaiats, ramificats i decurrents, de color groc grisenc a groc lila.'),
+          stemDescription: Value(
+              'Prim, buit, aplanat i solcat longitudinalment, de color groc or o groc ataronjat brillant molt cridaner.'),
+          safetyNotes: Value(
+              'Molt bon comestible, germà tardorí del Camagroc. Ideal per assecar, per fer arrossos de muntanya, saltats de pasta i remenats d\'ous.'),
+          dexNumber: Value(55),
+          imageAssetPath:
+              Value('assets/images/mushrooms/craterellus_tubaeformis.png'),
+        ),
+        BoletsCompanion(
+          id: Value('agaricus_arvensis'),
+          catalanName: Value('Bola de neu / Xampinyó d\'anís'),
+          scientificName: Value('Agaricus arvensis'),
+          family: Value('Agaricaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[5,6,9,10,11]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1700),
+          capDescription: Value(
+              'Gros i corpulent (8-20 cm), globós de jove (forma de bola de neu) que s\'aplana a convex. De color blanc pur a blanc groguenc, que es taca suaument de groc ocre en fregar-lo.'),
+          gillsDescription: Value(
+              'Lliures, atapeïdes, blanquinoses o rosa molt pàl·lid d\'inici, passant a marró xocolata fosques amb la maduració de les espores.'),
+          stemDescription: Value(
+              'Robust, cilíndric, blanc, amb un anell doble membranós molt característic amb forma d\'engranatge o estrella (roda dentada) a la cara inferior.'),
+          safetyNotes: Value(
+              'Excel·lent comestible d\'aroma agradable d\'anís o ametlles. DIFERENCIACIÓ VITAL: El tòxic Xampinyó groguenc (A. xanthodermus) grogueja immediatament amb groc crom intens a la base del peu i fa forta olor desagradable de tinta o fenol.'),
+          dexNumber: Value(56),
+          imageAssetPath:
+              Value('assets/images/mushrooms/agaricus_arvensis.png'),
+        ),
+        BoletsCompanion(
+          id: Value('hydnum_rufescens'),
+          catalanName: Value('Llengua de bou rogenca'),
+          scientificName: Value('Hydnum rufescens'),
+          family: Value('Hydnaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[9,10,11,12]'),
+          altitudeMin: Value(300),
+          altitudeMax: Value(1700),
+          capDescription: Value(
+              'De 3 a 8 cm, irregular, convex a pla, de color ataronjat rogenc, terracota o bru albercoc pàl·lid, més petit i prim que H. repandum.'),
+          gillsDescription: Value(
+              'Himeni format per agulles (fibres còniques descendents) molt denses i fràgils, de color crema ataronjat, adnades a decurrents.'),
+          stemDescription: Value(
+              'Cilíndric, prim, del mateix color ataronjat clar o blanquinós que el barret, sovint una mica descentrat.'),
+          safetyNotes: Value(
+              'Bon comestible de carn ferma i gust agradable lleugerament picant. Convé coure\'l bé per eliminar l\'amargor residual en exemplars vells. Molt bo en conserva d\'oli i vinagre o estofat.'),
+          dexNumber: Value(57),
+          imageAssetPath: Value('assets/images/mushrooms/hydnum_rufescens.png'),
+        ),
+        BoletsCompanion(
+          id: Value('scleroderma_citrinum'),
+          catalanName: Value('Patac d\'ase / Tòfona borda'),
+          scientificName: Value('Scleroderma citrinum'),
+          family: Value('Sclerodermataceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('toxic'),
+          fruitingSeason: Value('[8,9,10,11,12]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1600),
+          capDescription: Value(
+              'De 3 a 10 cm, globular o arrodonit deprimit, amb una pell (peridi) molt gruixuda, coriàcia i dura, de color groguenc ocre o terrós pàl·lid, coberta de berrugues i clivelles escamoses.'),
+          gillsDescription: Value(
+              'Interior (gleba) completament massís, inicialment blanc grisenc que ràpidament passa a negre violaci o negre blavós fosc sense cap veta blanca de marbrejat.'),
+          stemDescription: Value(
+              'No té peu real; només presenta un feix de filaments miceliars curts a la base que el fixen al terra.'),
+          safetyNotes: Value(
+              'TÒXIC. Provoca intoxicacions gastrointestinals severes amb vòmits, diarrees intenses i marejos. CONFUSIÓ PERILLOSA: Es pot confondre amb la Tòfona negra, però té la pell coriàcia groguenca i l\'interior negre sense vetes blanques.'),
+          dexNumber: Value(58),
+          imageAssetPath:
+              Value('assets/images/mushrooms/scleroderma_citrinum.png'),
+        ),
+        BoletsCompanion(
+          id: Value('clitocybe_nebularis'),
+          catalanName: Value('Pampa de boira / Boira'),
+          scientificName: Value('Clitocybe nebularis'),
+          family: Value('Tricholomataceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('toxic'),
+          fruitingSeason: Value('[10,11,12]'),
+          altitudeMin: Value(300),
+          altitudeMax: Value(1600),
+          capDescription: Value(
+              'De 7 a 18 cm, carnós, convex a pla amb el marge enrotllat, de color gris cendrós, gris boira o fum, sense mugró central.'),
+          gillsDescription: Value(
+              'Molt atapeïdes, decurrents, de color crema pàl·lid a groguenc, que es desprenen fàcilment de la carn del barret amb el dit.'),
+          stemDescription: Value(
+              'Robust, claviforme (engruixit a la base), fibril·lós, del mateix color gris blanquinós que el barret.'),
+          safetyNotes: Value(
+              'TÒXIC en cru i sovint INDIGEST fins i tot cuinat; conté nebularina i provoca nàusees i trastorns gàstrics a moltes persones. CONFUSIÓ: Es distingeix de la Pampa bona (I. geotropa) perquè no té mugró central i fa olor dolcenca enfarfegosa.'),
+          dexNumber: Value(59),
+          imageAssetPath:
+              Value('assets/images/mushrooms/clitocybe_nebularis.png'),
+        ),
+        BoletsCompanion(
+          id: Value('tylopilus_felleus'),
+          catalanName: Value('Mataparent amarg / Cep amarg'),
+          scientificName: Value('Tylopilus felleus'),
+          family: Value('Boletaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('sense_valor'),
+          fruitingSeason: Value('[7,8,9,10,11]'),
+          altitudeMin: Value(500),
+          altitudeMax: Value(1700),
+          capDescription: Value(
+              'De 6 a 15 cm, convex a pla, llis, sec, de color marró clar, beix avellana o ocre camussa, idèntic al barret d\'un Cep jove.'),
+          gillsDescription: Value(
+              'Tubs i porus blancs inicialment, que adquireixen un inconfusible to ROSAT o rosa brut en madurar. No blavegen.'),
+          stemDescription: Value(
+              'Robust, bulbós a cilíndric, ocre pàl·lid, cobert per un reticle (xarxa) molt marcat i en relleu de color marró fosc o negrenc.'),
+          safetyNotes: Value(
+              'NO COMESTIBLE PER EXTREMA AMARGOR. No és mortal ni verinós greu, però un sol trosset arruïna completament una cassola o paella sencera de ceps. DIFERÈNCIA: Els ceps bons tenen porus grocs/oliva i reticle blanc; aquest té porus rosats i reticle marró fosc.'),
+          dexNumber: Value(60),
+          imageAssetPath:
+              Value('assets/images/mushrooms/tylopilus_felleus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('suillellus_luridus'),
+          catalanName: Value('Mataparent de bou / Fals bolet de bou'),
+          scientificName: Value('Suillellus luridus'),
+          family: Value('Boletaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('toxic'),
+          fruitingSeason: Value('[6,7,8,9,10,11]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1500),
+          capDescription: Value(
+              'De 7 a 20 cm, convex, sec, finament vellutat, de color marró olivaci fosc, ocre terrós o gamussa brut.'),
+          gillsDescription: Value(
+              'Porus petits, rodons, de color vermell ataronjat a vermell maó, que blavegen immediatament a la pressió.'),
+          stemDescription: Value(
+              'Robust, cilíndric o eixamplat a la base, groc-ataronjat, cobert per una xarxa o RETICLE vermell molt marcat amb malles allargades.'),
+          safetyNotes: Value(
+              'TÒXIC en cru i especialment TÒXIC SI ES CONSUMEIX AMB ALCOHOL (síndrome coprinià amb sufocacions, taquicàrdia i vòmits). Es diferencia del Mataparent de peu vermell perquè aquest té un reticle evident a la cama, mentre que el peu vermell només té punts o pigues.'),
+          dexNumber: Value(61),
+          imageAssetPath:
+              Value('assets/images/mushrooms/suillellus_luridus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('russula_emetica'),
+          catalanName: Value('Rússula emètica / Cua cremosa'),
+          scientificName: Value('Russula emetica'),
+          family: Value('Russulaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('toxic'),
+          fruitingSeason: Value('[7,8,9,10,11]'),
+          altitudeMin: Value(500),
+          altitudeMax: Value(1900),
+          capDescription: Value(
+              'De 4 a 9 cm, convex que s\'aplana i es deprimeix al centre, lluent, viscós en temps humit, de color vermell cirera o escarlata molt viu i uniforme.'),
+          gillsDescription: Value(
+              'Lliures, atapeïdes, molt trencadisses, de color blanc pur immaculat (MAI grogues).'),
+          stemDescription: Value(
+              'Cilíndric, fràgil, buit amb l\'edat, blanc pur brillant sense cap tint groguenc.'),
+          safetyNotes: Value(
+              'TÒXIC. Provoca vòmits violents i gastroenteritis aguda per la seva forta toxicitat. Té un gust extremadament coent i picant que crema la llengua en tastar una engruna. Es distingeix de la Llora daurada perquè les làmines i el peu són completament blancs.'),
+          dexNumber: Value(62),
+          imageAssetPath: Value('assets/images/mushrooms/russula_emetica.png'),
+        ),
       ];
 
   static List<ArbresCompanion> get arbres => const [
@@ -1339,6 +1666,100 @@ class SeedData {
         BoletArbreAssociationsCompanion(
             boletId: Value('galerina_marginata'),
             arbreId: Value('pinus_sylvestris')),
+        // tuber_melanosporum -> quercus_ilex
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tuber_melanosporum'),
+            arbreId: Value('quercus_ilex')),
+        // infundibulicybe_geotropa -> quercus_ilex, pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('infundibulicybe_geotropa'),
+            arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('infundibulicybe_geotropa'),
+            arbreId: Value('pinus_sylvestris')),
+        // boletus_pinophilus -> pinus_sylvestris, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('boletus_pinophilus'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('boletus_pinophilus'),
+            arbreId: Value('fagus_sylvatica')),
+        // neoboletus_luridiformis -> fagus_sylvatica, pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('neoboletus_luridiformis'),
+            arbreId: Value('fagus_sylvatica')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('neoboletus_luridiformis'),
+            arbreId: Value('pinus_sylvestris')),
+        // boletus_reticulatus -> quercus_ilex, castanea_sativa
+        BoletArbreAssociationsCompanion(
+            boletId: Value('boletus_reticulatus'),
+            arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('boletus_reticulatus'),
+            arbreId: Value('castanea_sativa')),
+        // hygrophorus_marzuolus -> pinus_sylvestris, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('hygrophorus_marzuolus'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('hygrophorus_marzuolus'),
+            arbreId: Value('fagus_sylvatica')),
+        // russula_aurea -> castanea_sativa, quercus_ilex
+        BoletArbreAssociationsCompanion(
+            boletId: Value('russula_aurea'), arbreId: Value('castanea_sativa')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('russula_aurea'), arbreId: Value('quercus_ilex')),
+        // craterellus_tubaeformis -> pinus_sylvestris, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('craterellus_tubaeformis'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('craterellus_tubaeformis'),
+            arbreId: Value('fagus_sylvatica')),
+        // agaricus_arvensis -> pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('agaricus_arvensis'),
+            arbreId: Value('pinus_sylvestris')),
+        // hydnum_rufescens -> pinus_sylvestris, pinus_halepensis
+        BoletArbreAssociationsCompanion(
+            boletId: Value('hydnum_rufescens'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('hydnum_rufescens'),
+            arbreId: Value('pinus_halepensis')),
+        // scleroderma_citrinum -> quercus_ilex, pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('scleroderma_citrinum'),
+            arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('scleroderma_citrinum'),
+            arbreId: Value('pinus_sylvestris')),
+        // clitocybe_nebularis -> fagus_sylvatica, pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('clitocybe_nebularis'),
+            arbreId: Value('fagus_sylvatica')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('clitocybe_nebularis'),
+            arbreId: Value('pinus_sylvestris')),
+        // tylopilus_felleus -> pinus_sylvestris, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tylopilus_felleus'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tylopilus_felleus'),
+            arbreId: Value('fagus_sylvatica')),
+        // suillellus_luridus -> quercus_ilex, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('suillellus_luridus'),
+            arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('suillellus_luridus'),
+            arbreId: Value('fagus_sylvatica')),
+        // russula_emetica -> pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('russula_emetica'),
+            arbreId: Value('pinus_sylvestris')),
       ];
 
   static List<ToxicLookalikesCompanion> get toxicLookalikes => const [
@@ -1516,6 +1937,84 @@ class SeedData {
           comparisonNotes: Value(
               'El Groguet té làmines groc sofre i carn fibrosa; la Llora verda té làmines blanques lardàcies i carn trencadissa com guix.'),
         ),
+        ToxicLookalikesCompanion(
+          boletId: Value('tuber_melanosporum'),
+          lookalikeBoletId: Value('scleroderma_citrinum'),
+          comparisonNotes: Value(
+              'La Tòfona negra és subterrània i aromàtica amb gleba negrosa marbrada per venes blanques; el Patac d\'ase té pell dura berrugosa groga i gleba negra homogènia sense vetes blanques.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('infundibulicybe_geotropa'),
+          lookalikeBoletId: Value('clitocybe_nebularis'),
+          comparisonNotes: Value(
+              'La Pampa és de color beix ocre amb un mamelló central prominent (umbó); la Pampa de boira té un barret pla o deprimit gris cendra sense mamelló i és tòxica/indigesta.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('boletus_edulis'),
+          lookalikeBoletId: Value('tylopilus_felleus'),
+          comparisonNotes: Value(
+              'El Mataparent amarg té porus rosats a la maduresa i un reticle marró fosc prominent al peu; a més té un sabor extremadament amarg que arruïna qualsevol guisat.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('boletus_pinophilus'),
+          lookalikeBoletId: Value('tylopilus_felleus'),
+          comparisonNotes: Value(
+              'El Mataparent amarg té porus rosats de madur i reticle fosc marcat al peu, a diferència dels porus groguencs-oliva del Cep vermell, i és immensament amarg.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('neoboletus_luridiformis'),
+          lookalikeBoletId: Value('suillellus_luridus'),
+          comparisonNotes: Value(
+              'El Mataparent de peu vermell té peu puntejat de grans vermells sense reticle; el Mataparent de bou (tòxic en cru i amb alcohol) té una xarxa vermella molt marcada sobre fons groc.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('russula_aurea'),
+          lookalikeBoletId: Value('russula_emetica'),
+          comparisonNotes: Value(
+              'La Llora daurada té làmines i peu d\'un groc daurat lluminós i carn dolça; la Rússula emètica té làmines i peu d\'un blanc immaculat i és extremadament picant i tòxica.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('agaricus_arvensis'),
+          lookalikeBoletId: Value('agaricus_xanthodermus'),
+          comparisonNotes: Value(
+              'La Bola de neu fa olor suau d\'anís i té anell en roda dentada; el Xampinyó groguenc grogueja a l\'instant a la base del peu i fa una forta olor de tinta o fenol.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('agaricus_arvensis'),
+          lookalikeBoletId: Value('amanita_verna'),
+          comparisonNotes: Value(
+              'La mortal Cicuta blanca té làmines sempre d\'un blanc pur i volva membranosa en sac; la Bola de neu té làmines que passen de gris-rosat a xocolata i no té mai volva.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('clitocybe_nebularis'),
+          lookalikeBoletId: Value('entoloma_sinuatum'),
+          comparisonNotes: Value(
+              'El molt tòxic Pèrfid té làmines groguenques a rosades escotades i olor de farina rància; la Pampa de boira té làmines blanquinoses decurrents i forta olor de fenc/boira.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('agaricus_arvensis'),
+          lookalikeBoletId: Value('amanita_phalloides'),
+          comparisonNotes: Value(
+              'En fase de botó, la mortal Farinera borda es pot confondre amb el jove xampinyó, però l\'Amanita té volva membranosa en sac a la base i làmines sempre blanques pures.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('agaricus_arvensis'),
+          lookalikeBoletId: Value('amanita_virosa'),
+          comparisonNotes: Value(
+              'La mortal Farinera pudent és completament blanca, té peu llanós-esquamós, anell penjant i volva en sac; la Bola de neu mai té volva i les làmines enfosqueixen a xocolata.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('boletus_reticulatus'),
+          lookalikeBoletId: Value('tylopilus_felleus'),
+          comparisonNotes: Value(
+              'El Mataparent amarg té porus rosats de madur i un reticle marró fosc amb malles amples al peu; a diferència del reticle blanc fi del Cep d\'estiu, és insuportablement amarg.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('neoboletus_luridiformis'),
+          lookalikeBoletId: Value('rubroboletus_satanas'),
+          comparisonNotes: Value(
+              'El molt tòxic Mataparent de Satanàs té barret blanquinós-grisenc i reticle vermell al peu; el Mataparent de peu vermell té barret marró xocolata vellutat i peu pigallat de puntets sense xarxa.'),
+        ),
       ];
 
   static List<InsigniesCompanion> get insignies => const [
@@ -1533,5 +2032,8 @@ class SeedData {
         InsigniesCompanion(id: Value('quadern_de_camp')),
         InsigniesCompanion(id: Value('cartograf_del_bosc')),
         InsigniesCompanion(id: Value('gran_enciclopedia')),
+        InsigniesCompanion(id: Value('joies_de_la_cuina')),
+        InsigniesCompanion(id: Value('mestre_tofoner')),
+        InsigniesCompanion(id: Value('cuina_sense_ensurts')),
       ];
 }

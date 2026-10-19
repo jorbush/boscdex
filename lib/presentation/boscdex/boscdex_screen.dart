@@ -364,6 +364,9 @@ class BoscdexScreen extends ConsumerWidget {
             case BoletFilter.edibles:
               label = l10n.filterEdibles;
               break;
+            case BoletFilter.gourmet:
+              label = l10n.filterGourmet;
+              break;
             case BoletFilter.toxic:
               label = l10n.filterToxics;
               break;

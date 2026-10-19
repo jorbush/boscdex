@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:boscdex/core/constants/app_constants.dart';
 import 'package:boscdex/domain/models/forager_level.dart';
 import 'package:boscdex/presentation/boscdex/boscdex_provider.dart';
 import 'package:boscdex/presentation/journal/journal_provider.dart';
@@ -67,7 +68,7 @@ void main() {
       // 1. Verify AppBar and App Identity
       expect(find.text('Configuració'), findsOneWidget);
       expect(find.text('Boscdex'), findsOneWidget);
-      expect(find.text('v1.0.0'), findsOneWidget);
+      expect(find.text('v${AppConstants.appVersion}'), findsOneWidget);
       expect(find.text('100% Offline'), findsOneWidget);
 
       // 2. Verify Section Headers

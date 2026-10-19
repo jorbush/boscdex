@@ -12,6 +12,7 @@ import '../../data/database/app_database.dart';
 import '../../data/database/daos/bolet_dao.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/preferences_provider.dart';
+import '../../domain/models/culinary_recipe.dart';
 import '../../domain/models/edibilitat.dart';
 import '../../domain/models/raritat_tier.dart';
 import '../../domain/services/photo_export_service.dart';
@@ -21,6 +22,7 @@ import 'catalonia_pixel_map.dart';
 import 'morphology_section.dart';
 import 'season_indicator.dart';
 import 'toxic_twin_alert.dart';
+import 'traditional_recipe_card.dart';
 
 class BoletDetailScreen extends ConsumerStatefulWidget {
   final String id;
@@ -491,6 +493,17 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                       const SizedBox(height: 24),
                       _buildSafetyNotesCard(bolet.id, bolet.safetyNotes!),
                     ],
+                    () {
+                      final culinaryRecipe =
+                          CulinaryRecipe.forSpecies(bolet.id);
+                      if (culinaryRecipe != null) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: TraditionalRecipeCard(recipe: culinaryRecipe),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }(),
                   ],
                   const SizedBox(height: 48),
                 ],

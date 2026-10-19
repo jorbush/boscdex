@@ -6,6 +6,7 @@ import 'package:drift/native.dart';
 
 import 'package:flutter/services.dart';
 import 'package:boscdex/app.dart';
+import 'package:boscdex/core/constants/app_constants.dart';
 import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/services/classifier_service.dart';
 import 'package:boscdex/providers/classifier_provider.dart';
@@ -109,7 +110,8 @@ void main() {
 
       // 3. User lands on Boscdex Album tab
       expect(find.text('Boscdex'), findsWidgets);
-      expect(find.text('0/47 descoberts'), findsOneWidget);
+      expect(find.text('0/${AppConstants.catalogSpeciesCount} descoberts'),
+          findsOneWidget);
 
       // 3b. User inspects an undiscovered bolet to check its habitat & location
       final undiscoveredCardFinder = find.text('#001 ???');
@@ -216,7 +218,8 @@ void main() {
       await tester.pump();
 
       // Verify discovery counter has incremented from 0 to 1
-      expect(find.text('1/47 descoberts'), findsOneWidget);
+      expect(find.text('1/${AppConstants.catalogSpeciesCount} descoberts'),
+          findsOneWidget);
 
       // 8. Tap on the unlocked card in Boscdex grid to verify navigation to detail
       final cardFinder = find.text('Rovelló / Pinetell');

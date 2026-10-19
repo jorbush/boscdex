@@ -137,5 +137,32 @@ class Insignia {
       progressCount: 0,
       targetCount: AppConstants.catalogSpeciesCount,
     ),
+    Insignia(
+      id: 'joies_de_la_cuina',
+      nom: 'Les joies de la cuina',
+      descripcio:
+          'Descobreix 5 llegendes gastronòmiques: pampa, cep vermell, tòfona negra, marçot i mataparent de peu vermell',
+      iconPath: 'assets/badges/joies_de_la_cuina.png',
+      progressCount: 0,
+      targetCount: 5,
+    ),
+    Insignia(
+      id: 'mestre_tofoner',
+      nom: 'El mestre tofoner',
+      descripcio:
+          'Troba la preuada tòfona negra i aprèn a distingir-la del patac d\'ase',
+      iconPath: 'assets/badges/mestre_tofoner.png',
+      progressCount: 0,
+      targetCount: 2,
+    ),
+    Insignia(
+      id: 'cuina_sense_ensurts',
+      nom: 'Cuina sense ensurts',
+      descripcio:
+          'Identifica el mataparent amarg per protegir la teva cassola de ceps',
+      iconPath: 'assets/badges/cuina_sense_ensurts.png',
+      progressCount: 0,
+      targetCount: 1,
+    ),
   ];
 }
