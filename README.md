@@ -1,7 +1,7 @@
 # 🍄 Boscdex
 
 <p align="center">
-  <img src="assets/images/badges/mestre_boletaire.png" alt="Boscdex Icon" width="128" height="128" />
+  <img src="assets/icons/boscdex_logo.png" alt="Boscdex Logo" width="140" height="140" />
 </p>
 
 <p align="center">
