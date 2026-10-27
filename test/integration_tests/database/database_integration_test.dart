@@ -152,6 +152,43 @@ void main() {
       semisanguifluusLookalikes.any((l) => l.id == 'lactarius_torminosus'),
       isTrue,
     );
+
+    final vinosusLookalikes =
+        await db.boletDao.getToxicLookalikes('lactarius_vinosus');
+    expect(
+      vinosusLookalikes.any((l) => l.id == 'lactarius_chrysorrheus'),
+      isTrue,
+    );
+    expect(
+      vinosusLookalikes.any((l) => l.id == 'lactarius_torminosus'),
+      isTrue,
+    );
+    expect(
+      vinosusLookalikes.any((l) => l.id == 'paxillus_involutus'),
+      isTrue,
+    );
+
+    final terreumLookalikes =
+        await db.boletDao.getToxicLookalikes('tricholoma_terreum');
+    expect(
+      terreumLookalikes.any((l) => l.id == 'tricholoma_saponaceum'),
+      isTrue,
+    );
+
+    final citrinaLookalikes =
+        await db.boletDao.getToxicLookalikes('amanita_citrina');
+    expect(
+      citrinaLookalikes.any((l) => l.id == 'amanita_phalloides'),
+      isTrue,
+    );
+  });
+
+  test('Lactarius vinosus contains accurate latex description in database',
+      () async {
+    final vinosus = await db.boletDao.getBoletById('lactarius_vinosus');
+    expect(vinosus, isNotNull);
+    expect(vinosus!.latexDescription, isNotNull);
+    expect(vinosus.latexDescription, contains('vi negre'));
   });
 
   test('BoletDao searchByName finds specimens by Catalan or scientific name',
@@ -160,7 +197,7 @@ void main() {
     expect(
         searchCatalan.length,
         equals(
-            5)); // Pinetell, Rovelló d'obaga, Fals rovelló, Rovelló bord & Rovelló de pi negre
+            7)); // Pinetell, Rovelló de sang, Fals rovelló, Rovelló bord, Pinetell de sang, Rovelló vinós & Paxil·le
 
     final searchScientific = await db.boletDao.searchByName('Boletus');
     expect(searchScientific, isNotEmpty);

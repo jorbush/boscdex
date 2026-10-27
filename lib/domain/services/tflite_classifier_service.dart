@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/localization/species_localizer.dart';
 import '../models/classificacio_result.dart';
 import 'classifier_service.dart';
@@ -19,9 +20,9 @@ import 'visual_feature_classifier_service.dart';
 /// - Pre-processes camera frames into 3 complementary [1, 224, 224, 3] Float32 tensors
 ///   using Test-Time Augmentation (Full Frame + Horizontal Flip + 80% Central Macro Crop).
 /// - MobileNetV2 backbone computes 1,280 Global Average Pooling (GAP) deep features via TFLite.
-/// - Classification head (47 classes x 1280 features) executes in Dart in <0.05ms,
+/// - Classification head (75 classes x 1280 features) executes in Dart in <0.05ms,
 ///   guaranteeing 100% platform portability across all iOS and Android TFLite C runtime versions.
-/// - Evaluates all 47 Catalan fungal taxa with sub-80ms on-device latency.
+/// - Evaluates all 75 Catalan fungal taxa with sub-80ms on-device latency.
 /// - Gracefully falls back to [VisualFeatureClassifierService] if native TFLite C bindings
 ///   are unavailable (e.g. headless unit tests or mock environments).
 class TfliteClassifierService implements ClassifierService {
@@ -87,7 +88,9 @@ class TfliteClassifierService implements ClassifierService {
           .where((line) => line.isNotEmpty)
           .toList();
 
-      final numClasses = _labels.isNotEmpty ? _labels.length : 47;
+      final numClasses = _labels.isNotEmpty
+          ? _labels.length
+          : AppConstants.catalogSpeciesCount;
 
       // 2. Load classification head weights and biases
       final headData = await rootBundle.load(_headAssetPath);
@@ -232,7 +235,7 @@ class TfliteClassifierService implements ClassifierService {
 
       scored.sort((a, b) => b.value.compareTo(a.value));
 
-      // Return top-3 predictions with localized Catalan names across all 47 species
+      // Return top-3 predictions with localized Catalan names across all 75 species
       final top3 = scored.take(3).toList();
       final results = top3.map((entry) {
         final speciesId = entry.key;

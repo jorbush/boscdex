@@ -112,6 +112,14 @@ class CulinaryRecipe {
     'cantharellus_cibarius',
     'craterellus_cornucopioides',
     'craterellus_lutescens',
+    'cyclocybe_aegerita',
+    'tricholoma_portentosum',
+    'tuber_aestivum',
+    'amanita_rubescens',
+    'imleria_badia',
+    'lactarius_vinosus',
+    'cantharellus_subpruinosus',
+    'leccinum_aurantiacum',
   };
 
   static CulinaryRecipe? forSpecies(String speciesId) {
@@ -556,6 +564,229 @@ class CulinaryRecipe {
       winePairingCa: 'Vi negre jove del Pla de Bages o Costers del Segre.',
       winePairingEs: 'Tinto joven de Pla de Bages.',
       winePairingEn: 'Young fruity Pla de Bages red.',
+    ),
+    'cyclocybe_aegerita': CulinaryRecipe(
+      speciesId: 'cyclocybe_aegerita',
+      dishNameCa: 'Pollancrons saltejats amb all, julivert i cansalada viada',
+      dishNameEs: 'Setas de chopo salteadas con ajo, perejil y panceta',
+      dishNameEn:
+          'Sautéed Poplar Mushrooms with Garlic, Parsley and Cured Bacon',
+      descriptionCa:
+          'Una de les menges més antigues i preuades de Catalunya: el pollancró aporta una textura ferma i una intensa aroma d\'avellana.',
+      descriptionEs:
+          'Delicadeza tradicional catalana: textura firme y profundo aroma avellanado.',
+      descriptionEn:
+          'Ancestral Catalan forest delicacy with a firm crunchy texture and distinct nutty hazelnut aroma.',
+      methodCa:
+          'Enrossiu tires fines de cansalada viada en una paella. Afegiu els pollancrons nets i trossejats, salteu a foc viu 8 minuts i acabeu amb una picada d\'all i julivert fresc.',
+      methodEs:
+          'Dora panceta en sartén, saltea las setas a fuego vivo y finaliza con ajo y perejil picados.',
+      methodEn:
+          'Crisp bacon strips in a pan, toss in mushrooms over high heat for 8 minutes, and finish with freshly minced garlic and parsley.',
+      tipCa:
+          'Els peus vells poden ser durs o fibrosos: aprofiteu només els barrets i les parts altes i tendres de la cama.',
+      tipEs:
+          'Los pies adultos pueden ser leñosos: utiliza principalmente los sombreros.',
+      tipEn:
+          'Older stems become fibrous: use mostly the tender caps and upper stem parts.',
+      winePairingCa: 'Vi negre fresc de varietat Trepat (DO Conca de Barberà).',
+      winePairingEs: 'Tinto ligero Trepat de Conca de Barberà.',
+      winePairingEn: 'Light, peppery Trepat red from Conca de Barberà.',
+    ),
+    'tricholoma_portentosum': CulinaryRecipe(
+      speciesId: 'tricholoma_portentosum',
+      dishNameCa: 'Sopa cerdana de fredolics d\'anís amb pa de pagès torrat',
+      dishNameEs: 'Sopa pirenaica de capuchinas con pan tostado',
+      dishNameEn: 'Pyrenean Sooty Knight Mushroom Broth with Toasted Bread',
+      descriptionCa:
+          'Plat d\'hivern d\'alta muntanya que reconforta l\'ànima: els fredolics d\'anís aporten una textura sedosa i un perfum suau de farina i anís.',
+      descriptionEs:
+          'Sopa invernal de montaña con el delicado aroma anisado y harinoso de las capuchinas.',
+      descriptionEn:
+          'Hearty Pyrenean winter soup infused with the delicate farinaceous and sweet aniseed notes of the Sooty Knight.',
+      methodCa:
+          'Sofregiu els fredolics d\'anís amb ceba tendra i una cullerada de mantega del Pirineu. Cobriu amb brou d\'escudella suau, coeu 15 minuts i serviu sobre llesques de pa de pagès torrat amb formatge fos.',
+      methodEs:
+          'Pocha las setas con cebolla y mantequilla, vierte caldo de cocido, cuece 15 min y sirve sobre pan tostado con queso gratinado.',
+      methodEn:
+          'Sauté mushrooms in Pyrenean butter, simmer in rich bone broth for 15 minutes, and ladle over toasted country bread with melted mountain cheese.',
+      tipCa:
+          'Renteu-los delicadament ja que la cutícula una mica viscosa pot atrapar acícules de pi roig.',
+      tipEs:
+          'Lávalos con cuidado para retirar acículas de pino adheridas a la cutícula.',
+      tipEn:
+          'Clean gently with a damp brush to dislodge pine needles clinging to the viscid cap.',
+      winePairingCa: 'Vi negre amb cos de la DO Costers del Segre.',
+      winePairingEs: 'Tinto estructurado de Costers del Segre.',
+      winePairingEn: 'Full-bodied mountain red from Costers del Segre.',
+    ),
+    'tuber_aestivum': CulinaryRecipe(
+      speciesId: 'tuber_aestivum',
+      dishNameCa:
+          'Ous ferrats de corral amb làmines fresques de tòfona d\'estiu',
+      dishNameEs: 'Huevos fritos de corral con trufa de verano laminada',
+      dishNameEn: 'Fried Farm Eggs Shaved with Fresh Summer Truffles',
+      descriptionCa:
+          'La tòfona d\'estiu ofereix una aroma suau de bosc i avellana torrada, ideal per gaudir en cru sobre plats calents senzills.',
+      descriptionEs:
+          'La trufa de verano despliega sus notas sutiles de avellana sobre el calor de un huevo frito.',
+      descriptionEn:
+          'Fresh summer truffle reveals subtle roasted hazelnut notes when melted into hot, runny egg yolks.',
+      methodCa:
+          'Fregeu dos ous de gallina de pagès en abundant oli d\'oliva verge extra fins que la clara faci puntetes cruixents. Serviu al plat i lamineu la tòfona d\'estiu al moment amb una mandolina tofonera.',
+      methodEs:
+          'Fríe dos huevos en AOVE bien caliente y lámina la trufa de verano en el momento sobre la yema caliente.',
+      methodEn:
+          'Fry two farm eggs in hot extra virgin olive oil with crispy lace edges, and shave fresh truffle generously over the runny yolks at the table.',
+      tipCa:
+          'Conserveu la tòfona dins un pot hermètic amb ous frescos durant 48 hores abans de cuinar: la closca porosa s\'impregnarà del perfum tofoner.',
+      tipEs:
+          'Guarda la trufa en un frasco con huevos durante 48 h para que absorban todo su aroma.',
+      tipEn:
+          'Store the truffle with whole eggs in a sealed jar for 48 hours to infuse the yolks before cooking.',
+      winePairingCa: 'Cava Brut Nature Gran Reserva (DO Cava).',
+      winePairingEs: 'Cava Brut Nature Gran Reserva.',
+      winePairingEn: 'Aged Brut Nature Gran Reserva Cava.',
+    ),
+    'amanita_rubescens': CulinaryRecipe(
+      speciesId: 'amanita_rubescens',
+      dishNameCa:
+          'Cua de cavall saltada a foc lent amb ceba caramel·litzada i pernil',
+      dishNameEs: 'Amanita vinosa salteada a fuego lento con cebolla y jamón',
+      dishNameEn: 'Slow-Sautéed Blusher Mushrooms with Sweet Onion and Jamón',
+      descriptionCa:
+          'Plat exquisit del Montseny i les Guilleries on la vinosa adquireix una textura untuosa i un sabor suau i dolcenc.',
+      descriptionEs:
+          'Especialidad del Montseny con textura untuosa y sabor dulce tras una cocción prolongada.',
+      descriptionEn:
+          'Montseny regional specialty offering a rich, savory-sweet flavor and meltingly tender texture.',
+      methodCa:
+          'Talleu la cua de cavall a trossos generosos. Salteu en una cassola amb un fons d\'oli i ceba dolça picada a foc mitjà-lent durant un mínim de 20 minuts per garantir la cocció completa. Afegiu daus de pernil al final.',
+      methodEs:
+          'Saltea las setas troceadas con cebolla a fuego medio durante al menos 20 min para asegurar cocción completa. Añade jamón al final.',
+      methodEn:
+          'Sauté thickly sliced caps with sweet onions over medium-low heat for at least 20 minutes to ensure full heat breakdown. Toss with jamón before serving.',
+      tipCa:
+          'ALERTA DE SEGURETAT: Consumir ÚNICAMENT BEN CUITA (>70 °C durant més de 15 minuts). En cru conté hemolisines termolàbils tòxiques que es destrueixen completament amb la calor.',
+      tipEs:
+          'ALERTA DE SEGURIDAD: Consumir SIEMPRE BIEN COCINADA (>70 °C durante 15-20 min). En crudo contiene hemolisinas tóxicas.',
+      tipEn:
+          'CRITICAL SAFETY WARNING: Consume ONLY THOROUGHLY COOKED (>70 °C for 15-20 minutes). Raw specimens contain heat-labile toxins destroyed by thorough cooking.',
+      winePairingCa: 'Vi negre jove de Garnatxa de l\'Empordà.',
+      winePairingEs: 'Garnacha tinta de Empordà.',
+      winePairingEn: 'Fruity Empordà Garnatxa red.',
+    ),
+    'imleria_badia': CulinaryRecipe(
+      speciesId: 'imleria_badia',
+      dishNameCa:
+          'Arròs de muntanya a la cassola amb bolets de baia i costella',
+      dishNameEs: 'Arroz de montaña con boletos bayos y costilla de cerdo',
+      dishNameEn: 'Mountain Clay-Pot Rice with Bay Boletes and Pork Ribs',
+      descriptionCa:
+          'Un arròs típic dels pobles del Ripollès i Berguedà: el bolet de baia aporta un fons marronós profund i una textura gelatinosa similar al cep.',
+      descriptionEs:
+          'Arroz tradicional de montaña donde el boleto bayo confiere untuosidad y perfume forestal.',
+      descriptionEn:
+          'Traditional Catalan mountain rice infused with the savory depth and silky texture of the bay bolete.',
+      methodCa:
+          'Enrossiu la costella i feu un bon sofregit de ceba, tomàquet i all. Incorporeu els bolets de baia tallats gruixuts, afegiu l\'arròs, cobriu amb brou de carn i enforneu o cuineu 16 minuts a foc viu.',
+      methodEs:
+          'Dora la costilla, haz un sofrito clásico, añade las setas y el arroz, vierte caldo de carne y cuece 16 minutos.',
+      methodEn:
+          'Brown ribs, build a rich tomato and onion sofrito, toss in thick bolete slices, add rice, pour meat stock, and simmer for 16 minutes.',
+      tipCa:
+          'La carn del bolet de baia blaveja en tallar-la, però aquest to blavós desapareix completament amb la cocció donant un aspecte daurat impecable.',
+      tipEs:
+          'El viraje azulado de los poros desaparece completamente con el calor, dejando un tono dorado.',
+      tipEn:
+          'The blue-green bruising of the pores disappears completely when cooked, turning appetizingly golden.',
+      winePairingCa: 'Vi negre criança de la DO Montsant.',
+      winePairingEs: 'Tinto crianza de Montsant.',
+      winePairingEn: 'Oak-aged Montsant red.',
+    ),
+    'lactarius_vinosus': CulinaryRecipe(
+      speciesId: 'lactarius_vinosus',
+      dishNameCa:
+          'Rovellons de sang vinosa a la brasa amb all, julivert i vi ranci',
+      dishNameEs: 'Níscalos de sangre vinosa a la brasa con ajo y perejil',
+      dishNameEn:
+          'Charcoal-Grilled Wine Milkcaps with Garlic, Parsley and Rancio Wine',
+      descriptionCa:
+          'La màxima expressió del rovelló mediterrani: més dolç, aromàtic i cruixent que el rovelló comú.',
+      descriptionEs:
+          'La cumbre del níscalo mediterráneo: más dulce y sabroso que el rovelló común.',
+      descriptionEn:
+          'The pinnacle of Mediterranean milkcaps: richer, sweeter, and crunchier than common saffron milkcaps.',
+      methodCa:
+          'Col·loqueu els rovellons vinons sobre la graella ben calenta amb les làmines cap amunt. Afegiu sal gruixuda, oli d\'oliva i una picada d\'all i julivert amb unes gotes de vi ranci del Priorat.',
+      methodEs:
+          'Asa sobre brasas con láminas hacia arriba, adereza con sal gorda, AOVE y picada de ajo, perejil y gotas de vino rancio.',
+      methodEn:
+          'Grill caps gill-side up over glowing embers, season with coarse salt, olive oil, and minced garlic-parsley drizzled with a dash of Priorat rancio wine.',
+      tipCa:
+          'Reconeixereu el rovelló de sang vinosa pel seu làtex color remolatxa fosca: és considerat per molts boletaires el millor de tots els lactaris.',
+      tipEs:
+          'Su látex color vino tinto oscuro es la firma de uno de los mejores níscalos ibéricos.',
+      tipEn:
+          'Look for the deep beetroot-violet milk: revered by Catalan foragers as superior to all other milkcap varieties.',
+      winePairingCa: 'Vi negre potent de la DOQ Priorat o DO Terra Alta.',
+      winePairingEs: 'Tinto estructurado de Priorat o Terra Alta.',
+      winePairingEn: 'Robust, mineral Priorat or Terra Alta Garnacha red.',
+    ),
+    'cantharellus_subpruinosus': CulinaryRecipe(
+      speciesId: 'cantharellus_subpruinosus',
+      dishNameCa: 'Fricandó de vedella amb rossinyols blancs de roure',
+      dishNameEs: 'Fricandó de ternera con rebozuelos blancos de roble',
+      dishNameEn: 'Catalan Veal Fricandó Stew with Frosted Oak Chanterelles',
+      descriptionCa:
+          'Un monument de la cuina catalana: els rossinyols blancs mantenen una consistència ferma i alliberen una aroma càlida i afruitada.',
+      descriptionEs:
+          'Monumento culinario catalán: rebozuelos carnosos en estofado de ternera con picada de almendras.',
+      descriptionEn:
+          'An iconic Catalan stew: dense oak chanterelles simmered with tender veal in a rich almond and chocolate picada gravy.',
+      methodCa:
+          'Enfarineu i fregiu talls fins de llata de vedella. Feu un sofregit concentrat de ceba i tomàquet, torneu la carn a la cassola, afegiu els rossinyols i brou, i acabeu amb una picada d\'ametlles torrades, carquinyoli i xocolata negra.',
+      methodEs:
+          'Enharina y dora ternera, añade sofrito concentrado, las setas limpias y caldo. Cuece despacio y termina con picada de almendras y chocolate.',
+      methodEn:
+          'Dredge and sear thin veal slices, build a dark sofrito, return veal and chanterelles with broth, and finish with a picada of toasted almonds, carquinyoli biscuit, and dark chocolate.',
+      tipCa:
+          'El rossinyol blanc mai s\'acarnussa ni es desfà amb la cocció prolongada: podeu cuinar-lo sense por juntament amb la vedella.',
+      tipEs:
+          'Esta especie nunca se deshace en guisos largos, conservando una textura perfecta.',
+      tipEn:
+          'This oak chanterelle remains pleasantly firm even during long simmering.',
+      winePairingCa: 'Vi negre criança del Penedès o de Costers del Segre.',
+      winePairingEs: 'Tinto crianza del Penedès.',
+      winePairingEn: 'Oak-aged Penedès Cabernet or Tempranillo.',
+    ),
+    'leccinum_aurantiacum': CulinaryRecipe(
+      speciesId: 'leccinum_aurantiacum',
+      dishNameCa: 'Guisat de pollastre de pagès amb ceps vermellons',
+      dishNameEs: 'Guisado de pollo de corral con boletos anaranjados',
+      dishNameEn: 'Farmhouse Free-Range Chicken Stew with Orange Oak Boletes',
+      descriptionCa:
+          'Plat rústic de masia: els ceps vermellons aporten una salsa fosca, espessa i molt saborosa.',
+      descriptionEs:
+          'Plato rústico campestre donde el boleto anaranjado aporta una salsa espesa y aromática.',
+      descriptionEn:
+          'Rustic countryside stew where orange boletes lend deep color, body, and woodland richness to the braising sauce.',
+      methodCa:
+          'Enrossiu el pollastre a trossos en una cassola de fang. Retireu i en el mateix oli sofregiu ceba, alls i els barrets de cep vermelló a daus. Uniu-ho tot amb una copeta de conyac, mulleu amb brou de pollastre i deixeu fer xup-xup fins que el pollastre sigui tendre.',
+      methodEs:
+          'Dora pollo de corral en cazuela de barro, saltea las setas con sofrito y flambea con coñac. Cuece a fuego lento con caldo hasta tiernizar.',
+      methodEn:
+          'Brown chicken in a terracotta casserole, sauté mushroom caps with garlic and sofrito, flambé with brandy, and braise slowly in rich poultry stock.',
+      tipCa:
+          'La carn del cep vermelló s\'enfosqueix en coure\'s, però no us espanteu: és una reacció enzimàtica natural completament inòcua que enriqueix el color del suc del rostit.',
+      tipEs:
+          'La carne oscurece al cocinarse; es una reacción natural inofensiva que da un color apetitoso al caldo.',
+      tipEn:
+          'The flesh naturally darkens to charcoal-grey when cooked; this is completely harmless and deepens the stew color.',
+      winePairingCa:
+          'Vi blanc amb cos de la DO Terra Alta (Garnatxa blanca en bóta).',
+      winePairingEs: 'Garnacha blanca fermentada en barrica de Terra Alta.',
+      winePairingEn: 'Barrel-fermented Terra Alta White Grenache.',
     ),
   };
 }

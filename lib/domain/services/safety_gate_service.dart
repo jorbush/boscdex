@@ -11,7 +11,7 @@ class SafetyGateService {
   final double overwhelmingConfidenceThreshold;
   final double lethalConfidenceThreshold;
 
-  /// The 6 lethal Catalan taxa containing amatoxins, orellanine, or gyromitrin.
+  /// The 8 lethal Catalan taxa containing amatoxins, orellanine, gyromitrin, paxillus syndrome, or lethal muscarine.
   static const Set<String> lethalSpecies = {
     'amanita_phalloides',
     'amanita_verna',
@@ -19,6 +19,8 @@ class SafetyGateService {
     'cortinarius_orellanus',
     'galerina_marginata',
     'gyromitra_esculenta',
+    'paxillus_involutus',
+    'inocybe_erubescens',
   };
 
   SafetyGateService({

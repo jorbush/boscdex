@@ -3,11 +3,11 @@ import 'package:boscdex/domain/models/culinary_recipe.dart';
 
 void main() {
   group('CulinaryRecipe Domain Model', () {
-    test('contains exactly 16 gourmet species in registry', () {
-      expect(CulinaryRecipe.gourmetSpeciesIds.length, equals(16));
+    test('contains exactly 24 gourmet species in registry', () {
+      expect(CulinaryRecipe.gourmetSpeciesIds.length, equals(24));
     });
 
-    test('all 16 gourmet species resolve a valid CulinaryRecipe', () {
+    test('all 24 gourmet species resolve a valid CulinaryRecipe', () {
       for (final id in CulinaryRecipe.gourmetSpeciesIds) {
         final recipe = CulinaryRecipe.forSpecies(id);
         expect(recipe, isNotNull, reason: 'Expected recipe for $id');
@@ -68,6 +68,13 @@ void main() {
       expect(recipe.getTip('es'), contains('Tóxico'));
       expect(recipe.getTip('en'), contains('⚠️'));
       expect(recipe.getTip('en'), contains('Toxic'));
+    });
+
+    test('amanita_rubescens contains mandatory cooking safety warning', () {
+      final recipe = CulinaryRecipe.forSpecies('amanita_rubescens')!;
+      expect(recipe.getTip('ca'), contains('ALERTA DE SEGURETAT'));
+      expect(recipe.getTip('es'), contains('ALERTA DE SEGURIDAD'));
+      expect(recipe.getTip('en'), contains('CRITICAL SAFETY WARNING'));
     });
   });
 }

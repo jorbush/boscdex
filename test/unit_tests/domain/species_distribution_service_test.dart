@@ -45,6 +45,21 @@ void main() {
       expect(zones, contains(CataloniaZone.transversalMontseny));
     });
 
+    test('Cataloged species have tailored ecological distributions', () {
+      final vinosus =
+          SpeciesDistributionService.getZonesForSpecies('lactarius_vinosus');
+      expect(vinosus, contains(CataloniaZone.litoralPrelitoral));
+      expect(vinosus, contains(CataloniaZone.serraladaSudPrades));
+
+      final truffle =
+          SpeciesDistributionService.getZonesForSpecies('tuber_melanosporum');
+      expect(truffle, contains(CataloniaZone.portsTerresEbre));
+
+      final aegerita =
+          SpeciesDistributionService.getZonesForSpecies('cyclocybe_aegerita');
+      expect(aegerita, contains(CataloniaZone.ponent));
+    });
+
     test('CataloniaZone enum labels, bounds, and comarques are non-empty', () {
       for (final zone in CataloniaZone.values) {
         expect(zone.id, isNotEmpty);

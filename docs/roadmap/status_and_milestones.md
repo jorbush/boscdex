@@ -126,6 +126,16 @@ Prioritized features before the initial public store release:
 
 ---
 
+## 🚀 Milestone v1.4: 75-Species Catalonian Expansion & Safety Hardening
+- [x] **75-Species Catalan Catalog Expansion:** Expanded taxonomy from 62 to 75 Catalan mushroom species (+21.0%), adding 8 renowned culinary legends (*Cyclocybe aegerita*, *Tricholoma portentosum*, *Tuber aestivum*, *Amanita rubescens*, *Imleria badia*, *Lactarius vinosus*, *Cantharellus subpruinosus*, *Leccinum aurantiacum*) and 5 critical toxic/mortal lookalikes (*Hypholoma fasciculare*, *Paxillus involutus*, *Amanita citrina*, *Tricholoma saponaceum*, *Inocybe erubescens*).
+- [x] **13 Custom 16-Bit Retro Arcade Pixel-Art Sprites:** Generated 1024x1024 RGBA transparent sprites under `assets/images/mushrooms/` for all 13 additions (75 species total).
+- [x] **Zero-Tolerance Lethal Safety Hardening (8 Lethal Taxa):** Synchronized `SafetyGateService` to track 8 mortal Catalan taxa with 10% confidence recall trigger. Added 12 new toxic lookalike pairs in `SeedData`.
+- [x] **Trilingual Localization & Culinary Lore:** Added Catalan, Spanish, and English vernacular names, morphological descriptions, and 8 new traditional Catalan recipes with wine pairings (expanding gourmet catalog to 24 species).
+- [x] **Series 019 Empirical Benchmark (1,036 Field Photos):** Reached **85.4% Top-1 (885 / 1,036)** and **95.9% Top-3 (994 / 1,036)** across 75 species, with 47 of 75 species achieving 100% Top-3 accuracy and 100% Top-3 safety recall on *Amanita phalloides* (8/8).
+- [x] **Automated Test Suite Verification (338 Passing Tests):** 100% pass rate across 338 automated unit, widget, integration, and E2E tests (`flutter test --exclude-tags "ml_benchmark,golden"`) with 0 analyzer issues (`flutter analyze`).
+
+---
+
 ## 🔵 Planned for v2.0 (Taxonomy Expansion & Advanced Tools)
 
 - [ ] **Expanded Taxonomy:** Grow seed database from 47 species to the full 80 Catalan mushrooms and 12 indicator trees.

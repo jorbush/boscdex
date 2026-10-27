@@ -382,7 +382,9 @@ void main() {
         expect(SafetyGateService.lethalSpecies, equals(seededMortalIds));
         expect(
             SafetyGateService.lethalSpecies, contains('gyromitra_esculenta'));
-        expect(SafetyGateService.lethalSpecies.length, equals(6));
+        expect(SafetyGateService.lethalSpecies, contains('paxillus_involutus'));
+        expect(SafetyGateService.lethalSpecies, contains('inocybe_erubescens'));
+        expect(SafetyGateService.lethalSpecies.length, equals(8));
       });
 
       test(

@@ -521,7 +521,7 @@ void main() {
 
       // Scroll down to make ToxicTwinAlert visible
       final alertFinder = find.byType(ToxicTwinAlert);
-      expect(alertFinder, findsNWidgets(3));
+      expect(alertFinder, findsNWidgets(4));
       await tester.ensureVisible(alertFinder.first);
       await tester.pumpAndSettle();
 

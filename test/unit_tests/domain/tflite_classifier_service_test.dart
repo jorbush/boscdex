@@ -24,11 +24,14 @@ void main() {
       await service.initialize();
 
       // Labels from assets/models/mushroom_labels.txt should be parsed
-      expect(service.labels.length, equals(62));
+      expect(service.labels.length, equals(75));
       expect(service.labels, contains('lactarius_deliciosus'));
       expect(service.labels, contains('amanita_caesarea'));
       expect(service.labels, contains('boletus_edulis'));
       expect(service.labels, contains('chroogomphus_rutilus'));
+      expect(service.labels, contains('cyclocybe_aegerita'));
+      expect(service.labels, contains('paxillus_involutus'));
+      expect(service.labels, contains('inocybe_erubescens'));
     });
 
     test('Classifying real mushroom specimen yields non-flat confidence',
@@ -102,11 +105,11 @@ void main() {
     });
 
     test(
-        'All 62 model labels resolve non-empty Catalan names via SpeciesLocalizer',
+        'All 75 model labels resolve non-empty Catalan names via SpeciesLocalizer',
         () async {
       await service.initialize();
 
-      expect(service.labels.length, equals(62));
+      expect(service.labels.length, equals(75));
       for (final label in service.labels) {
         final caName =
             SpeciesLocalizer.getMushroomName(label, languageCode: 'ca');

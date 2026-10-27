@@ -52,7 +52,7 @@ void main() {
           BoletFilter.gourmet;
       await container.read(boscdexEntriesProvider.future);
       final filtered = container.read(filteredBoscdexEntriesProvider);
-      expect(filtered.length, equals(16));
+      expect(filtered.length, equals(24));
       expect(filtered.any((e) => e.bolet.id == 'tuber_melanosporum'), isTrue);
     });
 

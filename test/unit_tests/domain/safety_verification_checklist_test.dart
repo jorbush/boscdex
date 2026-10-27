@@ -207,6 +207,71 @@ void main() {
           BotanicalSafetyChecklist.getChecklist('gyromitra_esculenta');
       expect(gyromitra.items.map((i) => i.id),
           containsAll(['deadly_acknowledgement', 'study_only_confirmation']));
+
+      // All lethal taxa have deadly acknowledgements
+      for (final deadlyId in [
+        'amanita_verna',
+        'amanita_virosa',
+        'cortinarius_orellanus',
+        'galerina_marginata',
+        'paxillus_involutus',
+        'inocybe_erubescens',
+      ]) {
+        final deadlyCheck = BotanicalSafetyChecklist.getChecklist(deadlyId);
+        expect(deadlyCheck.items.map((i) => i.id),
+            containsAll(['deadly_acknowledgement', 'study_only_confirmation']));
+      }
+    });
+
+    test(
+        'Returns tailored checklist for Amanita rubescens (vinous bruising & cooking)',
+        () {
+      final rubescens =
+          BotanicalSafetyChecklist.getChecklist('amanita_rubescens');
+      expect(rubescens.speciesId, equals('amanita_rubescens'));
+      expect(
+        rubescens.items.map((i) => i.id),
+        containsAll([
+          'rubescens_vinous_bruising',
+          'rubescens_striate_ring',
+          'rubescens_cook_mandatory',
+        ]),
+      );
+    });
+
+    test(
+        'Returns tailored checklist for Hypogeous Truffles (Tuber melanosporum & aestivum)',
+        () {
+      final melanosporum =
+          BotanicalSafetyChecklist.getChecklist('tuber_melanosporum');
+      expect(
+        melanosporum.items.map((i) => i.id),
+        containsAll(['truffle_harvest_gleba', 'truffle_intense_aroma']),
+      );
+
+      final aestivum = BotanicalSafetyChecklist.getChecklist('tuber_aestivum');
+      expect(
+        aestivum.items.map((i) => i.id),
+        containsAll(['truffle_summer_pyramidal', 'truffle_underground_dog']),
+      );
+    });
+
+    test('Returns tailored checklist for Lactarius vinosus', () {
+      final vinosus =
+          BotanicalSafetyChecklist.getChecklist('lactarius_vinosus');
+      expect(
+        vinosus.items.map((i) => i.id),
+        containsAll(['latex_wine_beetroot', 'margin_smooth_vinosus']),
+      );
+    });
+
+    test('Returns tailored checklist for Tricholoma portentosum', () {
+      final portentosum =
+          BotanicalSafetyChecklist.getChecklist('tricholoma_portentosum');
+      expect(
+        portentosum.items.map((i) => i.id),
+        containsAll(['portentosum_streaked_cap', 'portentosum_anise_scent']),
+      );
     });
 
     test('Falls back to general safety checklist for unspecified species', () {

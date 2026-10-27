@@ -1359,6 +1359,294 @@ class SeedData {
           dexNumber: Value(62),
           imageAssetPath: Value('assets/images/mushrooms/russula_emetica.png'),
         ),
+        BoletsCompanion(
+          id: Value('cyclocybe_aegerita'),
+          catalanName: Value('Pollancró / Bolet de pollanc'),
+          scientificName: Value('Cyclocybe aegerita'),
+          family: Value('Strophariaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[4,5,6,7,8,9,10,11]'),
+          altitudeMin: Value(50),
+          altitudeMax: Value(1200),
+          capDescription: Value(
+              'De 4 a 14 cm, hemisfèric i marró avellana de jove, després convex-aplanat amb el centre més fosc i el marge ondulat i blanquinós.'),
+          gillsDescription: Value(
+              'Adenyades o lleugerament decurrents, molt atapeïdes, blanquinoses que passen a ocre rogenc o canyella per les espores.'),
+          stemDescription: Value(
+              'Llarg, corbat, fibrós i tenaç, blanc o bru clar, amb un anell membranós persistent molt evident situat a la part alta.'),
+          safetyNotes: Value(
+              'EXCEL·LENT COMESTIBLE molt apreciat a la cuina catalana. Creix en feixos densos sobre troncs i soques de pollancres, àlbers, salzes i figueres. Cal no confondre\'l amb el tòxic Bolet de pi amarg (Hypholoma fasciculare, de làmines verdoses i gust molt amarg) ni amb la mortal Galerina marginata (que creix sobre coníferes).'),
+          dexNumber: Value(63),
+          imageAssetPath:
+              Value('assets/images/mushrooms/cyclocybe_aegerita.png'),
+        ),
+        BoletsCompanion(
+          id: Value('tricholoma_portentosum'),
+          catalanName:
+              Value('Fredolic d\'anís / Tortell d\'anís / Griset de cavall'),
+          scientificName: Value('Tricholoma portentosum'),
+          family: Value('Tricholomataceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[9,10,11,12]'),
+          altitudeMin: Value(700),
+          altitudeMax: Value(1900),
+          capDescription: Value(
+              'De 5 a 12 cm, convex a aplanat amb un umbó obtús, una mica viscós en temps humit, de color gris cendra a gris sutge amb reflexos groguencs i fibril·les radials fosques.'),
+          gillsDescription: Value(
+              'Escotades, amples, espaiades, blanques amb reflexos groc llimona molt característics en madurar.'),
+          stemDescription: Value(
+              'Robust, cilíndric, blanc o amb suaus reflexos groguencs, massís i estriat longitudinalment.'),
+          safetyNotes: Value(
+              'EXCEL·LENT COMESTIBLE d\'alta muntanya, superior al fredolic comú per la seva carn ferma i suau aroma de farina fresca i anís. Molt buscat al Pirineu a les pinedes de pi roig i pi negre. Cal no confondre\'l amb el tòxic Fredolic bord (Tricholoma pardinum, de barret esquamós) ni amb el Bolet de sabó (Tricholoma saponaceum, d\'olor desagradable de sabó de rentar).'),
+          dexNumber: Value(64),
+          imageAssetPath:
+              Value('assets/images/mushrooms/tricholoma_portentosum.png'),
+        ),
+        BoletsCompanion(
+          id: Value('tuber_aestivum'),
+          catalanName: Value('Tòfona d\'estiu / Trufa d\'estiu'),
+          scientificName: Value('Tuber aestivum'),
+          family: Value('Tuberaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[5,6,7,8,9]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1300),
+          capDescription: Value(
+              'Cos subterrani arrodonit o lobulat de 2 a 10 cm, amb peridi negre o bru molt fosc recobert de berrugues piramidals grosses, anguloses i dures.'),
+          gillsDescription: Value(
+              'Gleba interna massissa, inicialment blanquinosa i després marró avellana o ocre clar, travessada per un dens reticle de venes blanques ramificades.'),
+          stemDescription: Value(
+              'Mancat de peu visible. Es recol·lecta sota terra amb ajuda de gossos tofoners a poca fondària sota roures, alzines, avellaners i faigs.'),
+          safetyNotes: Value(
+              'EXCEL·LENT COMESTIBLE. D\'aroma més suau que la tòfona negra d\'hivern, té una agradable olor d\'avellana i fong fresc ideal per laminar en cru. Es diferencia del Patac d\'ase (Scleroderma citrinum) perquè aquest té l\'interior negre carbó sense venes blanques i és de pell groguenca amarga i tòxica.'),
+          dexNumber: Value(65),
+          imageAssetPath: Value('assets/images/mushrooms/tuber_aestivum.png'),
+        ),
+        BoletsCompanion(
+          id: Value('amanita_rubescens'),
+          catalanName: Value('Cua de cavall / Vinosa'),
+          scientificName: Value('Amanita rubescens'),
+          family: Value('Amanitaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[5,6,7,8,9,10,11]'),
+          altitudeMin: Value(100),
+          altitudeMax: Value(1500),
+          capDescription: Value(
+              'De 6 a 18 cm, globós que passa a convex-aplanat, de color terrós rogenc a bru rosat, cobert de restes de vel en forma de berrugues farinoses irregulars gris-rosades.'),
+          gillsDescription: Value(
+              'Lliures, atapeïdes, blanques que s\'enrogeixen i prenen taques vinoses o vermelloses amb l\'edat o en fregar-les.'),
+          stemDescription: Value(
+              'Cilíndric, atenuat cap amunt amb base bulbosa arrodonida, blanc-rosat que pren tons vinosos a la base, amb un gran anell membranós estriat a la part superior.'),
+          safetyNotes: Value(
+              'COMESTIBLE DE QUALITAT ÚNICAMENT SI ES CUINA A FONS (>70 °C durant més de 15 minuts). TÒXICA EN CRU per presència d\'hemolisines que destrueixen els glòbuls vermells i que es destrueixen completament amb la calor. ALERTA MÀXIMA DE CONFUSIÓ amb la molt tòxica Pantera (Amanita pantherina); la Vinosa enrogeix clarament a qualsevol ferida i no té la volva circuncisa esglaonada de la Pantera.'),
+          dexNumber: Value(66),
+          imageAssetPath:
+              Value('assets/images/mushrooms/amanita_rubescens.png'),
+        ),
+        BoletsCompanion(
+          id: Value('imleria_badia'),
+          catalanName: Value('Bolet de baia / Cep de baia / Molleric de baia'),
+          scientificName: Value('Imleria badia'),
+          family: Value('Boletaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[8,9,10,11]'),
+          altitudeMin: Value(400),
+          altitudeMax: Value(1800),
+          capDescription: Value(
+              'De 5 a 15 cm, hemisfèric a convex, vellutat de jove i viscós en temps humit, de color marró castany fosc, xocolata o bru vermellós.'),
+          gillsDescription: Value(
+              'Porus petits i angulosos, de color crema pàl·lid que viren ràpidament a groc-verdós i blavegen de forma intensa en prémer-los.'),
+          stemDescription: Value(
+              'Cilíndric o lleugerament ventrut, de color ocre o bru clar amb fines fibril·les longitudinals marronoses, SENSE cap reticle ni xarxa.'),
+          safetyNotes: Value(
+              'EXCEL·LENT COMESTIBLE. Molt consumit a Catalunya com a substitut del cep en arrossos, saltats i deshidratat. Cal diferenciar-lo del Mataparent amarg (Tylopilus felleus), que té porus rosats de madur, reticle evident i un gust amarg repugnant.'),
+          dexNumber: Value(67),
+          imageAssetPath: Value('assets/images/mushrooms/imleria_badia.png'),
+        ),
+        BoletsCompanion(
+          id: Value('lactarius_vinosus'),
+          catalanName: Value('Rovelló de sang vinosa / Lleterola vinosa'),
+          scientificName: Value('Lactarius vinosus'),
+          family: Value('Russulaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[9,10,11,12]'),
+          altitudeMin: Value(100),
+          altitudeMax: Value(1000),
+          capDescription: Value(
+              'De 5 a 12 cm, convex amb el centre deprimit, de color lila vinós a vermell fosc amb reflexos grisencs o verds de vell, amb cercles concèntrics suaus.'),
+          gillsDescription: Value(
+              'Adenyades o una mica decurrents, atapeïdes, de color vermell vinós a porpra amb reflexos lilosos.'),
+          latexDescription: Value(
+              'Escàs, espès, de color vi negre fosc o remolatxa intensa, immutable o que s\'enfosqueix lentament, de gust suau no picant.'),
+          stemDescription: Value(
+              'Curt, cilíndric, massís i després buit, de color vinós pàl·lid cobert d\'un tovallol blanc.'),
+          safetyNotes: Value(
+              'EXCEL·LENT COMESTIBLE. Reconegut ràpidament pel seu làtex espès de color vi negre o remolatxa fosca (no pas taronja com el rovelló comú). Típic de les pinedes mediterrànies litorals i prelitorals sobre terreny calcari. No es pot confondre amb cap espècie perillosa.'),
+          dexNumber: Value(68),
+          imageAssetPath:
+              Value('assets/images/mushrooms/lactarius_vinosus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('cantharellus_subpruinosus'),
+          catalanName: Value('Rossinyol blanc / Rossinyol de roure'),
+          scientificName: Value('Cantharellus subpruinosus'),
+          family: Value('Cantharellaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('excellent'),
+          fruitingSeason: Value('[5,6,9,10,11]'),
+          altitudeMin: Value(150),
+          altitudeMax: Value(1200),
+          capDescription: Value(
+              'De 4 a 12 cm, carnós, convex i després en embut amb el marge ondulat, de color groc rovell d\'ou cobert d\'una capa pruïnosa blanquinosa o platejada molt visible.'),
+          gillsDescription: Value(
+              'Format per plecs o venes decurrents bifurcades (no pas làmines), espaiades i gruixudes, de color groc daurat viu.'),
+          stemDescription: Value(
+              'Curt, massís, atenuat a la base, del mateix color groc que els plecs.'),
+          safetyNotes: Value(
+              'EXCEL·LENT COMESTIBLE, encara més carnós i compacte que el rossinyol comú, amb una intensa olor afruitada d\'albercoc. Molt fidel a les rouredes i alzinars mediterranis. Atenció a no confondre\'l amb la Gírgola d\'olivera (Omphalotus olearius, molt tòxica, amb làmines veritables fines i que creix sobre soques).'),
+          dexNumber: Value(69),
+          imageAssetPath:
+              Value('assets/images/mushrooms/cantharellus_subpruinosus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('leccinum_aurantiacum'),
+          catalanName: Value('Cep vermelló / Pell de taronja / Bolet vermell'),
+          scientificName: Value('Leccinum aurantiacum'),
+          family: Value('Boletaceae'),
+          rarityTier: Value('poc_frequent'),
+          edibility: Value('comestible'),
+          fruitingSeason: Value('[6,7,8,9,10]'),
+          altitudeMin: Value(400),
+          altitudeMax: Value(1700),
+          capDescription: Value(
+              'De 6 a 20 cm, robust, hemisfèric a convex, sec, finament vellutat, d\'un color vermell ataronjat intens molt vistós que recorda la pell de taronja.'),
+          gillsDescription: Value(
+              'Tubs llargs i porus fins i rodons, de color blanc grisenc que prenen tons ocres i enfosqueixen en tocar-los.'),
+          stemDescription: Value(
+              'Molt llarg, robust i fibrós, eixamplat cap a la base, blanc i cobert de nombroses esquàmules o aspreses fosques (marronoses a negres).'),
+          safetyNotes: Value(
+              'BON COMESTIBLE. La carn és blanca però en tallar-la vira ràpidament a gris violaci i després a negre carbó; en cuinar-lo la carn es torna fosca però conserva un excel·lent sabor i textura ferma. El peu és fibrós i convé descartar-lo si és vell.'),
+          dexNumber: Value(70),
+          imageAssetPath:
+              Value('assets/images/mushrooms/leccinum_aurantiacum.png'),
+        ),
+        BoletsCompanion(
+          id: Value('hypholoma_fasciculare'),
+          catalanName:
+              Value('Bolet de pi amarg / Fals pollancró / Bolet de sofre'),
+          scientificName: Value('Hypholoma fasciculare'),
+          family: Value('Strophariaceae'),
+          rarityTier: Value('molt_comu'),
+          edibility: Value('toxic'),
+          fruitingSeason: Value('[4,5,6,7,8,9,10,11,12]'),
+          altitudeMin: Value(50),
+          altitudeMax: Value(1800),
+          capDescription: Value(
+              'De 2 a 7 cm, convex a pla-convex, llis, de color groc sofre molt brillant amb el centre ataronjat o vermellós.'),
+          gillsDescription: Value(
+              'Molt atapeïdes, adnates, inicialment grogues de sofre que viren ràpidament a verd oliva o verd fosc amb l\'esporada marró porpra.'),
+          stemDescription: Value(
+              'Prim, flexuós, buit, groc sofre a dalt i bru rovellat a la base, sense anell membranós però amb cortina fugaç fosca.'),
+          safetyNotes: Value(
+              'TÒXIC. Provoca greus trastorns gastrointestinals (gastroenteritis aguda, vòmits i rampes) que comencen entre 5 i 10 hores després de la ingesta. Té un sabor extremadament amarg i persistent. ALERTA: Sovint confós per boletaires novells amb el Pollancró (Cyclocybe aegerita) o les carreretes de soca; les seves làmines olivàcies i el gust amarg el delaten immediatament.'),
+          dexNumber: Value(71),
+          imageAssetPath:
+              Value('assets/images/mushrooms/hypholoma_fasciculare.png'),
+        ),
+        BoletsCompanion(
+          id: Value('paxillus_involutus'),
+          catalanName:
+              Value('Paxil·le / Fals rovelló d\'olor / Bolet enrotllat'),
+          scientificName: Value('Paxillus involutus'),
+          family: Value('Paxillaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('mortal'),
+          fruitingSeason: Value('[8,9,10,11]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1800),
+          capDescription: Value(
+              'De 5 a 15 cm, convex que es deprimeix al centre en forma d\'embut ample, viscós en temps humit, de color ocre olivaci a marró terrós, amb el marge fortament ENROTLLAT cap a dins i vellutat.'),
+          gillsDescription: Value(
+              'Decurrents, bifurcades a la base prop del peu, groc ocre que s\'enfosqueixen i prenen taques marró rovellat molt fosques de seguida que es toquen.'),
+          stemDescription: Value(
+              'Curt, massís, cilíndric o atenuat a la base, del mateix color que el barret o més clar, llis.'),
+          safetyNotes: Value(
+              'MORTAL / GRAUMENT TÒXIC (Síndrome paxil·lià). Antigament consumit cuit, avui se sap que provoca una reacció autoimmune retardada potencialment mortal (hemòlisi intravascular aguda amb col·lapse renal) després de consums repetits. MAI S\'HA DE CONSUMIR. Els boletaires inexperts el poden confondre amb rovellons o ceps vells, però no té làtex i les làmines s\'oxiden a marró fosc.'),
+          dexNumber: Value(72),
+          imageAssetPath:
+              Value('assets/images/mushrooms/paxillus_involutus.png'),
+        ),
+        BoletsCompanion(
+          id: Value('amanita_citrina'),
+          catalanName: Value('Farinera groga / Reig de la mort fals'),
+          scientificName: Value('Amanita citrina'),
+          family: Value('Amanitaceae'),
+          rarityTier: Value('comu'),
+          edibility: Value('sense_valor'),
+          fruitingSeason: Value('[8,9,10,11,12]'),
+          altitudeMin: Value(100),
+          altitudeMax: Value(1400),
+          capDescription: Value(
+              'De 5 a 10 cm, hemisfèric a convex-aplanat, de color groc llimona pàl·lid, groc verdós o blanquinós, cobert de grans plaques membranoses irregulars de color bru grisenc.'),
+          gillsDescription: Value(
+              'Lliures, atapeïdes, de color blanc immaculat o lleugerament groguenques a la vora.'),
+          stemDescription: Value(
+              'Esvelt, blanc-groguenc, amb un anell membranós penjant groc pàl·lid i una base terminada en un bulb molt gros, globós i arrodonit amb un marge o vora tallada molt neta (bulb marginat).'),
+          safetyNotes: Value(
+              'SENSE VALOR CULINARI I MODERADAMENT TÒXIC (conté bufotenina). Té una forta i desagradable olor de patata crua o rave. ALERTA MÀXIMA DE CONFUSIÓ: La seva semblança superficial amb la mortal Farinera borda (Amanita phalloides) o amb l\'Ou de reig (Amanita caesarea) la fa un bolet d\'alt risc pedagògic. La Farinera borda té volva en sac i no fa olor de patata.'),
+          dexNumber: Value(73),
+          imageAssetPath: Value('assets/images/mushrooms/amanita_citrina.png'),
+        ),
+        BoletsCompanion(
+          id: Value('tricholoma_saponaceum'),
+          catalanName: Value('Bolet de sabó / Fredolic de sabó'),
+          scientificName: Value('Tricholoma saponaceum'),
+          family: Value('Tricholomataceae'),
+          rarityTier: Value('molt_comu'),
+          edibility: Value('toxic'),
+          fruitingSeason: Value('[9,10,11,12]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1800),
+          capDescription: Value(
+              'De 4 a 10 cm, convex a aplanat amb marge ondulat, llis, molt variable de color: gris verdós, bru olivaci o ocre pàl·lid.'),
+          gillsDescription: Value(
+              'Escotades, amples, espaiades, de color blanc verdós o crema que sovint prenen taques vermelloses o salmó de velles.'),
+          stemDescription: Value(
+              'Robust, sovint corbat i atenuat o radicant a la base, blanquinós amb una tonalitat rosa o salmó característica a la base del peu.'),
+          safetyNotes: Value(
+              'TÒXIC. Provoca nàusees i trastorns gastrointestinals. Té una fortíssima i inconfusible olor de sabó de rentar la roba o detergent que augmenta en coure\'s, i un gust amarg desagradable. Es pot confondre amb el Fredolic comú (Tricholoma terreum) o el Fredolic d\'anís (Tricholoma portentosum), però l\'olor de sabó i la base rosa el delaten.'),
+          dexNumber: Value(74),
+          imageAssetPath:
+              Value('assets/images/mushrooms/tricholoma_saponaceum.png'),
+        ),
+        BoletsCompanion(
+          id: Value('inocybe_erubescens'),
+          catalanName: Value('Inòcibe de Patouillard'),
+          scientificName: Value('Inocybe erubescens'),
+          family: Value('Inocybaceae'),
+          rarityTier: Value('rara'),
+          edibility: Value('mortal'),
+          fruitingSeason: Value('[4,5,6,7]'),
+          altitudeMin: Value(200),
+          altitudeMax: Value(1400),
+          capDescription: Value(
+              'De 3 a 9 cm, cònic o acampanat amb un umbó central marcat i punxegut, blanc o crema pàl·lid que s\'esquerda radialment en fibril·les sedoses i que pren ràpidament TAQUES VERMELL-MAÓ intenses on es toca o envelleix.'),
+          gillsDescription: Value(
+              'Lliures o adnates, atapeïdes, inicialment blanquinoses que passen a canyella olivaci amb taques vermelloses vives.'),
+          stemDescription: Value(
+              'Robust, cilíndric amb base lleugerament bulbosa, blanc i finament estriat, que s\'enrogeix intensament a qualsevol pressió.'),
+          safetyNotes: Value(
+              'MORTAL (Síndrome muscarínic greu). Conté dosis molt elevades de muscarina. Provoca sudoració massiva, hipersecreció, bradicàrdia severa i xoc en menys d\'una hora. ALERTA DE PRIMAVERA: Freqüent a la primavera sota faigs i roures, es pot confondre fatalment amb el Moixernó (Calocybe gambosa) o les carreretes; el seu envermelliment vermell maó i barret cònic són claus vitals de seguretat.'),
+          dexNumber: Value(75),
+          imageAssetPath:
+              Value('assets/images/mushrooms/inocybe_erubescens.png'),
+        ),
       ];
 
   static List<ArbresCompanion> get arbres => const [
@@ -1760,6 +2048,100 @@ class SeedData {
         BoletArbreAssociationsCompanion(
             boletId: Value('russula_emetica'),
             arbreId: Value('pinus_sylvestris')),
+        // cyclocybe_aegerita -> castanea_sativa, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('cyclocybe_aegerita'),
+            arbreId: Value('castanea_sativa')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('cyclocybe_aegerita'),
+            arbreId: Value('fagus_sylvatica')),
+        // tricholoma_portentosum -> pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tricholoma_portentosum'),
+            arbreId: Value('pinus_sylvestris')),
+        // tuber_aestivum -> quercus_ilex, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tuber_aestivum'), arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tuber_aestivum'),
+            arbreId: Value('fagus_sylvatica')),
+        // amanita_rubescens -> castanea_sativa, quercus_ilex, fagus_sylvatica, pinus_sylvestris
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_rubescens'),
+            arbreId: Value('castanea_sativa')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_rubescens'),
+            arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_rubescens'),
+            arbreId: Value('fagus_sylvatica')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_rubescens'),
+            arbreId: Value('pinus_sylvestris')),
+        // imleria_badia -> pinus_sylvestris, castanea_sativa
+        BoletArbreAssociationsCompanion(
+            boletId: Value('imleria_badia'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('imleria_badia'), arbreId: Value('castanea_sativa')),
+        // lactarius_vinosus -> pinus_halepensis
+        BoletArbreAssociationsCompanion(
+            boletId: Value('lactarius_vinosus'),
+            arbreId: Value('pinus_halepensis')),
+        // cantharellus_subpruinosus -> quercus_ilex, castanea_sativa
+        BoletArbreAssociationsCompanion(
+            boletId: Value('cantharellus_subpruinosus'),
+            arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('cantharellus_subpruinosus'),
+            arbreId: Value('castanea_sativa')),
+        // leccinum_aurantiacum -> quercus_ilex, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('leccinum_aurantiacum'),
+            arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('leccinum_aurantiacum'),
+            arbreId: Value('fagus_sylvatica')),
+        // hypholoma_fasciculare -> pinus_sylvestris, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('hypholoma_fasciculare'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('hypholoma_fasciculare'),
+            arbreId: Value('fagus_sylvatica')),
+        // paxillus_involutus -> pinus_sylvestris, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('paxillus_involutus'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('paxillus_involutus'),
+            arbreId: Value('fagus_sylvatica')),
+        // amanita_citrina -> quercus_ilex, pinus_sylvestris, fagus_sylvatica
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_citrina'), arbreId: Value('quercus_ilex')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_citrina'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('amanita_citrina'),
+            arbreId: Value('fagus_sylvatica')),
+        // tricholoma_saponaceum -> fagus_sylvatica, pinus_sylvestris, quercus_ilex
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tricholoma_saponaceum'),
+            arbreId: Value('fagus_sylvatica')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tricholoma_saponaceum'),
+            arbreId: Value('pinus_sylvestris')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('tricholoma_saponaceum'),
+            arbreId: Value('quercus_ilex')),
+        // inocybe_erubescens -> fagus_sylvatica, quercus_ilex
+        BoletArbreAssociationsCompanion(
+            boletId: Value('inocybe_erubescens'),
+            arbreId: Value('fagus_sylvatica')),
+        BoletArbreAssociationsCompanion(
+            boletId: Value('inocybe_erubescens'),
+            arbreId: Value('quercus_ilex')),
       ];
 
   static List<ToxicLookalikesCompanion> get toxicLookalikes => const [
@@ -2014,6 +2396,114 @@ class SeedData {
           lookalikeBoletId: Value('rubroboletus_satanas'),
           comparisonNotes: Value(
               'El molt tòxic Mataparent de Satanàs té barret blanquinós-grisenc i reticle vermell al peu; el Mataparent de peu vermell té barret marró xocolata vellutat i peu pigallat de puntets sense xarxa.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('cyclocybe_aegerita'),
+          lookalikeBoletId: Value('hypholoma_fasciculare'),
+          comparisonNotes: Value(
+              'El tòxic Bolet de pi amarg té làmines groc-verdoses i carn intensament amarga; el Pollancró té làmines blanquinoses a canyella, olor agradable d\'avellana i anell membranós persistent.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('cyclocybe_aegerita'),
+          lookalikeBoletId: Value('galerina_marginata'),
+          comparisonNotes: Value(
+              'La mortal Galerina marginata creix sobre fusta de coníferes i és més petita; el Pollancró creix en feixos densos sobre fusta de ribera (pollancres, salzes) amb barrets carnosos.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('tricholoma_portentosum'),
+          lookalikeBoletId: Value('tricholoma_pardinum'),
+          comparisonNotes: Value(
+              'El molt tòxic Fredolic bord té el barret cobert d\'esquames concèntriques grosses i carn sense reflexos grocs; el Fredolic d\'anís té barret llis fibril·lós amb reflexos groc llimona a les làmines.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('tricholoma_portentosum'),
+          lookalikeBoletId: Value('tricholoma_saponaceum'),
+          comparisonNotes: Value(
+              'El tòxic Bolet de sabó fa una forta olor de detergent de rentar la roba i té la base del peu tenyida de rosa; el Fredolic d\'anís fa una suau olor de farina i anís.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('amanita_rubescens'),
+          lookalikeBoletId: Value('amanita_pantherina'),
+          comparisonNotes: Value(
+              'La molt tòxica Pantera té la carn sempre blanca immutable, anell llis no estriat i volva circuncisa en anells esglaonats; la Vinosa té carn que s\'enrogeix clarament a les ferides i anell estriat.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('amanita_rubescens'),
+          lookalikeBoletId: Value('amanita_citrina'),
+          comparisonNotes: Value(
+              'La Farinera groga fa forta olor de patata crua i té un bulb marginat molt abrupte sense enrogiment; la Vinosa no té bulb marginat i s\'enrogeix ràpidament amb l\'edat.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('tuber_aestivum'),
+          lookalikeBoletId: Value('scleroderma_citrinum'),
+          comparisonNotes: Value(
+              'El tòxic Patac d\'ase té pell groguenca amb berrugues fosques i interior negre massís sense venes; la Tòfona d\'estiu té peridi negre amb berrugues piramidals i interior avellana vetejat de blanc.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('cantharellus_subpruinosus'),
+          lookalikeBoletId: Value('omphalotus_olearius'),
+          comparisonNotes: Value(
+              'La molt tòxica Gírgola d\'olivera creix en troncs i té làmines veritables fines i atapeïdes; el Rossinyol blanc creix a terra sota roures i té plecs venosos gruixuts amb barret pruïnós.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('calocybe_gambosa'),
+          lookalikeBoletId: Value('inocybe_erubescens'),
+          comparisonNotes: Value(
+              'El mortal Inòcibe de Patouillard té barret cònic amb umbó agut i s\'enrogeix intensament (vermell maó) en fregar-lo; el Moixernó té barret convex massís que mai enrogeix i forta olor de farina.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('marasmius_oreades'),
+          lookalikeBoletId: Value('inocybe_erubescens'),
+          comparisonNotes: Value(
+              'El mortal Inòcibe de Patouillard és més robust, té làmines marronoses i s\'enrogeix amb taques vermelloses vives; la Carrereta mai enrogeix i té peu molt elàstic i tenaç que es pot cargolar.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('lactarius_deliciosus'),
+          lookalikeBoletId: Value('paxillus_involutus'),
+          comparisonNotes: Value(
+              'El mortal Paxil·le té marge fortament enrotllat, làmines que s\'oxiden a marró fosc i mai desprèn làtex taronja; el Rovelló raja sempre làtex taronja viu i té carn massissa immutable a taronja.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('imleria_badia'),
+          lookalikeBoletId: Value('tylopilus_felleus'),
+          comparisonNotes: Value(
+              'El Mataparent amarg té porus de color rosa brut en madurar i un reticle marró fosc molt evident al peu; el Bolet de baia té porus grocs que blavegen i peu fibrós sense reticle.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('tricholoma_terreum'),
+          lookalikeBoletId: Value('tricholoma_saponaceum'),
+          comparisonNotes: Value(
+              'El tòxic Bolet de sabó fa una forta olor de detergent de rentar la roba o sabó i té la base del peu tenyida de rosa; el Fredolic fa olor suau fúngica i no té mai tons rosats al peu.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('amanita_citrina'),
+          lookalikeBoletId: Value('amanita_phalloides'),
+          comparisonNotes: Value(
+              'La Farinera groga té un bulb marginat molt abrupte i fa forta olor de patata crua; la mortal Farinera borda té volva membranosa en sac lliure, barret verd oliva fibril·lós i olor agradable de mel de jove.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('amanita_caesarea'),
+          lookalikeBoletId: Value('amanita_citrina'),
+          comparisonNotes: Value(
+              'L\'Ou de reig té barret taronja viu, làmines i peu groc daurat lluminós; la Farinera groga té barret groc llimona pàl·lid amb plaques fosques, làmines blanques i forta olor de patata crua.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('lactarius_vinosus'),
+          lookalikeBoletId: Value('lactarius_chrysorrheus'),
+          comparisonNotes: Value(
+              'El Fals rovelló o Lleterola té làtex blanc que en pocs segons vira a groc sofre intens i és molt picant; el Rovelló de sang vinosa té làtex fosc color vi negre o remolatxa de gust dolç.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('lactarius_vinosus'),
+          lookalikeBoletId: Value('lactarius_torminosus'),
+          comparisonNotes: Value(
+              'La Cabra o Rovelló bord té el marge del barret densament barbós i pelut i exsuda làtex blanc acre; el Rovelló de sang vinosa té marge llis no barbat i làtex fosc vi negre.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('lactarius_vinosus'),
+          lookalikeBoletId: Value('paxillus_involutus'),
+          comparisonNotes: Value(
+              'El mortal Paxil·le té marge fortament enrotllat, làmines que s\'oxiden a bru en fregar-les i no té làtex; el Rovelló de sang vinosa raja làtex color vi negre fosc o remolatxa.'),
         ),
       ];
 
