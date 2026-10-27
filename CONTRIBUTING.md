@@ -163,3 +163,21 @@ Les descripcions de permisos per a la càmera, galeria i geolocalització es tro
 - `ios/Runner/ca.lproj/InfoPlist.strings` (Català)
 - `ios/Runner/es.lproj/InfoPlist.strings` (Castellà)
 - `ios/Runner/en.lproj/InfoPlist.strings` (Anglès)
+
+---
+
+## 🌿 Flux de Treball Git i Pull Requests
+
+1. Fes un fork del repositori i crea una branca per a la teva contribució (`git checkout -b feature/nom-de-la-millora`).
+2. Fes commits seguint la convenció de [Conventional Commits](https://www.conventionalcommits.org/):
+   - `feat:` Nova funcionalitat o espècie micològica
+   - `fix:` Correcció d'error o d'avís botànic
+   - `docs:` Actualització de documentació
+   - `test:` Nous tests de regressió o unitaris
+   - `refactor:` Canvis de codi que no alteren la funcionalitat
+3. Assegura't que l'analitzador estàtic i els tests passen al 100%:
+   ```bash
+   flutter analyze
+   flutter test --exclude-tags "ml_benchmark,golden"
+   ```
+4. Obre una Pull Request descrivint clarament el canvi. Gràcies per fer créixer Boscdex! 🍄🌲

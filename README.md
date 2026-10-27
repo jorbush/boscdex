@@ -1,111 +1,141 @@
 # 🍄 Boscdex
 
-**The offline mushroom forager's Pokédex to explore the Catalan forest**
+<p align="center">
+  <img src="assets/images/badges/mestre_boletaire.png" alt="Boscdex Icon" width="128" height="128" />
+</p>
 
-Boscdex is a gamified, 100% offline field guide designed for mushroom foragers (*boletaires*) and hikers in Catalonia. It blends the discovery thrill of a Pokédex (collection milestones, rarity tiers, badges) with critical field-safety protocols (edibility warnings, toxic lookalike alerts) and ecological context (mushrooms connected with their symbiotic host trees).
+<p align="center">
+  <strong>The 100% offline mushroom forager's Pokédex to explore the Catalan forest</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/jorbush/boscdex/releases"><img src="https://img.shields.io/badge/Release-v1.4.0-success.svg" alt="Release v1.4.0" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPLv3" /></a>
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.3.3-02569B?logo=flutter" alt="Flutter 3.3.3" /></a>
+  <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-2.18-0175C2?logo=dart" alt="Dart 2.18" /></a>
+  <img src="https://img.shields.io/badge/Taxa-75%20Catalan%20Species-forestgreen" alt="75 Catalan Species" />
+  <img src="https://img.shields.io/badge/Privacy-100%25%20Offline-brightgreen" alt="100% Offline" />
+  <img src="https://img.shields.io/badge/Languages-ca%20%7C%20es%20%7C%20en-orange" alt="Languages: ca | es | en" />
+</p>
+
+---
+
+## 🌲 What is Boscdex?
+
+**Boscdex** is a gamified, **100% offline** field companion engineered for mushroom foragers (*boletaires*) and hikers exploring the woods and mountains of Catalonia.
+
+It blends the discovery mechanics of a classic **Pokédex** (collection milestones, silhouette unlocks, rarity tiers, retro achievement badges) with **rigorous field-safety gates** (zero-tolerance lethal lookalike sentinels, interactive botanical verification checklists) and **Catalan ecological lore** (mycorrhizal tree symbiosis, 16-bit retro Catalonia maps, and traditional culinary recipes with local wine pairings).
 
 ---
 
 ## ✨ Key Features
 
-- **🔌 100% Offline** — Functions completely without an internet connection. On-device computer vision classification and local SQLite data.
-- **📸 Mushroom Scanner & High-Res Photo Storage** — Identifies wild mushrooms using real-time edge machine learning (Edge ML) and preserves high-resolution field photos on-device.
-- **🛰️ Private Offline GPS Geolocation** — Automatic on-device GPS coordinate capture and altitude logging with zero cloud synchronization, preserving secret foraging spots (*les clapes*).
-- **🗺️ Interactive Catalonia Field Map ("Mapa de Camp")** — 16-bit retro Catalonia map visualizing field discoveries with specimen-specific pixel art sprites, pinch-to-zoom (`InteractiveViewer`), category filters (`Tots`, `Bolets`, `Arbres`), and an inspection HUD.
-- **🔍 Sighting Detail & Export** — Inspect scanned photos with pinch-to-zoom (`InteractiveViewer`), neural coincidence percentage gauge, 1-tap download to Camera Roll, and native sharing (AirDrop, WhatsApp).
-- **🍄 Boscdex Album & "Les Teves Captures"** — Visual discovery album with dark silhouettes, rarity tiers, and personal specimen photo galleries.
-- **🌲 Indicator Trees** — Comprehensive guide to Catalonia's key mycorrhizal host trees (oak, beech, chestnut, pine).
-- **⚠️ Dangerous Lookalikes** — High-visibility safety alerts highlighting poisonous and deadly twin species.
-- **📝 Sighting Journal** — Field log recording discoveries with dual list/map view, real photo thumbnails, confidence pills, and timestamps.
-- **🌐 Trilingual Localization** — Full Catalan (*Català*, default), Spanish (*Castellano*), and English support across all UI navigation, on-device settings, species morphology (cap, gills, stem, latex), safety warnings, lookalike comparisons, and 16-bit regional foraging maps.
-- **🏆 Badges & Achievements** — Local gamification milestones celebrating field achievements.
-- **🎖️ Forager Leveling & Progression System ("Nivell de Boletaire")** — Dynamic 10-tier experience system (*Novell del Bosc* to *Mestre del Bosc*). Accumulates XP from cataloging mushrooms (+100 XP), identifying trees (+75 XP), unlocking badges (+150 XP), and logging journal sightings (+25 XP). Features an interactive retro HUD badge in the Boscdex AppBar, progress bar, XP breakdown modal, and rank roadmap.
+- **🔌 100% Offline by Design** — Operates entirely deep in the forest without cell reception. All computer vision inference and relational database queries run on-device.
+- **🍄 75 Catalan Fungal Taxa** — Comprehensive mycological catalog covering prized delicacies (*Ceps*, *Rovellons*, *Rossinyols*, *Camagrocs*, *Moixernons*, *Tòfones*, *Múrgoles*, *Llenegues*, *Ous de reig*, *Fredolics*), common woodland fungi, and lethal sentinels.
+- **📸 Real-Time Edge Machine Learning (Edge ML)** — Quantized MobileNetV2 feature extractor combined with a sub-0.05ms linear classification head executing in native Dart with 3-View Test-Time Augmentation (TTA).
+- **⚠️ Zero-Tolerance Life-Safety Gates** — Automatically alerts to lethal lookalikes (*Amanita phalloides*, *A. verna*, *A. virosa*, *Cortinarius orellanus*, *Galerina marginata*, *Gyromitra esculenta*, *Paxillus involutus*, *Inocybe erubescens*) at a 10% sensitivity threshold, triggering mandatory interactive verification checks (`BotanicalSafetyCheckDialog`).
+- **🗺️ 16-Bit Retro Catalonia Map ("Mapa de Camp")** — Interactive pixel-art map visualizing species distributions across Catalonia's 7 natural foraging zones (Alt Pirineu, Prepirineu Central, Serralada Transversal i Montseny, Litoral i Prelitoral, Ponent, Serralada Sud i Prades, Ports i Terres de l'Ebre).
+- **🛰️ Zero-Cloud Private GPS Geolocation** — Preserves coordinates and altitudinal data exclusively in local SQLite storage. Secret foraging patches (*les clapes*) never leave your device.
+- **🍳 Traditional Catalan Recipes & Wine Pairings** — Authentic recipes (*Sopa de fredolics*, *Lleteroles amb all i julivert*, *Arròs de muntanya amb ceps*) with cooking warnings and Catalan wine pairings (DO Priorat, DO Montsant, DO Empordà, DO Terra Alta, DO Penedès).
+- **🌲 Indicator Tree Guides** — Guides to key Catalan mycorrhizal host trees (*Pinus sylvestris*, *Pinus halepensis*, *Quercus ilex*, *Fagus sylvatica*, *Castanea sativa*) with on-demand tree classifier.
+- **🌐 Trilingual Localization** — Full Catalan (*Català*, default), Spanish (*Castellano*), and English support across all UI navigation, on-device settings, species morphology, safety warnings, and lookalike comparisons.
+- **🎖️ Forager Progression & Achievements** — 10-tier experience rank system (*Novell del Bosc* to *Mestre del Bosc*) with 17 collectible retro insignia badges.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Architecture & Tech Stack
 
-| Component | Technology |
-|---|---|
-| Framework | Flutter (Dart `>=2.18.0 <4.0.0`) |
-| ML Inference | TFLite / LiteRT on-device inference |
-| Database | SQLite via Drift (reactive, type-safe) |
-| State Management | Riverpod 2.x |
-| Navigation | GoRouter |
-| Location | Geolocator (offline GPS coordinates) |
-| Localization | Custom trilingual l10n engine (`ca`, `es`, `en`) |
+| Layer | Technology | Role |
+| :--- | :--- | :--- |
+| **Framework** | [Flutter](https://flutter.dev) (Dart `>=2.18.0 <4.0.0`) | Cross-platform mobile UI |
+| **State Management** | [Riverpod 2.x](https://riverpod.dev) | Declarative reactive dependency injection |
+| **Persistence** | [Drift](https://drift.simonbinder.eu/) + SQLite | Reactive, type-safe local database with auto-migration |
+| **Computer Vision** | TensorFlow Lite / LiteRT | On-device Edge-ML MobileNetV2 + 3-View TTA |
+| **Navigation** | [GoRouter](https://pub.dev/packages/go_router) | Declarative tabbed ShellRoute navigation |
+| **Hardware** | `camera`, `geolocator` | Live camera stream and offline GPS coordinates |
+| **Audio** | `audioplayers` | 8-bit retro chimes and discovery fanfares |
 
----
-
-## 📱 Minimum Requirements
-
-- **iOS:** 15.0+
-- **Android:** API 26+ (Android 8.0 Oreo)
+```
+lib/
+├── app.dart            # Main MaterialApp and Dark Forest pixel theme configuration
+├── main.dart           # App entrypoint with dependency initialization
+├── core/               # Constants, GoRouter, pixel theme, trilingual SpeciesLocalizer
+├── data/               # Drift database, SQLite tables, DAOs, and seed data
+├── domain/             # Domain models, services (ML, safety gate, badges, distribution)
+├── presentation/       # Feature screens (Boscdex, Scan, Detail, Journal, Settings)
+└── providers/          # Riverpod top-level state providers
+```
 
 ---
 
 ## 🚀 Getting Started
 
+### Prerequisites
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) 3.3.3 or compatible
+- Dart SDK 2.18.x
+- Java 17 + Android SDK 33
+- Xcode 14+ (for iOS builds)
+
+### Installation
 ```bash
-# 1. Install dependencies
+# 1. Clone the repository
+git clone https://github.com/jorbush/boscdex.git
+cd boscdex
+
+# 2. Install dependencies
 flutter pub get
 
-# 2. Run code generation (Drift DB schema & queries)
+# 3. Generate SQLite Drift database code
 dart run build_runner build --delete-conflicting-outputs
 
-# 3. Run the app
+# 4. Verify static analysis (0 issues)
+flutter analyze
+
+# 5. Run automated test suite
+flutter test --exclude-tags "ml_benchmark,golden"
+
+# 6. Launch on simulator or device
 flutter run
 ```
 
 ### Automation with Make
-
 ```bash
-# Format code
-make format
-
-# Run linter
-make lint
-
-# Run all test tiers (unit, integration, e2e)
-make test
-
-# Full CI validation check
-make check
+make format   # Format Dart code
+make lint     # Run static analyzer
+make test     # Run all unit and integration tests
+make check    # Full CI validation check
 ```
 
 ---
 
-## 🌿 Project Structure
+## 🧪 Testing & Quality Standards
 
-```
-lib/
-├── app.dart            # Main MaterialApp and theme configuration
-├── main.dart           # App entrypoint with dependency initialization
-├── core/               # App constants, router, theme, utilities, and localization (ca, es, en)
-├── data/               # Data layer (Drift DB, tables, DAOs, seed data)
-├── domain/             # Domain models, services (ML, safety gate, badges, Catalonia zones)
-├── presentation/       # Feature screens & widgets (Boscdex, Scan, Detail, Journal, Settings)
-└── providers/          # Riverpod top-level state providers (database, audio, preferences, locale)
+Boscdex enforces 100% test pass rates across three validation tiers:
+- **Unit Tests (`test/unit_tests/`)**: Domain logic, `SafetyGateService`, `BotanicalSafetyChecklist`, and isolated widget tests.
+- **Integration Tests (`test/integration_tests/`)**: In-memory SQLite queries, Drift DAOs, and photo persistence.
+- **Golden Tests (`test/unit_tests/presentation/`)**: Pixel-perfect rendering of 16-bit retro components.
+- **ML Benchmarks (`test/integration_tests/services/`)**: Automated validation on real field images ($N=1,036$, 85.4% Top-1, 95.9% Top-3).
 
-test/
-├── unit_tests/         # Tier 1: Domain services, models, and isolated widget tests
-├── integration_tests/  # Tier 2: Drift SQLite database, DAOs, and Riverpod integration
-└── e2e_tests/          # Tier 3: Complete user flows from splash to discovery logging
+---
 
-tools/                  # ML training and dataset pipeline (not bundled into the app)
-├── dataset/            # Dataset acquisition and Mediterranean filtering scripts
-├── training/           # Model training and fine-tuning scripts
-└── export/             # Quantization (INT8) and TFLite model export
-```
+## 🤝 Contributing
+
+We welcome contributions from mycologists, nature enthusiasts, translators, pixel artists, and developers!
+
+Please read our [**Contributing Guide (CONTRIBUTING.md)**](CONTRIBUTING.md) to get started. All participants are expected to adhere to our [**Code of Conduct (CODE_OF_CONDUCT.md)**](CODE_OF_CONDUCT.md).
+
+For vulnerability or botanical safety disclosures, please see [**SECURITY.md**](SECURITY.md).
 
 ---
 
 ## ⚠️ Safety & Legal Disclaimer
 
-> This application is intended as an educational field guide and navigational aid. Machine learning models are probabilistic and may produce incorrect classifications. **Never consume any wild mushroom without prior in-person validation from a qualified human mycologist.**
+> **FIELD IDENTIFICATION OF WILD MUSHROOMS CARRIES INHERENT RISKS OF SEVERE POISONING AND DEATH.**  
+> This software is provided solely for educational, cultural, and recreational purposes. Computer vision predictions are probabilistic. **NEVER ingest any wild mushroom based on application classifications alone.** Always cross-reference with official botanical keys and consult a certified mycologist.
 
 ---
 
 ## 📄 License
 
-Copyright © 2026 Boscdex. All rights reserved.
+This project is licensed under the **GNU General Public License v3.0 (GPLv3)**.  
+See the [**LICENSE**](LICENSE) file for the full license text and terms.
