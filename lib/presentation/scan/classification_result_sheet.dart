@@ -24,9 +24,11 @@ import '../../domain/services/safety_gate_service.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/preferences_provider.dart';
+import '../../providers/reference_photo_provider.dart';
 import '../../providers/sound_provider.dart';
 import '../journal/journal_map_projection.dart';
 import '../shared/edibility_badge.dart';
+import '../shared/mushroom_comparison_card.dart';
 import '../shared/safety_alert_box.dart';
 import '../boscdex/boscdex_provider.dart';
 import 'botanical_safety_check_dialog.dart';
@@ -556,6 +558,18 @@ class _MushroomClassificationResultSheetState
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Botanical Reference & Live Comparison Card
+                    if (_topBolet != null) ...[
+                      MushroomComparisonCard(
+                        userImageBytes: widget.imageBytes,
+                        topCandidate: _topBolet!,
+                        lookalikes: _lookalikes,
+                        referencePhotoService:
+                            ref.watch(referencePhotoServiceProvider),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Safety Gate: High danger alert (toxic or mortal species)
                     if (isDanger) ...[

@@ -42,11 +42,12 @@ Whether you have never written a line of machine learning code or want a refresh
 │   └─ Asymmetric cost: Why a classifier must never guess on toxicity    │
 │                                                                        │
 │   Chapter 6: Modern Optimization, Data Curation & 3-View TTA           │
-│   ├─ Taxonomic Ground-Truth Curation (The 36 corrupted IDs audit)      │
+│   ├─ Taxonomic Ground-Truth Curation (100% Verified Kingdom Fungi)     │
 │   ├─ Label Smoothing Loss: Calibrating Edge Probabilities              │
 │   ├─ Safety-Priority Inverse-Frequency Class Weighting                 │
 │   ├─ AdamW Optimization & Frozen BatchNormalization                    │
-│   └─ On-Device 3-View Test-Time Augmentation (TTA Feature Fusion)      │
+│   ├─ On-Device 3-View Test-Time Augmentation (TTA Feature Fusion)      │
+│   └─ Proximal 3-View TTA Linear Head Calibration (100% Ref Top-1)      │
 │                                                                        │
 └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -66,7 +67,7 @@ Whether you have never written a line of machine learning code or want a refresh
 5. [**05. Mycological Challenges in Computer Vision**](05_mycology_cv_challenges.md)  
    Phenological stages, environmental noise, Moiré effects, and asymmetric safety risk.
 6. [**06. Modern Optimization, Data Curation & Test-Time Augmentation (TTA)**](06_modern_optimization_and_tta.md)  
-   Taxonomic data curation, label smoothing loss ($\alpha = 0.10$), safety class weights, `AdamW`, frozen BatchNorm, and on-device 3-View TTA reaching 96.3% Top-3 accuracy.
+   Taxonomic data curation, label smoothing loss ($\alpha = 0.10$), safety class weights, `AdamW`, frozen BatchNorm, on-device 3-View TTA, and Proximal TTA Head Calibration reaching **96.9% Top-1 / 99.3% Top-3** across 1,041 field images and **100.0% Top-1** on all 75 botanical reference photos.
 
 ---
 
@@ -78,7 +79,7 @@ Whether you have never written a line of machine learning code or want a refresh
 | **Kernel / Filter** | A small grid of numbers ($3\times3$) that slides across an image to detect specific visual patterns. | Detects mushroom gills, cap edges, or scales. |
 | **Backbone** | A deep pre-trained neural network used to extract visual features. | MobileNetV2 turns an image into 1,280 numbers. |
 | **GAP** | Global Average Pooling: collapses spatial dimensions into a single vector. | Extracts the 1,280 feature fingerprint. |
-| **Logit** | The raw, unnormalized score a neural network outputs for each class. | 47 real numbers; higher means more confident. |
+| **Logit** | The raw, unnormalized score a neural network outputs for each class. | 75 real numbers; higher means more confident. |
 | **Softmax** | A mathematical function that converts logits into percentages summing to 100%. | Produces candidate probabilities in the UI. |
 | **Label Smoothing** | Regularization technique softening one-hot targets with a uniform distribution. | Prevents overconfidence and bounds logit dynamic range ($\alpha = 0.10$). |
 | **Loss** | A score measuring how wrong the model's prediction is. | The optimizer tweaks weights to minimize this score. |

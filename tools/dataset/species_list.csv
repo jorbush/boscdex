@@ -1,50 +1,50 @@
 species_id,scientific_name,catalan_name,inat_taxon_id,edibility,target_image_count
-lactarius_deliciosus,Lactarius deliciosus,Rovelló / Pinetell,57421,excellent,300
+lactarius_deliciosus,Lactarius deliciosus,Rovelló / Pinetell,155197,excellent,300
 boletus_edulis,Boletus edulis,Cep,48701,excellent,300
-cantharellus_cibarius,Cantharellus cibarius,Rossinyol,47348,excellent,300
-amanita_caesarea,Amanita caesarea,Ou de reig,48715,excellent,300
-craterellus_cornucopioides,Craterellus cornucopioides,Trompeta de la mort,47349,excellent,300
-macrolepiota_procera,Macrolepiota procera,Apagallums,55867,comestible,300
-tricholoma_terreum,Tricholoma terreum,Fredolic,118153,comestible,300
-calocybe_gambosa,Calocybe gambosa,Moixernó,123880,comestible,300
-pleurotus_ostreatus,Pleurotus ostreatus,Gírgola,48700,comestible,300
-hydnum_repandum,Hydnum repandum,Llengua de bou,67743,comestible,300
-hygrophorus_latitabundus,Hygrophorus latitabundus,Llenega negra,350022,comestible,300
-craterellus_lutescens,Craterellus lutescens,Camagroc,54438,comestible,300
-suillus_luteus,Suillus luteus,Llenegot,48531,sense_valor,250
-russula_cyanoxantha,Russula cyanoxantha,Llora verda,118183,sense_valor,250
+cantharellus_cibarius,Cantharellus cibarius,Rossinyol,47347,excellent,300
+amanita_caesarea,Amanita caesarea,Ou de reig,204588,excellent,300
+craterellus_cornucopioides,Craterellus cornucopioides,Trompeta de la mort,48607,excellent,300
+macrolepiota_procera,Macrolepiota procera,Apagallums,63401,comestible,300
+tricholoma_terreum,Tricholoma terreum,Fredolic,341797,comestible,300
+calocybe_gambosa,Calocybe gambosa,Moixernó,450829,comestible,300
+pleurotus_ostreatus,Pleurotus ostreatus,Gírgola,48494,comestible,300
+hydnum_repandum,Hydnum repandum,Llengua de bou,48641,comestible,300
+hygrophorus_latitabundus,Hygrophorus latitabundus,Llenega negra,1440332,comestible,300
+craterellus_lutescens,Craterellus lutescens,Camagroc,514218,comestible,300
+suillus_luteus,Suillus luteus,Llenegot,53488,sense_valor,250
+russula_cyanoxantha,Russula cyanoxantha,Llora verda,194437,sense_valor,250
 amanita_muscaria,Amanita muscaria,Reig bord,48715,toxic,300
-omphalotus_olearius,Omphalotus olearius,Gírgola d'olivera,54134,toxic,300
-entoloma_sinuatum,Entoloma sinuatum,Pèrfid,352757,toxic,300
+omphalotus_olearius,Omphalotus olearius,Gírgola d'olivera,64021,toxic,300
+entoloma_sinuatum,Entoloma sinuatum,Pèrfid,510199,toxic,300
 amanita_phalloides,Amanita phalloides,Farinera borda,52135,mortal,300
-amanita_verna,Amanita verna,Cicuta blanca,62707,mortal,300
-cortinarius_orellanus,Cortinarius orellanus,Cortinari de muntanya,125751,mortal,300
-lactarius_sanguifluus,Lactarius sanguifluus,Rovelló de sang,118207,excellent,300
-boletus_aereus,Boletus aereus,Cep negre,326791,excellent,300
-morchella_esculenta,Morchella esculenta,Múrgola,48089,excellent,250
-marasmius_oreades,Marasmius oreades,Carrereta,47285,excellent,250
-suillus_granulatus,Suillus granulatus,Molleric clapat / Pinetell de pi blanc,48530,comestible,250
-hygrophorus_russula,Hygrophorus russula,Carlet / Escarlet,350225,excellent,300
-hygrophorus_personii,Hygrophorus personii,Llenega d'alzina,624781,comestible,250
-pleurotus_eryngii,Pleurotus eryngii,Gírgola de panical,53711,comestible,300
-agaricus_campestris,Agaricus campestris,Xampinyó silvestre / Guisana,60321,comestible,250
-coprinus_comatus,Coprinus comatus,Bolet de tinta / Braguer de vaca,48098,comestible,250
-russula_virescens,Russula virescens,Palometa / Llora pigada,118228,excellent,250
-lactarius_semisanguifluus,Lactarius semisanguifluus,Pinetell de sang,372821,comestible,250
-suillus_bellinii,Suillus bellinii,Pinet de pi bord,366841,comestible,250
-amanita_pantherina,Amanita pantherina,Pantera / Reig bord pigat,52858,toxic,300
-agaricus_xanthodermus,Agaricus xanthodermus,Xampinyó groguenc / Xampinyó pudent,126614,toxic,300
-lactarius_chrysorrheus,Lactarius chrysorrheus,Lleterola de llet groga / Fals rovelló,154044,toxic,250
-tricholoma_equestre,Tricholoma equestre,Verderol,118100,toxic,250
-amanita_virosa,Amanita virosa,Àngel de la mort,62706,mortal,300
-galerina_marginata,Galerina marginata,Galerina mortal,55848,mortal,300
-chroogomphus_rutilus,Chroogomphus rutilus,Cama de perdiu,48714,comestible,300
-lepista_nuda,Lepista nuda,Pé blau / Pua blava,351427,comestible,250
-rubroboletus_satanas,Rubroboletus satanas,Mataparent de Satanàs,544548,toxic,250
+amanita_verna,Amanita verna,Cicuta blanca,58684,mortal,300
+cortinarius_orellanus,Cortinarius orellanus,Cortinari de muntanya,337849,mortal,300
+lactarius_sanguifluus,Lactarius sanguifluus,Rovelló de sang,332501,excellent,300
+boletus_aereus,Boletus aereus,Cep negre,333772,excellent,300
+morchella_esculenta,Morchella esculenta,Múrgola,58682,excellent,250
+marasmius_oreades,Marasmius oreades,Carrereta,118240,excellent,250
+suillus_granulatus,Suillus granulatus,Molleric clapat / Pinetell de pi blanc,179065,comestible,250
+hygrophorus_russula,Hygrophorus russula,Carlet / Escarlet,206118,excellent,300
+hygrophorus_personii,Hygrophorus persoonii,Llenega d'alzina,1440333,comestible,250
+pleurotus_eryngii,Pleurotus eryngii,Gírgola de panical,205516,comestible,300
+agaricus_campestris,Agaricus campestris,Xampinyó silvestre / Guisana,143563,comestible,250
+coprinus_comatus,Coprinus comatus,Bolet de tinta / Braguer de vaca,47392,comestible,250
+russula_virescens,Russula virescens,Palometa / Llora pigada,125720,excellent,250
+lactarius_semisanguifluus,Lactarius semisanguifluus,Pinetell de sang,775629,comestible,250
+suillus_bellinii,Suillus bellinii,Pinet de pi bord,499617,comestible,250
+amanita_pantherina,Amanita pantherina,Pantera / Reig bord pigat,48418,toxic,300
+agaricus_xanthodermus,Agaricus xanthodermus,Xampinyó groguenc / Xampinyó pudent,118394,toxic,300
+lactarius_chrysorrheus,Lactarius chrysorrheus,Lleterola de llet groga / Fals rovelló,194433,toxic,250
+tricholoma_equestre,Tricholoma equestre,Verderol,118215,toxic,250
+amanita_virosa,Amanita virosa,Àngel de la mort,58685,mortal,300
+galerina_marginata,Galerina marginata,Galerina mortal,154735,mortal,300
+chroogomphus_rutilus,Chroogomphus rutilus,Cama de perdiu,194275,comestible,300
+lepista_nuda,Lepista nuda,Pé blau / Pua blava,1525548,comestible,250
+rubroboletus_satanas,Rubroboletus satanas,Mataparent de Satanàs,544554,toxic,250
 hygrophorus_eburneus,Hygrophorus eburneus,Llenega blanca / Mocosa blanca,67331,comestible,250
-tricholoma_pardinum,Tricholoma pardinum,Fredolic bord / Griset bord,341772,toxic,250
-psathyrella_candolleana,Candolleomyces candolleanus,Candol·lea / Psatirel·la de Candolle,1179922,sense_valor,250
-lactarius_torminosus,Lactarius torminosus,Cabra / Rovelló bord,68310,toxic,300
+tricholoma_pardinum,Tricholoma pardinum,Fredolic bord / Griset bord,335206,toxic,250
+psathyrella_candolleana,Candolleomyces candolleanus,Candol·lea / Psatirel·la de Candolle,1179954,sense_valor,250
+lactarius_torminosus,Lactarius torminosus,Cabra / Rovelló bord,351313,toxic,300
 gyromitra_esculenta,Gyromitra esculenta,Bolet de greix / Falsa múrgola,85120,mortal,300
 tuber_melanosporum,Tuber melanosporum,Tòfona negra / Trufa negra,120281,excellent,250
 infundibulicybe_geotropa,Infundibulicybe geotropa,Pampa / Candela de bruixa / Cap d'orinal,451026,excellent,300

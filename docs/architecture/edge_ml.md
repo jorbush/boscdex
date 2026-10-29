@@ -10,10 +10,10 @@ Boscdex executes computer vision classification **strictly on-device** using qua
 |---|---|
 | **Base Architecture** | MobileNetV2 GAP Feature Extractor + Native Dart Linear Head |
 | **Quantization** | Full INT8 Post-Training Quantization (PTQ) |
-| **Target Size** | $< 18 \text{ MB}$ (Current: 2.50 MB backbone + 240.8 KB head) |
+| **Target Size** | $< 18 \text{ MB}$ (Current: 2.41 MB backbone + 375.3 KB head) |
 | **Input Resolution** | $224 \times 224 \times 3$ (RGB) with 3-View Test-Time Augmentation (TTA) |
 | **Target Inference Latency** | $< 150 \text{ ms}$ on mid-tier Android (API 26+) / Apple Neural Engine (iOS 15+) |
-| **Classes (Target Taxonomy)** | 47 cataloged Catalan mushroom species (Series 017) |
+| **Classes (Target Taxonomy)** | 75 cataloged Catalan mushroom species (Series 020) |
 
 ---
 
@@ -90,18 +90,18 @@ abstract class ClassifierService {
 ```
 
 This decoupled abstraction supports three progressive implementations:
-1. **`TfliteClassifierService` (Active in v1.3 Production):** Executes on-device MobileNetV2 GAP feature extraction combined with high-performance Dart linear classification heads for both mushrooms and indicator trees.
-   * **Mushroom Neural Classifier:** Evaluated on 47 taxa using `assets/models/mushroom_classifier.tflite` + `assets/models/mushroom_classifier_head.bin` with 3-View TTA. Verified at **85.1% Top-1** (530/623) and **96.3% Top-3** (600/623) accuracy across 623 real field photos, achieving **98.4% lethal species safety recall** (60/61).
-   * **Tree Neural Classifier:** Evaluated on 5 indicator tree taxa using `assets/models/tree_classifier.tflite` + `assets/models/tree_classifier_head.bin`. Lazy-loaded on first tree scan request to conserve RAM. Verified at **86.7% Top-1** and **100.0% Top-2** accuracy across 30 real field photos.
+1. **`TfliteClassifierService` (Active in v1.5 Production):** Executes on-device MobileNetV2 GAP feature extraction combined with high-performance Dart linear classification heads for both mushrooms and indicator trees.
+   * **Mushroom Neural Classifier:** Evaluated on 75 taxa using `assets/models/mushroom_classifier.tflite` + `assets/models/mushroom_classifier_head.bin` with 3-View TTA and Proximal Head Calibration. Verified at **96.9% Top-1** (1,009/1,041) and **99.3% Top-3** (1,034/1,041) accuracy across 1,041 real field photos, and **100.0% Top-1 & Top-3** (75/75) across all 75 canonical botanical reference photos (`assets/images/reference/`).
+   * **Tree Neural Classifier:** Evaluated on 5 indicator tree taxa using `assets/models/tree_classifier.tflite` + `assets/models/tree_classifier_head.bin`. Lazy-loaded on first tree scan request to conserve RAM. Verified at **80.0% Top-1** and **96.0% Top-2** accuracy across 79 real field photos.
 2. **`VisualFeatureClassifierService` (Graceful Fallback):** Real-time fallback analyzing camera frames by downscaling to $32 \times 32$ via `dart:ui.instantiateImageCodec`, computing HSV chromatic distribution histograms, and scoring against regional botanical profiles (100% offline, zero native binary dependencies).
 3. **`MockClassifierService`:** A deterministic round-robin scenario cycle used for rapid headless UI prototyping and reproducible unit tests.
 
 > **Production Model Bundles in `assets/models/`:**  
 > The `assets/models/` directory contains production-calibrated edge assets fine-tuned on real field photos + iNaturalist observations:
 > - **Mushroom Backbone & Head:**
->   - `mushroom_classifier.tflite` (2.50 MB): MobileNetV2 feature extractor (1,280 GAP features).
->   - `mushroom_classifier_head.bin` (240.8 KB): Float32 projection matrix ($47 \times 1280$) and biases evaluated in $<0.05\text{ ms}$.
->   - `mushroom_labels.txt` (47 classes): Ordered taxonomic label index mapping neural logits to entity IDs.
+>   - `mushroom_classifier.tflite` (2.41 MB): MobileNetV2 feature extractor (1,280 GAP features).
+>   - `mushroom_classifier_head.bin` (375.3 KB / 384,300 bytes): Float32 projection matrix ($75 \times 1280$) and biases evaluated in $<0.05\text{ ms}$.
+>   - `mushroom_labels.txt` (75 classes): Ordered taxonomic label index mapping neural logits to entity IDs.
 > - **Indicator Tree Backbone & Head:**
 >   - `tree_classifier.tflite` (2.50 MB): MobileNetV2 backbone for tree foliage/bark feature extraction.
 >   - `tree_classifier_head.bin` (25.6 KB): Calibrated Float32 projection matrix ($5 \times 1280$) and biases for the 5 indicator tree species.
@@ -112,10 +112,14 @@ This decoupled abstraction supports three progressive implementations:
 ## 🧪 Golden Set Empirical Evaluation & Model Testing
 
 To evaluate and track model refinement objectively across iterations, the project maintains on-device **Golden Validation Sets**:
-- **Mushroom Golden Set:** `test/assets/mushrooms/` (623 real high-resolution field photographs across all 47 Catalan taxa).
+- **Mushroom Field Golden Set:** `test/assets/mushrooms/` (1,041 real high-resolution field photographs across all 75 Catalan taxa).
   - Regression Test: [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart).
-  - Benchmark (Series 017): **85.1% Top-1** (530/623), **96.3% Top-3** (600/623), **98.4% lethal recall** (60/61).
+  - Benchmark (Series 020): **96.9% Top-1** (1,009/1,041), **99.3% Top-3** (1,034/1,041).
   - Execution Command: `flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart`.
+- **Botanical Reference Photos Benchmark:** `assets/images/reference/` (75 curated open-licensed CC botanical reference photos displayed in the app).
+  - Regression Test: [`test/integration_tests/services/mushroom_model_reference_images_integration_test.dart`](file:///Users/jordi/dev/boscdex/boscdex/test/integration_tests/services/mushroom_model_reference_images_integration_test.dart).
+  - Benchmark (Series 020): **100.0% Top-1** (75/75), **100.0% Top-3** (75/75).
+  - Execution Command: `flutter test test/integration_tests/services/mushroom_model_reference_images_integration_test.dart`.
 - **Tree Golden Set:** `test/assets/trees/` (79 real field photographs across all 5 indicator tree species).
   - Regression Test: [`test/unit_tests/domain/tree_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/tree_model_real_images_test.dart).
   - Benchmark: **80.0% Top-1**, **96.0% Top-2** (Phase 2 validation).

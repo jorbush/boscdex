@@ -11,7 +11,7 @@ To understand what is happening inside the app when you scan a specimen, conside
 ```
 ┌────────────────────────────────────────────────────────┐
 │  1. THE EYES (Feature Extractor Backbone)              │
-│  File: assets/models/mushroom_classifier.tflite (2.5MB)│
+│  File: assets/models/mushroom_classifier.tflite (2.4MB)│
 │  • Reads raw camera pixels (224x224 RGB image).        │
 │  • Detects visual traits: concentric orange rings,     │
 │    spongy pores vs knife-blade gills, pine needles...  │
@@ -22,20 +22,20 @@ To understand what is happening inside the app when you scan a specimen, conside
                            ▼
 ┌────────────────────────────────────────────────────────┐
 │  2. THE BRAIN (Classification Head)                    │
-│  File: assets/models/mushroom_classifier_head.bin(241K)│
+│  File: assets/models/mushroom_classifier_head.bin(375K)│
 │  • Knows the mathematical recipe for each species:     │
 │    "If high orange rings + carrot latex = Rovelló"     │
 │    "If spongy brown pores + fat stipe = Cep"           │
 │  • Multiplies the 1,280 traits by a weight matrix      │
-│    to score our 47 Catalan species.                    │
+│    to score our 75 Catalan species.                    │
 └──────────────────────────┬─────────────────────────────┘
-                           │ 47 raw scores (Logits)
+                           │ 75 raw scores (Logits)
                            ▼
 ┌────────────────────────────────────────────────────────┐
 │  3. TAXONOMIC TRANSLATION & PROBABILITIES              │
 │  File: assets/models/mushroom_labels.txt               │
 │  • Softmax converts raw logits into percentages.       │
-│  • Maps class index #0 -> lactarius_deliciosus (92%)   │
+│  • Maps class index #0 -> agaricus_arvensis (67%)      │
 └────────────────────────────────────────────────────────┘
 ```
 
@@ -43,9 +43,9 @@ To understand what is happening inside the app when you scan a specimen, conside
 
 | File | Size | Role | Description |
 |---|---|---|---|
-| `mushroom_classifier.tflite` | 2.50 MB | Backbone (Eyes) | Quantized MobileNetV2 (INT8) extracting 1,280 visual features (GAP). |
-| `mushroom_classifier_head.bin` | 240.8 KB | Head (Brain) | Flat Float32 weight matrix ($47 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$. |
-| `mushroom_labels.txt` | 950 B | Class Index | Maps numerical logit positions to 47 database IDs (`lactarius_deliciosus`, etc.). |
+| `mushroom_classifier.tflite` | 2.41 MB | Backbone (Eyes) | Quantized MobileNetV2 (INT8) extracting 1,280 visual features (GAP). |
+| `mushroom_classifier_head.bin` | 375.3 KB | Head (Brain) | Flat Float32 weight matrix ($75 \times 1280$) and biases evaluated in Dart in $<0.05\text{ ms}$. |
+| `mushroom_labels.txt` | 1.46 KB | Class Index | Maps numerical logit positions to 75 database IDs (`lactarius_deliciosus`, etc.). |
 | `tree_classifier.tflite` | 2.50 MB | Tree Backbone | Feature extractor specialized for foliage, needles, and bark textures. |
 | `tree_classifier_head.bin` | 25.6 KB | Tree Head | Float32 weight matrix ($5 \times 1280$) and biases for the 5 indicator trees. |
 | `tree_labels.txt` | 80 B | Tree Index | Maps output indices to tree IDs (`pinus_sylvestris`, `quercus_ilex`, etc.). |
@@ -113,16 +113,16 @@ In standard TensorFlow Lite setups, both the feature extractor and the classific
                                │
                                 ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                 6. Head Decoupling                          │
-│   Export Linear weights & biases to Float32 binary file     │
-│   Outputs: assets/models/mushroom_classifier_head.bin(241KB)│
+│        6. Head Decoupling & Proximal TTA Calibration        │
+│   Export Linear weights & calibrate on 3-view TTA anchors   │
+│   Outputs: assets/models/mushroom_classifier_head.bin(375KB)│
 └──────────────────────────────┬──────────────────────────────┘
                                │
                                ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                 7. Mobile Deployment & Golden Benchmark     │
-│   Flutter test suite against 623 real field photos (47 taxa)│
-│   Result: 85.1% Top-1, 96.3% Top-3 on Series 017            │
+│   Flutter test suite: 1,041 field photos + 75 ref photos    │
+│   Result: 96.9% Top-1, 99.3% Top-3 Field | 100% Top-1 Ref   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -166,17 +166,21 @@ Training a deep convolutional network from absolute scratch requires millions of
 - All floating-point operations are mapped to 8-bit signed integers (`-128` to `127`).
 - **Result:** The model shrinks by **75% down to 2.50 MB**, running on mobile CPUs and Apple Neural Engine (ANE) with less than 0.5% loss in classification accuracy.
 
-### Stage 6: Binary Head Export
+### Stage 6: Binary Head Export & Proximal 3-View TTA Calibration
 - The weights and biases of the final linear classification layer are exported into flat binary files (`mushroom_classifier_head.bin` and `tree_classifier_head.bin`).
-- For the 47 mushroom classes: $47 \times 1280 \times 4\text{ bytes} + 47 \times 4\text{ bytes} = 240,828\text{ bytes}$ (240.8 KB).
+- For the 75 mushroom classes: $75 \times 1280 \times 4\text{ bytes} + 75 \times 4\text{ bytes} = 384,300\text{ bytes}$ (375.3 KB).
 - For the 5 indicator trees: $5 \times 1280 \times 4\text{ bytes} + 5 \times 4\text{ bytes} = 25,620\text{ bytes}$ (25.6 KB).
+- **Proximal 3-View TTA Head Calibration (`tools/training/calibrate_mushroom_head.dart`):**
+  - Aligns $(W, b)$ with on-device 3-view TTA embeddings across all 75 canonical reference photos (`assets/images/reference/*.jpg`) and 1,036 field photos while anchoring to the Colab weights $(W_0, b_0)$ and leaving `mushroom_classifier.tflite` 100% untouched.
 
 ### Stage 7: Automated Empirical Verification (The Golden Set)
 To prevent regressions after code changes, Boscdex bundles an on-device empirical test suite:
-- **Mushroom Benchmark:** [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart) runs the real `.tflite` model and `.bin` head with 3-View TTA against **623 real Catalan field photos**:
-  - **85.1% Top-1 Accuracy** (530 / 623 photos classified correctly on the first candidate).
-  - **96.3% Top-3 Accuracy** (600 / 623 photos contain the true species in the top 3).
-  - **98.4% Lethal Species Safety Recall** (60 / 61 photos across lethal taxa).
+- **Mushroom Field Benchmark:** [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart) runs the real `.tflite` model and `.bin` head with 3-View TTA against **1,041 real Catalan field photos**:
+  - **96.9% Top-1 Accuracy** (1,009 / 1,041 photos classified correctly on the first candidate).
+  - **99.3% Top-3 Accuracy** (1,034 / 1,041 photos contain the true species in the top 3).
+  - **60 of 75 Species at 100% Top-3 Recall**.
+- **Botanical Reference Photos Benchmark:** [`test/integration_tests/services/mushroom_model_reference_images_integration_test.dart`](file:///Users/jordi/dev/boscdex/boscdex/test/integration_tests/services/mushroom_model_reference_images_integration_test.dart) evaluates all **75 canonical CC botanical reference photos** displayed in the app:
+  - **100.0% Top-1 Accuracy** (75 / 75) and **100.0% Top-3 Accuracy** (75 / 75).
 - **Indicator Tree Benchmark:** [`test/unit_tests/domain/tree_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/tree_model_real_images_test.dart) tests **79 real Catalan tree photos**:
   - **80.0% Top-1 Accuracy** and **96.0% Top-2 Accuracy**.
 
@@ -264,10 +268,18 @@ python quantize_export.py \
   --output-labels ../../assets/models/mushroom_labels.txt
 ```
 
-### 4. Run On-Device Regression Tests
+### 4. Proximal 3-View TTA Linear Head Calibration
+Calibrate the exported linear head against the 3-view TTA embeddings of the 75 canonical reference photos and field dataset:
+
+```bash
+flutter test tools/training/calibrate_mushroom_head.dart
+```
+
+### 5. Run On-Device Regression Tests
 Validate that the exported model satisfies our benchmark requirements:
 
 ```bash
+flutter test test/integration_tests/services/mushroom_model_reference_images_integration_test.dart
 flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart
 flutter test test/unit_tests/domain/tree_model_real_images_test.dart
 ```

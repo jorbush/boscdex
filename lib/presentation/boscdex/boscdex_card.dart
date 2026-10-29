@@ -25,10 +25,108 @@ class BoscdexCard extends StatelessWidget {
       languageCode: langCode,
       fallbackName: entry.bolet.catalanName,
     );
+    final edibility = EdibilitatExtension.fromString(entry.bolet.edibility);
 
     if (!entry.isDiscovered) {
       final assetPath = entry.bolet.imageAssetPath ??
           'assets/images/mushrooms/${entry.bolet.id}.png';
+
+      if (edibility.isToxic) {
+        return Semantics(
+          button: true,
+          label:
+              '$displayName, número $dexNum, ${edibility.localizedLabel(context)}, ${l10n.notDiscoveredBadge}',
+          child: GestureDetector(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              context.push('/boscdex/${entry.bolet.id}');
+            },
+            child: Container(
+              padding: const EdgeInsets.all(2.2),
+              decoration: RetroDecorations.card(
+                backgroundColor: edibility.badgeBackgroundColor,
+                shadowOffset: 2.5,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(11.8),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            child: Center(
+                              child: ColorFiltered(
+                                colorFilter: const ColorFilter.mode(
+                                  RetroColors.ink,
+                                  BlendMode.srcIn,
+                                ),
+                                child: Image.asset(
+                                  assetPath,
+                                  cacheWidth: 200,
+                                  fit: BoxFit.contain,
+                                  filterQuality: FilterQuality.none,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      _buildGenericSilhouette(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                            color: RetroColors.surface,
+                            border: Border(
+                              top: BorderSide(
+                                  color: RetroColors.ink, width: 1.5),
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '#$dexNum',
+                                style: const TextStyle(
+                                  fontFamily: RetroFonts.pixel,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: RetroColors.inkSoft,
+                                ),
+                              ),
+                              const SizedBox(height: 1),
+                              Text(
+                                displayName,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w900,
+                                  color: RetroColors.ink,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      top: 6,
+                      right: 6,
+                      child: EdibilityBadge(
+                        edibilitat: edibility,
+                        iconOnly: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
 
       return Semantics(
         button: true,
@@ -100,7 +198,6 @@ class BoscdexCard extends StatelessWidget {
     }
 
     final rarity = RaritatTierExtension.fromString(entry.bolet.rarityTier);
-    final edibility = EdibilitatExtension.fromString(entry.bolet.edibility);
 
     return Semantics(
       button: true,

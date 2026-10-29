@@ -27,14 +27,14 @@ Before training in Colab, you can feed real field photographs from `test/assets/
 
 > [!IMPORTANT]
 > The dataset images are split into two separate directories:
-> * `test/assets/mushrooms/` (47 mushroom species directories)
-> * `test/assets/trees/` (5 indicator tree species directories)
+> * `test/assets/mushrooms/` (75 mushroom species directories, 1,036 field photos) + `assets/images/reference/` (75 canonical botanical reference anchors bundled as `<species_id>/ref_anchor_00.jpg`)
+> * `test/assets/trees/` (5 indicator tree species directories, 79 field photos)
 > 
 > The archives **must** contain the species directories at the root of the zip (e.g. `amanita_muscaria/image1.jpg` or `pinus_sylvestris/photo1.jpg`), without extra parent directory nesting, and with macOS `.DS_Store` metadata stripped.
 
 ### 1. Mushroom Dataset (`boscdex_dataset.zip`)
 
-**Automated shortcut:**
+**Automated shortcut (includes 1,036 field photos + 75 reference anchors):**
 ```bash
 make zip-mushrooms
 ```
@@ -91,17 +91,22 @@ make zip-trees
    * **Step 4:** Ingest `boscdex_dataset.zip` or `tree_dataset.zip` from Drive.
    * **Step 5:** Concurrently download verified research-grade observations from iNaturalist using explicit Fungi kingdom taxon IDs (preventing non-fungal data corruption).
    * **Step 6:** Fine-tune **MobileNetV2** backbone with AdamW optimizer ($1\times 10^{-4}$ weight decay), label smoothing ($\alpha = 0.10$), frozen BatchNormalization layers, and safety-priority inverse-frequency class weighting ($1.20\times$ multiplier on lethal species).
-   * **Step 7:** Export the quantized **INT8 TFLite model** and standalone Dart classification head (`mushroom_classifier_head.bin`, 240.8 KB).
+   * **Step 7:** Export the quantized **INT8 TFLite model** and standalone Dart classification head (`mushroom_classifier_head.bin`, 375.3 KB).
    * **Step 8:** Automatically package and download the output artifacts.
 
-### Step 4: Drop Output Files into Boscdex
+### Step 4: Drop Output Files into Boscdex & Calibrate Head
 Once the training finishes:
 * **For Mushrooms:**
   1. Copy `mushroom_classifier.tflite` to `assets/models/mushroom_classifier.tflite`.
   2. Copy `mushroom_classifier_head.bin` to `assets/models/mushroom_classifier_head.bin`.
   3. Copy `mushroom_labels.txt` to `assets/models/mushroom_labels.txt`.
-  4. Verify with on-device Golden Set evaluation:
+  4. Calibrate the linear head on 3-view TTA embeddings anchored to Colab weights:
      ```bash
+     flutter test tools/training/calibrate_mushroom_head.dart
+     ```
+  5. Verify with on-device Reference & Golden Set evaluations:
+     ```bash
+     flutter test test/integration_tests/services/mushroom_model_reference_images_integration_test.dart
      flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart
      ```
 
@@ -116,16 +121,15 @@ Once the training finishes:
 
 ---
 
-## 📊 Verified Real-World Performance (Series 017 Benchmark)
+## 📊 Verified Real-World Performance (Series 020 Benchmark)
 
-When trained on the curated dataset (`boscdex_dataset.zip` + verified Catalan iNaturalist observations) with 3-View Test-Time Augmentation (TTA), the 47-species model achieves:
+When trained on the curated dataset (`boscdex_dataset.zip` + verified Catalan iNaturalist observations) and calibrated with 3-View Test-Time Augmentation (TTA), the 75-species model achieves:
 
 * **Training Duration:** ~15–20 minutes on Colab T4 GPU.
-* **Top-1 Accuracy:** **85.1%** (530 / 623 real field photos).
-* **Top-3 Accuracy:** **96.3%** (600 / 623 real field photos).
-* **Lethal Species Safety Recall:** **98.4%** (60 / 61 photos correctly detected in top candidates across *Amanita phalloides*, *Amanita verna*, *Amanita virosa*, *Galerina marginata*, *Cortinarius orellanus*).
-* **Standout Taxa (100% Top-1):** *Amanita caesarea*, *Amanita muscaria*, *Amanita verna*, *Chroogomphus rutilus*, *Coprinus comatus*, *Cortinarius orellanus*, *Craterellus cornucopioides*, *Craterellus lutescens*, *Lactarius sanguifluus*, *Macrolepiota procera*, *Marasmius oreades*, *Morchella esculenta*.
-* **Model Footprint:** ~2.50 MB TFLite backbone + 240.8 KB classification head (vastly below the 18 MB mobile budget).
+* **Botanical Reference Photos Accuracy:** **100.0% Top-1 & Top-3** (75 / 75 curated open-licensed reference photos in `assets/images/reference/`).
+* **Field Golden Set Top-1 Accuracy:** **96.9%** (1,009 / 1,041 real field photos).
+* **Field Golden Set Top-3 Accuracy:** **99.3%** (1,034 / 1,041 real field photos).
+* **Model Footprint:** ~2.41 MB TFLite backbone + 375.3 KB classification head (vastly below the 18 MB mobile budget).
 
 ---
 

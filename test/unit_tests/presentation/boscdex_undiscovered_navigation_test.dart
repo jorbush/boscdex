@@ -78,4 +78,94 @@ void main() {
     expect(find.text('Detail Screen: boletus_edulis'), findsOneWidget);
     expect(find.text('Encara no has descobert aquest bolet!'), findsNothing);
   });
+
+  testWidgets(
+      'Undiscovered toxic BoscdexCard reveals name and danger badge with silhouette sprite',
+      (tester) async {
+    String? navigatedPath;
+
+    const mockToxicBolet = Bolet(
+      id: 'amanita_phalloides',
+      catalanName: 'Farinera borda',
+      scientificName: 'Amanita phalloides',
+      family: 'Amanitaceae',
+      rarityTier: 'frequent',
+      edibility: 'mortal',
+      fruitingSeason: '[9,10,11]',
+      dexNumber: 10,
+      capDescription: 'Verdós o groguenc',
+      gillsDescription: 'Làmines blanques',
+      stemDescription: 'Peu blanc amb anell i volva',
+      latexDescription: null,
+      safetyNotes: 'Mortal fins i tot en dosis ínfimes.',
+      imageAssetPath: null,
+      silhouetteAssetPath: null,
+      altitudeMin: 100,
+      altitudeMax: 1200,
+    );
+
+    const undiscoveredToxicEntry = BoscdexEntry(
+      bolet: mockToxicBolet,
+      isDiscovered: false,
+    );
+
+    final router = GoRouter(
+      initialLocation: '/',
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const Scaffold(
+            body: SizedBox(
+              width: 150,
+              height: 180,
+              child: BoscdexCard(entry: undiscoveredToxicEntry),
+            ),
+          ),
+        ),
+        GoRoute(
+          path: '/boscdex/:id',
+          builder: (context, state) {
+            navigatedPath = '/boscdex/${state.params['id']}';
+            return Scaffold(
+              body: Text('Detail Screen: ${state.params['id']}'),
+            );
+          },
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(MaterialApp.router(
+      routerConfig: router,
+    ));
+    await tester.pumpAndSettle();
+
+    // 1. Revealed name and dex number for safety (NOT #010 ???)
+    expect(find.text('#010'), findsOneWidget);
+    expect(find.text('Farinera borda'), findsOneWidget);
+    expect(find.text('#010 ???'), findsNothing);
+
+    // 2. Danger badge icon (mortal: Icons.dangerous)
+    expect(find.byIcon(Icons.dangerous), findsOneWidget);
+
+    // 3. Sprite is rendered in silhouette
+    expect(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is ColorFiltered &&
+            widget.colorFilter ==
+                const ColorFilter.mode(
+                  Color(0xFF1E2822),
+                  BlendMode.srcIn,
+                ),
+      ),
+      findsWidgets,
+    );
+
+    // 4. Tap navigates to detail screen
+    await tester.tap(find.byType(BoscdexCard));
+    await tester.pumpAndSettle();
+
+    expect(navigatedPath, '/boscdex/amanita_phalloides');
+    expect(find.text('Detail Screen: amanita_phalloides'), findsOneWidget);
+  });
 }

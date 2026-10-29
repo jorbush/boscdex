@@ -10,6 +10,7 @@ import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/presentation/detail/bolet_detail_screen.dart';
 import 'package:boscdex/presentation/detail/arbre_detail_screen.dart';
 import 'package:boscdex/presentation/detail/toxic_twin_alert.dart';
+import 'package:boscdex/presentation/shared/photo_zoom_dialog.dart';
 import 'package:boscdex/providers/database_provider.dart';
 import 'package:boscdex/providers/preferences_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -77,6 +78,11 @@ void main() {
         findsOneWidget,
       );
 
+      // Verify header cover image magnifying glass is present and mode switch tabs are gone
+      expect(find.byIcon(Icons.zoom_in_rounded), findsOneWidget);
+      expect(find.text('👾 Pixel Art'), findsNothing);
+      expect(find.text('📷 Foto Real'), findsNothing);
+
       await tester.pumpWidget(const SizedBox.shrink());
     });
 
@@ -107,6 +113,11 @@ void main() {
       expect(find.text('Lactarius deliciosus'), findsNothing);
       expect(find.text('Comestible excel·lent'), findsNothing);
 
+      // Verify magnifying glass and mode tabs are NOT present when undiscovered:
+      expect(find.byIcon(Icons.zoom_in_rounded), findsNothing);
+      expect(find.text('👾 Pixel Art'), findsNothing);
+      expect(find.text('📷 Foto Real'), findsNothing);
+
       // Verify Habitat and Distribution (Location) renders:
       expect(find.text('Hàbitat i Distribució'), findsOneWidget);
       expect(find.text('Arbres associats'), findsOneWidget);
@@ -121,6 +132,38 @@ void main() {
 
       // Verify Camera CTA:
       expect(find.text('Cercar amb la càmera'), findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'BoletDetailScreen tapping magnifying glass opens PhotoZoomDialog',
+        (WidgetTester tester) async {
+      await db.descobrimentDao
+          .markDiscovered('lactarius_deliciosus', DateTime.now(), null);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: BoletDetailScreen(id: 'lactarius_deliciosus'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final zoomButton = find.byIcon(Icons.zoom_in_rounded);
+      expect(zoomButton, findsOneWidget);
+
+      await tester.tap(zoomButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(PhotoZoomDialog), findsOneWidget);
 
       await tester.pumpWidget(const SizedBox.shrink());
     });
@@ -175,14 +218,20 @@ void main() {
         findsOneWidget,
       );
 
-      // Verify undiscovered associated bolets show obfuscated dex number and question marks
+      // Verify undiscovered edible associated bolets show obfuscated dex number (#001 Rovelló)
       expect(
         find.text('#001 ???', skipOffstage: false),
         findsOneWidget,
       );
       expect(
-        find.textContaining('Rovelló', skipOffstage: false),
+        find.text('Rovelló / Pinetell', skipOffstage: false),
         findsNothing,
+      );
+
+      // Verify undiscovered toxic associated bolets are unmasked for safety
+      expect(
+        find.textContaining('Cabra / Rovelló bord', skipOffstage: false),
+        findsOneWidget,
       );
 
       await tester.pumpWidget(const SizedBox.shrink());
@@ -208,8 +257,96 @@ void main() {
 
       // Now Rovelló is revealed!
       expect(
-        find.textContaining('Rovelló', skipOffstage: false),
+        find.text('Rovelló / Pinetell', skipOffstage: false),
         findsOneWidget,
+      );
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'ArbreDetailScreen renders reference photo header and opens zoom dialog on tap',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: ArbreDetailScreen(id: 'pinus_sylvestris'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Verify zoom button is present in the cover header
+      final zoomButton = find.byIcon(Icons.zoom_in_rounded);
+      expect(zoomButton, findsOneWidget);
+
+      await tester.tap(zoomButton);
+      await tester.pumpAndSettle();
+
+      // Verify PhotoZoomDialog opened with tree name and scientific name
+      expect(find.byType(PhotoZoomDialog), findsOneWidget);
+      expect(find.text('Pi roig'), findsWidgets);
+      expect(find.text('Pinus sylvestris'), findsWidgets);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets(
+        'BoletDetailScreen renders unlocked safety information for undiscovered toxic mushroom',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appDatabaseProvider.overrideWithValue(db),
+            sharedPreferencesProvider.overrideWithValue(prefs),
+          ],
+          child: const MaterialApp(
+            home: BoletDetailScreen(id: 'amanita_phalloides'),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // 1. Unmasked name & scientific classification for safety
+      expect(find.text('Farinera borda'), findsOneWidget);
+      expect(find.text('Amanita phalloides'), findsOneWidget);
+      expect(find.text('Espècie per catalogar'), findsNothing);
+
+      // 2. Warning badges: Mortal edibility + Undiscovered
+      expect(find.text('Mortal'), findsOneWidget);
+      expect(find.text('No descobert'), findsOneWidget);
+
+      // 3. Real photo header cover & magnifying glass zoom button unlocked
+      expect(find.byIcon(Icons.zoom_in_rounded), findsOneWidget);
+
+      // 4. Morphology keys unlocked
+      expect(find.text('Morfologia'), findsOneWidget);
+      expect(find.text('Claus Morfològiques Bloquejades'), findsNothing);
+
+      // 5. Preventive safety advisory card displayed instead of camera hunting CTA
+      expect(find.text('Avís de Seguretat Preventiva'), findsOneWidget);
+      expect(find.text('Cercar amb la càmera'), findsNothing);
+
+      // 6. 16-bit arcade sprite card remains in silhouette until field discovery
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is ColorFiltered &&
+              widget.colorFilter ==
+                  const ColorFilter.mode(
+                    Color(0xFF1E2822),
+                    BlendMode.srcIn,
+                  ),
+        ),
+        findsWidgets,
       );
 
       await tester.pumpWidget(const SizedBox.shrink());

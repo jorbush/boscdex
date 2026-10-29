@@ -7,11 +7,13 @@ class ToxicTwinAlert extends StatelessWidget {
     super.key,
     required this.lookalikeName,
     required this.comparisonNotes,
+    this.lookalikeId,
     this.onTap,
   });
 
   final String lookalikeName;
   final String comparisonNotes;
+  final String? lookalikeId;
   final VoidCallback? onTap;
 
   @override
@@ -59,23 +61,60 @@ class ToxicTwinAlert extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            lookalikeName,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: RetroColors.ink,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            comparisonNotes,
-            style: const TextStyle(
-              fontSize: 13,
-              height: 1.4,
-              fontWeight: FontWeight.w600,
-              color: RetroColors.inkSoft,
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (lookalikeId != null) ...[
+                Container(
+                  width: 54,
+                  height: 54,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: RetroColors.arcadeRed, width: 2),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.asset(
+                    'assets/images/reference/$lookalikeId.jpg',
+                    fit: BoxFit.cover,
+                    errorBuilder: (ctx, err, st) => Image.asset(
+                      'assets/images/mushrooms/$lookalikeId.png',
+                      fit: BoxFit.contain,
+                      errorBuilder: (c, e, s) => const Icon(
+                        Icons.warning_rounded,
+                        color: RetroColors.arcadeRed,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      lookalikeName,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: RetroColors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      comparisonNotes,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        height: 1.4,
+                        fontWeight: FontWeight.w600,
+                        color: RetroColors.inkSoft,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           if (onTap != null) ...[
             const SizedBox(height: 10),

@@ -136,7 +136,13 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.byType(SafetyAlertBox), findsOneWidget);
-      expect(find.textContaining('Reig bord'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SafetyAlertBox),
+          matching: find.textContaining('Reig bord'),
+        ),
+        findsOneWidget,
+      );
 
       await tester.pumpWidget(const SizedBox.shrink());
     });
@@ -235,7 +241,10 @@ void main() {
       expect(find.textContaining('850 m'), findsOneWidget);
 
       // Tap Register CTA
-      await tester.tap(find.text('Registrar a la meva Boscdex'));
+      final regBtn = find.text('Registrar a la meva Boscdex');
+      await tester.ensureVisible(regBtn);
+      await tester.pumpAndSettle();
+      await tester.tap(regBtn);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
@@ -305,7 +314,13 @@ void main() {
 
       expect(find.byType(SafetyAlertBox), findsOneWidget);
       // Under Spanish locale, Amanita muscaria is "Matamoscas"
-      expect(find.textContaining('Matamoscas'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(SafetyAlertBox),
+          matching: find.textContaining('Matamoscas'),
+        ),
+        findsOneWidget,
+      );
 
       await tester.pumpWidget(const SizedBox.shrink());
     });
@@ -437,6 +452,8 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       final registerButton = find.text('Registrar a la meva Boscdex');
+      await tester.ensureVisible(registerButton);
+      await tester.pumpAndSettle();
       expect(registerButton, findsOneWidget);
       await tester.tap(registerButton);
       await tester.pumpAndSettle();

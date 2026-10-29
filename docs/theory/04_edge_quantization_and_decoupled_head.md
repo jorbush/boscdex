@@ -81,7 +81,7 @@ We split the model into two specialized pieces:
                                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │ PART 1: Hardware-Accelerated Feature Extractor                  │
-│ Asset: assets/models/mushroom_classifier.tflite (2.50 MB)       │
+│ Asset: assets/models/mushroom_classifier.tflite (2.41 MB)       │
 │ Engine: TFLite C Interpreter (MobileNetV2, 64 Conv Layers)      │
 │ Output: 1,280 Global Average Pooling (GAP) Float32 Features     │
 └────────────────────────────────┬────────────────────────────────┘
@@ -91,11 +91,11 @@ We split the model into two specialized pieces:
                                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │ PART 2: Portable Linear Classification Head                     │
-│ Asset: assets/models/mushroom_classifier_head.bin (240.8 KB)    │
+│ Asset: assets/models/mushroom_classifier_head.bin (375.3 KB)    │
 │ Engine: Pure Native Dart in TfliteClassifierService             │
 │ Operation: Dot Product (W • x + b)                              │
 │ Latency: < 0.05 ms (< 50 microseconds!)                         │
-│ Output: 47 Species Logits -> Numerically Stable Softmax         │
+│ Output: 75 Species Logits -> Numerically Stable Softmax         │
 └─────────────────────────────────────────────────────────────────┘
                                  │
                                  ▼
@@ -115,9 +115,9 @@ Because this model contains only convolutional and pooling operations (which hav
 
 ### How Part 2 Works (`mushroom_classifier_head.bin`):
 We export the Dense layer's weights and biases into a tiny raw binary file:
-* **47 Biases:** 47 float32s $\times$ 4 bytes = 188 bytes.
-* **Weights Matrix:** 47 classes $\times$ 1,280 features $\times$ 4 bytes = 240,640 bytes.
-* **Total File Size:** Exactly **240,828 bytes (~240.8 KB)**.
+* **75 Biases:** 75 float32s $\times$ 4 bytes = 300 bytes.
+* **Weights Matrix:** 75 classes $\times$ 1,280 features $\times$ 4 bytes = 384,000 bytes.
+* **Total File Size:** Exactly **384,300 bytes (~375.3 KB)**.
 
 In [`lib/domain/services/tflite_classifier_service.dart`](file:///Users/jordi/dev/boscdex/lib/domain/services/tflite_classifier_service.dart), the classification dot product runs directly in native Dart:
 
@@ -141,6 +141,6 @@ In production, instead of passing a single camera frame through Part 1, `TfliteC
 The three 1,280-D vectors are fused into a single representation before projecting through Part 2. See [Chapter 6: Modern Optimization & TTA](06_modern_optimization_and_tta.md) for full mathematical formulation.
 
 ### Why This Architecture is a Masterstroke:
-1. **Ultra-Fast Execution:** Computing 60,160 floating-point multiplications in Dart takes less than **0.05 milliseconds** ($< 50 \mu\text{s}$). It is completely imperceptible to the human eye.
+1. **Ultra-Fast Execution:** Computing 96,000 floating-point multiplications in Dart takes less than **0.05 milliseconds** ($< 50 \mu\text{s}$). It is completely imperceptible to the human eye.
 2. **Zero Version Incompatibility:** Dart runs everywhere Flutter runs. No C++ FlatBuffer opcode incompatibilities can ever break the classification head.
-3. **Instant Model Calibrations:** If we ever want to fine-tune the classifier head on new species or adjust biases for safety lookalikes, we only need to update a tiny 240.8 KB file rather than re-exporting and re-validating the entire TFLite graph!
+3. **Proximal On-Device TTA Head Calibration Without Backbone Poisoning:** Because the feature extractor (`mushroom_classifier.tflite`) is decoupled from the linear decision boundaries (`mushroom_classifier_head.bin`), we can calibrate $(W, b)$ directly on 3-view TTA embeddings anchored to the Colab weights $(W_0, b_0)$ via [`notebooks/boscdex_mushroom_training_colab.ipynb`](file:///Users/jordi/dev/boscdex/boscdex/notebooks/boscdex_mushroom_training_colab.ipynb) and [`tools/training/calibrate_mushroom_head.dart`](file:///Users/jordi/dev/boscdex/boscdex/tools/training/calibrate_mushroom_head.dart) — achieving **100% Top-1 accuracy (75/75)** on canonical botanical reference photos and **96.9% Top-1 / 99.3% Top-3** on 1,041 field photos!

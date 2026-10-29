@@ -11,6 +11,7 @@ import 'package:boscdex/data/database/app_database.dart';
 import 'package:boscdex/domain/models/classificacio_result.dart';
 import 'package:boscdex/domain/services/classifier_service.dart';
 import 'package:boscdex/presentation/scan/tree_classification_result_sheet.dart';
+import 'package:boscdex/presentation/shared/tree_comparison_card.dart';
 import 'package:boscdex/providers/database_provider.dart';
 import 'package:boscdex/providers/preferences_provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -95,6 +96,9 @@ void main() {
       expect(find.text('Agulla'), findsOneWidget);
       expect(find.text('Tronc superior ataronjat'), findsOneWidget);
       expect(find.text('Silici o àcid'), findsOneWidget);
+
+      // Verify botanical reference comparison card renders
+      expect(find.byType(TreeComparisonCard), findsOneWidget);
 
       // Verify associated mushrooms section and Rovelló association
       expect(

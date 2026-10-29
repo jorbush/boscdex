@@ -1,7 +1,7 @@
 name: boscdex
 description: La Pokédex offline del boletaire per explorar el bosc català.
 publish_to: 'none'
-version: 1.4.0+4
+version: 1.5.0+5
 
 environment:
   sdk: '>=2.18.0 <4.0.0'
@@ -60,6 +60,7 @@ flutter:
     - assets/database/
     - assets/models/
     - assets/images/mushrooms/
+    - assets/images/reference/
     - assets/images/trees/
     - assets/images/silhouettes/
     - assets/icons/

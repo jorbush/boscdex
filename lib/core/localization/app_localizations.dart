@@ -1420,6 +1420,78 @@ class AppLocalizations {
     }
   }
 
+  String get zoomPhoto {
+    switch (languageCode) {
+      case 'es':
+        return 'Ampliar foto';
+      case 'en':
+        return 'Zoom photo';
+      case 'ca':
+      default:
+        return 'Ampliar foto';
+    }
+  }
+
+  String get photoComparison {
+    switch (languageCode) {
+      case 'es':
+        return 'Comparativa fotográfica';
+      case 'en':
+        return 'Photo comparison';
+      case 'ca':
+      default:
+        return 'Comparativa fotogràfica';
+    }
+  }
+
+  String get yourCapture {
+    switch (languageCode) {
+      case 'es':
+        return 'Tu captura';
+      case 'en':
+        return 'Your capture';
+      case 'ca':
+      default:
+        return 'La teva captura';
+    }
+  }
+
+  String get botanicalReference {
+    switch (languageCode) {
+      case 'es':
+        return 'Referencia botánica';
+      case 'en':
+        return 'Botanical reference';
+      case 'ca':
+      default:
+        return 'Referència botànica';
+    }
+  }
+
+  String get toxicSafetyAdvisoryTitle {
+    switch (languageCode) {
+      case 'es':
+        return 'Aviso de Seguridad Preventiva';
+      case 'en':
+        return 'Preventive Safety Advisory';
+      case 'ca':
+      default:
+        return 'Avís de Seguretat Preventiva';
+    }
+  }
+
+  String get toxicSafetyAdvisoryBody {
+    switch (languageCode) {
+      case 'es':
+        return 'La identificación morfológica y fotográfica de esta especie tóxica está desbloqueada para tu protección. Nunca toques ni consumas setas peligrosas. El sprite retro se activará cuando la catalogues en el bosque.';
+      case 'en':
+        return 'Morphological and photographic identification for this toxic species is unlocked for your protection. Never touch or consume dangerous mushrooms. The retro sprite will activate once cataloged in the forest.';
+      case 'ca':
+      default:
+        return 'La identificació morfològica i fotogràfica d\'aquesta espècie tòxica està desbloquejada per a la teva protecció. Mai toquis ni consumeixis cap bolet perillós. El sprite retro s\'activarà quan l\'hagis catalogat al bosc.';
+    }
+  }
+
   String get photoSavedSnackbar {
     switch (languageCode) {
       case 'es':

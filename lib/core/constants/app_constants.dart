@@ -1,6 +1,6 @@
 class AppConstants {
   static const String appName = 'Boscdex';
-  static const String appVersion = '1.4.0';
+  static const String appVersion = '1.5.0';
   static const double confidenceThreshold = 0.70;
   static const int maxDexEntries = 80;
   static const int catalogSpeciesCount = 75;

@@ -8,9 +8,12 @@ import '../../core/localization/app_localizations.dart';
 import '../../core/localization/species_localizer.dart';
 import '../../core/theme/retro_decorations.dart';
 import '../../data/database/app_database.dart';
+import '../../domain/models/edibilitat.dart';
 import '../../domain/services/photo_export_service.dart';
 import '../../providers/database_provider.dart';
+import '../../providers/reference_photo_provider.dart';
 import '../journal/avistament_detail_sheet.dart';
+import '../shared/photo_zoom_dialog.dart';
 
 class ArbreDetailScreen extends ConsumerStatefulWidget {
   final String id;
@@ -89,12 +92,21 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
       );
     }
 
+    final refPhotoService = ref.watch(referencePhotoServiceProvider);
+    final refAssetPath = refPhotoService.getReferenceAssetPath(arbre.id);
+    final photoAttr = refPhotoService.getAttribution(arbre.id);
+    final treeDisplayName = SpeciesLocalizer.getTreeName(
+      arbre.id,
+      languageCode: l10n.languageCode,
+      fallbackName: arbre.catalanName,
+    );
+
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 240.0,
+            expandedHeight: 230.0,
             pinned: true,
             backgroundColor: RetroColors.creamBg,
             elevation: 0,
@@ -134,47 +146,119 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  color: RetroColors.forestGreen.withOpacity(0.18),
-                  border: const Border(
-                    bottom: BorderSide(color: RetroColors.ink, width: 3),
-                  ),
-                ),
-                child: Center(
-                  child: Container(
-                    width: 140,
-                    height: 140,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: RetroColors.ink, width: 3),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: RetroColors.ink,
-                          offset: Offset(4, 4),
-                        ),
-                      ],
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // 1. Cover Image (Real botanical tree photo) or Forest Wash
+                  if (refAssetPath.isNotEmpty) ...[
+                    Image.asset(
+                      refAssetPath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, st) => Container(
+                        color: RetroColors.forestGreen.withOpacity(0.18),
+                      ),
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(21),
-                      child: Image.asset(
-                        arbre.imageAssetPath ??
-                            'assets/images/trees/${arbre.id}.png',
-                        fit: BoxFit.contain,
-                        filterQuality: FilterQuality.none,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Center(
-                          child: Icon(
-                            Icons.park_rounded,
-                            size: 76,
-                            color: RetroColors.forestGreen,
+                    Container(
+                      color: Colors.black.withOpacity(0.16),
+                    ),
+                  ] else
+                    Container(
+                      color: RetroColors.forestGreen.withOpacity(0.18),
+                    ),
+
+                  // 2. Retro Bottom Border
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      height: 3,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+
+                  // 3. Central Retro Card with Tree Illustration
+                  Center(
+                    child: Container(
+                      width: 140,
+                      height: 140,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: RetroColors.ink, width: 3),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: RetroColors.ink,
+                            offset: Offset(4, 4),
+                          ),
+                        ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Center(
+                        child: Image.asset(
+                          arbre.imageAssetPath ??
+                              'assets/images/trees/${arbre.id}.png',
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.none,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Center(
+                            child: Icon(
+                              Icons.park_rounded,
+                              size: 76,
+                              color: RetroColors.forestGreen,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
+
+                  // 4. Magnifying Glass Button at Bottom Right
+                  if (refAssetPath.isNotEmpty)
+                    Positioned(
+                      right: 14,
+                      bottom: 14,
+                      child: Semantics(
+                        button: true,
+                        label: l10n.zoomPhoto,
+                        child: GestureDetector(
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            PhotoZoomDialog.show(
+                              context: context,
+                              assetPath: refAssetPath,
+                              title: treeDisplayName,
+                              subtitle: arbre.scientificName,
+                              attribution: photoAttr != null
+                                  ? '${photoAttr.author} (${photoAttr.licenseName})'
+                                  : null,
+                            );
+                          },
+                          child: Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: RetroColors.ink, width: 2),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: RetroColors.ink,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.zoom_in_rounded,
+                              color: RetroColors.ink,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -274,9 +358,12 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                       children: _bolets.map((bolet) {
                         final isDiscovered =
                             _discoveredBoletIds.contains(bolet.id);
+                        final edibilitat =
+                            EdibilitatExtension.fromString(bolet.edibility);
+                        final isRevealed = isDiscovered || edibilitat.isToxic;
                         final dexNum =
                             bolet.dexNumber.toString().padLeft(3, '0');
-                        final displayName = isDiscovered
+                        final displayName = isRevealed
                             ? SpeciesLocalizer.getMushroomName(
                                 bolet.id,
                                 languageCode:
@@ -321,10 +408,17 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                                 ),
                               );
 
+                        Color chipBg;
+                        if (isDiscovered) {
+                          chipBg = Colors.white;
+                        } else if (edibilitat.isToxic) {
+                          chipBg = edibilitat.badgeBackgroundColor;
+                        } else {
+                          chipBg = RetroColors.screenOverlay;
+                        }
+
                         return ActionChip(
-                          backgroundColor: isDiscovered
-                              ? Colors.white
-                              : RetroColors.screenOverlay,
+                          backgroundColor: chipBg,
                           side: const BorderSide(
                               color: RetroColors.ink, width: 2),
                           elevation: 0,
@@ -338,14 +432,31 @@ class _ArbreDetailScreenState extends ConsumerState<ArbreDetailScreen> {
                               child: sprite,
                             ),
                           ),
-                          label: Text(
-                            displayName,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              color: isDiscovered
-                                  ? RetroColors.ink
-                                  : RetroColors.inkSoft,
-                            ),
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  displayName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    color: isRevealed
+                                        ? RetroColors.ink
+                                        : RetroColors.inkSoft,
+                                  ),
+                                ),
+                              ),
+                              if (!isDiscovered && edibilitat.isToxic) ...[
+                                const SizedBox(width: 4),
+                                Icon(
+                                  edibilitat.icon,
+                                  size: 14,
+                                  color: edibilitat.badgeIconColor,
+                                ),
+                              ],
+                            ],
                           ),
                           onPressed: () {
                             HapticFeedback.selectionClick();

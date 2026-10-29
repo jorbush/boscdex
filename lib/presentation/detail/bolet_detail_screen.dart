@@ -12,12 +12,14 @@ import '../../data/database/app_database.dart';
 import '../../data/database/daos/bolet_dao.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/preferences_provider.dart';
+import '../../providers/reference_photo_provider.dart';
 import '../../domain/models/culinary_recipe.dart';
 import '../../domain/models/edibilitat.dart';
 import '../../domain/models/raritat_tier.dart';
 import '../../domain/services/photo_export_service.dart';
 import '../../domain/services/species_distribution_service.dart';
 import '../journal/avistament_detail_sheet.dart';
+import '../shared/photo_zoom_dialog.dart';
 import 'catalonia_pixel_map.dart';
 import 'morphology_section.dart';
 import 'season_indicator.dart';
@@ -132,15 +134,20 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
     final fruitingMonths = _parseMonths(bolet.fruitingSeason);
     final edibilitat = EdibilitatExtension.fromString(bolet.edibility);
     final raritatTier = RaritatTierExtension.fromString(bolet.rarityTier);
+    final isInfoUnlocked = _isDiscovered || edibilitat.isToxic;
 
     final dexNum = bolet.dexNumber.toString().padLeft(3, '0');
+
+    final refPhotoService = ref.watch(referencePhotoServiceProvider);
+    final refAssetPath = refPhotoService.getReferenceAssetPath(bolet.id);
+    final photoAttr = refPhotoService.getAttribution(bolet.id);
 
     return Scaffold(
       backgroundColor: RetroColors.creamBg,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 240.0,
+            expandedHeight: 230.0,
             pinned: true,
             backgroundColor: RetroColors.creamBg,
             elevation: 0,
@@ -180,74 +187,149 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  color: _isDiscovered
-                      ? edibilitat.color.withOpacity(0.18)
-                      : RetroColors.screenOverlay,
-                  border: const Border(
-                    bottom: BorderSide(color: RetroColors.ink, width: 3),
-                  ),
-                ),
-                child: Center(
-                  child: Container(
-                    width: 140,
-                    height: 140,
-                    decoration: BoxDecoration(
-                      color: _isDiscovered
-                          ? Colors.white
-                          : RetroColors.surfaceLight,
-                      borderRadius: BorderRadius.circular(24),
-                      border: Border.all(color: RetroColors.ink, width: 3),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: RetroColors.ink,
-                          offset: Offset(4, 4),
-                        ),
-                      ],
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // 1. Cover Image (Discovered or Toxic) or Mystery Overlay
+                  if (isInfoUnlocked && refAssetPath.isNotEmpty) ...[
+                    Image.asset(
+                      refAssetPath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, st) => Container(
+                        color: edibilitat.color.withOpacity(0.18),
+                      ),
                     ),
-                    padding: const EdgeInsets.all(8),
-                    child: Center(
-                      child: _isDiscovered
-                          ? Image.asset(
-                              bolet.imageAssetPath ??
-                                  'assets/images/mushrooms/${bolet.id}.png',
-                              fit: BoxFit.contain,
-                              filterQuality: FilterQuality.none,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Text(
-                                bolet.catalanName.isNotEmpty
-                                    ? bolet.catalanName
-                                        .substring(0, 1)
-                                        .toUpperCase()
-                                    : '?',
-                                style: TextStyle(
-                                  fontSize: 76,
-                                  fontWeight: FontWeight.w900,
-                                  color: edibilitat.color,
-                                ),
-                              ),
-                            )
-                          : ColorFiltered(
-                              colorFilter: const ColorFilter.mode(
-                                RetroColors.ink,
-                                BlendMode.srcIn,
-                              ),
-                              child: Image.asset(
+                    Container(
+                      color: Colors.black.withOpacity(0.16),
+                    ),
+                  ] else
+                    Container(
+                      color: RetroColors.screenOverlay,
+                    ),
+
+                  // 2. Retro Bottom Border
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      height: 3,
+                      color: RetroColors.ink,
+                    ),
+                  ),
+
+                  // 3. Central Pixel-Art Card
+                  Center(
+                    child: Container(
+                      width: 140,
+                      height: 140,
+                      decoration: BoxDecoration(
+                        color: _isDiscovered
+                            ? Colors.white
+                            : RetroColors.surfaceLight,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: RetroColors.ink, width: 3),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: RetroColors.ink,
+                            offset: Offset(4, 4),
+                          ),
+                        ],
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      padding: const EdgeInsets.all(8),
+                      child: Center(
+                        child: _isDiscovered
+                            ? Image.asset(
                                 bolet.imageAssetPath ??
                                     'assets/images/mushrooms/${bolet.id}.png',
                                 fit: BoxFit.contain,
                                 filterQuality: FilterQuality.none,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    const Text(
-                                  '🍄',
-                                  style: TextStyle(fontSize: 64),
+                                    Text(
+                                  bolet.catalanName.isNotEmpty
+                                      ? bolet.catalanName
+                                          .substring(0, 1)
+                                          .toUpperCase()
+                                      : '?',
+                                  style: TextStyle(
+                                    fontSize: 76,
+                                    fontWeight: FontWeight.w900,
+                                    color: edibilitat.color,
+                                  ),
+                                ),
+                              )
+                            : ColorFiltered(
+                                colorFilter: const ColorFilter.mode(
+                                  RetroColors.ink,
+                                  BlendMode.srcIn,
+                                ),
+                                child: Image.asset(
+                                  bolet.imageAssetPath ??
+                                      'assets/images/mushrooms/${bolet.id}.png',
+                                  fit: BoxFit.contain,
+                                  filterQuality: FilterQuality.none,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Text(
+                                    '🍄',
+                                    style: TextStyle(fontSize: 64),
+                                  ),
                                 ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
+
+                  // 4. Magnifying Glass Button at Bottom Right (Discovered or Toxic)
+                  if (isInfoUnlocked && refAssetPath.isNotEmpty)
+                    Positioned(
+                      right: 14,
+                      bottom: 14,
+                      child: Semantics(
+                        button: true,
+                        label: l10n.zoomPhoto,
+                        child: GestureDetector(
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            PhotoZoomDialog.show(
+                              context: context,
+                              assetPath: refAssetPath,
+                              title: SpeciesLocalizer.getMushroomName(
+                                bolet.id,
+                                languageCode: l10n.languageCode,
+                                fallbackName: bolet.catalanName,
+                              ),
+                              subtitle: bolet.scientificName,
+                              attribution: photoAttr != null
+                                  ? '${photoAttr.author} (${photoAttr.licenseName})'
+                                  : null,
+                            );
+                          },
+                          child: Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              border:
+                                  Border.all(color: RetroColors.ink, width: 2),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: RetroColors.ink,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.zoom_in_rounded,
+                              color: RetroColors.ink,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -258,7 +340,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title & Scientific Name
-                  if (!_isDiscovered) ...[
+                  if (!isInfoUnlocked) ...[
                     Text(
                       '#$dexNum ???',
                       style: const TextStyle(
@@ -304,7 +386,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   const SizedBox(height: 16),
 
                   // Badges Row
-                  if (!_isDiscovered) ...[
+                  if (!_isDiscovered && !edibilitat.isToxic) ...[
                     Row(
                       children: [
                         Container(
@@ -362,6 +444,76 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                               fontWeight: FontWeight.w900,
                               fontSize: 12.5,
                             ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ] else if (!_isDiscovered && edibilitat.isToxic) ...[
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: RetroColors.mintMuted,
+                            borderRadius: BorderRadius.circular(10),
+                            border:
+                                Border.all(color: RetroColors.ink, width: 2),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: RetroColors.ink,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.lock_outline_rounded,
+                                  size: 14, color: RetroColors.ink),
+                              const SizedBox(width: 6),
+                              Text(
+                                l10n.notDiscoveredBadge,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  color: RetroColors.ink,
+                                  fontSize: 12.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: edibilitat.badgeBackgroundColor,
+                            borderRadius: BorderRadius.circular(10),
+                            border:
+                                Border.all(color: RetroColors.ink, width: 2),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: RetroColors.ink,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(edibilitat.icon,
+                                  size: 14, color: edibilitat.badgeIconColor),
+                              const SizedBox(width: 6),
+                              Text(
+                                edibilitat.localizedLabel(context),
+                                style: TextStyle(
+                                  color: edibilitat.badgeIconColor,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12.5,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -427,6 +579,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   if (_toxicLookalikes.isNotEmpty) ...[
                     for (final twin in _toxicLookalikes)
                       ToxicTwinAlert(
+                        lookalikeId: twin.lookalike.id,
                         lookalikeName: SpeciesLocalizer.getMushroomName(
                           twin.lookalike.id,
                           languageCode: l10n.languageCode,
@@ -461,7 +614,7 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                   const SizedBox(height: 24),
 
                   // Locked vs Revealed Morphology & Exploration actions
-                  if (!_isDiscovered) ...[
+                  if (!isInfoUnlocked) ...[
                     _buildLockedMorphologyCard(),
                     const SizedBox(height: 24),
                     _buildSearchInForestCta(context),
@@ -492,6 +645,13 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
                         bolet.safetyNotes!.isNotEmpty) ...[
                       const SizedBox(height: 24),
                       _buildSafetyNotesCard(bolet.id, bolet.safetyNotes!),
+                    ],
+                    if (!_isDiscovered && edibilitat.isToxic) ...[
+                      const SizedBox(height: 24),
+                      _buildToxicSafetyAdvisoryCard(context),
+                    ] else if (!_isDiscovered) ...[
+                      const SizedBox(height: 24),
+                      _buildSearchInForestCta(context),
                     ],
                     () {
                       final culinaryRecipe =
@@ -740,6 +900,55 @@ class _BoletDetailScreenState extends ConsumerState<BoletDetailScreen> {
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: RetroColors.inkSoft,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToxicSafetyAdvisoryCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: RetroDecorations.card(
+        backgroundColor: const Color(0xFFFCE8E7),
+        borderColor: RetroColors.ink,
+        borderWidth: 2,
+        shadowOffset: 3,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.health_and_safety_rounded,
+                size: 20,
+                color: RetroColors.arcadeRed,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.toxicSafetyAdvisoryTitle,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                    color: RetroColors.arcadeRed,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.toxicSafetyAdvisoryBody,
+            style: const TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: RetroColors.ink,
               height: 1.4,
             ),
           ),

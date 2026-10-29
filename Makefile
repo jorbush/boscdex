@@ -78,12 +78,13 @@ build-ios: ## Build debug iOS app without codesigning
 	@echo "$(CYAN)Building iOS debug bundle...$(RESET)"
 	flutter build ios --no-codesign --debug
 
-zip-mushrooms: ## Package mushroom test assets into clean boscdex_dataset.zip for Drive/Colab
-	@echo "$(CYAN)Packaging mushroom dataset into boscdex_dataset.zip...$(RESET)"
+zip-mushrooms: ## Package mushroom test assets + 75 reference anchors into boscdex_dataset.zip for Drive/Colab
+	@echo "$(CYAN)Packaging mushroom dataset + 75 reference anchors into boscdex_dataset.zip...$(RESET)"
 	@rm -f boscdex_dataset.zip
 	@(cd test/assets/mushrooms && zip -r ../../../boscdex_dataset.zip . -x "*.DS_Store" -x "*/.DS_Store" -x ".DS_Store" -x "__MACOSX*")
+	@python3 -c 'import zipfile, pathlib; z=zipfile.ZipFile("boscdex_dataset.zip","a",zipfile.ZIP_DEFLATED); [z.write(p, f"{p.stem}/ref_anchor_00.jpg") for p in sorted(pathlib.Path("assets/images/reference").glob("*.jpg"))]; z.close()'
 	@ls -lh boscdex_dataset.zip
-	@echo "$(GREEN)✓ Created clean boscdex_dataset.zip for Google Drive (upload to MyDrive/ or MyDrive/boscdex/)$(RESET)"
+	@echo "$(GREEN)✓ Created clean boscdex_dataset.zip (with 75 reference anchors) for Google Drive (upload to MyDrive/ or MyDrive/boscdex/)$(RESET)"
 
 zip-trees: ## Package indicator tree test assets into clean tree_dataset.zip for Drive/Colab
 	@echo "$(CYAN)Packaging tree dataset into tree_dataset.zip...$(RESET)"

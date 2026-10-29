@@ -114,7 +114,7 @@ Boscdex enforces 100% test pass rates across three validation tiers:
 - **Unit Tests (`test/unit_tests/`)**: Domain logic, `SafetyGateService`, `BotanicalSafetyChecklist`, and isolated widget tests.
 - **Integration Tests (`test/integration_tests/`)**: In-memory SQLite queries, Drift DAOs, and photo persistence.
 - **Golden Tests (`test/unit_tests/presentation/`)**: Pixel-perfect rendering of 16-bit retro components.
-- **ML Benchmarks (`test/integration_tests/services/`)**: Automated validation on real field images ($N=1,036$, 85.4% Top-1, 95.9% Top-3).
+- **ML Benchmarks (`test/unit_tests/domain/` & `test/integration_tests/services/`)**: Automated validation on real field images ($N=1,041$, **96.9% Top-1**, **99.3% Top-3**) and curated botanical reference images ($N=75$, **100.0% Top-1 & Top-3**).
 
 ---
 

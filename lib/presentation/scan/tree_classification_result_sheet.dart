@@ -20,8 +20,10 @@ import '../../domain/services/badge_progression_service.dart';
 import '../../providers/database_provider.dart';
 import '../../providers/location_provider.dart';
 import '../../providers/preferences_provider.dart';
+import '../../providers/reference_photo_provider.dart';
 import '../../providers/sound_provider.dart';
 import '../journal/journal_map_projection.dart';
+import '../shared/tree_comparison_card.dart';
 
 /// Modal bottom sheet displaying the ML classification results for indicator trees,
 /// their morphological traits, and the prized edible/symbiotic mushrooms found beneath them.
@@ -402,6 +404,17 @@ class _TreeClassificationResultSheetState
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Botanical Reference & Live Comparison Card
+                    if (_arbre != null) ...[
+                      TreeComparisonCard(
+                        userImageBytes: widget.imageBytes,
+                        tree: _arbre!,
+                        referencePhotoService:
+                            ref.watch(referencePhotoServiceProvider),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Botanical traits
                     if (_arbre != null) ...[
