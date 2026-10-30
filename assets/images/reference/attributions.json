@@ -207,12 +207,12 @@
     "species_id": "amanita_phalloides",
     "scientific_name": "Amanita phalloides",
     "catalan_name": "Farinera borda",
-    "photo_id": 392666373,
-    "author": "Sofia Zvolanek",
-    "license_code": "cc-by",
-    "license_name": "CC BY 4.0",
-    "attribution_text": "(c) Sofia Zvolanek, some rights reserved (CC BY)",
-    "source_url": "https://www.inaturalist.org/observations/221717534",
+    "photo_id": 20261028,
+    "author": "Julio Puig",
+    "license_code": "cc-by-sa",
+    "license_name": "CC BY-SA 4.0",
+    "attribution_text": "(c) Julio Puig, Boscdex Field Collection (CC BY-SA 4.0)",
+    "source_url": "https://github.com/jorbush/boscdex",
     "asset_path": "assets/images/reference/amanita_phalloides.jpg"
   },
   {

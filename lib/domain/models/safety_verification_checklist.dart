@@ -1122,5 +1122,41 @@ class BotanicalSafetyChecklist {
         ),
       ],
     ),
+
+    // 18. Farinera groga / Reig de la mort fals (Amanita citrina)
+    'amanita_citrina': const BotanicalSafetyChecklist(
+      speciesId: 'amanita_citrina',
+      items: [
+        BotanicalCheckItem(
+          id: 'citrina_toxic_acknowledgement',
+          questionCa:
+              'Entens que la Farinera groga (Amanita citrina) és TÒXICA (conté bufotenina) i té alt risc de confusió amb la mortal Amanita phalloides?',
+          questionEs:
+              '¿Entiendes que la Falsa oronja (Amanita citrina) es TÓXICA (contiene bufotenina) y se confunde fácilmente con la mortal Amanita phalloides?',
+          questionEn:
+              'Do you acknowledge that the False Death Cap (Amanita citrina) is TOXIC (contains bufotenine) and is easily confused with deadly Amanita phalloides?',
+          detailCa:
+              'La Farinera groga té bulb marginat abrupte i olor de patata crua; la mortal Farinera borda té volva en sac membranós lliure.',
+          detailEs:
+              'La Falsa oronja tiene bulbo marginado y olor a patata cruda; la mortal Oronja verde tiene volva en saco libre.',
+          detailEn:
+              'False Death Cap has a margined bulb and raw potato odor; deadly Death Cap has a loose saccate volva.',
+        ),
+        BotanicalCheckItem(
+          id: 'study_only_confirmation',
+          questionCa:
+              'Confirmes que aquest registre és exclusivament per a estudi botànic i conservació?',
+          questionEs:
+              '¿Confirmas que este registro es exclusivamente para estudio botánico y conservación?',
+          questionEn:
+              'Do you confirm this sighting is recorded solely for botanical study and biodiversity conservation?',
+          detailCa: 'Mai recolliu cap Amanita groga o blanca per al consum.',
+          detailEs:
+              'Nunca recolectéis ninguna Amanita amarilla o blanca para el consumo.',
+          detailEn:
+              'Never harvest any yellow or white Amanita species for consumption.',
+        ),
+      ],
+    ),
   };
 }

@@ -292,7 +292,7 @@ class SeedData {
           scientificName: Value('Russula cyanoxantha'),
           family: Value('Russulaceae'),
           rarityTier: Value('comu'),
-          edibility: Value('sense_valor'),
+          edibility: Value('comestible'),
           fruitingSeason: Value('[6,7,8,9,10]'),
           altitudeMin: Value(200),
           altitudeMax: Value(1400),
@@ -302,8 +302,8 @@ class SeedData {
               'Blanques. La prova clau per a identificar-la és que la textura de les làmines no és trencadissa, sinó tova (com formatge llescat fi), quan s\'hi passa el dit NO es trenquen.'),
           stemDescription: Value(
               'Blanc, ferm, sense cap anell ni volva, recte i generalment cilíndric. Carn trencadissa.'),
-          safetyNotes:
-              Value('Es pot consumir, però no s\'aprecia gaire a la cuina.'),
+          safetyNotes: Value(
+              'Bon comestible; cal assegurar-se que les làmines són flexibles i no trencadisses i que no té volva ni anell per no confondre les formes verdoses amb la mortal Farinera borda (Amanita phalloides).'),
           dexNumber: Value(14),
           imageAssetPath:
               Value('assets/images/mushrooms/russula_cyanoxantha.png'),
@@ -1531,7 +1531,7 @@ class SeedData {
           stemDescription: Value(
               'Molt llarg, robust i fibrós, eixamplat cap a la base, blanc i cobert de nombroses esquàmules o aspreses fosques (marronoses a negres).'),
           safetyNotes: Value(
-              'BON COMESTIBLE. La carn és blanca però en tallar-la vira ràpidament a gris violaci i després a negre carbó; en cuinar-lo la carn es torna fosca però conserva un excel·lent sabor i textura ferma. El peu és fibrós i convé descartar-lo si és vell.'),
+              'BON COMESTIBLE UN COP BEN CUIT (TÒXIC EN CRU O POC FET: requereix cocció completa d\'almenys 15-20 minuts per evitar trastorns gastrointestinals). La carn és blanca però en tallar-la vira ràpidament a gris violaci i després a negre carbó; en cuinar-lo la carn es torna fosca però conserva un excel·lent sabor i textura ferma. El peu és fibrós i convé descartar-lo si és vell.'),
           dexNumber: Value(70),
           imageAssetPath:
               Value('assets/images/mushrooms/leccinum_aurantiacum.png'),
@@ -1542,7 +1542,7 @@ class SeedData {
               Value('Bolet de pi amarg / Fals pollancró / Bolet de sofre'),
           scientificName: Value('Hypholoma fasciculare'),
           family: Value('Strophariaceae'),
-          rarityTier: Value('molt_comu'),
+          rarityTier: Value('comu'),
           edibility: Value('toxic'),
           fruitingSeason: Value('[4,5,6,7,8,9,10,11,12]'),
           altitudeMin: Value(50),
@@ -1588,7 +1588,7 @@ class SeedData {
           scientificName: Value('Amanita citrina'),
           family: Value('Amanitaceae'),
           rarityTier: Value('comu'),
-          edibility: Value('sense_valor'),
+          edibility: Value('toxic'),
           fruitingSeason: Value('[8,9,10,11,12]'),
           altitudeMin: Value(100),
           altitudeMax: Value(1400),
@@ -1599,7 +1599,7 @@ class SeedData {
           stemDescription: Value(
               'Esvelt, blanc-groguenc, amb un anell membranós penjant groc pàl·lid i una base terminada en un bulb molt gros, globós i arrodonit amb un marge o vora tallada molt neta (bulb marginat).'),
           safetyNotes: Value(
-              'SENSE VALOR CULINARI I MODERADAMENT TÒXIC (conté bufotenina). Té una forta i desagradable olor de patata crua o rave. ALERTA MÀXIMA DE CONFUSIÓ: La seva semblança superficial amb la mortal Farinera borda (Amanita phalloides) o amb l\'Ou de reig (Amanita caesarea) la fa un bolet d\'alt risc pedagògic. La Farinera borda té volva en sac i no fa olor de patata.'),
+              'TÒXIC (conté bufotenina i triptamines) I SENSE VALOR CULINARI. Té una forta i desagradable olor de patata crua o rave. ALERTA MÀXIMA DE CONFUSIÓ: La seva semblança superficial amb la mortal Farinera borda (Amanita phalloides), la Cicuta blanca (Amanita verna) o l\'Ou de reig (Amanita caesarea) la fa un bolet d\'alt risc. La Farinera borda té volva en sac i no fa olor de patata.'),
           dexNumber: Value(73),
           imageAssetPath: Value('assets/images/mushrooms/amanita_citrina.png'),
         ),
@@ -1608,7 +1608,7 @@ class SeedData {
           catalanName: Value('Bolet de sabó / Fredolic de sabó'),
           scientificName: Value('Tricholoma saponaceum'),
           family: Value('Tricholomataceae'),
-          rarityTier: Value('molt_comu'),
+          rarityTier: Value('comu'),
           edibility: Value('toxic'),
           fruitingSeason: Value('[9,10,11,12]'),
           altitudeMin: Value(200),
@@ -1630,7 +1630,7 @@ class SeedData {
           catalanName: Value('Inòcibe de Patouillard'),
           scientificName: Value('Inocybe erubescens'),
           family: Value('Inocybaceae'),
-          rarityTier: Value('rara'),
+          rarityTier: Value('rar'),
           edibility: Value('mortal'),
           fruitingSeason: Value('[4,5,6,7]'),
           altitudeMin: Value(200),
@@ -2504,6 +2504,24 @@ class SeedData {
           lookalikeBoletId: Value('paxillus_involutus'),
           comparisonNotes: Value(
               'El mortal Paxil·le té marge fortament enrotllat, làmines que s\'oxiden a bru en fregar-les i no té làtex; el Rovelló de sang vinosa raja làtex color vi negre fosc o remolatxa.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('lepista_nuda'),
+          lookalikeBoletId: Value('cortinarius_orellanus'),
+          comparisonNotes: Value(
+              'El Peu blau té làmines i peu violacis, esporada blanquinosa-rosada i mai té cortina; els Cortinaris mortals tenen cortina com teranyina i esporada marró rovell.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('pleurotus_eryngii'),
+          lookalikeBoletId: Value('omphalotus_olearius'),
+          comparisonNotes: Value(
+              'La Gírgola de panical creix a terra d\'erms i pastures sobre arrels de panical amb làmines blanquinoses; la tòxica Gírgola d\'olivera és taronja viu i creix en feixos sobre soques de fusta.'),
+        ),
+        ToxicLookalikesCompanion(
+          boletId: Value('amanita_citrina'),
+          lookalikeBoletId: Value('amanita_verna'),
+          comparisonNotes: Value(
+              'Les formes blanques de la Farinera groga tenen bulb marginat abrupte i forta olor de patata crua; la mortal Cicuta blanca té volva en sac membranós lliure i no fa olor de patata.'),
         ),
       ];
 

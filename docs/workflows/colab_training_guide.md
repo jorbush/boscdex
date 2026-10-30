@@ -121,14 +121,14 @@ Once the training finishes:
 
 ---
 
-## 📊 Verified Real-World Performance (Series 020 Benchmark)
+## 📊 Verified Real-World Performance (Series 021 Benchmark)
 
 When trained on the curated dataset (`boscdex_dataset.zip` + verified Catalan iNaturalist observations) and calibrated with 3-View Test-Time Augmentation (TTA), the 75-species model achieves:
 
 * **Training Duration:** ~15–20 minutes on Colab T4 GPU.
 * **Botanical Reference Photos Accuracy:** **100.0% Top-1 & Top-3** (75 / 75 curated open-licensed reference photos in `assets/images/reference/`).
-* **Field Golden Set Top-1 Accuracy:** **96.9%** (1,009 / 1,041 real field photos).
-* **Field Golden Set Top-3 Accuracy:** **99.3%** (1,034 / 1,041 real field photos).
+* **Field Golden Set Top-1 Accuracy:** **94.9%** (996 / 1,049 real field photos).
+* **Field Golden Set Top-3 Accuracy:** **99.0%** (1,038 / 1,049 real field photos).
 * **Model Footprint:** ~2.41 MB TFLite backbone + 375.3 KB classification head (vastly below the 18 MB mobile budget).
 
 ---

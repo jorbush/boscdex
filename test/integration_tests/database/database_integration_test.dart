@@ -175,10 +175,18 @@ void main() {
       isTrue,
     );
 
+    final citrina = await db.boletDao.getBoletById('amanita_citrina');
+    expect(citrina, isNotNull);
+    expect(citrina!.edibility, equals('toxic'));
+
     final citrinaLookalikes =
         await db.boletDao.getToxicLookalikes('amanita_citrina');
     expect(
       citrinaLookalikes.any((l) => l.id == 'amanita_phalloides'),
+      isTrue,
+    );
+    expect(
+      citrinaLookalikes.any((l) => l.id == 'amanita_verna'),
       isTrue,
     );
   });

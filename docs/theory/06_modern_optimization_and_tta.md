@@ -280,16 +280,17 @@ Where:
 
 ---
 
-## 8. Empirical Results Summary: Series 014 through Series 020
+## 8. Empirical Results Summary: Series 014 through Series 021
 
-The progression across our benchmark series illustrates the cumulative impact of data curation, 3-view TTA, taxonomy expansion, and proximal TTA head calibration:
+The progression across our benchmark series illustrates the cumulative impact of data curation, 3-view TTA, taxonomy expansion, proximal TTA head calibration, and local phenotypic adaptation:
 
-| Metric | Series 014 (47 Taxa) | Series 017 (47 Taxa Overhaul) | Series 018 (62 Taxa) | Series 019 (75 Taxa) | **Series 020 (75 Taxa + Colab & Proximal TTA Head)** |
+| Metric | Series 014 (47 Taxa) | Series 018 (62 Taxa) | Series 019 (75 Taxa) | Series 020 (75 Taxa + Ref Anchors) | **Series 021 (Catalan *A. phalloides* Anchor + 1,049 Field Photos)** |
 |---|:---:|:---:|:---:|:---:|:---:|
-| **Field Test Photos ($N$)** | 623 | 623 | 855 | 1,036 | **1,041 (+ 75 Ref Photos)** |
-| **Field Top-1 Accuracy** | 547 / 623 (87.8%) | 530 / 623 (85.1%) | 756 / 855 (88.4%) | 885 / 1,036 (85.4%) | **1,009 / 1,041 (96.9%) 🚀** |
-| **Field Top-3 Accuracy** | 590 / 623 (94.7%) | 600 / 623 (96.3%) | 827 / 855 (96.7%) | 994 / 1,036 (95.9%) | **1,034 / 1,041 (99.3%) 🎯** |
-| **Reference Photos Top-1** | — | — | — | 41 / 75 (54.7%) | **75 / 75 (100.0%) ✅** |
+| **Field Test Photos ($N$)** | 623 | 855 | 1,036 | 1,041 | **1,049 (+ 75 Ref Photos)** |
+| **Field Top-1 Accuracy** | 547 / 623 (87.8%) | 756 / 855 (88.4%) | 885 / 1,036 (85.4%) | 1,009 / 1,041 (96.9%) | **996 / 1,049 (94.9%)** |
+| **Field Top-3 Accuracy** | 590 / 623 (94.7%) | 827 / 855 (96.7%) | 994 / 1,036 (95.9%) | 1,034 / 1,041 (99.3%) | **1,038 / 1,049 (99.0%) 🎯** |
+| **Reference Photos Top-1** | — | — | 41 / 75 (54.7%) | 75 / 75 (100.0%) | **75 / 75 (100.0%) ✅** |
+| **Zero-Tolerance Lethal Recall** | 100% | 100% | 100% | 100% | **100% (Protected Catalan Phenotypes)** |
 | **100% Top-3 Field Species** | 22 / 47 (46.8%) | 31 / 47 (66.0%) | 43 / 62 (69.4%) | 47 / 75 (62.7%) | **60 / 75 (80.0%)** |
 | **100% Top-1 Field Species** | 15 / 47 (31.9%) | 16 / 47 (34.0%) | 20 / 62 (32.3%) | 21 / 75 (28.0%) | **39 / 75 (52.0%)** |
 

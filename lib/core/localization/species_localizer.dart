@@ -2294,11 +2294,12 @@ class SpeciesLocalizer {
           'Edible after peeling the slimy skin (which is laxative), but of mediocre culinary value.',
     },
     'russula_cyanoxantha': {
-      'ca': 'Es pot consumir, però no s\'aprecia gaire a la cuina.',
+      'ca':
+          'Bon comestible; cal assegurar-se que les làmines són flexibles i no trencadisses i que no té volva ni anell per no confondre les formes verdoses amb la mortal Farinera borda (Amanita phalloides).',
       'es':
-          'Comestible de buena calidad; asegurarse de que las láminas son flexibles y no quebradizas.',
+          'Comestible de buena calidad; asegurarse de que las láminas son flexibles y no quebradizas y descartar volva o anillo para no confundir con la mortal Amanita phalloides.',
       'en':
-          'Good edible; ensure gills are flexible and non-brittle to confirm identity.',
+          'Good edible; ensure gills are flexible and non-brittle and verify absence of ring and volva to never confuse greenish caps with deadly Amanita phalloides.',
     },
     'amanita_muscaria': {
       'ca':
@@ -2518,11 +2519,11 @@ class SpeciesLocalizer {
     },
     'amanita_citrina': {
       'ca':
-          'SENSE VALOR CULINARI I MODERADAMENT TÒXIC (conté bufotenina). Té una forta i desagradable olor de patata crua o rave. ALERTA MÀXIMA DE CONFUSIÓ: La seva semblança superficial amb la mortal Farinera borda (Amanita phalloides) o amb l\'Ou de reig (Amanita caesarea) la fa un bolet d\'alt risc pedagògic. La Farinera borda té volva en sac i no fa olor de patata.',
+          'TÒXIC (conté bufotenina i triptamines) I SENSE VALOR CULINARI. Té una forta i desagradable olor de patata crua o rave. ALERTA MÀXIMA DE CONFUSIÓ: La seva semblança superficial amb la mortal Farinera borda (Amanita phalloides), la Cicuta blanca (Amanita verna) o l\'Ou de reig (Amanita caesarea) la fa un bolet d\'alt risc. La Farinera borda té volva en sac i no fa olor de patata.',
       'es':
-          'SIN VALOR CULINARIO / SOSPECHOSA. Fuerte olor a patata cruda o rábano. Evitar por confusión con la mortal Amanita phalloides.',
+          'TÓXICA (contiene bufotenina y triptaminas) Y SIN VALOR CULINARIO. Fuerte olor a patata cruda o rábano. ALERTA DE CONFUSIÓN: Gran riesgo de confusión con la mortal Amanita phalloides o Amanita verna.',
       'en':
-          'INEDIBLE / SUSPECT. Strong raw potato or radish odor. Avoid to prevent confusion with deadly Amanita phalloides.',
+          'TOXIC (contains bufotenine and tryptamines) AND INEDIBLE. Strong raw potato or radish odor. HIGH CONFUSION RISK with deadly Amanita phalloides and Amanita verna.',
     },
     'amanita_rubescens': {
       'ca':
@@ -2670,11 +2671,11 @@ class SpeciesLocalizer {
     },
     'leccinum_aurantiacum': {
       'ca':
-          'BON COMESTIBLE. La carn és blanca però en tallar-la vira ràpidament a gris violaci i després a negre carbó; en cuinar-lo la carn es torna fosca però conserva un excel·lent sabor i textura ferma. El peu és fibrós i convé descartar-lo si és vell.',
+          'BON COMESTIBLE UN COP BEN CUIT (TÒXIC EN CRU O POC FET: requereix cocció completa d\'almenys 15-20 minuts per evitar trastorns gastrointestinals). La carn és blanca però en tallar-la vira ràpidament a gris violaci i després a negre carbó; en cuinar-lo la carn es torna fosca però conserva un excel·lent sabor i textura ferma. El peu és fibrós i convé descartar-lo si és vell.',
       'es':
-          'BUEN COMESTIBLE. La carne ennegrece al cocinarla. Debe cocinarse a fondo bajo álamos y abedules.',
+          'BUEN COMESTIBLE BIEN COCINADO (TÓXICO EN CRUDO O POCO HECHO: requiere cocción completa de 15-20 minutos). La carne ennegrece al cocinarla.',
       'en':
-          'GOOD EDIBLE. Flesh darkens black during cooking. Must be thoroughly cooked.',
+          'GOOD EDIBLE WHEN THOROUGHLY COOKED (TOXIC RAW OR UNDERCOOKED: requires 15-20 minutes of cooking). Flesh darkens black during cooking.',
     },
     'neoboletus_luridiformis': {
       'ca':
@@ -3262,6 +3263,30 @@ class SpeciesLocalizer {
           'El mortal paxilo enrollado tiene margen enrollado, láminas que oscurecen a pardo al tacto y carece de látex; el níscalo vinoso mana látex color vino tinto o remolacha.',
       'en':
           'Deadly Brown Roll-Rim has an inrolled margin, gills bruising brown, and no milk latex; Wine-capped Milkcap exudes dark wine-red/beetroot milk.',
+    },
+    'lepista_nuda:cortinarius_orellanus': {
+      'ca':
+          'El Peu blau té làmines i peu violacis, esporada blanquinosa-rosada i mai té cortina; els Cortinaris mortals tenen cortina com teranyina i esporada marró rovell.',
+      'es':
+          'El pie azul tiene láminas y pie violáceos, esporada blanquecina-rosada y carece de cortina; los cortinarios mortales tienen cortina araneosa y esporada marrón óxido.',
+      'en':
+          'Wood Blewit has violet gills and stem, pale pinkish-buff spore print, and no cortina; deadly Webcaps have a cobwebby cortina and rusty-brown spores.',
+    },
+    'pleurotus_eryngii:omphalotus_olearius': {
+      'ca':
+          'La Gírgola de panical creix a terra d\'erms i pastures sobre arrels de panical amb làmines blanquinoses; la tòxica Gírgola d\'olivera és taronja viu i creix en feixos sobre soques de fusta.',
+      'es':
+          'La seta de cardo crece en tierra de prados sobre raíces de cardo con láminas blanquecinas; la tóxica seta de olivo es naranja vivo y crece en ramilletes sobre tocones de madera.',
+      'en':
+          'King Oyster grows terrestrially in pastures on eryngo roots with whitish gills; toxic Jack-o\'-lantern is bright orange and grows in dense clusters on tree stumps.',
+    },
+    'amanita_citrina:amanita_verna': {
+      'ca':
+          'Les formes blanques de la Farinera groga tenen bulb marginat abrupte i forta olor de patata crua; la mortal Cicuta blanca té volva en sac membranós lliure i no fa olor de patata.',
+      'es':
+          'Las formas blancas de la falsa oronja tienen bulbo marginado abrupto y fuerte olor a patata cruda; la mortal cicuta blanca tiene volva en saco membranoso libre.',
+      'en':
+          'White forms of the False Death Cap have an abruptly margined basal bulb and raw potato odor; deadly Spring Amanita has a free membranous saccate volva.',
     },
   };
 

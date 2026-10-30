@@ -26,7 +26,7 @@ We deeply thank the naturalists, mycologists, and photographers of the [iNatural
 | 15 | *Amanita muscaria* | Reig bord | Borja Fierro-Leva | CC BY 4.0 | [Photo #448681419](https://www.inaturalist.org/taxa/48715) |
 | 16 | *Omphalotus olearius* | Gírgola d'olivera | Davide Puddu | CC BY 4.0 | [Photo #19072595](https://www.inaturalist.org/observations/13091310) |
 | 17 | *Entoloma sinuatum* | Pèrfid | matejfranceskin | CC BY-SA 4.0 | [Photo #148654266](https://commons.wikimedia.org/wiki/File:Entoloma_sinuatum_12.jpg) |
-| 18 | *Amanita phalloides* | Farinera borda | Sofia Zvolanek | CC BY 4.0 | [Photo #392666373](https://www.inaturalist.org/observations/221717534) |
+| 18 | *Amanita phalloides* | Farinera borda | Julio Puig | CC BY-SA 4.0 | [Field Photo #20261028](https://github.com/jorbush/boscdex) |
 | 19 | *Amanita verna* | Cicuta blanca | Davide Puddu | CC BY 4.0 | [Photo #29238677](https://www.inaturalist.org/taxa/58684) |
 | 20 | *Cortinarius orellanus* | Cortinari de muntanya | Jose Castro | CC BY 4.0 | [Photo #139699317](https://www.inaturalist.org/observations/84954351) |
 | 21 | *Lactarius sanguifluus* | Rovelló de sang | Lucian Clanet | CC BY 4.0 | [Photo #598783046](https://www.inaturalist.org/taxa/332501) |

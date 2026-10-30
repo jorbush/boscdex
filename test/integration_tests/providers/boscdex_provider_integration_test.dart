@@ -80,6 +80,8 @@ void main() {
 
       final filtered = container.read(filteredBoscdexEntriesProvider);
       expect(filtered, isNotEmpty);
+      expect(filtered.length, equals(25)); // 17 toxic + 8 mortal
+      expect(filtered.any((e) => e.bolet.id == 'amanita_citrina'), isTrue);
       for (final item in filtered) {
         expect(item.bolet.edibility, anyOf('toxic', 'mortal'));
       }

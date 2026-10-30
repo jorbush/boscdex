@@ -91,7 +91,7 @@ abstract class ClassifierService {
 
 This decoupled abstraction supports three progressive implementations:
 1. **`TfliteClassifierService` (Active in v1.5 Production):** Executes on-device MobileNetV2 GAP feature extraction combined with high-performance Dart linear classification heads for both mushrooms and indicator trees.
-   * **Mushroom Neural Classifier:** Evaluated on 75 taxa using `assets/models/mushroom_classifier.tflite` + `assets/models/mushroom_classifier_head.bin` with 3-View TTA and Proximal Head Calibration. Verified at **96.9% Top-1** (1,009/1,041) and **99.3% Top-3** (1,034/1,041) accuracy across 1,041 real field photos, and **100.0% Top-1 & Top-3** (75/75) across all 75 canonical botanical reference photos (`assets/images/reference/`).
+   * **Mushroom Neural Classifier:** Evaluated on 75 taxa using `assets/models/mushroom_classifier.tflite` + `assets/models/mushroom_classifier_head.bin` with 3-View TTA and Proximal Head Calibration. Verified at **94.9% Top-1** (996/1,049) and **99.0% Top-3** (1,038/1,049) accuracy across 1,049 real field photos (Series 021), and **100.0% Top-1 & Top-3** (75/75) across all 75 canonical botanical reference photos (`assets/images/reference/`).
    * **Tree Neural Classifier:** Evaluated on 5 indicator tree taxa using `assets/models/tree_classifier.tflite` + `assets/models/tree_classifier_head.bin`. Lazy-loaded on first tree scan request to conserve RAM. Verified at **80.0% Top-1** and **96.0% Top-2** accuracy across 79 real field photos.
 2. **`VisualFeatureClassifierService` (Graceful Fallback):** Real-time fallback analyzing camera frames by downscaling to $32 \times 32$ via `dart:ui.instantiateImageCodec`, computing HSV chromatic distribution histograms, and scoring against regional botanical profiles (100% offline, zero native binary dependencies).
 3. **`MockClassifierService`:** A deterministic round-robin scenario cycle used for rapid headless UI prototyping and reproducible unit tests.
@@ -112,14 +112,14 @@ This decoupled abstraction supports three progressive implementations:
 ## 🧪 Golden Set Empirical Evaluation & Model Testing
 
 To evaluate and track model refinement objectively across iterations, the project maintains on-device **Golden Validation Sets**:
-- **Mushroom Field Golden Set:** `test/assets/mushrooms/` (1,041 real high-resolution field photographs across all 75 Catalan taxa).
+- **Mushroom Field Golden Set:** `test/assets/mushrooms/` (1,049 real high-resolution field photographs across all 75 Catalan taxa).
   - Regression Test: [`test/unit_tests/domain/mushroom_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/mushroom_model_real_images_test.dart).
-  - Benchmark (Series 020): **96.9% Top-1** (1,009/1,041), **99.3% Top-3** (1,034/1,041).
+  - Benchmark (Series 021): **94.9% Top-1** (996/1,049), **99.0% Top-3** (1,038/1,049).
   - Execution Command: `flutter test test/unit_tests/domain/mushroom_model_real_images_test.dart`.
 - **Botanical Reference Photos Benchmark:** `assets/images/reference/` (75 curated open-licensed CC botanical reference photos displayed in the app).
-  - Regression Test: [`test/integration_tests/services/mushroom_model_reference_images_integration_test.dart`](file:///Users/jordi/dev/boscdex/boscdex/test/integration_tests/services/mushroom_model_reference_images_integration_test.dart).
-  - Benchmark (Series 020): **100.0% Top-1** (75/75), **100.0% Top-3** (75/75).
-  - Execution Command: `flutter test test/integration_tests/services/mushroom_model_reference_images_integration_test.dart`.
+  - Regression Test: [`test/unit_tests/domain/mushroom_model_reference_images_test.dart`](file:///Users/jordi/dev/boscdex/boscdex/test/unit_tests/domain/mushroom_model_reference_images_test.dart).
+  - Benchmark (Series 021): **100.0% Top-1** (75/75), **100.0% Top-3** (75/75).
+  - Execution Command: `flutter test test/unit_tests/domain/mushroom_model_reference_images_test.dart`.
 - **Tree Golden Set:** `test/assets/trees/` (79 real field photographs across all 5 indicator tree species).
   - Regression Test: [`test/unit_tests/domain/tree_model_real_images_test.dart`](file:///Users/jordi/dev/boscdex/test/unit_tests/domain/tree_model_real_images_test.dart).
   - Benchmark: **80.0% Top-1**, **96.0% Top-2** (Phase 2 validation).
